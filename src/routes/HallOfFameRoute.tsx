@@ -21,7 +21,7 @@ export const HallOfFameRoute = () => {
   const rest = leaderboard.slice(3, 12);
 
   return (
-    <AppShell session={session} active="hall">
+    <AppShell session={session} active="ranks">
       <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-10">
         <section className="mb-8 text-center">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-indigo-600">

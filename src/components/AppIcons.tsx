@@ -93,3 +93,26 @@ export const HomeIcon = (props: IconProps) => (
     <path d="M6 10.5V20h12v-9.5" />
   </svg>
 );
+
+export const GroupIcon = (props: IconProps) => (
+  <svg {...baseProps} {...props}>
+    <path d="M16 18a4 4 0 0 0-8 0" />
+    <path d="M12 12a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
+    <path d="M20 18a3 3 0 0 0-4-2.83" />
+    <path d="M17.5 11.5a2.5 2.5 0 1 0-1.7-4.34" />
+  </svg>
+);
+
+export const SettingsIcon = (props: IconProps) => (
+  <svg {...baseProps} {...props}>
+    <circle cx="12" cy="12" r="3" />
+    <path d="M19.4 15a1 1 0 0 0 .2 1.1l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1 1 0 0 0-1.1-.2 1 1 0 0 0-.6.9V20a2 2 0 1 1-4 0v-.2a1 1 0 0 0-.6-.9 1 1 0 0 0-1.1.2l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1 1 0 0 0 .2-1.1 1 1 0 0 0-.9-.6H4a2 2 0 1 1 0-4h.2a1 1 0 0 0 .9-.6 1 1 0 0 0-.2-1.1l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1 1 0 0 0 1.1.2 1 1 0 0 0 .6-.9V4a2 2 0 1 1 4 0v.2a1 1 0 0 0 .6.9 1 1 0 0 0 1.1-.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1 1 0 0 0-.2 1.1 1 1 0 0 0 .9.6H20a2 2 0 1 1 0 4h-.2a1 1 0 0 0-.4 1Z" />
+  </svg>
+);
+
+export const StarBadgeIcon = (props: IconProps) => (
+  <svg {...baseProps} {...props}>
+    <circle cx="12" cy="12" r="9" />
+    <path d="M12 7.2l1.35 2.74 3.02.44-2.18 2.12.52 3-2.71-1.43-2.7 1.43.52-3-2.19-2.12 3.03-.44L12 7.2Z" />
+  </svg>
+);

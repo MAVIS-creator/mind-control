@@ -12,7 +12,7 @@ export const ProfileRoute = () => {
   const avatar = avatarOptions.find((entry) => entry.id === session.profile.avatarId) ?? avatarOptions[0];
 
   return (
-    <AppShell session={session} active="profile">
+    <AppShell session={session} active="me">
       <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-10">
         <section className="glass-panel rounded-[2rem] p-6 sm:p-8">
           <div className="grid gap-8 lg:grid-cols-[240px_1fr] lg:items-center">
