@@ -1,5 +1,14 @@
 import { motion } from "framer-motion";
 import { Link, Navigate } from "react-router-dom";
+import {
+  ClockIcon,
+  GridIcon,
+  PlayIcon,
+  RulesIcon,
+  SparklesIcon,
+  TrophyIcon,
+  UserIcon,
+} from "../components/AppIcons";
 import { LeaderboardTable } from "../components/LeaderboardTable";
 import { useAppContext } from "../state/AppContext";
 import { avatarOptions } from "../data/avatars";
@@ -47,15 +56,17 @@ export const PlayRoute = () => {
           <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:gap-3">
             <Link
               to="/profile"
-              className="rounded-2xl border border-white/10 px-4 py-3 text-center text-xs uppercase tracking-[0.18em] text-white/70 sm:px-5 sm:text-sm sm:tracking-[0.28em]"
+              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/10 px-4 py-3 text-center text-xs uppercase tracking-[0.18em] text-white/70 sm:px-5 sm:text-sm sm:tracking-[0.28em]"
             >
+              <UserIcon className="h-4 w-4" />
               Profile
             </Link>
             <button
               type="button"
               onClick={() => void logout()}
-              className="rounded-2xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-white/70 sm:px-5 sm:text-sm sm:tracking-[0.28em]"
+              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-white/70 sm:px-5 sm:text-sm sm:tracking-[0.28em]"
             >
+              <ArrowRightExit />
               Logout
             </button>
           </div>
@@ -74,8 +85,14 @@ export const PlayRoute = () => {
               Classic Memory Mode
             </h2>
             <details className="mt-5 rounded-[1.5rem] border border-white/15 bg-white/10 px-5 py-4 text-white/80" open>
-              <summary className="cursor-pointer list-none font-display text-lg uppercase tracking-[0.14em] text-white">
-                Game rules
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-3 font-display text-lg uppercase tracking-[0.14em] text-white">
+                <span className="inline-flex items-center gap-3">
+                  <span className="rounded-2xl bg-white/10 p-2 text-amber-100">
+                    <RulesIcon className="h-5 w-5" />
+                  </span>
+                  Game rules
+                </span>
+                <span className="text-sm text-white/50">Open</span>
               </summary>
               <div className="mt-4 space-y-3 text-sm leading-7">
                 <p>Match all pairs before the timer runs out.</p>
@@ -85,7 +102,12 @@ export const PlayRoute = () => {
             </details>
 
             <div className="mt-5 rounded-[1.5rem] border border-white/15 bg-white/10 p-5">
-              <h3 className="font-display text-sm uppercase tracking-[0.22em] text-white">Select theme</h3>
+              <div className="flex items-center gap-3">
+                <span className="rounded-2xl bg-white/10 p-2 text-amber-100">
+                  <SparklesIcon className="h-5 w-5" />
+                </span>
+                <h3 className="font-display text-sm uppercase tracking-[0.22em] text-white">Select theme</h3>
+              </div>
               <div className="mt-4 grid grid-cols-2 gap-3">
                 {themeOptions.map((option) => {
                   const active = settings.theme === option.id;
@@ -108,7 +130,12 @@ export const PlayRoute = () => {
             </div>
 
             <div className="mt-5 rounded-[1.5rem] border border-white/15 bg-white/10 p-5">
-              <h3 className="font-display text-sm uppercase tracking-[0.22em] text-white">Grid size</h3>
+              <div className="flex items-center gap-3">
+                <span className="rounded-2xl bg-white/10 p-2 text-amber-100">
+                  <GridIcon className="h-5 w-5" />
+                </span>
+                <h3 className="font-display text-sm uppercase tracking-[0.22em] text-white">Grid size</h3>
+              </div>
               <div className="mt-4 grid gap-3 sm:grid-cols-3">
                 {gridOptions.map(([key, option]) => {
                   const active = settings.gridSize === key;
@@ -135,12 +162,27 @@ export const PlayRoute = () => {
 
             <div className="mt-5 grid gap-3 sm:grid-cols-3">
               {[
-                ["Theme", settings.theme === "numbers" ? "Numbers" : "Icons"],
-                ["Grid", GRID_OPTIONS[settings.gridSize].label],
-                ["Timer", `${GRID_OPTIONS[settings.gridSize].totalTimeSeconds}s`],
-              ].map(([title, value]) => (
+                {
+                  title: "Theme",
+                  value: settings.theme === "numbers" ? "Numbers" : "Icons",
+                  icon: <SparklesIcon className="h-4 w-4" />,
+                },
+                {
+                  title: "Grid",
+                  value: GRID_OPTIONS[settings.gridSize].label,
+                  icon: <GridIcon className="h-4 w-4" />,
+                },
+                {
+                  title: "Timer",
+                  value: `${GRID_OPTIONS[settings.gridSize].totalTimeSeconds}s`,
+                  icon: <ClockIcon className="h-4 w-4" />,
+                },
+              ].map(({ title, value, icon }) => (
                 <div key={title} className="rounded-2xl border border-white/12 bg-white/8 p-4">
-                  <div className="text-[0.65rem] uppercase tracking-[0.22em] text-white/45">{title}</div>
+                  <div className="flex items-center gap-2 text-[0.65rem] uppercase tracking-[0.22em] text-white/45">
+                    {icon}
+                    {title}
+                  </div>
                   <div className="mt-2 font-medium text-white">{value}</div>
                 </div>
               ))}
@@ -148,8 +190,9 @@ export const PlayRoute = () => {
 
             <Link
               to="/play/classic"
-              className="mt-6 inline-flex w-full items-center justify-center rounded-[1.6rem] bg-[#fda214] px-5 py-4 font-display text-base uppercase tracking-[0.18em] text-white"
+              className="mt-6 inline-flex w-full items-center justify-center gap-3 rounded-[1.6rem] bg-[#fda214] px-5 py-4 font-display text-base uppercase tracking-[0.18em] text-white"
             >
+              <PlayIcon className="h-5 w-5" />
               Start game
             </Link>
           </motion.section>
@@ -160,3 +203,19 @@ export const PlayRoute = () => {
     </div>
   );
 };
+
+const ArrowRightExit = () => (
+  <svg
+    className="h-4 w-4"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.9"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M9 6H5a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h4" />
+    <path d="M16 17l5-5-5-5" />
+    <path d="M10 12h11" />
+  </svg>
+);

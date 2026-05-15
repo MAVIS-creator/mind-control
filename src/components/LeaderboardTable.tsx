@@ -1,3 +1,4 @@
+import { TrophyIcon } from "./AppIcons";
 import { avatarOptions } from "../data/avatars";
 import type { LeaderboardEntry } from "../types";
 import { formatDuration, formatNumber, formatPercent } from "../lib/utils";
@@ -7,7 +8,10 @@ const avatarMap = new Map(avatarOptions.map((avatar) => [avatar.id, avatar]));
 export const LeaderboardTable = ({ entries }: { entries: LeaderboardEntry[] }) => (
   <div className="glass-panel overflow-hidden rounded-[2rem]">
     <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
-      <h2 className="font-display text-lg uppercase tracking-[0.28em] text-white">
+      <h2 className="flex items-center gap-3 font-display text-lg uppercase tracking-[0.22em] text-white">
+        <span className="rounded-2xl bg-white/10 p-2 text-amber-100">
+          <TrophyIcon className="h-4 w-4" />
+        </span>
         Leaderboard
       </h2>
       <p className="text-xs uppercase tracking-[0.22em] text-amber-100/85">Classic mode</p>
