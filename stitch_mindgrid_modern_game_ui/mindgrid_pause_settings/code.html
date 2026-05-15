@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MindGrid - Pause Menu</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "secondary-fixed": "#d4e3ff",
+                      "on-secondary-container": "#003c70",
+                      "secondary-fixed-dim": "#a4c9ff",
+                      "primary": "#3525cd",
+                      "surface-container-lowest": "#ffffff",
+                      "primary-fixed": "#e2dfff",
+                      "on-tertiary-fixed": "#2c0051",
+                      "on-error-container": "#93000a",
+                      "tertiary-fixed": "#f0dbff",
+                      "surface-bright": "#f9f9ff",
+                      "background": "#f9f9ff",
+                      "on-surface": "#111c2d",
+                      "surface": "#f9f9ff",
+                      "surface-container-high": "#dee8ff",
+                      "secondary-container": "#64a8fe",
+                      "on-primary": "#ffffff",
+                      "tertiary": "#6b00b7",
+                      "surface-container-highest": "#d8e3fb",
+                      "on-primary-container": "#dad7ff",
+                      "surface-container-low": "#f0f3ff",
+                      "on-secondary-fixed-variant": "#004883",
+                      "tertiary-container": "#862dd4",
+                      "surface-container": "#e7eeff",
+                      "on-primary-fixed-variant": "#3323cc",
+                      "on-background": "#111c2d",
+                      "secondary": "#0060ac",
+                      "primary-container": "#4f46e5",
+                      "surface-dim": "#cfdaf2",
+                      "outline-variant": "#c7c4d8",
+                      "outline": "#777587",
+                      "tertiary-fixed-dim": "#ddb7ff",
+                      "on-tertiary": "#ffffff",
+                      "error-container": "#ffdad6",
+                      "on-tertiary-container": "#ebd2ff",
+                      "on-error": "#ffffff",
+                      "inverse-primary": "#c3c0ff",
+                      "inverse-surface": "#263143",
+                      "surface-variant": "#d8e3fb",
+                      "on-secondary": "#ffffff",
+                      "primary-fixed-dim": "#c3c0ff",
+                      "on-secondary-fixed": "#001c39",
+                      "on-surface-variant": "#464555",
+                      "error": "#ba1a1a",
+                      "on-primary-fixed": "#0f0069",
+                      "on-tertiary-fixed-variant": "#6900b3",
+                      "surface-tint": "#4d44e3",
+                      "inverse-on-surface": "#ecf1ff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "1rem",
+                      "lg": "2rem",
+                      "xl": "3rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "margin-mobile": "20px",
+                      "unit": "4px",
+                      "container-max": "1200px",
+                      "margin-desktop": "40px",
+                      "gutter": "16px"
+              },
+              "fontFamily": {
+                      "display-lg": ["Inter"],
+                      "body-sm": ["Inter"],
+                      "label-caps": ["Inter"],
+                      "headline-md": ["Inter"],
+                      "body-lg": ["Inter"],
+                      "display-lg-mobile": ["Inter"]
+              },
+              "fontSize": {
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                      "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                      "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "display-lg-mobile": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "800"}]
+              }
+            },
+          },
+        }
+      </script>
+<style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 8px 32px 0 rgba(53, 37, 205, 0.1);
+        }
+        .inner-glow {
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.6);
+        }
+        .button-squish:active {
+            transform: scale(0.96);
+        }
+        .custom-slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            background: #d8e3fb;
+            border-radius: 999px;
+            outline: none;
+        }
+        .custom-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #3525cd;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(53, 37, 205, 0.3);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background font-body-lg text-on-background overflow-hidden h-screen w-screen flex items-center justify-center p-4">
+<!-- Background Game Layer (Simulated Blurred Gameplay) -->
+<div class="fixed inset-0 -z-10 grid grid-cols-4 grid-rows-6 gap-3 p-6 opacity-40 grayscale-[0.2]">
+<div class="bg-surface-container rounded-lg border-4 border-white"></div>
+<div class="bg-primary/20 rounded-lg border-4 border-white"></div>
+<div class="bg-surface-container rounded-lg border-4 border-white"></div>
+<div class="bg-surface-container rounded-lg border-4 border-white"></div>
+<div class="bg-tertiary-container/30 rounded-lg border-4 border-white flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-4xl" style="font-variation-settings: 'FILL' 1;">hexagon</span>
+</div>
+<div class="bg-surface-container rounded-lg border-4 border-white"></div>
+<div class="bg-secondary-container/40 rounded-lg border-4 border-white"></div>
+<div class="bg-surface-container rounded-lg border-4 border-white"></div>
+<!-- Repeating patterns to simulate a grid-based puzzle game -->
+<script>
+            for(let i=0; i<16; i++) {
+                document.write('<div class="bg-surface-container rounded-lg border-4 border-white"></div>');
+            }
+        </script>
+</div>
+<!-- Main Pause Menu Content -->
+<main class="w-full max-w-[420px] glass-panel rounded-xl p-8 flex flex-col items-center">
+<!-- Header Section -->
+<header class="text-center mb-8">
+<h1 class="font-display-lg-mobile text-display-lg-mobile text-primary tracking-tight mb-2">Paused</h1>
+<p class="font-label-caps text-label-caps text-outline uppercase tracking-[0.2em]">Level 42 • Mastermind</p>
+</header>
+<!-- Primary Action: Resume -->
+<button class="w-full bg-gradient-to-b from-primary to-primary-container text-on-primary font-headline-md text-headline-md py-4 rounded-lg inner-glow shadow-lg shadow-primary/20 button-squish flex items-center justify-center gap-3 mb-10">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+            Resume
+        </button>
+<!-- Settings List -->
+<div class="w-full space-y-6 mb-10">
+<h2 class="font-label-caps text-label-caps text-on-surface-variant border-b border-outline-variant pb-2">Settings</h2>
+<!-- Master Volume Slider -->
+<div class="flex flex-col gap-3">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant">volume_up</span>
+<span class="font-body-sm text-body-sm text-on-surface">Master Volume</span>
+</div>
+<span class="font-body-sm text-body-sm text-primary">85%</span>
+</div>
+<input class="custom-slider" type="range" value="85"/>
+</div>
+<!-- Toggle: Sound Effects -->
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant">equalizer</span>
+<span class="font-body-sm text-body-sm text-on-surface">Sound Effects</span>
+</div>
+<div class="w-12 h-7 bg-primary rounded-full relative p-1 flex items-center justify-end">
+<div class="bg-white w-5 h-5 rounded-full shadow-sm"></div>
+</div>
+</div>
+<!-- Toggle: Music -->
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant">music_note</span>
+<span class="font-body-sm text-body-sm text-on-surface">Music</span>
+</div>
+<div class="w-12 h-7 bg-primary rounded-full relative p-1 flex items-center justify-end">
+<div class="bg-white w-5 h-5 rounded-full shadow-sm"></div>
+</div>
+</div>
+<!-- Toggle: Haptic Feedback -->
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant">vibration</span>
+<span class="font-body-sm text-body-sm text-on-surface">Haptic Feedback</span>
+</div>
+<div class="w-12 h-7 bg-surface-container-highest rounded-full relative p-1 flex items-center justify-start border border-outline-variant">
+<div class="bg-white w-5 h-5 rounded-full shadow-sm"></div>
+</div>
+</div>
+</div>
+<!-- Secondary Actions Section -->
+<footer class="w-full flex flex-col gap-3">
+<button class="w-full flex items-center justify-center gap-2 bg-surface-container-low text-primary font-body-lg text-body-lg py-3 rounded-lg border border-primary/10 hover:bg-surface-container-high transition-colors button-squish">
+<span class="material-symbols-outlined text-[20px]">refresh</span>
+                Restart Level
+            </button>
+<button class="w-full flex items-center justify-center gap-2 bg-surface-container-low text-error font-body-lg text-body-lg py-3 rounded-lg border border-error/10 hover:bg-error-container transition-colors button-squish">
+<span class="material-symbols-outlined text-[20px]">logout</span>
+                Quit to Lobby
+            </button>
+</footer>
+<!-- Brand Footer -->
+<div class="mt-8 flex items-center gap-2 opacity-50">
+<span class="material-symbols-outlined text-primary text-sm">grid_view</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">MindGrid v2.4.0</span>
+</div>
+</main>
+<!-- Floating Background Decorative Elements -->
+<div class="fixed top-10 right-10 w-32 h-32 bg-primary/10 rounded-full blur-3xl -z-10"></div>
+<div class="fixed bottom-20 left-10 w-48 h-48 bg-tertiary/10 rounded-full blur-3xl -z-10"></div>
+</body></html>

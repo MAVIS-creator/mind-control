@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container": "#e7eeff",
+                    "surface-variant": "#d8e3fb",
+                    "surface": "#f9f9ff",
+                    "primary-fixed-dim": "#c3c0ff",
+                    "surface-dim": "#cfdaf2",
+                    "inverse-primary": "#c3c0ff",
+                    "error-container": "#ffdad6",
+                    "on-secondary-container": "#003c70",
+                    "primary": "#3525cd",
+                    "secondary-fixed": "#d4e3ff",
+                    "secondary-fixed-dim": "#a4c9ff",
+                    "on-primary-fixed-variant": "#3323cc",
+                    "on-surface": "#111c2d",
+                    "on-background": "#111c2d",
+                    "tertiary": "#6b00b7",
+                    "outline-variant": "#c7c4d8",
+                    "on-secondary-fixed-variant": "#004883",
+                    "surface-container-highest": "#d8e3fb",
+                    "on-tertiary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "on-surface-variant": "#464555",
+                    "on-primary-container": "#dad7ff",
+                    "on-primary-fixed": "#0f0069",
+                    "tertiary-fixed-dim": "#ddb7ff",
+                    "tertiary-fixed": "#f0dbff",
+                    "surface-container-lowest": "#ffffff",
+                    "primary-container": "#4f46e5",
+                    "on-error-container": "#93000a",
+                    "secondary-container": "#64a8fe",
+                    "primary-fixed": "#e2dfff",
+                    "error": "#ba1a1a",
+                    "on-primary": "#ffffff",
+                    "inverse-on-surface": "#ecf1ff",
+                    "secondary": "#0060ac",
+                    "surface-bright": "#f9f9ff",
+                    "on-secondary": "#ffffff",
+                    "outline": "#777587",
+                    "surface-container-low": "#f0f3ff",
+                    "inverse-surface": "#263143",
+                    "on-secondary-fixed": "#001c39",
+                    "tertiary-container": "#862dd4",
+                    "background": "#f9f9ff",
+                    "on-tertiary-container": "#ebd2ff",
+                    "on-tertiary-fixed": "#2c0051",
+                    "on-tertiary-fixed-variant": "#6900b3",
+                    "surface-tint": "#4d44e3",
+                    "surface-container-high": "#dee8ff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-mobile": "20px",
+                    "unit": "4px",
+                    "gutter": "16px",
+                    "margin-desktop": "40px",
+                    "container-max": "1200px"
+            },
+            "fontFamily": {
+                    "label-caps": ["Inter"],
+                    "display-lg-mobile": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-sm": ["Inter"]
+            },
+            "fontSize": {
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "display-lg-mobile": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+        .inner-glow {
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.5);
+        }
+        .premium-shadow {
+            box-shadow: 0 12px 40px -12px rgba(53, 37, 205, 0.08);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen overflow-x-hidden">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-gutter py-2 max-w-container-max mx-auto bg-white/70 dark:bg-surface-container/70 backdrop-blur-md border-b border-white/20 dark:border-outline-variant/20 shadow-sm shadow-primary/5">
+<div class="text-headline-md font-headline-md font-black tracking-tight text-primary dark:text-inverse-primary">MindGrid</div>
+<div class="hidden md:flex items-center gap-8">
+<a class="text-label-caps font-label-caps text-on-surface-variant hover:bg-primary/10 transition-colors px-3 py-1 rounded-full" href="#">Home</a>
+<a class="text-label-caps font-label-caps text-on-surface-variant hover:bg-primary/10 transition-colors px-3 py-1 rounded-full" href="#">Ranks</a>
+<a class="text-label-caps font-label-caps text-primary font-bold px-3 py-1 rounded-full bg-primary/5" href="#">Social</a>
+<a class="text-label-caps font-label-caps text-on-surface-variant hover:bg-primary/10 transition-colors px-3 py-1 rounded-full" href="#">Me</a>
+</div>
+<div class="flex items-center gap-4">
+<div class="bg-primary-container/20 px-4 py-1.5 rounded-full border border-primary/10 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]" style="font-variation-settings: 'FILL' 1;">stars</span>
+<span class="text-label-caps font-label-caps text-primary">1,250 XP</span>
+</div>
+<button class="material-symbols-outlined text-on-surface-variant hover:bg-primary/10 p-2 rounded-full transition-colors">settings</button>
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-white shadow-sm">
+<img alt="Player avatar" data-alt="A professional high-resolution 3D character portrait of a modern, stylish player avatar with a friendly expression. The character features soft, stylized lighting and a clean aesthetic consistent with a premium mobile game. The background is a soft, blurred indigo and white gradient that creates a feeling of depth and mental clarity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuADsMAAQN8lKkM538n2caddu544ApSiAQApfiXUmb7LJg-M6ZtvMDDDpmTH6JV8oZAg_9NuJTZlfoexK4sKDwCSGiKmWWa56UIBXYcpfzX1PjTsp9iqjmc0IYzrb4sy6EOw7aWEX90R6EgovcoeoSdUEph-5muICaIt0o8tJg8M3K34w3l0GhRK4oi1EnBcWpAOXzt0eJ4H_EMkmcuaW7a4seXDSboDVAsFrJYaJXwmLSwKtHCbnNhkCQ-KrA0JNchOCzWAlmawGhTi"/>
+</div>
+</div>
+</header>
+<main class="pt-24 pb-32 px-4 md:px-margin-desktop max-w-container-max mx-auto grid grid-cols-1 md:grid-cols-12 gap-8">
+<!-- Sidebar: Online Friends (Left for Desktop) -->
+<aside class="md:col-span-3 order-2 md:order-1 space-y-6">
+<div class="glass-panel rounded-lg p-6 premium-shadow">
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-label-caps font-label-caps text-on-surface-variant">Friends Online</h3>
+<span class="bg-secondary-container/20 text-secondary text-[10px] px-2 py-0.5 rounded-full font-bold">24</span>
+</div>
+<div class="space-y-4">
+<!-- Friend Item -->
+<div class="flex items-center gap-3 p-2 hover:bg-white/50 rounded-xl transition-all cursor-pointer group">
+<div class="relative">
+<img alt="Friend avatar" class="w-10 h-10 rounded-full object-cover border-2 border-white" data-alt="A cinematic 3D digital illustration of a cheerful young woman's avatar, styled with premium smooth textures and soft-key lighting. The character has an approachable look, fitting a high-end casual game ecosystem. The lighting is bright and warm, set against a clean, minimalist studio backdrop in soft pastel blues." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZ2xYCvfqHqhIqyT6COuO3kIKp49oYA4XHKoIUqYAU47Y_gKy2uf1YelcdZ4tmYbXiRSPyfFENdSHWCQadsWHuUtueIZPku655H653V0vAC3BBWq7KPUiikg0H0vfzJoOj2FjHuzy8bh9hmos8ZmlHakLhwlhsTmYQOfSUepkzGYfIeKnEZDkf3DgRavRALP5JQ61cJJd2uZyRM1tHkdPItCvaoEUNFw6NnsZj4-_o473sr09LtR9MSDD2T_CCOY0u4Pk6UQHz0GKC"/>
+<div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-body-sm font-bold truncate">Alex_Mind</p>
+<p class="text-[10px] text-surface-variant font-bold uppercase tracking-wider">In Lobby</p>
+</div>
+<button class="material-symbols-outlined text-primary opacity-0 group-hover:opacity-100 transition-opacity">add_circle</button>
+</div>
+<!-- Friend Item -->
+<div class="flex items-center gap-3 p-2 hover:bg-white/50 rounded-xl transition-all cursor-pointer group">
+<div class="relative">
+<img alt="Friend avatar" class="w-10 h-10 rounded-full object-cover border-2 border-white" data-alt="A high-quality 3D rendered avatar of a man with a friendly, casual appearance. The visual style is clean and minimalist, using soft shadows and a bright color palette of whites and deep indigos. The image is captured in a high-key lighting setup that emphasizes clarity and a premium gaming feel." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDD2U2_xAyAp0ij6eJwCZ7eBkQalqknr1p_w3_DEe4NwupjGAMeWl7r1qvPG9d37yw3_o0EOBybUFIRfsz75We8DID5tsKp6Oy2LW5vPc2dlJEuvSmGRKyFG3Fuwt_Arc6wUB24UPvlPZ7_pn0WzhBLfLzJwI1bYDJl_3YEuoXEXSeBwHQL9yrtinlAqqRDRK4H-C-u0N0mI5aYwCI84Y-RyEk5Fvgb9EHhPVtrAnBqBVKj7zXiU96_48c7o-4VgbMiD0talcIF4lLV"/>
+<div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-body-sm font-bold truncate">ZenMaster42</p>
+<p class="text-[10px] text-surface-variant font-bold uppercase tracking-wider">Online</p>
+</div>
+<button class="material-symbols-outlined text-primary opacity-0 group-hover:opacity-100 transition-opacity">add_circle</button>
+</div>
+</div>
+<button class="w-full mt-6 py-3 border-2 border-dashed border-outline-variant/50 rounded-xl text-label-caps font-label-caps text-outline hover:border-primary/50 hover:text-primary transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">person_add</span>
+                    Find More
+                </button>
+</div>
+</aside>
+<!-- Main Content: Matchmaking & Players -->
+<div class="md:col-span-9 order-1 md:order-2 space-y-8">
+<!-- Matchmaking Status Card -->
+<div class="glass-panel rounded-lg p-10 flex flex-col items-center text-center premium-shadow relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-tertiary"></div>
+<!-- Pulsing Animation Placeholder -->
+<div class="relative mb-8">
+<div class="absolute inset-0 bg-primary/20 rounded-full scale-150 blur-xl opacity-50"></div>
+<div class="w-24 h-24 rounded-full bg-white flex items-center justify-center shadow-lg inner-glow z-10 relative">
+<span class="material-symbols-outlined text-primary text-[48px]" style="font-variation-settings: 'FILL' 1;">groups</span>
+</div>
+</div>
+<h2 class="text-headline-md font-headline-md text-on-surface mb-2">Finding Match...</h2>
+<p class="text-body-sm text-on-surface-variant mb-8 max-w-sm">Searching for opponents with similar MindGrid rank. Estimated time: <span class="font-bold text-primary">0:45</span></p>
+<div class="flex flex-col sm:flex-row gap-4 w-full max-w-md">
+<button class="flex-1 bg-primary text-white py-4 rounded-xl font-bold shadow-lg shadow-primary/20 active:scale-95 transition-all inner-glow flex items-center justify-center gap-2">
+<span>Cancel Search</span>
+</button>
+<div class="flex-1 glass-panel px-6 py-4 rounded-xl flex items-center justify-between border border-primary/10">
+<div class="text-left">
+<p class="text-[10px] text-on-surface-variant uppercase font-bold">Room Code</p>
+<p class="font-headline-md text-primary tracking-widest">MG-8291</p>
+</div>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">content_copy</button>
+</div>
+</div>
+</div>
+<!-- Players in Lobby Grid -->
+<div>
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-headline-md font-headline-md text-on-surface">Party Members</h3>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 bg-green-500 rounded-full"></span>
+<span class="text-label-caps font-label-caps text-on-surface-variant">Lobby Open</span>
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<!-- Player Card: Ready -->
+<div class="glass-panel p-6 rounded-lg text-center premium-shadow border-2 border-primary/20 relative group">
+<div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-white text-[10px] px-3 py-1 rounded-full font-bold shadow-sm uppercase">Host</div>
+<img alt="Player avatar" class="w-20 h-20 rounded-full mx-auto mb-4 border-4 border-white shadow-md" data-alt="A professional high-resolution 3D character portrait of a modern, stylish player avatar with a friendly expression. The character features soft, stylized lighting and a clean aesthetic consistent with a premium mobile game. The background is a soft, blurred indigo and white gradient that creates a feeling of depth and mental clarity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDo9vZAD-SE4WXdbLSSKNf-xXzcTr_Rq1Jqejds7-pkxXxJvQQF4GVLC-oI6xRY1IM37anaQCdsc466qoMjefrtdEkjpjwWZqsY99cSzCxZJaIJLia73Hi_TJ-liAAAxjPPElBo1RqmElh0v-znd0QmTpSnoDaQ7av9dZRzarBTz2ktQhGDF3wv9OGnKdj7GoTeN3dI4Z5PlJ7LbCsz5g3nr0OG-UVHXowB-JbZp3DbreL7Ix48q4NIkWTjvF9_16w_p1caOA_iGjkg"/>
+<h4 class="text-body-lg font-bold">You</h4>
+<p class="text-label-caps font-label-caps text-primary mt-1">Ready</p>
+</div>
+<!-- Player Card: Ready -->
+<div class="glass-panel p-6 rounded-lg text-center premium-shadow relative">
+<img alt="Player avatar" class="w-20 h-20 rounded-full mx-auto mb-4 border-4 border-white shadow-md" data-alt="A high-fidelity 3D digital sculpt of a female avatar with a calm and focused expression, perfectly suited for a strategic puzzle game environment. The art style is clean and professional, with a focus on smooth porcelain-like skin and vibrant eyes. The color palette incorporates light blues and gentle whites, set against a softly blurred minimalist studio background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBK-Hsbw6dmh5LAP55nhu4SV29IhdkHlapd-4tI6sUfajEs1_gjMuNAyh1ty6TnmXNketBd0qoCwcu9c27u17IK0T4A69JpqeK45tqOG5jnaXz7sa_IuW7k_Ab1s4lTDEQFFJyP-unn0slM98dSGw3Uukxmmei4ZlEcocqgtOOTO2TSYUYp0aExldxnFrmbXKIw90vq6NZyBhuvl-nHEOh5Q0WYci_zdhM6LH0F6gd02Zlohh4MgyT1X74Jcwoidlu9nrcLRaQyHpG-"/>
+<h4 class="text-body-lg font-bold">Sarah_Pz</h4>
+<p class="text-label-caps font-label-caps text-primary mt-1">Ready</p>
+</div>
+<!-- Player Card: Empty/Invite -->
+<button class="border-2 border-dashed border-outline-variant/40 rounded-lg p-6 flex flex-col items-center justify-center group hover:border-primary/40 hover:bg-primary/5 transition-all">
+<div class="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center mb-4 text-outline group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[32px]">add</span>
+</div>
+<p class="text-label-caps font-label-caps text-outline group-hover:text-primary">Invite Friend</p>
+</button>
+<!-- Player Card: Empty/Invite -->
+<button class="border-2 border-dashed border-outline-variant/40 rounded-lg p-6 flex flex-col items-center justify-center group hover:border-primary/40 hover:bg-primary/5 transition-all">
+<div class="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center mb-4 text-outline group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[32px]">add</span>
+</div>
+<p class="text-label-caps font-label-caps text-outline group-hover:text-primary">Invite Friend</p>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Visible on Mobile) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 pb-safe py-3 bg-white/70 dark:bg-surface-container/70 backdrop-blur-xl border-t border-white/20 dark:border-outline-variant/20 shadow-lg shadow-primary/10 rounded-t-lg">
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1.5 hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="text-label-caps font-label-caps">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1.5 hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="leaderboard">leaderboard</span>
+<span class="text-label-caps font-label-caps">Ranks</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-4 py-1.5 scale-90 duration-150 ease-out" href="#">
+<span class="material-symbols-outlined" data-icon="group" style="font-variation-settings: 'FILL' 1;">group</span>
+<span class="text-label-caps font-label-caps">Social</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1.5 hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="text-label-caps font-label-caps">Me</span>
+</a>
+</nav>
+</body></html>

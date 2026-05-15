@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>MindGrid - Home</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container": "#e7eeff",
+                    "surface-variant": "#d8e3fb",
+                    "surface": "#f9f9ff",
+                    "primary-fixed-dim": "#c3c0ff",
+                    "surface-dim": "#cfdaf2",
+                    "inverse-primary": "#c3c0ff",
+                    "error-container": "#ffdad6",
+                    "on-secondary-container": "#003c70",
+                    "primary": "#3525cd",
+                    "secondary-fixed": "#d4e3ff",
+                    "secondary-fixed-dim": "#a4c9ff",
+                    "on-primary-fixed-variant": "#3323cc",
+                    "on-surface": "#111c2d",
+                    "on-background": "#111c2d",
+                    "tertiary": "#6b00b7",
+                    "outline-variant": "#c7c4d8",
+                    "on-secondary-fixed-variant": "#004883",
+                    "surface-container-highest": "#d8e3fb",
+                    "on-tertiary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "on-surface-variant": "#464555",
+                    "on-primary-container": "#dad7ff",
+                    "on-primary-fixed": "#0f0069",
+                    "tertiary-fixed-dim": "#ddb7ff",
+                    "tertiary-fixed": "#f0dbff",
+                    "surface-container-lowest": "#ffffff",
+                    "primary-container": "#4f46e5",
+                    "on-error-container": "#93000a",
+                    "secondary-container": "#64a8fe",
+                    "primary-fixed": "#e2dfff",
+                    "error": "#ba1a1a",
+                    "on-primary": "#ffffff",
+                    "inverse-on-surface": "#ecf1ff",
+                    "secondary": "#0060ac",
+                    "surface-bright": "#f9f9ff",
+                    "on-secondary": "#ffffff",
+                    "outline": "#777587",
+                    "surface-container-low": "#f0f3ff",
+                    "inverse-surface": "#263143",
+                    "on-secondary-fixed": "#001c39",
+                    "tertiary-container": "#862dd4",
+                    "background": "#f9f9ff",
+                    "on-tertiary-container": "#ebd2ff",
+                    "on-tertiary-fixed": "#2c0051",
+                    "on-tertiary-fixed-variant": "#6900b3",
+                    "surface-tint": "#4d44e3",
+                    "surface-container-high": "#dee8ff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-mobile": "20px",
+                    "unit": "4px",
+                    "gutter": "16px",
+                    "margin-desktop": "40px",
+                    "container-max": "1200px"
+            },
+            "fontFamily": {
+                    "label-caps": ["Inter"],
+                    "display-lg-mobile": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-sm": ["Inter"]
+            },
+            "fontSize": {
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "display-lg-mobile": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .inner-glow {
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.5);
+        }
+        .floating-shape {
+            position: absolute;
+            z-index: -1;
+            filter: blur(80px);
+            opacity: 0.4;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen relative overflow-x-hidden">
+<!-- Background Decorative Elements -->
+<div class="fixed inset-0 overflow-hidden -z-10 pointer-events-none">
+<div class="floating-shape bg-primary w-[500px] h-[500px] -top-20 -left-20 rounded-full"></div>
+<div class="floating-shape bg-tertiary w-[400px] h-[400px] bottom-1/4 -right-10 rounded-full"></div>
+<div class="floating-shape bg-secondary-container w-[300px] h-[300px] top-1/2 left-1/3 rounded-full"></div>
+</div>
+<!-- TopAppBar (Shared Component) -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-gutter py-2 max-w-container-max mx-auto bg-white/70 backdrop-blur-md border-b border-white/20 shadow-sm shadow-primary/5">
+<div class="text-headline-md font-headline-md font-black tracking-tight text-primary">MindGrid</div>
+<div class="flex items-center gap-4">
+<span class="text-label-caps font-label-caps text-primary px-3 py-1 bg-primary/10 rounded-full border border-primary/20">1,250 XP</span>
+<button class="material-symbols-outlined text-on-surface-variant hover:bg-primary/10 transition-colors p-2 rounded-full" data-icon="settings">settings</button>
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-white">
+<img alt="Player avatar" data-alt="A high-quality 3D rendered profile avatar of a smiling young person with a modern, stylish look. The lighting is soft and studio-quality, emphasizing the smooth textures and vibrant indigo and white color palette of the MindGrid brand. The background is a clean, minimalist gradient that reflects a premium, playful digital experience." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB2v9PeZpRrjLIz_fIPSS7ix1DC8m7m7Qdb1EWoMSFFXXdPKCf1-LVh73NRfWFePeAazLLk1xNKOLQ4vVsdEKOAvypRuH3B-rWUlDgb-IthAXH6xWciGBBhDxCoNirKDWKU4RzfxnlTs2vbj5G1wkNk3Gx3HHj_iQtX0taJ7K5irN-sfIUPTF7GRCW9_MeKkb2mXdJcSnq1oeG9pvp0Wz3cpuLHxxbl-SVdyurIhytulAoBWXDh132rOE2_xn_qKIJJu04Ge2Fgz0-w"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="pt-24 pb-32 px-gutter max-w-container-max mx-auto">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+<!-- Hero & Main Action (8 Columns) -->
+<section class="lg:col-span-8 flex flex-col gap-8">
+<!-- Game Brand Hero -->
+<div class="flex flex-col items-center justify-center py-12 text-center">
+<div class="w-32 h-32 mb-6 bg-gradient-to-br from-primary to-tertiary rounded-3xl flex items-center justify-center shadow-lg shadow-primary/20 rotate-3">
+<span class="material-symbols-outlined text-white text-[64px]" style="font-variation-settings: 'FILL' 1;">grid_view</span>
+</div>
+<h1 class="font-display-lg-mobile text-display-lg-mobile md:font-display-lg md:text-display-lg text-primary tracking-tight mb-4">MINDGRID</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-md mx-auto">Master your focus. Unlock your mental potential one puzzle at a time.</p>
+</div>
+<!-- Primary Action Card -->
+<div class="glass p-8 rounded-lg inner-glow shadow-xl shadow-primary/10 flex flex-col items-center text-center">
+<button class="w-full md:w-auto px-12 py-5 bg-gradient-to-b from-primary-container to-primary text-white rounded-full font-headline-md text-headline-md shadow-lg shadow-primary/30 transform active:scale-95 transition-all hover:brightness-110 flex items-center justify-center gap-3">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+                        Play Now
+                    </button>
+<div class="mt-6 flex gap-8">
+<div class="text-center">
+<p class="font-label-caps text-label-caps text-on-surface-variant">LEVEL</p>
+<p class="font-headline-md text-headline-md text-primary">24</p>
+</div>
+<div class="text-center">
+<p class="font-label-caps text-label-caps text-on-surface-variant">GAMES</p>
+<p class="font-headline-md text-headline-md text-primary">142</p>
+</div>
+<div class="text-center">
+<p class="font-label-caps text-label-caps text-on-surface-variant">STREAK</p>
+<p class="font-headline-md text-headline-md text-primary">7</p>
+</div>
+</div>
+</div>
+<!-- Bento Grid: Challenges & Rank -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Daily Challenge -->
+<div class="glass p-6 rounded-lg inner-glow flex flex-col">
+<div class="flex justify-between items-start mb-6">
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Daily Challenge</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">The Paradox Prism</p>
+</div>
+<div class="bg-tertiary/10 text-tertiary px-3 py-1 rounded-full flex items-center gap-1 border border-tertiary/20">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+<span class="font-label-caps text-label-caps">14:22:05</span>
+</div>
+</div>
+<div class="relative w-full aspect-video rounded-xl overflow-hidden mb-4 group cursor-pointer">
+<img alt="Daily Puzzle Preview" data-alt="A mesmerizing geometric puzzle board featuring translucent purple and indigo cubes floating in a soft, ethereal space. The lighting is diffused and calm, with subtle light rays piercing through the arrangement. The overall aesthetic is highly polished and minimalist, reflecting the MindGrid theme of mental clarity and premium game design." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXUlFKjyIKe89KyaG_bjFpTG7YledtXNC5L9xG6igEj48HWvlzDG5-UgaGVN-vBNa_VBBAZAARrFW9SYgbpozF804TNqpm6lXiAsy4Z0PBkQiRrJIW1UaU7fWKERVquAzmpvjIhknMezlEb28FQeXswgCJziWMm1sVY1AoJS_FoEEz1pFO9f6zlalllwqeZwqBX1q4s9-kh2aVD3m8f9xl9BVeiTUnCaRrmJYC8hsb4YQnDBR1W2wgpUJ0qEKSn5PgdYiza8irfkAp"/>
+<div class="absolute inset-0 bg-primary/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="bg-white/90 p-4 rounded-full shadow-lg">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">play_circle</span>
+</span>
+</div>
+</div>
+<button class="w-full py-3 bg-secondary-container text-on-secondary-container rounded-full font-label-caps text-label-caps uppercase tracking-widest hover:bg-secondary transition-colors">Start Challenge</button>
+</div>
+<!-- Player Rank Card -->
+<div class="glass p-6 rounded-lg inner-glow flex flex-col justify-between">
+<div class="flex items-center gap-4 mb-6">
+<div class="w-16 h-16 bg-gradient-to-br from-tertiary to-primary-container rounded-2xl flex items-center justify-center shadow-inner">
+<span class="material-symbols-outlined text-white text-[32px]" style="font-variation-settings: 'FILL' 1;">psychology</span>
+</div>
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant">CURRENT RANK</p>
+<h3 class="font-headline-md text-headline-md text-tertiary">Memory Master</h3>
+</div>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between font-label-caps text-label-caps text-on-surface">
+<span>XP PROGRESS</span>
+<span>1,250 / 2,000</span>
+</div>
+<!-- Progress Bar (Shared Style) -->
+<div class="h-4 w-full bg-surface-container rounded-full overflow-hidden border border-white/50">
+<div class="h-full bg-gradient-to-r from-secondary-container via-primary-container to-tertiary w-[62.5%] rounded-full shadow-sm"></div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant italic">750 XP until 'Cognitive Architect'</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Sidebar (4 Columns) -->
+<aside class="lg:col-span-4 flex flex-col gap-6">
+<!-- Leaderboard Preview -->
+<div class="glass p-6 rounded-lg inner-glow shadow-lg shadow-primary/5">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline-md text-headline-md text-on-surface">Global Rank</h3>
+<span class="material-symbols-outlined text-on-surface-variant">leaderboard</span>
+</div>
+<div class="space-y-4">
+<!-- Top 1 -->
+<div class="flex items-center justify-between p-4 bg-white/50 rounded-2xl border border-white/50">
+<div class="flex items-center gap-3">
+<div class="relative">
+<img alt="Rank 1" class="w-12 h-12 rounded-full border-2 border-primary" data-alt="A friendly, expressive 3D character headshot with soft features and a warm smile. The character has modern glasses and a purple beanie, fitting the playful minimalist aesthetic of a high-end mobile game. The lighting is bright and clean." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAaf5fQmA3KglBYlr8G47RsDudd0kErkkTgtndEEn_Sa0a9yl3V2S0f5DcHt3uKVNVxsD0LJ0trhz5VOR_4ZQ0hQLQSNV8rS2Ml256lXk8SEBBsMore1VAdPAA9V5Ewk09NB6Hw6wzxnxkyOuXRP1wlSofx2lmNR88jlkNMP1IOvWlvnl3zwIPLuyvPkwC1hBI2wlXd18OWy0xyPLghYkSmTjrQZ4KO01w7GeYyqW70nQ5OOTx0cVuKfgqLWpOwt_b5Rwapp0rR46M-"/>
+<span class="absolute -top-1 -right-1 bg-primary text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-bold">1</span>
+</div>
+<div>
+<p class="font-label-caps text-label-caps text-on-surface">SOLO_LEVELER</p>
+<p class="text-[10px] text-primary font-bold uppercase">ZENITH LORD</p>
+</div>
+</div>
+<p class="font-headline-md text-headline-md text-primary">12.5k</p>
+</div>
+<!-- Top 2 -->
+<div class="flex items-center justify-between p-4 bg-white/30 rounded-2xl">
+<div class="flex items-center gap-3">
+<div class="relative">
+<img alt="Rank 2" class="w-12 h-12 rounded-full border-2 border-transparent" data-alt="A stylized 3D female avatar with purple hair and a confident expression. The style is sleek and consistent with the MindGrid app's visual identity, using soft shadows and high-production value materials." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-QpCWnCw5R0NirjWaYMW3SvSdBGYgPeFqNTu9R3aXryN5z6DrhqVL1N7IgsADLBqXSYN7cXD86RytF0u4Pip1oLoGk_Ge3uThKn7jMKxffrxkdlCxUMNPMVxh3hJmYRBoxHzri7f9qsj56JhybQdPGC6SRD8-fmTNGbOovoupbXpSegxvbsNYPzVSgrxStPsbuG0NR9dR9iXaPJ7k4SYKMIHrf-O2CA_L4yt_DHpMK7cyyc9MJkjHfxvjgEteguU701UWV41AzwQK"/>
+<span class="absolute -top-1 -right-1 bg-surface-variant text-on-surface-variant text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-bold">2</span>
+</div>
+<div>
+<p class="font-label-caps text-label-caps text-on-surface">NEURON_GIRL</p>
+<p class="text-[10px] text-on-surface-variant font-bold uppercase">ELITE MIND</p>
+</div>
+</div>
+<p class="font-headline-md text-headline-md text-on-surface-variant">10.8k</p>
+</div>
+<!-- Top 3 -->
+<div class="flex items-center justify-between p-4 bg-white/30 rounded-2xl">
+<div class="flex items-center gap-3">
+<div class="relative">
+<img alt="Rank 3" class="w-12 h-12 rounded-full border-2 border-transparent" data-alt="A 3D male character avatar with a minimalist, clean aesthetic. The character is wearing a white turtleneck and has a thoughtful expression. The overall style is Apple-like and smooth, integrated perfectly into the MindGrid UI theme." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRtpXD8ytjMxLbbmssAmBl9LfJ2Uj7nk_JVWgxDxq5ZKX3MqD-7SOenmihWosPG6PAM5WCL0LgaffSL1Loc7U7Fl--xjloiru2a7IgkGcqs5d7AifiMOUUPnH-gY8pedr7r_7a4F4Bw5AF9PEPXJgIE1Yn2eSh59m-aw37dTjML4Z9LaZHfe0OLGnFvCY91HizaqKAKAsxgqGUCdZ9eXOOPqpz4AO8Y7xXTC0cTG1ZDrxo1AuolXPDc-BeQHgeAXZ9SnKGYFf7y10K"/>
+<span class="absolute -top-1 -right-1 bg-surface-variant text-on-surface-variant text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-bold">3</span>
+</div>
+<div>
+<p class="font-label-caps text-label-caps text-on-surface">KINETIC_BOY</p>
+<p class="text-[10px] text-on-surface-variant font-bold uppercase">ELITE MIND</p>
+</div>
+</div>
+<p class="font-headline-md text-headline-md text-on-surface-variant">9.2k</p>
+</div>
+</div>
+<button class="w-full mt-6 py-2 text-primary font-label-caps text-label-caps hover:underline">VIEW FULL LEADERBOARD</button>
+</div>
+<!-- Recent Activity / Stats -->
+<div class="glass p-6 rounded-lg inner-glow">
+<h3 class="font-label-caps text-label-caps text-on-surface-variant mb-4 uppercase">RECENT STATS</h3>
+<div class="space-y-4">
+<div class="flex justify-between items-center">
+<span class="font-body-sm text-body-sm">Avg. Reaction Time</span>
+<span class="font-body-sm text-body-sm text-primary font-bold">245ms</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-body-sm text-body-sm">Focus Score</span>
+<span class="font-body-sm text-body-sm text-primary font-bold">88/100</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-body-sm text-body-sm">Daily Goal</span>
+<span class="font-body-sm text-body-sm text-primary font-bold">3 / 5</span>
+</div>
+</div>
+</div>
+</aside>
+</div>
+</main>
+<!-- BottomNavBar (Shared Component) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 pb-safe py-3 bg-white/70 backdrop-blur-xl border-t border-white/20 shadow-lg shadow-primary/10 rounded-t-lg md:hidden">
+<!-- Home (Active) -->
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-4 py-1.5 scale-90" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="text-label-caps font-label-caps">Home</span>
+</a>
+<!-- Ranks -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1.5 hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined">leaderboard</span>
+<span class="text-label-caps font-label-caps">Ranks</span>
+</a>
+<!-- Social -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1.5 hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="text-label-caps font-label-caps">Social</span>
+</a>
+<!-- Me -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1.5 hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="text-label-caps font-label-caps">Me</span>
+</a>
+</nav>
+<!-- Desktop Sidebar/Nav Mockup (Simplified for clarity) -->
+<div class="hidden md:block fixed left-0 top-1/2 -translate-y-1/2 ml-4 flex-col gap-4 z-40">
+<div class="glass p-2 rounded-full flex flex-col gap-2 shadow-lg border border-white/50">
+<button class="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center"><span class="material-symbols-outlined">home</span></button>
+<button class="w-12 h-12 rounded-full hover:bg-primary/10 text-primary flex items-center justify-center transition-colors"><span class="material-symbols-outlined">leaderboard</span></button>
+<button class="w-12 h-12 rounded-full hover:bg-primary/10 text-primary flex items-center justify-center transition-colors"><span class="material-symbols-outlined">psychology</span></button>
+<button class="w-12 h-12 rounded-full hover:bg-primary/10 text-primary flex items-center justify-center transition-colors"><span class="material-symbols-outlined">person</span></button>
+</div>
+</div>
+</body></html>

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+                  "surface-container": "#e7eeff",
+                  "surface-variant": "#d8e3fb",
+                  "surface": "#f9f9ff",
+                  "primary-fixed-dim": "#c3c0ff",
+                  "surface-dim": "#cfdaf2",
+                  "inverse-primary": "#c3c0ff",
+                  "error-container": "#ffdad6",
+                  "on-secondary-container": "#003c70",
+                  "primary": "#3525cd",
+                  "secondary-fixed": "#d4e3ff",
+                  "secondary-fixed-dim": "#a4c9ff",
+                  "on-primary-fixed-variant": "#3323cc",
+                  "on-surface": "#111c2d",
+                  "on-background": "#111c2d",
+                  "tertiary": "#6b00b7",
+                  "outline-variant": "#c7c4d8",
+                  "on-secondary-fixed-variant": "#004883",
+                  "surface-container-highest": "#d8e3fb",
+                  "on-tertiary": "#ffffff",
+                  "on-error": "#ffffff",
+                  "on-surface-variant": "#464555",
+                  "on-primary-container": "#dad7ff",
+                  "on-primary-fixed": "#0f0069",
+                  "tertiary-fixed-dim": "#ddb7ff",
+                  "tertiary-fixed": "#f0dbff",
+                  "surface-container-lowest": "#ffffff",
+                  "primary-container": "#4f46e5",
+                  "on-error-container": "#93000a",
+                  "secondary-container": "#64a8fe",
+                  "primary-fixed": "#e2dfff",
+                  "error": "#ba1a1a",
+                  "on-primary": "#ffffff",
+                  "inverse-on-surface": "#ecf1ff",
+                  "secondary": "#0060ac",
+                  "surface-bright": "#f9f9ff",
+                  "on-secondary": "#ffffff",
+                  "outline": "#777587",
+                  "surface-container-low": "#f0f3ff",
+                  "inverse-surface": "#263143",
+                  "on-secondary-fixed": "#001c39",
+                  "tertiary-container": "#862dd4",
+                  "background": "#f9f9ff",
+                  "on-tertiary-container": "#ebd2ff",
+                  "on-tertiary-fixed": "#2c0051",
+                  "on-tertiary-fixed-variant": "#6900b3",
+                  "surface-tint": "#4d44e3",
+                  "surface-container-high": "#dee8ff"
+          },
+          "borderRadius": {
+                  "DEFAULT": "1rem",
+                  "lg": "2rem",
+                  "xl": "3rem",
+                  "full": "9999px"
+          },
+          "spacing": {
+                  "margin-mobile": "20px",
+                  "unit": "4px",
+                  "gutter": "16px",
+                  "margin-desktop": "40px",
+                  "container-max": "1200px"
+          },
+          "fontFamily": {
+                  "label-caps": ["Inter"],
+                  "display-lg-mobile": ["Inter"],
+                  "display-lg": ["Inter"],
+                  "body-lg": ["Inter"],
+                  "headline-md": ["Inter"],
+                  "body-sm": ["Inter"]
+          },
+          "fontSize": {
+                  "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                  "display-lg-mobile": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                  "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                  "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                  "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                  "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "500"}]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    .inner-glow {
+      box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.5);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-background min-h-screen font-body-lg overflow-x-hidden">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-gutter py-2 max-w-container-max mx-auto bg-white/70 backdrop-blur-md border-b border-white/20 shadow-sm shadow-primary/5">
+<div class="text-headline-md font-headline-md font-black tracking-tight text-primary">MindGrid</div>
+<div class="flex items-center gap-4">
+<div class="bg-primary/10 px-4 py-1.5 rounded-full flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">stars</span>
+<span class="text-label-caps font-label-caps text-primary">1,250 XP</span>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">settings</span>
+</button>
+<div class="w-10 h-10 rounded-full border-2 border-primary/20 overflow-hidden">
+<img alt="Player Avatar" class="w-full h-full object-cover" data-alt="A highly detailed 3D avatar of a young gamer with stylized features, wearing a modern techwear hoodie. The character is set against a clean, minimalist soft indigo background with gentle studio lighting. The aesthetic is premium and playful, maintaining a professional glassmorphism look consistent with a high-end gaming interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCEZ22RFt4kYIT_Cjuq5Px7kYAFBnakwjMCIKIKLK5bF1XigwwNitvR_drfG3JIJnn7V2V_8zCD2fGophWFEbjScWFg5vu4CMYk8KqlUkku7gdJU37pMA8JERYWHuSPMrruecnqG9yArKcaPA10Lf2NNl-8o3ls0kwnZuTRdV7AnHfqTx144xqXsugu_-T2dYyEvB1nc37fEaWf8Hj6u1FC1m6T346Y7fKXb-I7rWxCIartniDZJlqzw5HngHKJSR_haHIWIP00dAwP"/>
+</div>
+</div>
+</header>
+<main class="pt-24 pb-32 px-gutter max-w-4xl mx-auto">
+<!-- Hero Header -->
+<section class="mb-8 text-center">
+<h1 class="font-display-lg text-display-lg text-primary mb-2">Hall of Fame</h1>
+<p class="text-on-surface-variant font-body-lg">Compete with the world's brightest minds and climb the ranks.</p>
+</section>
+<!-- Tab Navigation -->
+<div class="flex justify-center mb-8">
+<nav class="glass-card p-1.5 rounded-full flex gap-1 inner-glow">
+<button class="px-6 py-2 rounded-full text-label-caps font-label-caps bg-primary text-white shadow-md">Global</button>
+<button class="px-6 py-2 rounded-full text-label-caps font-label-caps text-on-surface-variant hover:bg-primary/5 transition-colors">Weekly</button>
+<button class="px-6 py-2 rounded-full text-label-caps font-label-caps text-on-surface-variant hover:bg-primary/5 transition-colors">Daily</button>
+</nav>
+</div>
+<!-- Top 3 Podium (Bento Style) -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+<!-- Rank 2: Silver -->
+<div class="order-2 md:order-1 flex flex-col items-center justify-end">
+<div class="glass-card w-full p-6 rounded-lg text-center inner-glow relative pt-12">
+<div class="absolute -top-10 left-1/2 -translate-x-1/2 w-20 h-20 rounded-full border-4 border-[#C0C0C0] p-1 bg-white shadow-xl">
+<img class="w-full h-full rounded-full" data-alt="Detailed 3D character portrait of a professional woman with glasses and a friendly expression. The lighting is soft and even, highlighting the clean textures of the minimalist avatar design. The character is placed in a premium, glassmorphism-themed profile circle with a metallic silver border, set against a pristine white studio background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlyZGnYcaN8Ryq1Wn3WFoKz-oesP8A43Dsl9HOf9DqQHIlxv4WR20gvTOgopaqNO0AWRYXuy57Hp7PU-H17uOwcmxyFXOhQM2Vr6TTUrA9bFh2xs5uSjs6Vf9Q1RbnshVF1Bo6l2AMkkC-DoXmoBm0vHD1VRhuIOLuqCGwSX0sli38JkJP2ci-zNR5PHb4_kBrFwBnqt1CVKY7fgjdbY7p6ZR6agY-YRlD7wKnD2tEJ98f3CWbGvD0FJCUvltPkgWTUQ11Aye_lsEs"/>
+</div>
+<div class="inline-flex items-center justify-center bg-[#C0C0C0] text-white w-8 h-8 rounded-full mb-2 font-bold">2</div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Sarah.Grid</h3>
+<p class="text-primary font-bold text-label-caps">12,450 XP</p>
+</div>
+</div>
+<!-- Rank 1: Gold -->
+<div class="order-1 md:order-2 flex flex-col items-center">
+<div class="glass-card w-full p-8 rounded-lg text-center inner-glow relative pt-16 scale-105 border-primary/20 shadow-xl shadow-primary/10">
+<div class="absolute -top-12 left-1/2 -translate-x-1/2 w-24 h-24 rounded-full border-4 border-[#FFD700] p-1 bg-white shadow-2xl">
+<img class="w-full h-full rounded-full" data-alt="A premium 3D character illustration of a smiling young man with a modern hairstyle. The avatar is rendered with high-quality textures and soft global illumination. He is framed by a glowing gold circular border, emphasizing his top-tier status. The entire visual is set in a bright, modern, and clean minimalist environment with soft indigo accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB9nHprqxXnp_f-PTyujm4RO9dmSL5ANLI_Ek4G8BruNcN_Al_hyCSeci_rVNiD21kDKMCdCOmhBU-iKE-ZSn7BFze4j3VAyTGvBPHWBmSjM08dcM5ToRarw6LEdiS8EOQOttTsn34r4R62KGYVqolj2qrzIuKVWYcr664maHLVhb6aQ3PKqgdoLwMhrmDNXIUxRJVCwCwb-mrJ0YIVGQQKyYgd-kokz8ThzScnEDknr2jmSSU8rNAbE7vEsw9X4OLfEmtI4mA7IKPB"/>
+</div>
+<div class="inline-flex items-center justify-center bg-[#FFD700] text-white w-10 h-10 rounded-full mb-3 font-bold shadow-lg shadow-yellow-500/30">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface text-2xl">AlexMaster</h3>
+<p class="text-primary font-black text-body-lg">15,800 XP</p>
+<div class="mt-4 px-3 py-1 bg-primary/10 text-primary text-label-caps font-label-caps rounded-full inline-block">Grandmaster</div>
+</div>
+</div>
+<!-- Rank 3: Bronze -->
+<div class="order-3 flex flex-col items-center justify-end">
+<div class="glass-card w-full p-6 rounded-lg text-center inner-glow relative pt-12">
+<div class="absolute -top-10 left-1/2 -translate-x-1/2 w-20 h-20 rounded-full border-4 border-[#CD7F32] p-1 bg-white shadow-xl">
+<img class="w-full h-full rounded-full" data-alt="High-quality 3D minimalist avatar of a creative individual with short hair and a stylish scarf. The rendering features soft shadows and clean lines. The character is centered within a metallic bronze circular frame, maintaining a consistent professional look with a bright, high-key lighting style and soft pastel secondary colors." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNkZmCla_xJSYO7IyEoYR8Ib5M1Kny8g_4iUV2HFOCb3v6DRwjjJU7zqcWBJQlOL5TieUp3brwg1ylOisIOPYjTM9W9PcW6-wlaeanVQz3iRRR7h9J1cCWOfj3b4eSIycMlLiz27EQVN98CjucCbQzb99ylgNhPQ3sr4_reM1S_AUAAp6HdfvTP7g19ePpYNs2ST2WrynbkoWThJR13vkvBAbsacXAD30i5hE1O3SGB86HeZSSGs93vOtYr6OQryy18xQkTRElDFK_"/>
+</div>
+<div class="inline-flex items-center justify-center bg-[#CD7F32] text-white w-8 h-8 rounded-full mb-2 font-bold">3</div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Mika_Puzzles</h3>
+<p class="text-primary font-bold text-label-caps">11,200 XP</p>
+</div>
+</div>
+</div>
+<!-- Leaderboard Table -->
+<div class="glass-card rounded-lg overflow-hidden inner-glow">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-primary/5 text-label-caps font-label-caps text-on-surface-variant border-b border-outline-variant/20">
+<th class="px-6 py-4">Rank</th>
+<th class="px-6 py-4">Player</th>
+<th class="px-6 py-4 text-right">XP</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10">
+<!-- Row 4 -->
+<tr class="hover:bg-primary/5 transition-colors group">
+<td class="px-6 py-4 font-bold text-on-surface-variant">4</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<img alt="Luna Avatar" class="w-10 h-10 rounded-full bg-surface-variant" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCoj36FTjc3C-psryL_Rd7zFEEthpC1t3L54d_P-TDC8Vgcu-YGzJ_OmAD__iwdgtoZuic4eGvjvahZeFKjHslEVszI4U1840UG7591NywLcytOGCRSVc2TGfLuwWt77wPxq-29RCWjbSExOVwueMXaenW_00sxoJKhvEqJm2xv_SNDn8IWnocwnHBb3yvFcwYxUBCE5fxhf5waUZi_C0ZWKLhZPACXsfvJMxx_0F2LwO13GrQInx54AE_Ju5FEGNWLBeM9VwsNCg-h"/>
+<div>
+<div class="font-bold text-on-surface">Luna_Sky</div>
+<div class="text-xs text-on-surface-variant font-label-caps">Expert</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-right font-black text-primary">9,850</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-primary/5 transition-colors">
+<td class="px-6 py-4 font-bold text-on-surface-variant">5</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<img alt="Devin Avatar" class="w-10 h-10 rounded-full bg-surface-variant" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDEm6nDQ81vRUwYqQDfQU8NDdGGzdVO173_cvlV04xQqkLksUUSsajcjb1HO9SoStU7tYsNatRYwLbDdfQNJsAb3b6UH1KnCC9-kvvibEtaw-Etq3gmcz3MKAGZutkjQTfQKmwkMEj4A_zzClVPqYY1LW0TElT0kEBrynAPDMIejMfI32GwcwUOqIvpla4O0QXPHetKdINpektRVQzNQ88Mk7vcKaGgFocq-UVbhrW8WVI3xqS3CBKMigIwOUt82LlzZs2ZCBqnBGDP"/>
+<div>
+<div class="font-bold text-on-surface">Devin.exe</div>
+<div class="text-xs text-on-surface-variant font-label-caps">Challenger</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-right font-black text-primary">9,200</td>
+</tr>
+<!-- Row 6 (Current User Context) -->
+<tr class="bg-primary/10 border-l-4 border-primary">
+<td class="px-6 py-4 font-bold text-primary">42</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<img alt="Your Avatar" class="w-10 h-10 rounded-full bg-white shadow-sm" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDzP5kIGjLcguhgegkMSgeFtBupOD7cpz3Pp1aOkZOgE9F5yowZ0ujhAz60uATBO6f-6fFg-dWLNVt6jWuqfvzR8HnofNdDjN-4JQoWHjtB4ewVSvcPGMVPnGpAQbSM86CcSrt2cbarU3oW1HzoShXQmj9pwORJAWZrmVHc_Hv5L_ZR3xX1sb7N_FxZIjD8tRXgdPmrYnUrWm0esSz3UQC6bLamrAQxf1jRoZHcWcwu3cLMvK9jAPBOxDbIg3hKeoAE347FFTWO-CJX"/>
+<div>
+<div class="font-bold text-on-surface">You (Felix)</div>
+<div class="text-xs text-primary font-label-caps">Rising Star</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-right font-black text-primary">1,250</td>
+</tr>
+<!-- Row 7 -->
+<tr class="hover:bg-primary/5 transition-colors">
+<td class="px-6 py-4 font-bold text-on-surface-variant">43</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<img alt="Sasha Avatar" class="w-10 h-10 rounded-full bg-surface-variant" src="https://lh3.googleusercontent.com/aida-public/AB6AXuByvbax5YON-nhyN31s3EUH6TRDoam1G130pFIh4jCQKv9wGjhL3B8pJBr32P2NG6EdCsj5IdahaN0GKTVJJAS6mhXUz_-pfWAoDXX2FdWxwo1_dyJIUG8emq_hjrbehLxJ5snBYtT5JNO9P27E7NnpzqTch_JeZ4OXVopTHLCuL5e214H9AIPvwFvVxdK5_41HNQxf3CRUW0wBgSDCheI-brbo4obfHQgZ0JVgYGRv_PvzKJe0sTbVWIZLpkKpuhFM3NkxeJyu3VaN"/>
+<div>
+<div class="font-bold text-on-surface">Sasha_Grey</div>
+<div class="text-xs text-on-surface-variant font-label-caps">Explorer</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-right font-black text-primary">1,200</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Stats Chip Grid -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
+<div class="glass-card p-4 rounded-lg text-center inner-glow">
+<p class="text-label-caps font-label-caps text-on-surface-variant mb-1">Your Rank</p>
+<p class="font-headline-md text-headline-md text-primary">#42</p>
+</div>
+<div class="glass-card p-4 rounded-lg text-center inner-glow">
+<p class="text-label-caps font-label-caps text-on-surface-variant mb-1">Percentile</p>
+<p class="font-headline-md text-headline-md text-primary">Top 15%</p>
+</div>
+<div class="glass-card p-4 rounded-lg text-center inner-glow">
+<p class="text-label-caps font-label-caps text-on-surface-variant mb-1">Win Rate</p>
+<p class="font-headline-md text-headline-md text-primary">64%</p>
+</div>
+<div class="glass-card p-4 rounded-lg text-center inner-glow">
+<p class="text-label-caps font-label-caps text-on-surface-variant mb-1">Friends Rank</p>
+<p class="font-headline-md text-headline-md text-primary">#2</p>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 pb-safe py-3 bg-white/70 backdrop-blur-xl border-t border-white/20 shadow-lg shadow-primary/10 rounded-t-lg">
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1.5 hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="text-label-caps font-label-caps">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-4 py-1.5 scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="leaderboard" style="font-variation-settings: 'FILL' 1;">leaderboard</span>
+<span class="text-label-caps font-label-caps">Ranks</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1.5 hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="text-label-caps font-label-caps">Social</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1.5 hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="text-label-caps font-label-caps">Me</span>
+</a>
+</nav>
+</body></html>

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MindGrid - Welcome Back</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        .glass-card {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .inner-glow {
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.4);
+        }
+        .soft-diffusion {
+            box-shadow: 0 20px 40px -10px rgba(53, 37, 205, 0.08);
+        }
+        .bg-mesh {
+            background-color: #f9f9ff;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(53, 37, 205, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(134, 45, 212, 0.15) 0px, transparent 50%),
+                radial-gradient(at 50% 50%, rgba(100, 168, 254, 0.1) 0px, transparent 50%);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-dim": "#cfdaf2",
+                      "tertiary-fixed-dim": "#ddb7ff",
+                      "on-tertiary": "#ffffff",
+                      "outline-variant": "#c7c4d8",
+                      "outline": "#777587",
+                      "on-tertiary-container": "#ebd2ff",
+                      "on-error": "#ffffff",
+                      "error-container": "#ffdad6",
+                      "inverse-primary": "#c3c0ff",
+                      "inverse-surface": "#263143",
+                      "primary-fixed-dim": "#c3c0ff",
+                      "surface-variant": "#d8e3fb",
+                      "on-secondary": "#ffffff",
+                      "on-surface-variant": "#464555",
+                      "on-secondary-fixed": "#001c39",
+                      "on-primary-fixed": "#0f0069",
+                      "error": "#ba1a1a",
+                      "surface-tint": "#4d44e3",
+                      "inverse-on-surface": "#ecf1ff",
+                      "on-tertiary-fixed-variant": "#6900b3",
+                      "secondary-fixed": "#d4e3ff",
+                      "on-secondary-container": "#003c70",
+                      "primary": "#3525cd",
+                      "secondary-fixed-dim": "#a4c9ff",
+                      "tertiary-fixed": "#f0dbff",
+                      "surface-container-lowest": "#ffffff",
+                      "primary-fixed": "#e2dfff",
+                      "on-tertiary-fixed": "#2c0051",
+                      "on-error-container": "#93000a",
+                      "on-surface": "#111c2d",
+                      "surface-bright": "#f9f9ff",
+                      "background": "#f9f9ff",
+                      "surface": "#f9f9ff",
+                      "surface-container-high": "#dee8ff",
+                      "secondary-container": "#64a8fe",
+                      "on-primary": "#ffffff",
+                      "on-primary-container": "#dad7ff",
+                      "tertiary": "#6b00b7",
+                      "surface-container-highest": "#d8e3fb",
+                      "surface-container-low": "#f0f3ff",
+                      "on-secondary-fixed-variant": "#004883",
+                      "tertiary-container": "#862dd4",
+                      "surface-container": "#e7eeff",
+                      "on-primary-fixed-variant": "#3323cc",
+                      "on-background": "#111c2d",
+                      "secondary": "#0060ac",
+                      "primary-container": "#4f46e5"
+              },
+              "borderRadius": {
+                      "DEFAULT": "1rem",
+                      "lg": "2rem",
+                      "xl": "3rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "margin-desktop": "40px",
+                      "gutter": "16px",
+                      "margin-mobile": "20px",
+                      "unit": "4px",
+                      "container-max": "1200px"
+              },
+              "fontFamily": {
+                      "display-lg": ["Inter"],
+                      "body-sm": ["Inter"],
+                      "label-caps": ["Inter"],
+                      "headline-md": ["Inter"],
+                      "body-lg": ["Inter"],
+                      "display-lg-mobile": ["Inter"]
+              },
+              "fontSize": {
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                      "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                      "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "display-lg-mobile": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "800"}]
+              }
+            },
+          },
+        }
+      </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-mesh min-h-screen flex items-center justify-center p-gutter">
+<!-- Auth Shell Suppression: No TopAppBar or BottomNavBar as per Transactional Task mandate -->
+<main class="w-full max-w-md">
+<div class="glass-card soft-diffusion rounded-xl p-8 flex flex-col items-center">
+<!-- Brand Section -->
+<div class="mb-10 text-center">
+<div class="w-20 h-20 bg-primary-container rounded-lg flex items-center justify-center mb-6 mx-auto inner-glow shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-white text-5xl" style="font-variation-settings: 'FILL' 1;">grid_view</span>
+</div>
+<h1 class="font-headline-md text-headline-md text-primary tracking-tight mb-2">MindGrid</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Welcome Back, Genius</p>
+</div>
+<!-- Form Section -->
+<form class="w-full space-y-5" onsubmit="return false;">
+<div class="space-y-1">
+<label class="font-label-caps text-label-caps text-on-surface-variant px-1">Email Address</label>
+<div class="relative">
+<input class="w-full h-14 px-5 bg-surface-container-low border-0 rounded-xl focus:ring-2 focus:ring-primary/20 transition-all font-body-sm text-body-sm text-on-surface placeholder:text-outline/50" placeholder="clara@example.com" type="email"/>
+</div>
+</div>
+<div class="space-y-1">
+<div class="flex justify-between items-center px-1">
+<label class="font-label-caps text-label-caps text-on-surface-variant">Password</label>
+<a class="font-label-caps text-label-caps text-primary" href="#">Forgot?</a>
+</div>
+<div class="relative">
+<input class="w-full h-14 px-5 bg-surface-container-low border-0 rounded-xl focus:ring-2 focus:ring-primary/20 transition-all font-body-sm text-body-sm text-on-surface placeholder:text-outline/50" placeholder="••••••••" type="password"/>
+</div>
+</div>
+<button class="w-full h-16 bg-gradient-to-b from-primary to-primary-container text-white font-headline-md text-headline-md rounded-xl inner-glow shadow-xl shadow-primary/20 active:scale-95 transition-transform duration-200 mt-4">
+                    Enter Grid
+                </button>
+</form>
+<!-- Social Divider -->
+<div class="w-full flex items-center my-8">
+<div class="flex-1 h-px bg-outline-variant/30"></div>
+<span class="px-4 font-label-caps text-label-caps text-outline/60">OR CONNECT WITH</span>
+<div class="flex-1 h-px bg-outline-variant/30"></div>
+</div>
+<!-- Social Login Options -->
+<div class="flex gap-4 w-full">
+<button class="flex-1 h-14 glass-card rounded-xl flex items-center justify-center border border-outline-variant/50 hover:bg-white transition-colors active:scale-95">
+<img alt="Google" class="w-6 h-6" data-alt="A high-fidelity digital illustration of the Google brand icon, captured in a studio lighting setup. The aesthetic is clean and modern, following a light-mode color palette with white and soft grays. The icon is centered in a minimalist environment that suggests a premium, polished user interface experience typical of high-end mobile applications." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDb-4cgtJKsQrLFu9oC7JxfQknOnZ3MY6Q5bkPxqjNle2ErB7X6mtH-3T3fx1VJ_mtdp_kbXq_SKq0FBQb-KfKws8Vo2tnczRdWFgS34qgzDitytmLd8Rza_3zixKL_g6yg2NR_DQlGsip9_cgjfWD1n-8Rd8k3nihwtZ4KUNj7uvHTXUOqa0kqApRsNaof7xJ8zo5q23TJccsoZgg-OvgApRB1bA_dWhXyR4UoI_vhnmhIJ0-LQhshSXxE7rAwnxNP4OBeqt4MKJKk"/>
+</button>
+<button class="flex-1 h-14 glass-card rounded-xl flex items-center justify-center border border-outline-variant/50 hover:bg-white transition-colors active:scale-95">
+<span class="material-symbols-outlined text-on-surface text-2xl" style="font-variation-settings: 'FILL' 1;">File</span>
+</button>
+</div>
+<!-- Toggle Auth Mode -->
+<p class="mt-10 font-body-sm text-body-sm text-on-surface-variant">
+                New to the grid? 
+                <a class="text-primary font-bold hover:underline" href="#">Create Account</a>
+</p>
+</div>
+<!-- Decorative background elements -->
+<div class="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] bg-secondary-container/20 blur-[120px] rounded-full z-[-1]"></div>
+<div class="fixed bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-tertiary-container/10 blur-[120px] rounded-full z-[-1]"></div>
+</main>
+<!-- Visual Polish: Floating Tiles in Background -->
+<div class="fixed inset-0 pointer-events-none z-[-2] overflow-hidden opacity-40">
+<div class="absolute top-[15%] right-[10%] w-24 h-24 glass-card rounded-lg rotate-12 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary-fixed-dim text-4xl">extension</span>
+</div>
+<div class="absolute bottom-[20%] left-[5%] w-32 h-32 glass-card rounded-lg -rotate-12 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary-fixed-dim text-5xl">psychology</span>
+</div>
+<div class="absolute top-[60%] right-[-2%] w-20 h-20 glass-card rounded-lg rotate-45 flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary-fixed-dim text-3xl">lightbulb</span>
+</div>
+</div>
+</body></html>

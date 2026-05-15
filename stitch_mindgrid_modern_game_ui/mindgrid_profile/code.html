@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Profile - MindGrid</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container": "#e7eeff",
+                        "surface-variant": "#d8e3fb",
+                        "surface": "#f9f9ff",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "surface-dim": "#cfdaf2",
+                        "inverse-primary": "#c3c0ff",
+                        "error-container": "#ffdad6",
+                        "on-secondary-container": "#003c70",
+                        "primary": "#3525cd",
+                        "secondary-fixed": "#d4e3ff",
+                        "secondary-fixed-dim": "#a4c9ff",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "on-surface": "#111c2d",
+                        "on-background": "#111c2d",
+                        "tertiary": "#6b00b7",
+                        "outline-variant": "#c7c4d8",
+                        "on-secondary-fixed-variant": "#004883",
+                        "surface-container-highest": "#d8e3fb",
+                        "on-tertiary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "on-surface-variant": "#464555",
+                        "on-primary-container": "#dad7ff",
+                        "on-primary-fixed": "#0f0069",
+                        "tertiary-fixed-dim": "#ddb7ff",
+                        "tertiary-fixed": "#f0dbff",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-container": "#4f46e5",
+                        "on-error-container": "#93000a",
+                        "secondary-container": "#64a8fe",
+                        "primary-fixed": "#e2dfff",
+                        "error": "#ba1a1a",
+                        "on-primary": "#ffffff",
+                        "inverse-on-surface": "#ecf1ff",
+                        "secondary": "#0060ac",
+                        "surface-bright": "#f9f9ff",
+                        "on-secondary": "#ffffff",
+                        "outline": "#777587",
+                        "surface-container-low": "#f0f3ff",
+                        "inverse-surface": "#263143",
+                        "on-secondary-fixed": "#001c39",
+                        "tertiary-container": "#862dd4",
+                        "background": "#f9f9ff",
+                        "on-tertiary-container": "#ebd2ff",
+                        "on-tertiary-fixed": "#2c0051",
+                        "on-tertiary-fixed-variant": "#6900b3",
+                        "surface-tint": "#4d44e3",
+                        "surface-container-high": "#dee8ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "20px",
+                        "unit": "4px",
+                        "gutter": "16px",
+                        "margin-desktop": "40px",
+                        "container-max": "1200px"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-sm": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+        .inner-glow {
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.5);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen pb-24 md:pb-0">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-gutter py-2 max-w-container-max mx-auto bg-white/70 dark:bg-surface-container/70 backdrop-blur-md border-b border-white/20 dark:border-outline-variant/20 shadow-sm shadow-primary/5">
+<div class="flex items-center gap-2">
+<span class="text-headline-md font-headline-md font-black tracking-tight text-primary dark:text-inverse-primary">MindGrid</span>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden md:flex gap-6 mr-6">
+<a class="text-on-surface-variant dark:text-surface-variant font-label-caps text-label-caps hover:bg-primary/10 transition-colors px-3 py-1 rounded-full" href="#">Home</a>
+<a class="text-on-surface-variant dark:text-surface-variant font-label-caps text-label-caps hover:bg-primary/10 transition-colors px-3 py-1 rounded-full" href="#">Ranks</a>
+<a class="text-on-surface-variant dark:text-surface-variant font-label-caps text-label-caps hover:bg-primary/10 transition-colors px-3 py-1 rounded-full" href="#">Social</a>
+<a class="text-primary dark:text-inverse-primary font-bold font-label-caps text-label-caps px-3 py-1 rounded-full" href="#">Me</a>
+</div>
+<div class="bg-primary-container text-on-primary-container px-4 py-1.5 rounded-full font-label-caps text-label-caps flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+                1,250 XP
+            </div>
+<button class="material-symbols-outlined p-2 text-on-surface-variant hover:bg-primary/10 transition-colors rounded-full">settings</button>
+</div>
+</header>
+<main class="pt-24 px-gutter max-w-container-max mx-auto space-y-8">
+<!-- Central Player Card -->
+<section class="glass-card rounded-lg p-8 md:p-12 shadow-lg shadow-primary/5 flex flex-col md:flex-row items-center gap-8 relative overflow-hidden">
+<div class="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full -mr-20 -mt-20 blur-3xl"></div>
+<div class="relative">
+<div class="w-32 h-32 md:w-48 md:h-48 rounded-full border-4 border-white shadow-xl overflow-hidden ring-4 ring-primary-fixed">
+<img alt="Player avatar with rank badge" class="w-full h-full object-cover" data-alt="A professional studio portrait of a modern digital artist character, wearing sleek tech-wear, with a soft cinematic glow against a minimalist neutral backdrop. The lighting is bright and high-key, matching a premium light-mode UI aesthetic. The character has a friendly expression and sharp features, rendered in high resolution with subtle depth of field." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBEJF7jsnoHWxPdXW7tsPqRZykUgYYIOly4TvHllHyE6E_ceMVloClMSM7N2IDA7QvjmgnxYi3f4SeizI9J509l-SdmRF2Bla8GRI8B6tqLOtG1Hgj0lMk-DkhVnwFz1WZp0ZM5W5D3p190lXsyP02y4EX9O17vpKdYLqLu4yghSVt12czZunz6AzxqyeBQJN7rjRIK6EGRiv6JBm9tkpLlrkaRpojO3eQ7pQy9iEEhm8FKUsR8EgOX8RSwnEpIxEXHUkxIrSemNYFR"/>
+</div>
+<div class="absolute bottom-2 right-2 bg-primary text-white p-2 rounded-full shadow-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+</div>
+</div>
+<div class="flex-1 w-full space-y-6">
+<div class="text-center md:text-left">
+<h1 class="text-display-lg font-display-lg text-on-surface">Alex Gridmaster</h1>
+<p class="text-body-lg font-body-lg text-on-surface-variant">Global Rank: #412 • Pro Puzzle Solver</p>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between items-end">
+<span class="text-label-caps font-label-caps text-primary uppercase">XP Level 24</span>
+<span class="text-label-caps font-label-caps text-on-surface-variant">4,250 / 5,000 XP</span>
+</div>
+<div class="h-4 w-full bg-surface-variant rounded-full overflow-hidden p-0.5">
+<div class="h-full bg-gradient-to-r from-primary to-secondary-container rounded-full" style="width: 85%;"></div>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant text-center md:text-left">750 XP until Level 25 Achievement!</p>
+</div>
+</div>
+</section>
+<!-- Stats Grid -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="glass-card rounded-lg p-6 shadow-sm flex flex-col items-center text-center space-y-2 inner-glow">
+<span class="text-label-caps font-label-caps text-on-surface-variant uppercase">Win Rate</span>
+<span class="text-headline-md font-headline-md text-primary">78.4%</span>
+<div class="flex gap-1">
+<span class="w-1 h-3 bg-primary rounded-full"></span>
+<span class="w-1 h-3 bg-primary rounded-full"></span>
+<span class="w-1 h-3 bg-primary rounded-full"></span>
+<span class="w-1 h-3 bg-primary/20 rounded-full"></span>
+</div>
+</div>
+<div class="glass-card rounded-lg p-6 shadow-sm flex flex-col items-center text-center space-y-2 inner-glow">
+<span class="text-label-caps font-label-caps text-on-surface-variant uppercase">Average Time</span>
+<span class="text-headline-md font-headline-md text-primary">02:45</span>
+<span class="text-body-sm font-body-sm text-green-600 flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">trending_up</span> -12s this week
+                </span>
+</div>
+<div class="glass-card rounded-lg p-6 shadow-sm flex flex-col items-center text-center space-y-2 inner-glow">
+<span class="text-label-caps font-label-caps text-on-surface-variant uppercase">Total Games</span>
+<span class="text-headline-md font-headline-md text-primary">1,402</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant">Top 5% active players</span>
+</div>
+</section>
+<!-- Main Content Area: Match History & Achievements -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Match History (Asymmetric) -->
+<section class="lg:col-span-8 space-y-6">
+<div class="flex justify-between items-center">
+<h2 class="text-headline-md font-headline-md text-on-surface">Match History</h2>
+<button class="text-label-caps font-label-caps text-primary hover:underline">View All</button>
+</div>
+<div class="space-y-4">
+<!-- History Item 1 -->
+<div class="glass-card rounded-lg p-4 flex items-center justify-between hover:bg-white/90 transition-all border-l-4 border-primary">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div>
+<p class="text-body-lg font-bold text-on-surface">Classic Grid - Hard</p>
+<p class="text-body-sm font-body-sm text-on-surface-variant">2 minutes ago • 2,400 pts</p>
+</div>
+</div>
+<div class="text-right">
+<span class="text-headline-md font-bold text-primary">+45 XP</span>
+</div>
+</div>
+<!-- History Item 2 -->
+<div class="glass-card rounded-lg p-4 flex items-center justify-between hover:bg-white/90 transition-all border-l-4 border-error">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-error/10 rounded-full flex items-center justify-center text-error">
+<span class="material-symbols-outlined">cancel</span>
+</div>
+<div>
+<p class="text-body-lg font-bold text-on-surface">Time Trial - Elite</p>
+<p class="text-body-sm font-body-sm text-on-surface-variant">1 hour ago • 1,120 pts</p>
+</div>
+</div>
+<div class="text-right">
+<span class="text-headline-md font-bold text-on-surface-variant">+10 XP</span>
+</div>
+</div>
+<!-- History Item 3 -->
+<div class="glass-card rounded-lg p-4 flex items-center justify-between hover:bg-white/90 transition-all border-l-4 border-primary">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div>
+<p class="text-body-lg font-bold text-on-surface">Sudoku Variant</p>
+<p class="text-body-sm font-body-sm text-on-surface-variant">3 hours ago • 3,100 pts</p>
+</div>
+</div>
+<div class="text-right">
+<span class="text-headline-md font-bold text-primary">+55 XP</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Achievements Sidebar (Bento Grid) -->
+<section class="lg:col-span-4 space-y-6">
+<h2 class="text-headline-md font-headline-md text-on-surface">Achievements</h2>
+<div class="grid grid-cols-2 gap-4">
+<div class="glass-card p-4 rounded-lg flex flex-col items-center text-center gap-2 border-b-4 border-tertiary shadow-sm">
+<span class="material-symbols-outlined text-[32px] text-tertiary" style="font-variation-settings: 'FILL' 1;">bolt</span>
+<span class="text-label-caps font-label-caps text-on-surface leading-tight">Quick Thinker</span>
+</div>
+<div class="glass-card p-4 rounded-lg flex flex-col items-center text-center gap-2 border-b-4 border-primary shadow-sm">
+<span class="material-symbols-outlined text-[32px] text-primary" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+<span class="text-label-caps font-label-caps text-on-surface leading-tight">Streak Master</span>
+</div>
+<div class="glass-card p-4 rounded-lg flex flex-col items-center text-center gap-2 border-b-4 border-secondary-container shadow-sm">
+<span class="material-symbols-outlined text-[32px] text-secondary" style="font-variation-settings: 'FILL' 1;">psychology</span>
+<span class="text-label-caps font-label-caps text-on-surface leading-tight">Mind Palace</span>
+</div>
+<div class="glass-card p-4 rounded-lg flex flex-col items-center text-center gap-2 bg-surface-variant/30 opacity-50 border-b-4 border-outline grayscale">
+<span class="material-symbols-outlined text-[32px] text-outline">lock</span>
+<span class="text-label-caps font-label-caps text-on-surface leading-tight">Grandmaster</span>
+</div>
+</div>
+<button class="w-full py-4 glass-card rounded-lg text-primary font-bold hover:bg-primary hover:text-white transition-all shadow-sm">
+                    Show All Badges
+                </button>
+</section>
+</div>
+<!-- Unlockable Themes Section -->
+<section class="pb-12 space-y-6">
+<h2 class="text-headline-md font-headline-md text-on-surface">Unlockable Themes</h2>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Theme 1: Neon Night -->
+<div class="group cursor-pointer">
+<div class="aspect-video rounded-lg overflow-hidden bg-zinc-900 mb-4 shadow-lg group-hover:scale-[1.02] transition-transform">
+<div class="w-full h-full flex items-center justify-center p-4">
+<div class="grid grid-cols-3 gap-2 w-full">
+<div class="aspect-square bg-primary/80 rounded shadow-[0_0_15px_rgba(53,37,205,0.5)]"></div>
+<div class="aspect-square bg-tertiary/80 rounded shadow-[0_0_15px_rgba(107,0,183,0.5)]"></div>
+<div class="aspect-square bg-primary/80 rounded shadow-[0_0_15px_rgba(53,37,205,0.5)]"></div>
+</div>
+</div>
+</div>
+<div class="flex justify-between items-center">
+<h3 class="text-body-lg font-bold text-on-surface">Neon Night</h3>
+<span class="px-3 py-1 bg-surface-variant text-on-surface-variant text-label-caps font-label-caps rounded-full">Equipped</span>
+</div>
+</div>
+<!-- Theme 2: Minimal Glass -->
+<div class="group cursor-pointer">
+<div class="aspect-video rounded-lg overflow-hidden bg-slate-100 mb-4 shadow-lg group-hover:scale-[1.02] transition-transform relative">
+<div class="absolute inset-0 bg-gradient-to-br from-white/40 to-white/10 backdrop-blur-md"></div>
+<div class="w-full h-full flex items-center justify-center p-4 relative z-10">
+<div class="grid grid-cols-3 gap-2 w-full">
+<div class="aspect-square bg-white border border-white/50 rounded shadow-sm"></div>
+<div class="aspect-square bg-white border border-white/50 rounded shadow-sm"></div>
+<div class="aspect-square bg-white border border-white/50 rounded shadow-sm"></div>
+</div>
+</div>
+</div>
+<div class="flex justify-between items-center">
+<h3 class="text-body-lg font-bold text-on-surface">Minimal Glass</h3>
+<button class="px-3 py-1 bg-primary text-white text-label-caps font-label-caps rounded-full hover:bg-primary-container transition-colors">Select</button>
+</div>
+</div>
+<!-- Theme 3: Retro Arcade -->
+<div class="group cursor-pointer opacity-75">
+<div class="aspect-video rounded-lg overflow-hidden bg-orange-50 mb-4 shadow-lg group-hover:scale-[1.02] transition-transform flex items-center justify-center relative">
+<div class="absolute inset-0 flex flex-col items-center justify-center bg-black/40 text-white z-20">
+<span class="material-symbols-outlined mb-2">lock</span>
+<span class="text-label-caps font-label-caps">Level 30 Required</span>
+</div>
+<div class="w-full h-full flex items-center justify-center p-4">
+<div class="grid grid-cols-3 gap-2 w-full">
+<div class="aspect-square bg-orange-400 rounded"></div>
+<div class="aspect-square bg-yellow-400 rounded"></div>
+<div class="aspect-square bg-orange-400 rounded"></div>
+</div>
+</div>
+</div>
+<div class="flex justify-between items-center">
+<h3 class="text-body-lg font-bold text-on-surface">Retro Arcade</h3>
+<span class="text-label-caps font-label-caps text-on-surface-variant">LOCKED</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 pb-safe py-3 bg-white/70 dark:bg-surface-container/70 backdrop-blur-xl border-t border-white/20 dark:border-outline-variant/20 shadow-lg shadow-primary/10">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant px-4 py-1.5 hover:text-primary dark:hover:text-primary-fixed-dim transition-all" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="text-label-caps font-label-caps">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant px-4 py-1.5 hover:text-primary dark:hover:text-primary-fixed-dim transition-all" href="#">
+<span class="material-symbols-outlined">leaderboard</span>
+<span class="text-label-caps font-label-caps">Ranks</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant px-4 py-1.5 hover:text-primary dark:hover:text-primary-fixed-dim transition-all" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="text-label-caps font-label-caps">Social</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-4 py-1.5 scale-90 duration-150 ease-out" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="text-label-caps font-label-caps">Me</span>
+</a>
+</nav>
+</body></html>

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "outline-variant": "#c7c4d8",
+                    "on-secondary-container": "#003c70",
+                    "on-tertiary-fixed": "#2c0051",
+                    "surface": "#f9f9ff",
+                    "surface-container-high": "#dee8ff",
+                    "on-secondary-fixed": "#001c39",
+                    "primary-container": "#4f46e5",
+                    "on-tertiary-container": "#ebd2ff",
+                    "on-tertiary-fixed-variant": "#6900b3",
+                    "secondary": "#0060ac",
+                    "on-error": "#ffffff",
+                    "surface-tint": "#4d44e3",
+                    "surface-container-lowest": "#ffffff",
+                    "secondary-fixed": "#d4e3ff",
+                    "surface-container": "#e7eeff",
+                    "outline": "#777587",
+                    "on-secondary": "#ffffff",
+                    "inverse-on-surface": "#ecf1ff",
+                    "on-primary-container": "#dad7ff",
+                    "primary-fixed-dim": "#c3c0ff",
+                    "on-surface-variant": "#464555",
+                    "on-error-container": "#93000a",
+                    "primary": "#3525cd",
+                    "surface-container-low": "#f0f3ff",
+                    "surface-bright": "#f9f9ff",
+                    "tertiary-container": "#862dd4",
+                    "error": "#ba1a1a",
+                    "on-primary-fixed": "#0f0069",
+                    "on-primary": "#ffffff",
+                    "inverse-surface": "#263143",
+                    "surface-container-highest": "#d8e3fb",
+                    "on-surface": "#111c2d",
+                    "secondary-fixed-dim": "#a4c9ff",
+                    "tertiary-fixed-dim": "#ddb7ff",
+                    "tertiary-fixed": "#f0dbff",
+                    "on-primary-fixed-variant": "#3323cc",
+                    "background": "#f9f9ff",
+                    "tertiary": "#6b00b7",
+                    "secondary-container": "#64a8fe",
+                    "on-secondary-fixed-variant": "#004883",
+                    "on-background": "#111c2d",
+                    "surface-dim": "#cfdaf2",
+                    "inverse-primary": "#c3c0ff",
+                    "error-container": "#ffdad6",
+                    "on-tertiary": "#ffffff",
+                    "primary-fixed": "#e2dfff",
+                    "surface-variant": "#d8e3fb"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "container-max": "1200px",
+                    "unit": "4px",
+                    "gutter": "16px",
+                    "margin-mobile": "20px",
+                    "margin-desktop": "40px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Inter"],
+                    "display-lg-mobile": ["Inter"],
+                    "label-caps": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "display-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "display-lg-mobile": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 8px 32px 0 rgba(53, 37, 205, 0.08);
+        }
+        .inner-glow {
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.5);
+        }
+        .bg-mesh {
+            background-color: #f9f9ff;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(53, 37, 205, 0.1) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(107, 0, 183, 0.1) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(0, 96, 172, 0.1) 0px, transparent 50%),
+                radial-gradient(at 0% 100%, rgba(79, 70, 229, 0.1) 0px, transparent 50%);
+        }
+    </style>
+</head>
+<body class="bg-mesh min-h-screen font-body-lg text-on-background selection:bg-primary-container selection:text-on-primary-container overflow-x-hidden">
+<!-- Top Navigation -->
+<nav class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-gutter py-2 max-w-container-max mx-auto bg-white/70 dark:bg-surface-container/70 backdrop-blur-md border-b border-white/20 dark:border-outline-variant/20 shadow-sm shadow-primary/5">
+<div class="flex items-center gap-2">
+<span class="text-headline-md font-headline-md font-black tracking-tight text-primary dark:text-inverse-primary">MindGrid</span>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 bg-primary/5 px-3 py-1 rounded-full border border-primary/10">
+<span class="material-symbols-outlined text-primary text-[18px]" style="font-variation-settings: 'FILL' 1;">stars</span>
+<span class="text-label-caps font-label-caps text-primary">1,250 XP</span>
+</div>
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+</nav>
+<!-- Main Game Over Content -->
+<main class="relative z-10 flex flex-col items-center justify-center min-h-screen px-margin-mobile pt-20 pb-24 lg:px-margin-desktop">
+<!-- Blurred Background Grid Simulation -->
+<div class="absolute inset-0 z-0 opacity-20 pointer-events-none flex items-center justify-center overflow-hidden">
+<div class="grid grid-cols-4 gap-4 w-full max-w-md blur-3xl transform rotate-12 scale-150">
+<div class="aspect-square bg-primary-container rounded-lg"></div>
+<div class="aspect-square bg-secondary-container rounded-lg"></div>
+<div class="aspect-square bg-tertiary-container rounded-lg"></div>
+<div class="aspect-square bg-primary rounded-lg"></div>
+<div class="aspect-square bg-secondary rounded-lg"></div>
+<div class="aspect-square bg-primary-container rounded-lg"></div>
+<div class="aspect-square bg-tertiary rounded-lg"></div>
+<div class="aspect-square bg-primary rounded-lg"></div>
+</div>
+</div>
+<section class="w-full max-w-lg z-10 flex flex-col gap-8 items-center">
+<!-- Result Card -->
+<div class="glass-card w-full rounded-lg p-8 flex flex-col items-center gap-6 relative overflow-hidden">
+<!-- Level Up Badge -->
+<div class="absolute -top-1 -right-1">
+<div class="bg-tertiary text-on-tertiary px-6 py-2 rounded-bl-lg rounded-tr-lg font-bold text-label-caps flex items-center gap-2 shadow-lg animate-pulse">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">trending_up</span>
+                        Level Up!
+                    </div>
+</div>
+<!-- Main Header -->
+<div class="text-center">
+<p class="text-label-caps font-label-caps text-primary mb-2">SESSION COMPLETE</p>
+<h1 class="text-display-lg-mobile md:text-display-lg font-display-lg-mobile md:font-display-lg text-on-surface tracking-tighter">Excellent Focus!</h1>
+</div>
+<!-- Final Score Section -->
+<div class="w-full py-6 flex flex-col items-center bg-white/40 rounded-lg border border-white/60 inner-glow">
+<span class="text-label-caps font-label-caps text-on-surface-variant">FINAL SCORE</span>
+<span class="text-[64px] font-black leading-none text-primary tracking-tighter my-2">12,450</span>
+<div class="flex gap-4 mt-2">
+<div class="flex items-center gap-1.5 px-3 py-1 bg-primary/10 rounded-full">
+<span class="material-symbols-outlined text-[16px] text-primary" style="font-variation-settings: 'FILL' 1;">bolt</span>
+<span class="text-label-caps font-label-caps text-primary">+450 XP</span>
+</div>
+</div>
+</div>
+<!-- Stats Grid -->
+<div class="grid grid-cols-2 gap-4 w-full">
+<div class="bg-surface-container-low p-4 rounded-lg border border-white/30 flex flex-col">
+<span class="material-symbols-outlined text-secondary mb-1">grid_view</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant">Total Matches</span>
+<span class="text-headline-md font-headline-md text-on-surface">48</span>
+</div>
+<div class="bg-surface-container-low p-4 rounded-lg border border-white/30 flex flex-col">
+<span class="material-symbols-outlined text-tertiary mb-1">timer</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant">Time Taken</span>
+<span class="text-headline-md font-headline-md text-on-surface">02:45</span>
+</div>
+</div>
+<!-- Progress Section -->
+<div class="w-full space-y-3">
+<div class="flex justify-between items-end">
+<div class="flex flex-col">
+<span class="text-label-caps font-label-caps text-on-surface-variant">RANK PROGRESS</span>
+<span class="text-body-lg font-body-lg text-on-surface font-bold">Elite Strategist</span>
+</div>
+<span class="text-label-caps font-label-caps text-primary">850 / 1000 XP</span>
+</div>
+<div class="h-4 w-full bg-surface-container-highest rounded-full overflow-hidden p-0.5 border border-white/50 shadow-inner">
+<div class="h-full bg-gradient-to-r from-secondary to-tertiary rounded-full relative overflow-hidden" style="width: 85%;">
+<div class="absolute inset-0 bg-white/20 w-full h-full skew-x-[-20deg] translate-x-[-10%] blur-sm"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="w-full flex flex-col gap-4">
+<button class="w-full h-16 bg-gradient-to-b from-primary-container to-primary text-on-primary rounded-lg font-headline-md text-headline-md inner-glow hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3 shadow-xl shadow-primary/20">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+                    Play Again
+                </button>
+<button class="w-full h-14 bg-white/40 hover:bg-white/60 text-secondary rounded-lg font-body-lg font-bold border border-secondary/20 hover:border-secondary/40 active:scale-95 transition-all flex items-center justify-center gap-3 backdrop-blur-sm">
+<span class="material-symbols-outlined">dashboard</span>
+                    Back to Lobby
+                </button>
+</div>
+</section>
+<!-- Celebration Visual Elements -->
+<div class="absolute top-1/4 left-10 hidden lg:block opacity-40">
+<span class="material-symbols-outlined text-[48px] text-tertiary" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+</div>
+<div class="absolute bottom-1/4 right-10 hidden lg:block opacity-40">
+<span class="material-symbols-outlined text-[48px] text-secondary" style="font-variation-settings: 'FILL' 1;">star_half</span>
+</div>
+</main>
+<!-- Bottom Navigation (Shared Component Logic) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 pb-safe py-3 bg-white/70 dark:bg-surface-container/70 backdrop-blur-xl border-t border-white/20 dark:border-outline-variant/20 shadow-lg shadow-primary/10 rounded-t-lg md:hidden">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant px-4 py-1.5 hover:text-primary dark:hover:text-primary-fixed-dim transition-all" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="text-label-caps font-label-caps">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant px-4 py-1.5 hover:text-primary dark:hover:text-primary-fixed-dim transition-all" href="#">
+<span class="material-symbols-outlined">leaderboard</span>
+<span class="text-label-caps font-label-caps">Ranks</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant px-4 py-1.5 hover:text-primary dark:hover:text-primary-fixed-dim transition-all" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="text-label-caps font-label-caps">Social</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-4 py-1.5 scale-90 duration-150 ease-out" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="text-label-caps font-label-caps">Me</span>
+</a>
+</nav>
+<!-- Decorative Image in Background -->
+<div class="fixed inset-0 pointer-events-none -z-10 overflow-hidden opacity-5">
+<img alt="Background pattern" class="w-full h-full object-cover grayscale brightness-150" data-alt="A macro photography shot of iridescent glass tiles arranged in a complex geometric grid pattern. The lighting is soft and ethereal, highlighting sharp edges and translucent depths. A palette of cool indigo and violet tones creates a serene yet sophisticated atmosphere, embodying digital clarity and premium entertainment design." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCpmQo1Ig8No0p2Hx9ooNhpac6Kk-mXObFguEtsw9IAjAMzYMGCvrOUWmJP28S1QfTdKSy-DTTr_boauQBFqDtdrTVKLbdSNlyr2B31T0MXg5ull4l3NYuAwxqQinMxbrZBV4pkX25tFgmeObufwEfmU-_h_eo990ZVhZY_ocPZIDRUVLstBzdvl_E4ogaF6VvJIl0H2FNxjKuiXZsHEs1Jg4cNsoq_B0VjX0lgr23sD8UuDz2eDALrd7CWkiFgWZsaIJoqTdt7TAkj"/>
+</div>
+</body></html>

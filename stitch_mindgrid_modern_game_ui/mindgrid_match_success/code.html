@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Prevent scrolling under the modal */
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .inner-glow {
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.5);
+        }
+        .soft-diffusion {
+            box-shadow: 0 20px 40px -10px rgba(53, 37, 205, 0.08);
+        }
+        .game-grid-pattern {
+            background-color: #f9f9ff;
+            background-image: radial-gradient(#dee8ff 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        /* Floating animation simulation via CSS for reward items */
+        .float-up {
+            animation: floatUp 2s ease-out infinite;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(10px); opacity: 0; }
+            20% { opacity: 1; }
+            100% { transform: translateY(-40px); opacity: 0; }
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline-variant": "#c7c4d8",
+                        "on-secondary-container": "#003c70",
+                        "on-tertiary-fixed": "#2c0051",
+                        "surface": "#f9f9ff",
+                        "surface-container-high": "#dee8ff",
+                        "on-secondary-fixed": "#001c39",
+                        "primary-container": "#4f46e5",
+                        "on-tertiary-container": "#ebd2ff",
+                        "on-tertiary-fixed-variant": "#6900b3",
+                        "secondary": "#0060ac",
+                        "on-error": "#ffffff",
+                        "surface-tint": "#4d44e3",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-fixed": "#d4e3ff",
+                        "surface-container": "#e7eeff",
+                        "outline": "#777587",
+                        "on-secondary": "#ffffff",
+                        "inverse-on-surface": "#ecf1ff",
+                        "on-primary-container": "#dad7ff",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "on-surface-variant": "#464555",
+                        "on-error-container": "#93000a",
+                        "primary": "#3525cd",
+                        "surface-container-low": "#f0f3ff",
+                        "surface-bright": "#f9f9ff",
+                        "tertiary-container": "#862dd4",
+                        "error": "#ba1a1a",
+                        "on-primary-fixed": "#0f0069",
+                        "on-primary": "#ffffff",
+                        "inverse-surface": "#263143",
+                        "surface-container-highest": "#d8e3fb",
+                        "on-surface": "#111c2d",
+                        "secondary-fixed-dim": "#a4c9ff",
+                        "tertiary-fixed-dim": "#ddb7ff",
+                        "tertiary-fixed": "#f0dbff",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "background": "#f9f9ff",
+                        "tertiary": "#6b00b7",
+                        "secondary-container": "#64a8fe",
+                        "on-secondary-fixed-variant": "#004883",
+                        "on-background": "#111c2d",
+                        "surface-dim": "#cfdaf2",
+                        "inverse-primary": "#c3c0ff",
+                        "error-container": "#ffdad6",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed": "#e2dfff",
+                        "surface-variant": "#d8e3fb"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-max": "1200px",
+                        "unit": "4px",
+                        "gutter": "16px",
+                        "margin-mobile": "20px",
+                        "margin-desktop": "40px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Inter"],
+                        "display-lg-mobile": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "display-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "display-lg-mobile": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800" }]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface overflow-hidden">
+<!-- Top App Bar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-gutter py-2 max-w-container-max mx-auto bg-white/70 dark:bg-surface-container/70 backdrop-blur-md border-b border-white/20 dark:border-outline-variant/20 shadow-sm shadow-primary/5">
+<div class="text-headline-md font-headline-md font-black tracking-tight text-primary dark:text-inverse-primary">MindGrid</div>
+<div class="flex items-center gap-4">
+<div class="px-3 py-1 rounded-full bg-primary/10 text-primary font-bold text-label-caps">1,250 XP</div>
+<button class="material-symbols-outlined text-on-surface-variant hover:bg-primary/10 transition-colors p-2 rounded-full">settings</button>
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary/20">
+<img alt="Avatar" data-alt="A professional 3D character avatar of a young gamer with a focused expression, wearing sleek futuristic headphones. The character is set against a clean, light-blue studio background with soft cinematic lighting. The aesthetic is highly polished and minimalist, reflecting a premium gaming identity with subtle purple highlights on the clothing." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDeeTRjtPHilbzmfmNBVdHMyhCPeZhlzI39UbayyoAF1zzqWcwlsVcSguzWZJ1eAGvgybpuOrUQyos9ACUauxtviX6diNgfDYw63mEDn2oApRSPUqnjMo8xfLV8XSgYqmyhcjSy4sdBwUjZAx3kTgoSQldANxMmU4MTiY2jW_JBqh6bNK_2bDBaHfTcfsLDt88ut1aUV86SQzEC2It6WSrglMkiOfT84y29IH1RUWAol_BotNep0djAPclWQ4Tujjuyn_EEzkFvU2ze"/>
+</div>
+</div>
+</header>
+<!-- Main Game Canvas (Blurred Background) -->
+<main class="relative w-full h-screen flex items-center justify-center pt-16 game-grid-pattern filter blur-sm">
+<div class="grid grid-cols-4 gap-4 p-8 max-w-lg w-full">
+<!-- Tiles represent the background game state -->
+<div class="aspect-square bg-white rounded-xl shadow-sm border border-outline-variant/30"></div>
+<div class="aspect-square bg-white rounded-xl shadow-sm border border-outline-variant/30 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-4xl" style="font-variation-settings: 'FILL' 1;">diamond</span>
+</div>
+<div class="aspect-square bg-white rounded-xl shadow-sm border border-outline-variant/30"></div>
+<div class="aspect-square bg-white rounded-xl shadow-sm border border-outline-variant/30"></div>
+<div class="aspect-square bg-white rounded-xl shadow-sm border border-outline-variant/30"></div>
+<div class="aspect-square bg-white rounded-xl shadow-sm border border-outline-variant/30"></div>
+<div class="aspect-square bg-white rounded-xl shadow-sm border border-outline-variant/30 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-4xl" style="font-variation-settings: 'FILL' 1;">diamond</span>
+</div>
+<div class="aspect-square bg-white rounded-xl shadow-sm border border-outline-variant/30"></div>
+<div class="aspect-square bg-white rounded-xl shadow-sm border border-outline-variant/30"></div>
+<div class="aspect-square bg-white rounded-xl shadow-sm border border-outline-variant/30"></div>
+<div class="aspect-square bg-white rounded-xl shadow-sm border border-outline-variant/30"></div>
+<div class="aspect-square bg-white rounded-xl shadow-sm border border-outline-variant/30"></div>
+</div>
+</main>
+<!-- Match Success Overlay (Modal) -->
+<div class="fixed inset-0 z-[100] flex items-center justify-center px-margin-mobile">
+<!-- Backdrop Backdrop Blur Overlay -->
+<div class="absolute inset-0 bg-primary/5 backdrop-blur-md"></div>
+<!-- Modal Card -->
+<div class="relative glass-panel soft-diffusion inner-glow w-full max-w-sm rounded-lg p-10 flex flex-col items-center text-center overflow-visible">
+<!-- Icon Container -->
+<div class="relative mb-6">
+<div class="w-24 h-24 rounded-full bg-secondary-container flex items-center justify-center shadow-lg shadow-secondary/20 border-4 border-white/80">
+<span class="material-symbols-outlined text-white text-5xl font-bold">check</span>
+</div>
+<!-- Particle Accents (Static representation of glass/light flare) -->
+<div class="absolute -top-2 -right-2 w-4 h-4 bg-tertiary-fixed-dim rounded-full animate-pulse"></div>
+<div class="absolute -bottom-1 -left-4 w-3 h-3 bg-secondary-fixed rounded-full opacity-60"></div>
+</div>
+<!-- Headline -->
+<h1 class="font-display-lg-mobile text-display-lg-mobile text-primary mb-2 tracking-tighter">PERFECT MATCH!</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-8">Your focus is unparalleled. Keep the streak going!</p>
+<!-- Rewards Cluster -->
+<div class="flex gap-4 mb-10">
+<div class="relative flex flex-col items-center">
+<div class="glass-panel border border-primary/20 rounded-full px-4 py-2 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-lg" style="font-variation-settings: 'FILL' 1;">stars</span>
+<span class="font-label-caps text-label-caps text-primary">+50 XP</span>
+</div>
+<!-- Floating visual cue -->
+<span class="absolute -top-4 font-bold text-primary opacity-0 pointer-events-none float-up">+50 XP</span>
+</div>
+<div class="relative flex flex-col items-center">
+<div class="glass-panel border border-tertiary/20 rounded-full px-4 py-2 flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary text-lg" style="font-variation-settings: 'FILL' 1;">monetization_on</span>
+<span class="font-label-caps text-label-caps text-tertiary">+10 COINS</span>
+</div>
+<!-- Floating visual cue -->
+<span class="absolute -top-4 font-bold text-tertiary opacity-0 pointer-events-none float-up" style="animation-delay: 0.5s;">+10 Coins</span>
+</div>
+</div>
+<!-- Action Button -->
+<button class="group relative w-full bg-gradient-to-b from-primary to-primary-container text-white font-headline-md text-headline-md py-4 rounded-full shadow-lg shadow-primary/25 hover:scale-[1.02] active:scale-95 transition-all duration-200 overflow-hidden inner-glow">
+<span class="relative z-10">Continue</span>
+<!-- Subtle glow effect -->
+<div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="absolute top-0 left-0 w-full h-1/2 bg-white/10 rounded-full blur-xl -translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
+</button>
+</div>
+</div>
+<!-- Bottom Nav Bar (Mobile View) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 pb-safe py-3 bg-white/70 dark:bg-surface-container/70 backdrop-blur-xl border-t border-white/20 dark:border-outline-variant/20 shadow-lg shadow-primary/10 rounded-t-lg">
+<div class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-4 py-1.5 scale-90">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="text-label-caps font-label-caps">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant px-4 py-1.5 hover:text-primary transition-all">
+<span class="material-symbols-outlined">leaderboard</span>
+<span class="text-label-caps font-label-caps">Ranks</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant px-4 py-1.5 hover:text-primary transition-all">
+<span class="material-symbols-outlined">group</span>
+<span class="text-label-caps font-label-caps">Social</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant px-4 py-1.5 hover:text-primary transition-all">
+<span class="material-symbols-outlined">person</span>
+<span class="text-label-caps font-label-caps">Me</span>
+</div>
+</nav>
+</body></html>

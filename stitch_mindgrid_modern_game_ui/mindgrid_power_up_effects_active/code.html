@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at top left, #f0f3ff 0%, #e7eeff 100%);
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        .glass-panel {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            background: rgba(255, 255, 255, 0.7);
+        }
+        .inner-glow {
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.8);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .card-shadow {
+            box-shadow: 0 10px 25px -5px rgba(53, 37, 205, 0.05), 0 8px 10px -6px rgba(53, 37, 205, 0.05);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container": "#e7eeff",
+                        "surface-variant": "#d8e3fb",
+                        "surface": "#f9f9ff",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "surface-dim": "#cfdaf2",
+                        "inverse-primary": "#c3c0ff",
+                        "error-container": "#ffdad6",
+                        "on-secondary-container": "#003c70",
+                        "primary": "#3525cd",
+                        "secondary-fixed": "#d4e3ff",
+                        "secondary-fixed-dim": "#a4c9ff",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "on-surface": "#111c2d",
+                        "on-background": "#111c2d",
+                        "tertiary": "#6b00b7",
+                        "outline-variant": "#c7c4d8",
+                        "on-secondary-fixed-variant": "#004883",
+                        "surface-container-highest": "#d8e3fb",
+                        "on-tertiary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "on-surface-variant": "#464555",
+                        "on-primary-container": "#dad7ff",
+                        "on-primary-fixed": "#0f0069",
+                        "tertiary-fixed-dim": "#ddb7ff",
+                        "tertiary-fixed": "#f0dbff",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-container": "#4f46e5",
+                        "on-error-container": "#93000a",
+                        "secondary-container": "#64a8fe",
+                        "primary-fixed": "#e2dfff",
+                        "error": "#ba1a1a",
+                        "on-primary": "#ffffff",
+                        "inverse-on-surface": "#ecf1ff",
+                        "secondary": "#0060ac",
+                        "surface-bright": "#f9f9ff",
+                        "on-secondary": "#ffffff",
+                        "outline": "#777587",
+                        "surface-container-low": "#f0f3ff",
+                        "inverse-surface": "#263143",
+                        "on-secondary-fixed": "#001c39",
+                        "tertiary-container": "#862dd4",
+                        "background": "#f9f9ff",
+                        "on-tertiary-container": "#ebd2ff",
+                        "on-tertiary-fixed": "#2c0051",
+                        "on-tertiary-fixed-variant": "#6900b3",
+                        "surface-tint": "#4d44e3",
+                        "surface-container-high": "#dee8ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "20px",
+                        "unit": "4px",
+                        "gutter": "16px",
+                        "margin-desktop": "40px",
+                        "container-max": "1200px"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Inter"],
+                        "display-lg-mobile": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "display-lg-mobile": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "500"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+    @keyframes pulse-ring {
+        0% { box-shadow: 0 0 0 0 rgba(53, 37, 205, 0.4); }
+        70% { box-shadow: 0 0 0 10px rgba(53, 37, 205, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(53, 37, 205, 0); }
+    }
+    .powerup-active-ring { animation: pulse-ring 2s infinite; }
+    .frost-overlay { background: rgba(212, 227, 255, 0.4); backdrop-filter: blur(2px); border: 2px solid rgba(255, 255, 255, 0.8); }
+    .motion-blur { filter: blur(2px); transform: translateX(2px); transition: transform 0.1s ease-in-out; }
+    .partially-revealed { background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(4px); box-shadow: inset 0 0 15px rgba(53, 37, 205, 0.2); }
+</style></head>
+<body class="text-on-background bg-background">
+<!-- Top Navigation Anchor (Shared Component Execution) -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-gutter py-2 max-w-container-max mx-auto bg-white/70 dark:bg-surface-container/70 backdrop-blur-md border-b border-white/20 dark:border-outline-variant/20 shadow-sm shadow-primary/5">
+<div class="flex items-center gap-4">
+<span class="text-headline-md font-headline-md font-black tracking-tight text-primary dark:text-inverse-primary">MindGrid</span>
+<div class="h-6 w-px bg-outline-variant/30"></div>
+<button class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary font-label-caps text-label-caps hover:bg-primary/20 transition-colors">
+<span class="material-symbols-outlined text-[18px]">pause</span>
+                PAUSE
+            </button>
+</div>
+<div class="hidden md:flex gap-8">
+<div class="flex flex-col items-center frost-overlay px-4 rounded-lg">
+<span class="text-on-surface-variant font-label-caps text-label-caps opacity-60">TIME</span>
+<span class="text-headline-md font-headline-md text-primary">01:42</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="text-on-surface-variant font-label-caps text-label-caps opacity-60">MOVES</span>
+<span class="text-headline-md font-headline-md text-primary">14</span>
+</div>
+<div class="flex flex-col items-center px-4 py-1 rounded-xl bg-secondary-container/20 border border-secondary-container/30">
+<span class="text-secondary font-label-caps text-label-caps">COMBO</span>
+<span class="text-headline-md font-headline-md text-secondary">x2</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary text-on-primary shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-[18px]" data-weight="fill">workspace_premium</span>
+<span class="font-label-caps text-label-caps">1,250 XP</span>
+</div>
+<img alt="Player avatar" class="w-10 h-10 rounded-full border-2 border-white shadow-sm" data-alt="A high-quality 3D rendered character avatar for a premium gaming application. The character is a stylized, minimalist human figure with clean lines and soft lighting, wearing a futuristic indigo headset. The background is a soft, blurred gradient of light blue and white, maintaining a clean and professional aesthetic consistent with Apple-style UI design." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6-46V4bMa09QByU43P4TdQ8lzfXot615fI5nZ_5H8p9Gm1kORIDptQ9zD5nAZlwZb_sBRRNHaTzRaYGQLrAgUDdnGtXukRA8UUy2qhT803_g2SiJYOSZp_AlwfJx1Rwq3O8dvwWJ9P5Jhtk7JNqM1fOrXvCoywkbqFjzJ3hALV6HcGJmp3HPKS5BHOTCF2PiWDQJ7_Q4MYO5AlvRMe45rWAq3VxVtKAkcdljpnZ3uDRXCWyCpsPlLoR5yVpI2KtVewISVR8COaiHW"/>
+</div>
+</header>
+<!-- Main Game Canvas -->
+<main class="pt-24 pb-24 md:pb-8 px-4 flex flex-col md:flex-row items-center justify-center min-h-screen gap-8 max-w-7xl mx-auto">
+<!-- Left Power-up Sidebar (Desktop) / Bottom Action Bar (Mobile fallback) -->
+<aside class="fixed left-6 top-1/2 -translate-y-1/2 hidden lg:flex flex-col gap-4">
+<div class="glass-panel p-3 rounded-2xl border border-white/40 shadow-xl flex flex-col gap-4">
+<button class="group flex flex-col items-center gap-1 p-3 rounded-xl hover:bg-primary/10 transition-all duration-300">
+<div class="w-12 h-12 rounded-full bg-white shadow-md flex items-center justify-center text-primary group-hover:scale-110 transition-transform powerup-active-ring">
+<span class="material-symbols-outlined text-[28px]" data-weight="fill">visibility</span>
+</div>
+<span class="font-label-caps text-[10px] text-primary">PEEK (2)</span>
+</button>
+<button class="group flex flex-col items-center gap-1 p-3 rounded-xl hover:bg-primary/10 transition-all duration-300">
+<div class="w-12 h-12 rounded-full bg-white shadow-md flex items-center justify-center text-primary group-hover:scale-110 transition-transform shadow-[0_0_15px_rgba(100,168,254,0.6)]">
+<span class="material-symbols-outlined text-[28px]" data-weight="fill">ac_unit</span>
+</div>
+<span class="font-label-caps text-[10px] text-primary">FREEZE (1)</span>
+</button>
+<button class="group flex flex-col items-center gap-1 p-3 rounded-xl hover:bg-primary/10 transition-all duration-300">
+<div class="w-12 h-12 rounded-full bg-white shadow-md flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[28px]" data-weight="fill">shuffle</span>
+</div>
+<span class="font-label-caps text-[10px] text-primary">SHUFFLE (3)</span>
+</button>
+</div>
+</aside>
+<!-- Memory Grid Container -->
+<section class="flex-1 flex flex-col items-center justify-center max-w-3xl w-full">
+<!-- Mobile Stats Bar -->
+<div class="md:hidden w-full flex justify-between items-center mb-6 px-4 py-3 glass-panel rounded-2xl border border-white/40 shadow-sm">
+<div class="text-center">
+<div class="font-label-caps text-[10px] text-on-surface-variant/60">TIME</div>
+<div class="font-headline-md text-headline-md text-primary leading-none">01:42</div>
+</div>
+<div class="w-px h-8 bg-outline-variant/30"></div>
+<div class="text-center">
+<div class="font-label-caps text-[10px] text-on-surface-variant/60">MOVES</div>
+<div class="font-headline-md text-headline-md text-primary leading-none">14</div>
+</div>
+<div class="w-px h-8 bg-outline-variant/30"></div>
+<div class="px-3 py-1 rounded-lg bg-secondary-container/20 border border-secondary-container/30">
+<div class="font-label-caps text-[10px] text-secondary">COMBO</div>
+<div class="font-headline-md text-headline-md text-secondary leading-none">x2</div>
+</div>
+</div>
+<!-- The Grid (4x4 example) -->
+<div class="grid grid-cols-4 gap-3 md:gap-6 w-full aspect-square md:aspect-auto">
+<!-- Row 1 -->
+<div class="aspect-square glass-panel rounded-xl md:rounded-2xl flex items-center justify-center card-shadow inner-glow border border-white/60 cursor-pointer hover:scale-105 active:scale-95 transition-all"><div class="w-full h-full partially-revealed rounded-xl md:rounded-2xl flex items-center justify-center"><span class="material-symbols-outlined text-primary/40 text-4xl">star</span></div></div>
+<!-- Active/Matched Card -->
+<div class="aspect-square bg-primary rounded-xl md:rounded-2xl flex items-center justify-center shadow-lg shadow-primary/30 inner-glow cursor-pointer transition-all">
+<span class="material-symbols-outlined text-on-primary text-5xl" data-weight="fill">rocket_launch</span>
+</div>
+<div class="aspect-square glass-panel rounded-xl md:rounded-2xl flex items-center justify-center card-shadow inner-glow border border-white/60 cursor-pointer hover:scale-105 transition-all">
+<span class="material-symbols-outlined text-primary/20 text-4xl">grid_view</span>
+</div>
+<div class="aspect-square glass-panel rounded-xl md:rounded-2xl flex items-center justify-center card-shadow inner-glow border border-white/60 cursor-pointer hover:scale-105 transition-all"><div class="w-full h-full partially-revealed rounded-xl md:rounded-2xl flex items-center justify-center"><span class="material-symbols-outlined text-primary/40 text-4xl">favorite</span></div></div>
+<!-- Row 2 -->
+<div class="aspect-square glass-panel rounded-xl md:rounded-2xl flex items-center justify-center card-shadow inner-glow border border-white/60 cursor-pointer hover:scale-105 transition-all">
+<span class="material-symbols-outlined text-primary/20 text-4xl">grid_view</span>
+</div>
+<div class="aspect-square glass-panel rounded-xl md:rounded-2xl flex items-center justify-center card-shadow inner-glow border border-white/60 cursor-pointer hover:scale-105 transition-all">
+<span class="material-symbols-outlined text-primary/20 text-4xl">grid_view</span>
+</div>
+<!-- Flipped Card (Face Up) -->
+<div class="aspect-square bg-white rounded-xl md:rounded-2xl flex items-center justify-center shadow-xl border-2 border-primary/20 cursor-pointer transition-all">
+<span class="material-symbols-outlined text-primary text-5xl" data-weight="fill">lightbulb</span>
+</div>
+<div class="aspect-square glass-panel rounded-xl md:rounded-2xl flex items-center justify-center card-shadow inner-glow border border-white/60 cursor-pointer hover:scale-105 transition-all">
+<span class="material-symbols-outlined text-primary/20 text-4xl">grid_view</span>
+</div>
+<!-- Row 3 -->
+<div class="aspect-square glass-panel rounded-xl md:rounded-2xl flex items-center justify-center card-shadow inner-glow border border-white/60 cursor-pointer hover:scale-105 transition-all">
+<span class="material-symbols-outlined text-primary/20 text-4xl">grid_view</span>
+</div>
+<!-- Active/Matched Card -->
+<div class="aspect-square bg-primary rounded-xl md:rounded-2xl flex items-center justify-center shadow-lg shadow-primary/30 inner-glow cursor-pointer transition-all">
+<span class="material-symbols-outlined text-on-primary text-5xl" data-weight="fill">rocket_launch</span>
+</div>
+<div class="aspect-square glass-panel rounded-xl md:rounded-2xl flex items-center justify-center card-shadow inner-glow border border-white/60 cursor-pointer hover:scale-105 transition-all">
+<span class="material-symbols-outlined text-primary/20 text-4xl">grid_view</span>
+</div>
+<div class="aspect-square glass-panel rounded-xl md:rounded-2xl flex items-center justify-center card-shadow inner-glow border border-white/60 cursor-pointer hover:scale-105 transition-all">
+<span class="material-symbols-outlined text-primary/20 text-4xl">grid_view</span>
+</div>
+<!-- Row 4 -->
+<div class="aspect-square glass-panel rounded-xl md:rounded-2xl flex items-center justify-center card-shadow inner-glow border border-white/60 cursor-pointer hover:scale-105 transition-all motion-blur">
+<span class="material-symbols-outlined text-primary/20 text-4xl">grid_view</span>
+</div>
+<div class="aspect-square glass-panel rounded-xl md:rounded-2xl flex items-center justify-center card-shadow inner-glow border border-white/60 cursor-pointer hover:scale-105 transition-all">
+<span class="material-symbols-outlined text-primary/20 text-4xl">grid_view</span>
+</div>
+<div class="aspect-square glass-panel rounded-xl md:rounded-2xl flex items-center justify-center card-shadow inner-glow border border-white/60 cursor-pointer hover:scale-105 transition-all">
+<span class="material-symbols-outlined text-primary/20 text-4xl">grid_view</span>
+</div>
+<div class="aspect-square glass-panel rounded-xl md:rounded-2xl flex items-center justify-center card-shadow inner-glow border border-white/60 cursor-pointer hover:scale-105 transition-all motion-blur">
+<span class="material-symbols-outlined text-primary/20 text-4xl">grid_view</span>
+</div>
+</div>
+</section>
+<!-- Right Side Player Status (Desktop Only) -->
+<aside class="fixed right-6 top-1/2 -translate-y-1/2 hidden xl:flex flex-col gap-6 w-64">
+<div class="glass-panel p-6 rounded-2xl border border-white/40 shadow-xl">
+<h3 class="font-label-caps text-label-caps text-on-surface-variant mb-4">MATCH PROGRESS</h3>
+<div class="space-y-4">
+<div>
+<div class="flex justify-between font-body-sm text-body-sm mb-1.5">
+<span class="text-on-surface-variant">Matches</span>
+<span class="text-primary font-bold">2/8</span>
+</div>
+<div class="w-full h-2.5 bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full w-1/4 bg-gradient-to-r from-primary to-secondary-container rounded-full"></div>
+</div>
+</div>
+<div class="p-3 bg-primary/5 rounded-xl border border-primary/10">
+<p class="text-body-sm font-body-sm text-primary leading-tight">Match 2 more pairs to unlock the next power-up!</p>
+</div>
+</div>
+</div>
+<div class="glass-panel p-6 rounded-2xl border border-white/40 shadow-xl">
+<h3 class="font-label-caps text-label-caps text-on-surface-variant mb-4">GLOBAL RANK</h3>
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center text-white font-bold">#4</div>
+<div>
+<p class="font-label-caps text-label-caps leading-none">LEADERBOARD</p>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Top 5% this week</p>
+</div>
+</div>
+</div>
+</aside>
+</main>
+<!-- Bottom Nav Bar (Shared Component Execution) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 pb-safe py-3 bg-white/70 dark:bg-surface-container/70 backdrop-blur-xl border-t border-white/20 dark:border-outline-variant/20 shadow-lg shadow-primary/10">
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-4 py-1.5 scale-90 duration-150 ease-out" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="text-label-caps font-label-caps">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant px-4 py-1.5 hover:text-primary dark:hover:text-primary-fixed-dim transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="leaderboard">leaderboard</span>
+<span class="text-label-caps font-label-caps">Ranks</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant px-4 py-1.5 hover:text-primary dark:hover:text-primary-fixed-dim transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="text-label-caps font-label-caps">Social</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant px-4 py-1.5 hover:text-primary dark:hover:text-primary-fixed-dim transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="text-label-caps font-label-caps">Me</span>
+</a>
+</nav>
+<!-- Floating Action Button Suppression Context: On Game Screen, FAB is suppressed to prioritize grid interaction -->
+</body></html>
