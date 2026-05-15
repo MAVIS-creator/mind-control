@@ -1,9 +1,9 @@
-import { useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { avatarOptions } from "../data/avatars";
 import { useAppContext } from "../state/AppContext";
 import type { AuthSession } from "../types";
-import { BrandMarkIcon, HomeIcon, SettingsIcon, StarBadgeIcon, TrophyIcon, UserIcon } from "./AppIcons";
+import { BrandMarkIcon, HomeIcon, TrophyIcon, UserIcon } from "./AppIcons";
 
 type AppShellProps = {
   session: AuthSession;
@@ -19,20 +19,32 @@ const navItems = [
 export const AppShell = ({ session, active, children }: AppShellProps) => {
   const { logout } = useAppContext();
   const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement | null>(null);
   const avatar = avatarOptions.find((entry) => entry.id === session.profile.avatarId) ?? avatarOptions[0];
+
+  useEffect(() => {
+    const onPointerDown = (event: PointerEvent) => {
+      if (!menuRef.current?.contains(event.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+
+    window.addEventListener("pointerdown", onPointerDown);
+    return () => window.removeEventListener("pointerdown", onPointerDown);
+  }, []);
 
   return (
     <div className="min-h-screen pb-24 md:pb-8">
-      <header className="sticky top-0 z-40 border-b border-white/40 bg-white/75 backdrop-blur-md">
+      <header className="sticky top-0 z-40 border-b border-[#ececf6] bg-white/80 backdrop-blur-md">
         <div className="mx-auto flex max-w-[1400px] items-center justify-between px-5 py-3 sm:px-8">
           <Link to="/play" className="flex items-center gap-3">
-            <BrandMarkIcon className="h-11 w-11 shrink-0" />
-            <span className="font-display text-[2.15rem] font-extrabold tracking-[-0.05em] text-slate-900">
+            <BrandMarkIcon className="h-10 w-10 shrink-0" />
+            <span className="font-display text-[2rem] font-extrabold tracking-[-0.05em] text-[#111c2d]">
               MindGrid
             </span>
           </Link>
 
-          <nav className="hidden items-center gap-6 md:flex">
+          <nav className="hidden items-center gap-4 md:flex">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = active === item.id;
@@ -42,8 +54,8 @@ export const AppShell = ({ session, active, children }: AppShellProps) => {
                   to={item.to}
                   className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-[1.02rem] font-medium transition ${
                     isActive
-                      ? "bg-[#efeefe] text-[#3525cd] shadow-sm"
-                      : "text-[#667085] hover:bg-[#f5f4ff] hover:text-[#3525cd]"
+                      ? "bg-[#f3f1ff] text-[#3525cd]"
+                      : "text-[#667085] hover:bg-[#f7f6ff] hover:text-[#3525cd]"
                   }`}
                 >
                   <Icon className="h-4 w-4" />
@@ -54,36 +66,29 @@ export const AppShell = ({ session, active, children }: AppShellProps) => {
           </nav>
 
           <div className="flex items-center gap-3 sm:gap-5">
-            <div className="inline-flex items-center gap-2 rounded-full border border-[#c7c4d8] bg-white/80 px-4 py-2 text-[#3525cd] shadow-sm">
-              <StarBadgeIcon className="h-5 w-5" />
+            <div className="inline-flex items-center gap-2 rounded-full border border-[#d9d8eb] bg-white px-4 py-2 text-[#3525cd] shadow-sm">
+              <span className="inline-flex h-5 w-5 items-center justify-center rounded-full border border-current text-[0.72rem] font-bold">
+                ★
+              </span>
               <span className="text-sm font-semibold tracking-[0.04em]">{session.profile.xp} XP</span>
             </div>
-            <button
-              type="button"
-              aria-label="Settings"
-              className="rounded-full p-2 text-[#464555] transition hover:bg-[#f5f4ff] hover:text-[#3525cd]"
-            >
-              <SettingsIcon className="h-6 w-6" />
-            </button>
-            <div className="relative">
+
+            <div className="relative" ref={menuRef}>
               <button
                 type="button"
                 onClick={() => setMenuOpen((current) => !current)}
                 className="rounded-full border-2 border-white bg-slate-100 shadow-sm"
+                aria-label="Profile menu"
               >
-                <img
-                  src={avatar.image}
-                  alt={avatar.name}
-                  className="h-12 w-12 rounded-full"
-                />
+                <img src={avatar.image} alt={avatar.name} className="h-12 w-12 rounded-full" />
               </button>
 
               {menuOpen ? (
-                <div className="absolute right-0 top-[calc(100%+10px)] w-44 rounded-2xl border border-white/70 bg-white/95 p-2 shadow-[0_18px_40px_rgba(53,37,205,0.12)] backdrop-blur-xl">
+                <div className="absolute right-0 top-[calc(100%+10px)] w-44 rounded-2xl border border-[#ececf6] bg-white/95 p-2 shadow-[0_18px_40px_rgba(53,37,205,0.12)] backdrop-blur-xl">
                   <Link
                     to="/profile"
                     onClick={() => setMenuOpen(false)}
-                    className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-slate-700 transition hover:bg-[#f5f4ff] hover:text-[#3525cd]"
+                    className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-[#464555] transition hover:bg-[#f5f4ff] hover:text-[#3525cd]"
                   >
                     <UserIcon className="h-4 w-4" />
                     Profile
@@ -94,7 +99,7 @@ export const AppShell = ({ session, active, children }: AppShellProps) => {
                       setMenuOpen(false);
                       void logout();
                     }}
-                    className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-medium text-slate-700 transition hover:bg-[#f5f4ff] hover:text-[#3525cd]"
+                    className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-medium text-[#464555] transition hover:bg-[#f5f4ff] hover:text-[#3525cd]"
                   >
                     <UserIcon className="h-4 w-4" />
                     Logout
@@ -108,7 +113,7 @@ export const AppShell = ({ session, active, children }: AppShellProps) => {
 
       <main>{children}</main>
 
-      <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-white/40 bg-white/80 px-2 py-3 backdrop-blur-xl md:hidden">
+      <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-[#ececf6] bg-white/80 px-2 py-3 backdrop-blur-xl md:hidden">
         <div className="mx-auto flex max-w-3xl items-center justify-around">
           {navItems.map((item) => {
             const Icon = item.icon;
@@ -118,9 +123,7 @@ export const AppShell = ({ session, active, children }: AppShellProps) => {
                 key={item.id}
                 to={item.to}
                 className={`flex min-w-[78px] flex-col items-center rounded-2xl px-4 py-2 text-xs font-semibold transition ${
-                  isActive
-                    ? "bg-[#4f46e5] text-white shadow-[0_12px_24px_rgba(79,70,229,0.24)]"
-                    : "text-[#464555]"
+                  isActive ? "bg-[#4f46e5] text-white shadow-[0_12px_24px_rgba(79,70,229,0.24)]" : "text-[#464555]"
                 }`}
               >
                 <Icon className="h-5 w-5" />
