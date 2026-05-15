@@ -14,8 +14,8 @@ export default {
         haze: "#7c90ff",
       },
       fontFamily: {
-        display: ["Orbitron", "sans-serif"],
-        body: ["Space Grotesk", "sans-serif"],
+        display: ["Inter", "sans-serif"],
+        body: ["Inter", "sans-serif"],
       },
       boxShadow: {
         neon: "0 0 30px rgba(108, 247, 255, 0.18)",

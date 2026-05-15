@@ -60,7 +60,7 @@ export const GameRoute = () => {
   const totalPairs = state.board.cards.length / 2;
 
   if (!session) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/login" replace />;
   }
 
   return (
@@ -68,8 +68,8 @@ export const GameRoute = () => {
       <div className="mx-auto max-w-7xl space-y-4 sm:space-y-5">
         <div className="glass-panel flex flex-col gap-3 rounded-[2rem] px-4 py-4 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:px-5">
           <div className="text-center sm:text-left">
-            <p className="text-[0.65rem] uppercase tracking-[0.22em] text-white/50">Classic board</p>
-            <h1 className="font-display text-2xl uppercase tracking-[0.08em] text-white sm:text-3xl">
+            <p className="text-[0.65rem] uppercase tracking-[0.22em] text-slate-500">Classic board</p>
+            <h1 className="font-display text-2xl tracking-[-0.03em] text-slate-900 sm:text-3xl">
               Memory
             </h1>
           </div>
@@ -77,7 +77,7 @@ export const GameRoute = () => {
             <button
               type="button"
               onClick={togglePause}
-              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#304859] px-3 py-3 text-[0.65rem] uppercase tracking-[0.18em] text-white sm:px-4 sm:text-xs"
+              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-indigo-600 px-3 py-3 text-[0.65rem] uppercase tracking-[0.18em] text-white sm:px-4 sm:text-xs"
             >
               {state.status === "paused" ? <PlayIcon className="h-4 w-4" /> : <PauseIcon className="h-4 w-4" />}
               {state.status === "paused" ? "Resume" : "Pause"}
@@ -85,14 +85,14 @@ export const GameRoute = () => {
             <button
               type="button"
               onClick={reset}
-              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#dfe7ec] px-3 py-3 text-[0.65rem] uppercase tracking-[0.16em] text-[#304859] sm:px-4 sm:text-xs"
+              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-slate-100 px-3 py-3 text-[0.65rem] uppercase tracking-[0.16em] text-slate-700 sm:px-4 sm:text-xs"
             >
               <RefreshIcon className="h-4 w-4" />
               Restart
             </button>
             <Link
               to="/play"
-              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#dfe7ec] px-3 py-3 text-center text-[0.65rem] uppercase tracking-[0.16em] text-[#304859] sm:px-4 sm:text-xs"
+              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-slate-100 px-3 py-3 text-center text-[0.65rem] uppercase tracking-[0.16em] text-slate-700 sm:px-4 sm:text-xs"
             >
               <ArrowLeftIcon className="h-4 w-4" />
               New game
@@ -110,14 +110,14 @@ export const GameRoute = () => {
           <StatPill label="Theme" value={settings.theme === "numbers" ? "Numbers" : "Icons"} icon={<SparklesIcon className="h-4 w-4" />} />
         </div>
 
-        <div className="glass-panel rounded-[2rem] p-4 text-sm leading-6 text-white/70 sm:p-5 sm:leading-7">
+        <div className="glass-panel rounded-[2rem] p-4 text-sm leading-6 text-slate-600 sm:p-5 sm:leading-7">
           Current setup: {GRID_OPTIONS[settings.gridSize].label} board, {GRID_OPTIONS[settings.gridSize].totalTimeSeconds}s timer,
           {settings.theme === "numbers" ? " number" : " icon"} cards, status {instability.toLowerCase()}, accuracy {formatPercent(results.accuracy)},
           and best combo x{state.maxCombo}.
         </div>
 
         {audit.suspicionScore > 0 ? (
-          <div className="glass-panel rounded-[2rem] border border-amber-300/20 p-4 text-sm leading-6 text-white/70">
+          <div className="glass-panel rounded-[2rem] border border-amber-200 p-4 text-sm leading-6 text-slate-600">
             Fair-play monitor is active. This run has {audit.suspicionScore} suspicious signal{audit.suspicionScore > 1 ? "s" : ""} logged for admin review.
           </div>
         ) : null}

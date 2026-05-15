@@ -14,7 +14,7 @@ export class MindGridScene extends Phaser.Scene {
 
   create() {
     this.isReady = true;
-    this.cameras.main.setBackgroundColor("#17345a");
+    this.cameras.main.setBackgroundColor("#eef3ff");
     this.renderBoard();
   }
 
@@ -87,7 +87,7 @@ export class MindGridScene extends Phaser.Scene {
 
       this.add
         .text(x, y, revealed ? card.symbol : "◈", {
-          fontFamily: "Orbitron",
+          fontFamily: "Inter",
           fontSize: `${cardSize >= 90 ? 28 : cardSize >= 76 ? 22 : 18}px`,
           color: revealed ? textColor : theme === "icons" ? "#304859" : "#1f3147",
         })
@@ -97,7 +97,7 @@ export class MindGridScene extends Phaser.Scene {
     if (combo >= 2) {
       this.add
         .text(width - 26, 24, `COMBO x${combo}`, {
-          fontFamily: "Orbitron",
+          fontFamily: "Inter",
           fontSize: "18px",
           color: "#f59e0b",
         })

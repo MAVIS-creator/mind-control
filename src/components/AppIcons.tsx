@@ -86,3 +86,10 @@ export const RulesIcon = (props: IconProps) => (
     <path d="M9 16h4" />
   </svg>
 );
+
+export const HomeIcon = (props: IconProps) => (
+  <svg {...baseProps} {...props}>
+    <path d="M4 11.5 12 5l8 6.5" />
+    <path d="M6 10.5V20h12v-9.5" />
+  </svg>
+);

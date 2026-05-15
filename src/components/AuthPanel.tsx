@@ -1,16 +1,27 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import { AvatarPicker } from "./AvatarPicker";
 import { useAppContext } from "../state/AppContext";
 import { avatarOptions } from "../data/avatars";
 
-export const AuthPanel = () => {
+type AuthPanelProps = {
+  forcedMode?: "login" | "register";
+};
+
+export const AuthPanel = ({ forcedMode }: AuthPanelProps) => {
   const { authMode, setAuthMode, login, register } = useAppContext();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [avatarId, setAvatarId] = useState(avatarOptions[0].id);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (forcedMode) {
+      setAuthMode(forcedMode);
+    }
+  }, [forcedMode, setAuthMode]);
 
   const copy = useMemo(
     () =>
@@ -51,39 +62,37 @@ export const AuthPanel = () => {
       initial={{ opacity: 0, y: 22 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="glass-panel relative overflow-hidden rounded-[2rem] p-5 sm:p-7"
+      className="glass-panel relative overflow-hidden rounded-[2rem] p-6 sm:p-8"
     >
-      <div className="mb-6 flex items-center gap-2 rounded-full border border-white/20 bg-white/10 p-1 text-sm">
-        <button
-          type="button"
-          onClick={() => setAuthMode("login")}
-          className={`flex-1 rounded-full px-4 py-2 transition ${
-            authMode === "login" ? "bg-white text-slate-900" : "text-white/70"
+      <div className="mb-6 flex items-center gap-2 rounded-full border border-slate-200 bg-slate-100 p-1 text-sm">
+        <Link
+          to="/login"
+          className={`flex-1 rounded-full px-4 py-2 text-center font-medium transition ${
+            authMode === "login" ? "bg-white text-slate-900 shadow-sm" : "text-slate-500"
           }`}
         >
           Login
-        </button>
-        <button
-          type="button"
-          onClick={() => setAuthMode("register")}
-          className={`flex-1 rounded-full px-4 py-2 transition ${
-            authMode === "register" ? "bg-white text-slate-900" : "text-white/70"
+        </Link>
+        <Link
+          to="/register"
+          className={`flex-1 rounded-full px-4 py-2 text-center font-medium transition ${
+            authMode === "register" ? "bg-white text-slate-900 shadow-sm" : "text-slate-500"
           }`}
         >
           Register
-        </button>
+        </Link>
       </div>
 
       <div className="mb-6">
-        <h2 className="font-display text-2xl uppercase tracking-[0.14em] text-white">
+        <h2 className="font-display text-3xl tracking-[-0.03em] text-slate-900">
           {copy.title}
         </h2>
-        <p className="mt-2 text-sm text-white/70">{copy.hint}</p>
+        <p className="mt-2 text-sm text-slate-500">{copy.hint}</p>
       </div>
 
       <form className="space-y-4" onSubmit={handleSubmit}>
         <label className="block">
-          <span className="mb-2 block text-xs uppercase tracking-[0.22em] text-white/75">
+          <span className="mb-2 block text-xs uppercase tracking-[0.22em] text-slate-500">
             Username
           </span>
           <input
@@ -92,12 +101,12 @@ export const AuthPanel = () => {
             value={username}
             onChange={(event) => setUsername(event.target.value)}
             placeholder="player_one"
-            className="w-full rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-white outline-none transition placeholder:text-white/35 focus:border-sky-300 focus:bg-white/15"
+            className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-indigo-300 focus:ring-4 focus:ring-indigo-100"
           />
         </label>
 
         <label className="block">
-          <span className="mb-2 block text-xs uppercase tracking-[0.22em] text-white/75">
+          <span className="mb-2 block text-xs uppercase tracking-[0.22em] text-slate-500">
             Password
           </span>
           <input
@@ -107,13 +116,13 @@ export const AuthPanel = () => {
             value={password}
             onChange={(event) => setPassword(event.target.value)}
             placeholder="••••••••"
-            className="w-full rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-white outline-none transition placeholder:text-white/35 focus:border-sky-300 focus:bg-white/15"
+            className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-indigo-300 focus:ring-4 focus:ring-indigo-100"
           />
         </label>
 
         {authMode === "register" ? (
           <div>
-            <div className="mb-2 block text-xs uppercase tracking-[0.22em] text-white/75">
+            <div className="mb-2 block text-xs uppercase tracking-[0.22em] text-slate-500">
               Avatar
             </div>
             <AvatarPicker value={avatarId} onChange={setAvatarId} />
@@ -129,7 +138,7 @@ export const AuthPanel = () => {
         <button
           type="submit"
           disabled={loading}
-          className="w-full rounded-2xl bg-gradient-to-r from-amber-300 via-orange-300 to-rose-300 px-5 py-3 font-display text-sm uppercase tracking-[0.22em] text-slate-900 transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60"
+          className="w-full rounded-2xl bg-gradient-to-b from-indigo-600 to-indigo-500 px-5 py-3 font-display text-sm uppercase tracking-[0.22em] text-white transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60"
         >
           {loading ? "Loading..." : copy.action}
         </button>

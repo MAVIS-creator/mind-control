@@ -5,8 +5,14 @@ import { useAppContext } from "./state/AppContext";
 const LandingRoute = lazy(() =>
   import("./routes/LandingRoute").then((module) => ({ default: module.LandingRoute })),
 );
+const AuthRoute = lazy(() =>
+  import("./routes/AuthRoute").then((module) => ({ default: module.AuthRoute })),
+);
 const PlayRoute = lazy(() =>
   import("./routes/PlayRoute").then((module) => ({ default: module.PlayRoute })),
+);
+const HallOfFameRoute = lazy(() =>
+  import("./routes/HallOfFameRoute").then((module) => ({ default: module.HallOfFameRoute })),
 );
 const ProfileRoute = lazy(() =>
   import("./routes/ProfileRoute").then((module) => ({ default: module.ProfileRoute })),
@@ -55,9 +61,12 @@ export const App = () => {
     >
       <Routes>
         <Route path="/" element={<LandingRoute />} />
+        <Route path="/login" element={<AuthRoute mode="login" />} />
+        <Route path="/register" element={<AuthRoute mode="register" />} />
         <Route path="/play" element={<PlayRoute />} />
         <Route path="/play/classic" element={<GameRoute />} />
         <Route path="/results/:runId" element={<ResultsRoute />} />
+        <Route path="/hall-of-fame" element={<HallOfFameRoute />} />
         <Route path="/profile" element={<ProfileRoute />} />
         <Route path="/admin" element={<AdminRoute />} />
         <Route path="*" element={<Navigate to="/" replace />} />
