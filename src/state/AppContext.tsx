@@ -30,6 +30,8 @@ type AppContextValue = {
   login: (payload: LoginPayload) => Promise<void>;
   logout: () => Promise<void>;
   refreshLeaderboard: () => Promise<void>;
+  updateRun: (entry: LeaderboardEntry) => Promise<void>;
+  deleteRun: (runId: string) => Promise<void>;
   submitRun: (
     entry: Omit<LeaderboardEntry, "id" | "playedAt" | "userId" | "username" | "avatarId">,
   ) => Promise<LeaderboardEntry>;
@@ -98,6 +100,18 @@ export const AppProvider = ({ children }: PropsWithChildren) => {
       refreshLeaderboard: async () => {
         const next = await authApi.fetchLeaderboard();
         setLeaderboard(next);
+      },
+      updateRun: async (entry) => {
+        if (!session) throw new Error("Admin access is required.");
+        const nextEntry = await authApi.updateRun(session, entry);
+        setLeaderboard((current) =>
+          current.map((row) => (row.id === nextEntry.id ? nextEntry : row)),
+        );
+      },
+      deleteRun: async (runId) => {
+        if (!session) throw new Error("Admin access is required.");
+        const nextEntries = await authApi.deleteRun(session, runId);
+        setLeaderboard(nextEntries);
       },
       submitRun: async (entry) => {
         if (!session) throw new Error("You need to be logged in before saving a run.");

@@ -28,6 +28,20 @@ export type PlayerProfile = {
   xp: number;
   rank: RankTitle;
   createdAt: string;
+  isAdmin: boolean;
+};
+
+export type ReviewStatus = "pending" | "approved" | "flagged";
+
+export type RunAudit = {
+  suspicionScore: number;
+  suspicionReasons: string[];
+  automationFlag: boolean;
+  fastInputFlag: boolean;
+  hiddenTabFlag: boolean;
+  rapidSequenceCount: number;
+  reviewedStatus: ReviewStatus;
+  reviewedNote: string;
 };
 
 export type LeaderboardEntry = {
@@ -41,6 +55,7 @@ export type LeaderboardEntry = {
   maxCombo: number;
   duration: number;
   playedAt: string;
+  audit: RunAudit;
 };
 
 export type AuthSession = {

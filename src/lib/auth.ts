@@ -6,7 +6,14 @@ import type {
   RegisterPayload,
 } from "../types";
 import { avatarOptions } from "../data/avatars";
-import { calculateRank, normalizeUsername, uid, usernameToEmail } from "./utils";
+import { createEmptyAudit, normalizeAudit } from "./audit";
+import {
+  calculateRank,
+  normalizeUsername,
+  parseAdminUsernames,
+  uid,
+  usernameToEmail,
+} from "./utils";
 import {
   loadLeaderboard,
   loadSession,
@@ -32,15 +39,21 @@ const createProfile = (payload: RegisterPayload): PlayerProfile => ({
   xp: 0,
   rank: "Neural Rookie",
   createdAt: new Date().toISOString(),
+  isAdmin: parseAdminUsernames().includes(ensureValidUsername(payload.username)),
 });
 
-const mapRemoteProfile = (row: Partial<PlayerProfile> | null, fallbackUsername: string): PlayerProfile => ({
+const mapRemoteProfile = (
+  row: Partial<PlayerProfile> | null,
+  fallbackUsername: string,
+  isAdmin: boolean,
+): PlayerProfile => ({
   id: row?.id ?? uid(),
   username: row?.username ?? fallbackUsername,
   avatarId: row?.avatarId ?? avatarOptions[0].id,
   xp: row?.xp ?? 0,
   rank: row?.rank ?? "Neural Rookie",
   createdAt: row?.createdAt ?? new Date().toISOString(),
+  isAdmin,
 });
 
 const sortLeaderboard = (entries: LeaderboardEntry[]) =>
@@ -49,10 +62,34 @@ const sortLeaderboard = (entries: LeaderboardEntry[]) =>
     return a.duration - b.duration;
   });
 
+const canBeAdminFromEnv = (username: string) =>
+  parseAdminUsernames().includes(normalizeUsername(username));
+
+const resolveAdminState = async (userId: string, username: string) => {
+  if (canBeAdminFromEnv(username)) return true;
+  if (!hasSupabase || !supabase) return false;
+
+  const { data } = await supabase
+    .from("admin_users")
+    .select("user_id")
+    .eq("user_id", userId)
+    .maybeSingle();
+
+  return Boolean(data?.user_id);
+};
+
 export const authApi = {
   async bootstrap(): Promise<AuthSession | null> {
     if (!hasSupabase || !supabase) {
-      return loadSession();
+      const session = loadSession();
+      if (!session) return null;
+      return {
+        ...session,
+        profile: {
+          ...session.profile,
+          isAdmin: canBeAdminFromEnv(session.profile.username) || session.profile.isAdmin || false,
+        },
+      };
     }
 
     const {
@@ -67,6 +104,12 @@ export const authApi = {
       .eq("id", session.user.id)
       .maybeSingle();
 
+    const fallbackUsername = session.user.email?.split("@")[0] ?? "player";
+    const isAdmin = await resolveAdminState(
+      session.user.id,
+      profileRow?.username ?? fallbackUsername,
+    );
+
     const profile = mapRemoteProfile(
       profileRow
         ? {
@@ -78,7 +121,8 @@ export const authApi = {
             createdAt: profileRow.created_at,
           }
         : null,
-      session.user.email?.split("@")[0] ?? "player",
+      fallbackUsername,
+      isAdmin,
     );
     const currentSession = { profile, accessToken: session.access_token };
     saveSession(currentSession);
@@ -140,7 +184,12 @@ export const authApi = {
       if (!user || user.password !== payload.password) {
         throw new Error("Signal mismatch. Check your username and password.");
       }
-      const session = { profile: user.profile };
+      const session = {
+        profile: {
+          ...user.profile,
+          isAdmin: canBeAdminFromEnv(user.profile.username) || user.profile.isAdmin || false,
+        },
+      };
       saveSession(session);
       return session;
     }
@@ -163,6 +212,8 @@ export const authApi = {
 
     if (profileError) throw profileError;
 
+    const isAdmin = await resolveAdminState(data.user.id, normalized);
+
     const profile = mapRemoteProfile(
       profileRow
         ? {
@@ -175,6 +226,7 @@ export const authApi = {
           }
         : null,
       normalized,
+      isAdmin,
     );
     const session = { profile, accessToken: data.session?.access_token };
     saveSession(session);
@@ -199,6 +251,7 @@ export const authApi = {
       username: session.profile.username,
       avatarId: session.profile.avatarId,
       playedAt: new Date().toISOString(),
+      audit: normalizeAudit(entry.audit),
     };
 
     const gainedXp = Math.max(140, Math.round(entry.score * 0.12));
@@ -215,7 +268,10 @@ export const authApi = {
           : stored,
       );
       saveUsers(users);
-      const entries = sortLeaderboard([completeEntry, ...loadLeaderboard()]).slice(0, 20);
+      const entries = sortLeaderboard([
+        completeEntry,
+        ...loadLeaderboard().map((row) => ({ ...row, audit: normalizeAudit(row.audit) })),
+      ]).slice(0, 20);
       saveLeaderboard(entries);
       const nextSession = { profile: updatedProfile };
       saveSession(nextSession);
@@ -233,6 +289,14 @@ export const authApi = {
       max_combo: completeEntry.maxCombo,
       duration: completeEntry.duration,
       played_at: completeEntry.playedAt,
+      suspicion_score: completeEntry.audit.suspicionScore,
+      suspicion_reasons: completeEntry.audit.suspicionReasons,
+      automation_flag: completeEntry.audit.automationFlag,
+      fast_input_flag: completeEntry.audit.fastInputFlag,
+      hidden_tab_flag: completeEntry.audit.hiddenTabFlag,
+      rapid_sequence_count: completeEntry.audit.rapidSequenceCount,
+      reviewed_status: completeEntry.audit.reviewedStatus,
+      reviewed_note: completeEntry.audit.reviewedNote,
     });
     if (runError) throw runError;
 
@@ -248,7 +312,7 @@ export const authApi = {
 
     const { data: leaderboardRows, error: leaderboardError } = await supabase
       .from("game_runs")
-      .select("id, user_id, username, avatar_id, mode, score, accuracy, max_combo, duration, played_at")
+      .select("id, user_id, username, avatar_id, mode, score, accuracy, max_combo, duration, played_at, suspicion_score, suspicion_reasons, automation_flag, fast_input_flag, hidden_tab_flag, rapid_sequence_count, reviewed_status, reviewed_note")
       .order("score", { ascending: false })
       .order("duration", { ascending: true })
       .limit(20);
@@ -266,6 +330,16 @@ export const authApi = {
       maxCombo: row.max_combo,
       duration: row.duration,
       playedAt: row.played_at,
+      audit: normalizeAudit({
+        suspicionScore: row.suspicion_score,
+        suspicionReasons: row.suspicion_reasons,
+        automationFlag: row.automation_flag,
+        fastInputFlag: row.fast_input_flag,
+        hiddenTabFlag: row.hidden_tab_flag,
+        rapidSequenceCount: row.rapid_sequence_count,
+        reviewedStatus: row.reviewed_status,
+        reviewedNote: row.reviewed_note,
+      }),
     })) satisfies LeaderboardEntry[];
 
     const nextSession = { profile: updatedProfile };
@@ -276,12 +350,15 @@ export const authApi = {
 
   async fetchLeaderboard(): Promise<LeaderboardEntry[]> {
     if (!hasSupabase || !supabase) {
-      return loadLeaderboard();
+      return loadLeaderboard().map((row) => ({
+        ...row,
+        audit: normalizeAudit(row.audit),
+      }));
     }
 
     const { data, error } = await supabase
       .from("game_runs")
-      .select("id, user_id, username, avatar_id, mode, score, accuracy, max_combo, duration, played_at")
+      .select("id, user_id, username, avatar_id, mode, score, accuracy, max_combo, duration, played_at, suspicion_score, suspicion_reasons, automation_flag, fast_input_flag, hidden_tab_flag, rapid_sequence_count, reviewed_status, reviewed_note")
       .order("score", { ascending: false })
       .order("duration", { ascending: true })
       .limit(20);
@@ -299,8 +376,65 @@ export const authApi = {
       maxCombo: row.max_combo,
       duration: row.duration,
       playedAt: row.played_at,
+      audit: normalizeAudit({
+        suspicionScore: row.suspicion_score,
+        suspicionReasons: row.suspicion_reasons,
+        automationFlag: row.automation_flag,
+        fastInputFlag: row.fast_input_flag,
+        hiddenTabFlag: row.hidden_tab_flag,
+        rapidSequenceCount: row.rapid_sequence_count,
+        reviewedStatus: row.reviewed_status,
+        reviewedNote: row.reviewed_note,
+      }),
     })) satisfies LeaderboardEntry[];
     saveLeaderboard(leaderboard);
     return leaderboard;
+  },
+
+  async updateRun(session: AuthSession, updatedEntry: LeaderboardEntry) {
+    if (!session.profile.isAdmin) {
+      throw new Error("Admin access is required.");
+    }
+
+    const nextEntry = { ...updatedEntry, audit: normalizeAudit(updatedEntry.audit) };
+
+    if (!hasSupabase || !supabase) {
+      const nextEntries = loadLeaderboard().map((entry) =>
+        entry.id === nextEntry.id ? nextEntry : entry,
+      );
+      saveLeaderboard(nextEntries);
+      return nextEntry;
+    }
+
+    const { error } = await supabase
+      .from("game_runs")
+      .update({
+        score: nextEntry.score,
+        accuracy: nextEntry.accuracy,
+        max_combo: nextEntry.maxCombo,
+        duration: nextEntry.duration,
+        reviewed_status: nextEntry.audit.reviewedStatus,
+        reviewed_note: nextEntry.audit.reviewedNote,
+      })
+      .eq("id", nextEntry.id);
+
+    if (error) throw error;
+    return nextEntry;
+  },
+
+  async deleteRun(session: AuthSession, runId: string) {
+    if (!session.profile.isAdmin) {
+      throw new Error("Admin access is required.");
+    }
+
+    if (!hasSupabase || !supabase) {
+      const nextEntries = loadLeaderboard().filter((entry) => entry.id !== runId);
+      saveLeaderboard(nextEntries);
+      return nextEntries;
+    }
+
+    const { error } = await supabase.from("game_runs").delete().eq("id", runId);
+    if (error) throw error;
+    return this.fetchLeaderboard();
   },
 };

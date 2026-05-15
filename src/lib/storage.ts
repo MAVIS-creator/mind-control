@@ -5,7 +5,7 @@ const USERS_KEY = "mindgrid.users";
 const BOARD_KEY = "mindgrid.leaderboard";
 const SETTINGS_KEY = "mindgrid.settings";
 
-type StoredUser = {
+export type StoredUser = {
   profile: PlayerProfile;
   password: string;
 };

@@ -15,6 +15,7 @@ describe("local auth fallback", () => {
     });
 
     expect(registered.profile.username).toBe("pilot_one");
+    expect(registered.profile.isAdmin).toBe(false);
 
     await authApi.logout();
 

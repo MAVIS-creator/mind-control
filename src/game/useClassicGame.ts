@@ -8,6 +8,7 @@ import {
   revealCard,
   tickGame,
 } from "./engine";
+import { useGameAudio } from "./useGameAudio";
 
 type Action =
   | { type: "reveal"; cardId: string }
@@ -53,6 +54,7 @@ export const useClassicGame = (settings: GameSetupSettings) => {
   }, [state.status]);
 
   const results = useMemo(() => calculateResults(state), [state]);
+  useGameAudio(state.events);
 
   return {
     state,

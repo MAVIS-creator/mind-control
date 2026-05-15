@@ -54,6 +54,15 @@ export const PlayRoute = () => {
             </div>
           </div>
           <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:gap-3">
+            {session.profile.isAdmin ? (
+              <Link
+                to="/admin"
+                className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/10 px-4 py-3 text-center text-xs uppercase tracking-[0.18em] text-white/70 sm:px-5 sm:text-sm sm:tracking-[0.28em]"
+              >
+                <TrophyIcon className="h-4 w-4" />
+                Admin
+              </Link>
+            ) : null}
             <Link
               to="/profile"
               className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/10 px-4 py-3 text-center text-xs uppercase tracking-[0.18em] text-white/70 sm:px-5 sm:text-sm sm:tracking-[0.28em]"

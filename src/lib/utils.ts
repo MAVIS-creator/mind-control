@@ -34,3 +34,9 @@ export const uid = () =>
   typeof crypto !== "undefined" && "randomUUID" in crypto
     ? crypto.randomUUID()
     : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+
+export const parseAdminUsernames = () =>
+  (import.meta.env.VITE_ADMIN_USERNAMES as string | undefined)
+    ?.split(",")
+    .map((value) => normalizeUsername(value))
+    .filter(Boolean) ?? [];

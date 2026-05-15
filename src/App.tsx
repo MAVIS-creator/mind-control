@@ -17,6 +17,9 @@ const GameRoute = lazy(() =>
 const ResultsRoute = lazy(() =>
   import("./routes/ResultsRoute").then((module) => ({ default: module.ResultsRoute })),
 );
+const AdminRoute = lazy(() =>
+  import("./routes/AdminRoute").then((module) => ({ default: module.AdminRoute })),
+);
 
 export const App = () => {
   const { booting } = useAppContext();
@@ -56,6 +59,7 @@ export const App = () => {
         <Route path="/play/classic" element={<GameRoute />} />
         <Route path="/results/:runId" element={<ResultsRoute />} />
         <Route path="/profile" element={<ProfileRoute />} />
+        <Route path="/admin" element={<AdminRoute />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Suspense>

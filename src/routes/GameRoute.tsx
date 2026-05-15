@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { ArrowLeftIcon, ClockIcon, GridIcon, PauseIcon, PlayIcon, RefreshIcon, SparklesIcon } from "../components/AppIcons";
 import { MindGridCanvas } from "../game/phaser/MindGridCanvas";
+import { useFairPlayMonitor } from "../game/useFairPlayMonitor";
 import { useClassicGame } from "../game/useClassicGame";
 import { StatPill } from "../components/StatPill";
 import { formatDuration, formatNumber, formatPercent } from "../lib/utils";
@@ -13,6 +14,7 @@ export const GameRoute = () => {
   const navigate = useNavigate();
   const { state, results, reveal, reset, togglePause } = useClassicGame(settings);
   const [submitted, setSubmitted] = useState(false);
+  const audit = useFairPlayMonitor(state.events, state.status);
 
   useEffect(() => {
     if (!session || submitted || (state.status !== "won" && state.status !== "lost")) return;
@@ -24,6 +26,7 @@ export const GameRoute = () => {
         accuracy: Number(results.accuracy.toFixed(2)),
         maxCombo: state.maxCombo,
         duration: GRID_OPTIONS[settings.gridSize].totalTimeSeconds - state.timerRemaining,
+        audit,
       });
       setSubmitted(true);
       navigate(`/results/${entry.id}`, {
@@ -112,6 +115,12 @@ export const GameRoute = () => {
           {settings.theme === "numbers" ? " number" : " icon"} cards, status {instability.toLowerCase()}, accuracy {formatPercent(results.accuracy)},
           and best combo x{state.maxCombo}.
         </div>
+
+        {audit.suspicionScore > 0 ? (
+          <div className="glass-panel rounded-[2rem] border border-amber-300/20 p-4 text-sm leading-6 text-white/70">
+            Fair-play monitor is active. This run has {audit.suspicionScore} suspicious signal{audit.suspicionScore > 1 ? "s" : ""} logged for admin review.
+          </div>
+        ) : null}
       </div>
     </div>
   );
