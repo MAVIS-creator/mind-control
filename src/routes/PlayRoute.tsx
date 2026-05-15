@@ -21,11 +21,11 @@ export const PlayRoute = () => {
             <img
               src={avatar.image}
               alt={avatar.name}
-              className="h-16 w-16 rounded-[1.4rem] border border-cyan/30 bg-slate-950"
+              className="h-16 w-16 rounded-[1.4rem] border border-white/20 bg-slate-950/20"
             />
             <div>
-              <p className="font-display text-xs uppercase tracking-[0.38em] text-cyan/75">
-                Pilot online
+              <p className="font-display text-xs uppercase tracking-[0.24em] text-amber-100">
+                Player ready
               </p>
               <h1 className="font-display text-2xl uppercase tracking-[0.12em] text-white">
                 {session.profile.username}
@@ -38,9 +38,9 @@ export const PlayRoute = () => {
           <div className="flex flex-wrap gap-3">
             <Link
               to="/play/classic"
-              className="rounded-2xl bg-gradient-to-r from-cyan to-indigo px-5 py-3 font-display text-sm uppercase tracking-[0.3em] text-slate-950"
+              className="rounded-2xl bg-gradient-to-r from-amber-300 via-orange-300 to-rose-300 px-5 py-3 font-display text-sm uppercase tracking-[0.24em] text-slate-900"
             >
-              Enter grid
+              Play now
             </Link>
             <Link
               to="/profile"
@@ -65,19 +65,19 @@ export const PlayRoute = () => {
             className="glass-panel rounded-[2rem] p-6"
           >
             <p className="font-display text-xs uppercase tracking-[0.38em] text-cyan/75">
-              Mission briefing
+              Game overview
             </p>
             <h2 className="mt-3 font-display text-3xl uppercase tracking-[0.14em] text-white">
               Classic Sync Mode
             </h2>
             <p className="mt-4 max-w-xl text-sm leading-7 text-white/68">
-              Reveal matching neural fragments before the timer expires. Every clean streak pushes your multiplier higher,
-              but every mistake injects corruption into the grid and breaks your combo chain.
+              Reveal matching cards before the timer runs out. Good streaks raise your combo,
+              while mistakes slow down your climb up the leaderboard.
             </p>
             <div className="mt-6 grid gap-3 sm:grid-cols-3">
               {[
                 ["Goal", "Clear all 8 pairs"],
-                ["Pressure", "75-second collapse timer"],
+                ["Pressure", "75-second round timer"],
                 ["Scoring", "Combo, time, and accuracy bonuses"],
               ].map(([title, value]) => (
                 <div key={title} className="rounded-2xl border border-white/10 bg-white/5 p-4">
@@ -86,8 +86,8 @@ export const PlayRoute = () => {
                 </div>
               ))}
             </div>
-            <div className="mt-6 rounded-[1.6rem] border border-violet/20 bg-violet/10 p-4 text-sm text-white/70">
-              Multiplayer sabotage, daily seed battles, and ability systems are reserved for the next release layer.
+            <div className="mt-6 rounded-[1.6rem] border border-white/15 bg-white/8 p-4 text-sm text-white/70">
+              More modes and multiplayer can come later. This first version focuses on a clean, replayable classic mode.
             </div>
           </motion.section>
 

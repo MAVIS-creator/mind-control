@@ -7,7 +7,7 @@ export const normalizeUsername = (username: string) =>
   username.trim().toLowerCase().replace(/[^a-z0-9_]/g, "");
 
 export const usernameToEmail = (username: string) =>
-  `${normalizeUsername(username)}@mindgrid.player`;
+  `${normalizeUsername(username)}@mindgridplay.com`;
 
 export const calculateRank = (xp: number): RankTitle => {
   if (xp >= 12000) return "System Overlord";

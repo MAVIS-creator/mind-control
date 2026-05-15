@@ -78,7 +78,7 @@ export const authApi = {
             createdAt: profileRow.created_at,
           }
         : null,
-      session.user.email?.split("@")[0] ?? "pilot",
+      session.user.email?.split("@")[0] ?? "player",
     );
     const currentSession = { profile, accessToken: session.access_token };
     saveSession(currentSession);
@@ -91,7 +91,7 @@ export const authApi = {
     if (!hasSupabase || !supabase) {
       const users = loadUsers();
       if (users.some((item) => item.profile.username === normalized)) {
-        throw new Error("That username is already linked to an active neural pilot.");
+        throw new Error("That username is already taken.");
       }
       const profile = createProfile({ ...payload, username: normalized });
       users.push({ profile, password: payload.password });

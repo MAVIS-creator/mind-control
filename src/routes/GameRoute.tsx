@@ -78,7 +78,7 @@ export const GameRoute = () => {
             <button
               type="button"
               onClick={reset}
-              className="rounded-2xl bg-white/10 px-4 py-3 text-xs uppercase tracking-[0.32em] text-white"
+              className="rounded-2xl bg-white/12 px-4 py-3 text-xs uppercase tracking-[0.2em] text-white"
             >
               Restart
             </button>
@@ -97,13 +97,13 @@ export const GameRoute = () => {
           </div>
 
           <aside className="glass-panel rounded-[2rem] p-5">
-            <p className="font-display text-xs uppercase tracking-[0.38em] text-cyan/75">
-              Neural telemetry
+            <p className="font-display text-xs uppercase tracking-[0.24em] text-amber-100">
+              Match stats
             </p>
             <div className="mt-5 space-y-4">
               {[
-                ["Instability", instability],
-                ["Pairs secured", `${state.matches}/8`],
+                ["Round state", instability],
+                ["Pairs cleared", `${state.matches}/8`],
                 ["Mismatches", `${state.mismatches}`],
                 ["Moves", `${state.moves}`],
                 ["Max combo", `x${state.maxCombo}`],
@@ -114,8 +114,8 @@ export const GameRoute = () => {
                 </div>
               ))}
             </div>
-            <div className="mt-5 rounded-2xl border border-cyan/15 bg-cyan/5 p-4 text-sm leading-6 text-white/65">
-              Fast consecutive matches amplify your combo tier. Mistakes inject corruption pulses and reduce score pressure recovery.
+            <div className="mt-5 rounded-2xl border border-white/15 bg-white/8 p-4 text-sm leading-6 text-white/65">
+              Match quickly to build higher combo bonuses. Clean rounds with fewer mistakes produce the best final scores.
             </div>
           </aside>
         </div>

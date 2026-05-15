@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import { AvatarPicker } from "./AvatarPicker";
 import { useAppContext } from "../state/AppContext";
 import { avatarOptions } from "../data/avatars";
-import { hasSupabase } from "../lib/supabase";
 
 export const AuthPanel = () => {
   const { authMode, setAuthMode, login, register } = useAppContext();
@@ -17,14 +16,14 @@ export const AuthPanel = () => {
     () =>
       authMode === "login"
         ? {
-            title: "Resume neural sync",
+            title: "Welcome back",
             action: "Login",
-            hint: "Re-enter the grid and stabilize your fragment chain.",
+            hint: "Jump back in and keep your streak going.",
           }
         : {
-            title: "Forge your pilot identity",
+            title: "Create your player account",
             action: "Register",
-            hint: "Claim a codename, secure your access key, and select an avatar shell.",
+            hint: "Pick a username, set your password, and choose a demo avatar.",
           },
     [authMode],
   );
@@ -52,15 +51,14 @@ export const AuthPanel = () => {
       initial={{ opacity: 0, y: 22 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="glass-panel relative overflow-hidden rounded-[2rem] p-5 shadow-violet sm:p-7"
+      className="glass-panel relative overflow-hidden rounded-[2rem] p-5 sm:p-7"
     >
-      <div className="absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-cyan/60 to-transparent" />
-      <div className="mb-6 flex items-center gap-2 rounded-full border border-cyan/15 bg-cyan/5 p-1 text-sm">
+      <div className="mb-6 flex items-center gap-2 rounded-full border border-white/20 bg-white/10 p-1 text-sm">
         <button
           type="button"
           onClick={() => setAuthMode("login")}
           className={`flex-1 rounded-full px-4 py-2 transition ${
-            authMode === "login" ? "bg-cyan/15 text-cyan" : "text-white/70"
+            authMode === "login" ? "bg-white text-slate-900" : "text-white/70"
           }`}
         >
           Login
@@ -69,7 +67,7 @@ export const AuthPanel = () => {
           type="button"
           onClick={() => setAuthMode("register")}
           className={`flex-1 rounded-full px-4 py-2 transition ${
-            authMode === "register" ? "bg-violet/15 text-violet" : "text-white/70"
+            authMode === "register" ? "bg-white text-slate-900" : "text-white/70"
           }`}
         >
           Register
@@ -77,7 +75,7 @@ export const AuthPanel = () => {
       </div>
 
       <div className="mb-6">
-        <h2 className="font-display text-2xl uppercase tracking-[0.2em] text-white">
+        <h2 className="font-display text-2xl uppercase tracking-[0.14em] text-white">
           {copy.title}
         </h2>
         <p className="mt-2 text-sm text-white/70">{copy.hint}</p>
@@ -85,7 +83,7 @@ export const AuthPanel = () => {
 
       <form className="space-y-4" onSubmit={handleSubmit}>
         <label className="block">
-          <span className="mb-2 block text-xs uppercase tracking-[0.28em] text-cyan/80">
+          <span className="mb-2 block text-xs uppercase tracking-[0.22em] text-white/75">
             Username
           </span>
           <input
@@ -93,13 +91,13 @@ export const AuthPanel = () => {
             minLength={3}
             value={username}
             onChange={(event) => setUsername(event.target.value)}
-            placeholder="neural_pilot"
-            className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none transition placeholder:text-white/30 focus:border-cyan/70 focus:bg-white/10"
+            placeholder="player_one"
+            className="w-full rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-white outline-none transition placeholder:text-white/35 focus:border-sky-300 focus:bg-white/15"
           />
         </label>
 
         <label className="block">
-          <span className="mb-2 block text-xs uppercase tracking-[0.28em] text-cyan/80">
+          <span className="mb-2 block text-xs uppercase tracking-[0.22em] text-white/75">
             Password
           </span>
           <input
@@ -109,14 +107,14 @@ export const AuthPanel = () => {
             value={password}
             onChange={(event) => setPassword(event.target.value)}
             placeholder="••••••••"
-            className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none transition placeholder:text-white/30 focus:border-cyan/70 focus:bg-white/10"
+            className="w-full rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-white outline-none transition placeholder:text-white/35 focus:border-sky-300 focus:bg-white/15"
           />
         </label>
 
         {authMode === "register" ? (
           <div>
-            <div className="mb-2 block text-xs uppercase tracking-[0.28em] text-cyan/80">
-              Avatar shell
+            <div className="mb-2 block text-xs uppercase tracking-[0.22em] text-white/75">
+              Avatar
             </div>
             <AvatarPicker value={avatarId} onChange={setAvatarId} />
           </div>
@@ -131,17 +129,11 @@ export const AuthPanel = () => {
         <button
           type="submit"
           disabled={loading}
-          className="w-full rounded-2xl bg-gradient-to-r from-cyan to-indigo px-5 py-3 font-display text-sm uppercase tracking-[0.3em] text-slate-950 transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60"
+          className="w-full rounded-2xl bg-gradient-to-r from-amber-300 via-orange-300 to-rose-300 px-5 py-3 font-display text-sm uppercase tracking-[0.22em] text-slate-900 transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {loading ? "Syncing..." : copy.action}
+          {loading ? "Loading..." : copy.action}
         </button>
       </form>
-
-      <div className="mt-5 rounded-2xl border border-white/10 bg-slate-950/35 px-4 py-3 text-xs text-white/60">
-        {hasSupabase
-          ? "Supabase bridge detected. Auth, profile state, and leaderboard runs will persist remotely."
-          : "Supabase keys not set yet. The game runs in local pilot mode with the same flows so you can build and test immediately."}
-      </div>
     </motion.section>
   );
 };

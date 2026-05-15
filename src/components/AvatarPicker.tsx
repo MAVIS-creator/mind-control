@@ -18,8 +18,8 @@ export const AvatarPicker = ({ value, onChange }: AvatarPickerProps) => (
           className={cn(
             "group rounded-3xl border px-3 py-3 text-left transition duration-200",
             active
-              ? "border-cyan bg-cyan/10 shadow-neon"
-              : "border-white/10 bg-white/5 hover:border-cyan/50 hover:bg-white/10",
+              ? "border-white/60 bg-white/16 shadow-lg"
+              : "border-white/10 bg-white/5 hover:border-white/35 hover:bg-white/10",
           )}
         >
           <div

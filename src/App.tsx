@@ -31,7 +31,7 @@ export const App = () => {
           <h1 className="mt-3 font-display text-2xl uppercase tracking-[0.18em] text-white">
             MindGrid uplink
           </h1>
-          <p className="mt-2 text-sm text-white/60">Stabilizing the neural gateway...</p>
+          <p className="mt-2 text-sm text-white/60">Loading your game hub...</p>
         </div>
       </div>
     );
@@ -45,7 +45,7 @@ export const App = () => {
             <p className="font-display text-xs uppercase tracking-[0.4em] text-cyan/75">
               Routing
             </p>
-            <p className="mt-3 text-sm text-white/60">Streaming the next neural chamber...</p>
+            <p className="mt-3 text-sm text-white/60">Opening the next screen...</p>
           </div>
         </div>
       }

@@ -59,7 +59,7 @@ export const LeaderboardTable = ({ entries }: { entries: LeaderboardEntry[] }) =
           ) : (
             <tr>
               <td className="px-5 py-8 text-sm text-white/60" colSpan={5}>
-                No completed runs yet. Enter the grid and set the first neural benchmark.
+                No completed runs yet. Start a match and set the first high score.
               </td>
             </tr>
           )}

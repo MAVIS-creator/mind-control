@@ -1,6 +1,6 @@
 # MindGrid: Neural Clash
 
-MindGrid is a cyberpunk memory-arcade MVP built with `React`, `TypeScript`, `Tailwind`, `Phaser`, and optional `Supabase` persistence.
+MindGrid is a polished memory-arcade MVP built with `React`, `TypeScript`, `Tailwind`, `Phaser`, and optional `Supabase` persistence.
 
 ## Scripts
 

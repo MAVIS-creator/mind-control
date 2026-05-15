@@ -25,11 +25,11 @@ export const ProfileRoute = () => {
             <img
               src={avatar.image}
               alt={avatar.name}
-              className="w-full max-w-[220px] rounded-[2rem] border border-cyan/20 bg-slate-950"
+              className="w-full max-w-[220px] rounded-[2rem] border border-white/20 bg-slate-950/20"
             />
             <div>
-              <p className="font-display text-xs uppercase tracking-[0.38em] text-cyan/75">
-                Pilot dossier
+              <p className="font-display text-xs uppercase tracking-[0.24em] text-amber-100">
+                Player profile
               </p>
               <h1 className="mt-3 font-display text-4xl uppercase tracking-[0.12em] text-white">
                 {session.profile.username}

@@ -27,20 +27,20 @@ export const ResultsRoute = () => {
         <section className="glass-panel rounded-[2rem] p-6 sm:p-8">
           <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="font-display text-xs uppercase tracking-[0.38em] text-cyan/75">
-                Neural debrief
+              <p className="font-display text-xs uppercase tracking-[0.24em] text-amber-100">
+                Round summary
               </p>
               <h1 className="mt-3 font-display text-4xl uppercase tracking-[0.12em] text-white">
-                {state.won ? "Grid synchronized" : "Grid collapse detected"}
+                {state.won ? "Round cleared" : "Time over"}
               </h1>
               <p className="mt-3 max-w-2xl text-sm leading-7 text-white/68">
-                Your run has been archived to the ladder. Review the score stack, then jump back in for a cleaner chain.
+                Your score has been saved. Check the breakdown, then jump back in for a better combo chain.
               </p>
             </div>
             <img
               src={avatar.image}
               alt={avatar.name}
-              className="h-24 w-24 rounded-[1.8rem] border border-cyan/20 bg-slate-950"
+              className="h-24 w-24 rounded-[1.8rem] border border-white/20 bg-slate-950/20"
             />
           </div>
 
@@ -80,7 +80,7 @@ export const ResultsRoute = () => {
         <div className="flex flex-wrap gap-3">
           <Link
             to="/play/classic"
-            className="rounded-2xl bg-gradient-to-r from-cyan to-indigo px-5 py-3 font-display text-sm uppercase tracking-[0.3em] text-slate-950"
+            className="rounded-2xl bg-gradient-to-r from-amber-300 via-orange-300 to-rose-300 px-5 py-3 font-display text-sm uppercase tracking-[0.22em] text-slate-900"
           >
             Run again
           </Link>

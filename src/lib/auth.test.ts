@@ -11,7 +11,7 @@ describe("local auth fallback", () => {
     const registered = await authApi.register({
       username: "pilot_one",
       password: "secure123",
-      avatarId: "pulse-runner",
+      avatarId: "ace-scout",
     });
 
     expect(registered.profile.username).toBe("pilot_one");
@@ -23,6 +23,6 @@ describe("local auth fallback", () => {
       password: "secure123",
     });
 
-    expect(loggedIn.profile.avatarId).toBe("pulse-runner");
+    expect(loggedIn.profile.avatarId).toBe("ace-scout");
   });
 });

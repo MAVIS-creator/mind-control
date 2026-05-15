@@ -78,7 +78,7 @@ export const AppProvider = ({ children }: PropsWithChildren) => {
         setLeaderboard(next);
       },
       submitRun: async (entry) => {
-        if (!session) throw new Error("A neural pilot session is required.");
+        if (!session) throw new Error("You need to be logged in before saving a run.");
         const result = await authApi.submitRun(session, entry);
         setSession(result.session);
         setLeaderboard(result.leaderboard);
