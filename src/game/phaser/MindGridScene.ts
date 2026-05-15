@@ -37,20 +37,24 @@ export class MindGridScene extends Phaser.Scene {
 
     this.children.removeAll();
 
-    const { board, timerRemaining, combo, mismatches, theme } = this.latestState;
+    const { board, timerRemaining, combo, mismatches } = this.latestState;
     const width = this.scale.width;
     const height = this.scale.height;
 
-    this.add
-      .rectangle(width / 2, height / 2, width * 0.94, height * 0.92, 0xf7fbff, 0.92)
-      .setStrokeStyle(2, 0xc8d8ea, 0.8);
+    this.add.rectangle(width / 2, height / 2, width * 0.96, height * 0.94, 0xf5f7ff, 0.94);
+
+    const frame = this.add.graphics();
+    frame.lineStyle(2, 0xe3e8f7, 0.95);
+    frame.fillStyle(0xf9fbff, 0.86);
+    frame.fillRoundedRect(width * 0.04, height * 0.05, width * 0.92, height * 0.9, 28);
+    frame.strokeRoundedRect(width * 0.04, height * 0.05, width * 0.92, height * 0.9, 28);
 
     const margin = 24;
-    const gap = board.columns >= 6 ? 10 : 16;
+    const gap = board.columns >= 6 ? 12 : 18;
     const cardSize = Math.min(
       (width - margin * 2 - gap * (board.columns - 1)) / board.columns,
       (height - margin * 2 - gap * (board.rows - 1)) / board.rows,
-      board.columns >= 6 ? 72 : 92,
+      board.columns >= 6 ? 88 : 110,
     );
     const gridWidth = cardSize * board.columns + gap * (board.columns - 1);
     const gridHeight = cardSize * board.rows + gap * (board.rows - 1);
@@ -71,12 +75,12 @@ export class MindGridScene extends Phaser.Scene {
       const y = startY + row * (cardSize + gap);
 
       const revealed = card.revealed || card.matched;
-      const fillColor = card.matched ? 0xf59e0b : revealed ? 0x304859 : 0xb9c6d3;
-      const textColor = card.matched || revealed ? "#fcfcfc" : "#304859";
+      const fillColor = card.matched ? 0x3d32da : revealed ? 0x4f46e5 : 0xffffff;
+      const textColor = card.matched || revealed ? "#fcfcfc" : "#c5c3f5";
 
       const tile = this.add
-        .circle(x, y, cardSize / 2, fillColor, 0.97)
-        .setStrokeStyle(revealed ? 2 : 0, 0xffffff, 0.65)
+        .rectangle(x, y, cardSize, cardSize, fillColor, 0.98)
+        .setStrokeStyle(revealed ? 2 : 2, revealed ? 0xd9dff8 : 0xe4e8f5, 0.96)
         .setInteractive({ useHandCursor: !card.matched && !card.revealed });
 
       tile.on("pointerdown", () => {
@@ -85,13 +89,32 @@ export class MindGridScene extends Phaser.Scene {
         }
       });
 
-      this.add
-        .text(x, y, revealed ? card.symbol : "◈", {
-          fontFamily: "Inter",
-          fontSize: `${cardSize >= 90 ? 28 : cardSize >= 76 ? 22 : 18}px`,
-          color: revealed ? textColor : theme === "icons" ? "#304859" : "#1f3147",
-        })
-        .setOrigin(0.5);
+      if (!revealed) {
+        const iconGap = Math.max(cardSize * 0.09, 6);
+        const iconSize = Math.max(cardSize * 0.12, 9);
+        const offset = iconSize / 2 + iconGap / 2;
+        const icon = this.add.graphics();
+        icon.lineStyle(2.2, 0xd2cff7, 1);
+        [
+          [-offset, -offset],
+          [offset, -offset],
+          [-offset, offset],
+          [offset, offset],
+        ].forEach(([dx, dy]) => {
+          icon.strokeRoundedRect(x + dx - iconSize / 2, y + dy - iconSize / 2, iconSize, iconSize, 3);
+        });
+      }
+
+      if (revealed) {
+        this.add
+          .text(x, y, card.symbol, {
+            fontFamily: "Inter",
+            fontSize: `${cardSize >= 102 ? 34 : cardSize >= 88 ? 28 : 22}px`,
+            color: textColor,
+            fontStyle: card.matched ? "700" : "600",
+          })
+          .setOrigin(0.5);
+      }
     });
 
     if (combo >= 2) {

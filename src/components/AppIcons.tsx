@@ -1,6 +1,9 @@
 import type { SVGProps } from "react";
 
 type IconProps = SVGProps<SVGSVGElement>;
+type BrandMotionMarkProps = {
+  className?: string;
+};
 
 const baseProps = {
   fill: "none",
@@ -131,4 +134,13 @@ export const BrandMarkIcon = (props: SVGProps<SVGSVGElement>) => (
       </linearGradient>
     </defs>
   </svg>
+);
+
+export const BrandMotionMark = ({ className }: BrandMotionMarkProps) => (
+  <div className={`brand-motion-mark ${className ?? ""}`.trim()} aria-hidden="true">
+    <span className="brand-motion-cell brand-motion-cell-a" />
+    <span className="brand-motion-cell brand-motion-cell-b" />
+    <span className="brand-motion-cell brand-motion-cell-c" />
+    <span className="brand-motion-cell brand-motion-cell-d" />
+  </div>
 );

@@ -93,6 +93,16 @@ export const AppShell = ({ session, active, children }: AppShellProps) => {
                     <UserIcon className="h-4 w-4" />
                     Profile
                   </Link>
+                  {session.profile.isAdmin ? (
+                    <Link
+                      to="/admin"
+                      onClick={() => setMenuOpen(false)}
+                      className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-[#464555] transition hover:bg-[#f5f4ff] hover:text-[#3525cd]"
+                    >
+                      <TrophyIcon className="h-4 w-4" />
+                      Admin
+                    </Link>
+                  ) : null}
                   <button
                     type="button"
                     onClick={() => {

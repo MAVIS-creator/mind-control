@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { AvatarPicker } from "./AvatarPicker";
-import { BrandMarkIcon } from "./AppIcons";
 import { useAppContext } from "../state/AppContext";
 import { avatarOptions } from "../data/avatars";
 
@@ -28,14 +27,14 @@ export const AuthPanel = ({ forcedMode }: AuthPanelProps) => {
     () =>
       authMode === "login"
         ? {
-            title: "Welcome Back, Genius",
+            title: "Welcome back",
             action: "Enter Grid",
-            hint: null,
+            hint: "Sign in to continue your single-player run, save scores, and climb the Hall of Fame.",
           }
         : {
             title: "Join the Grid",
             action: "Create Account",
-            hint: "Start your journey toward mental mastery today.",
+            hint: "Choose an avatar, lock in your username, and start building your memory rank.",
           },
     [authMode],
   );
@@ -64,12 +63,14 @@ export const AuthPanel = ({ forcedMode }: AuthPanelProps) => {
         initial={{ opacity: 0, y: 22 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.45 }}
-        className="mx-auto w-full max-w-md rounded-[2.8rem] border border-white/50 bg-white/75 p-8 shadow-[0_20px_40px_rgba(53,37,205,0.08)] backdrop-blur-xl"
+        className="mx-auto w-full max-w-[32rem] rounded-[2.8rem] border border-white/60 bg-white/82 p-7 shadow-[0_26px_60px_rgba(53,37,205,0.08)] backdrop-blur-xl sm:p-9"
       >
-        <div className="mb-10 text-center">
-          <BrandMarkIcon className="mx-auto mb-6 h-20 w-20 shadow-[0_14px_28px_rgba(53,37,205,0.18)]" />
-          <h2 className="font-display text-[2.3rem] font-bold tracking-[-0.05em] text-[#3525cd]">MindGrid</h2>
-          <p className="mt-3 text-[1.1rem] text-[#464555]">{copy.title}</p>
+        <div className="mb-9">
+          <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#667085]">Sign in</p>
+          <h2 className="mt-3 font-display text-[2.6rem] font-extrabold tracking-[-0.06em] text-[#111c2d]">
+            {copy.title}
+          </h2>
+          <p className="mt-3 max-w-md text-[1rem] leading-7 text-[#5a6174]">{copy.hint}</p>
         </div>
 
         <form className="space-y-5" onSubmit={handleSubmit}>
@@ -83,14 +84,13 @@ export const AuthPanel = ({ forcedMode }: AuthPanelProps) => {
               value={username}
               onChange={(event) => setUsername(event.target.value)}
               placeholder="player_one"
-              className="h-16 w-full rounded-full border border-[#e8eaf5] bg-[#eef2ff] px-6 text-[1.15rem] text-[#111c2d] outline-none transition focus:border-[#c3c0ff] focus:ring-4 focus:ring-[#e2dfff]"
+              className="h-16 w-full rounded-[1.35rem] border border-[#e8eaf5] bg-[#eef2ff] px-6 text-[1.1rem] text-[#111c2d] outline-none transition focus:border-[#c3c0ff] focus:ring-4 focus:ring-[#e2dfff]"
             />
           </label>
 
           <label className="block">
             <div className="mb-2 flex items-center justify-between">
               <span className="text-sm font-semibold uppercase tracking-[0.16em] text-[#464555]">Password</span>
-              <span className="text-sm font-semibold text-[#3525cd]">Forgot?</span>
             </div>
             <input
               required
@@ -99,7 +99,7 @@ export const AuthPanel = ({ forcedMode }: AuthPanelProps) => {
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               placeholder="••••••••"
-              className="h-16 w-full rounded-full border border-[#e8eaf5] bg-[#eef2ff] px-6 text-[1.15rem] text-[#111c2d] outline-none transition focus:border-[#c3c0ff] focus:ring-4 focus:ring-[#e2dfff]"
+              className="h-16 w-full rounded-[1.35rem] border border-[#e8eaf5] bg-[#eef2ff] px-6 text-[1.1rem] text-[#111c2d] outline-none transition focus:border-[#c3c0ff] focus:ring-4 focus:ring-[#e2dfff]"
             />
           </label>
 
@@ -116,24 +116,13 @@ export const AuthPanel = ({ forcedMode }: AuthPanelProps) => {
           >
             {loading ? "Loading..." : copy.action}
           </button>
+
+          <div className="rounded-[1.6rem] border border-[#e8eaf5] bg-[#f8f9ff] px-5 py-4 text-sm text-[#5a6174]">
+            Use the same username and password you created during registration. Saved runs and leaderboard progress stay tied to this account.
+          </div>
         </form>
 
-        <div className="my-10 flex items-center gap-4">
-          <div className="h-px flex-1 bg-[#d8dbea]" />
-          <span className="text-sm font-semibold uppercase tracking-[0.16em] text-[#a0a4b8]">Or connect with</span>
-          <div className="h-px flex-1 bg-[#d8dbea]" />
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
-          <button type="button" className="rounded-full border border-[#d9d8eb] bg-white px-5 py-5 text-lg font-semibold text-[#111c2d]">
-            Google
-          </button>
-          <button type="button" className="rounded-full border border-[#d9d8eb] bg-white px-5 py-5 text-lg font-semibold text-[#111c2d]">
-            File
-          </button>
-        </div>
-
-        <p className="mt-10 text-center text-[1.05rem] text-[#464555]">
+        <p className="mt-8 text-center text-[1.05rem] text-[#464555]">
           New to the grid?{" "}
           <Link to="/register" className="font-semibold text-[#3525cd]">
             Create Account
@@ -144,21 +133,17 @@ export const AuthPanel = ({ forcedMode }: AuthPanelProps) => {
   }
 
   return (
-    <motion.section
-      initial={{ opacity: 0, y: 22 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.45 }}
-      className="mx-auto w-full max-w-xl"
-    >
-      <div className="mb-8 text-center">
-        <h2 className="font-display text-[3rem] font-extrabold tracking-[-0.05em] text-[#3525cd]">MindGrid</h2>
-        <p className="mt-2 text-sm font-semibold uppercase tracking-[0.22em] text-[#464555]">Connect To Clarity</p>
-      </div>
-
-      <section className="rounded-[2.8rem] border border-white/50 bg-white/80 p-8 shadow-[0_20px_40px_rgba(53,37,205,0.08)] backdrop-blur-xl">
+      <motion.section
+        initial={{ opacity: 0, y: 22 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.45 }}
+        className="mx-auto w-full max-w-[34rem]"
+      >
+      <section className="rounded-[2.8rem] border border-white/60 bg-white/82 p-7 shadow-[0_26px_60px_rgba(53,37,205,0.08)] backdrop-blur-xl sm:p-9">
         <header>
-          <h3 className="text-[3rem] font-extrabold tracking-[-0.06em] text-[#111c2d]">{copy.title}</h3>
-          <p className="mt-3 max-w-md text-[1.2rem] leading-9 text-[#464555]">{copy.hint}</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#667085]">Create account</p>
+          <h3 className="mt-3 text-[2.8rem] font-extrabold tracking-[-0.06em] text-[#111c2d]">{copy.title}</h3>
+          <p className="mt-3 max-w-lg text-[1rem] leading-7 text-[#5a6174]">{copy.hint}</p>
         </header>
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
@@ -167,34 +152,36 @@ export const AuthPanel = ({ forcedMode }: AuthPanelProps) => {
             <AvatarPicker value={avatarId} onChange={setAvatarId} />
           </div>
 
-          <label className="block">
-            <span className="mb-2 block text-sm font-semibold uppercase tracking-[0.16em] text-[#464555]">
-              Username
-            </span>
-            <input
-              required
-              minLength={3}
-              value={username}
-              onChange={(event) => setUsername(event.target.value)}
-              placeholder="Enter your grid name"
-              className="h-16 w-full rounded-[1.2rem] border border-[#e8eaf5] bg-[#eef2ff] px-6 text-[1.15rem] text-[#111c2d] outline-none transition focus:border-[#c3c0ff] focus:ring-4 focus:ring-[#e2dfff]"
-            />
-          </label>
+          <div className="grid gap-5 sm:grid-cols-2">
+            <label className="block">
+              <span className="mb-2 block text-sm font-semibold uppercase tracking-[0.16em] text-[#464555]">
+                Username
+              </span>
+              <input
+                required
+                minLength={3}
+                value={username}
+                onChange={(event) => setUsername(event.target.value)}
+                placeholder="Enter your grid name"
+                className="h-16 w-full rounded-[1.35rem] border border-[#e8eaf5] bg-[#eef2ff] px-6 text-[1.05rem] text-[#111c2d] outline-none transition focus:border-[#c3c0ff] focus:ring-4 focus:ring-[#e2dfff]"
+              />
+            </label>
 
-          <label className="block">
-            <span className="mb-2 block text-sm font-semibold uppercase tracking-[0.16em] text-[#464555]">
-              Password
-            </span>
-            <input
-              required
-              type="password"
-              minLength={6}
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              placeholder="••••••••"
-              className="h-16 w-full rounded-[1.2rem] border border-[#e8eaf5] bg-[#eef2ff] px-6 text-[1.15rem] text-[#111c2d] outline-none transition focus:border-[#c3c0ff] focus:ring-4 focus:ring-[#e2dfff]"
-            />
-          </label>
+            <label className="block">
+              <span className="mb-2 block text-sm font-semibold uppercase tracking-[0.16em] text-[#464555]">
+                Password
+              </span>
+              <input
+                required
+                type="password"
+                minLength={6}
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                placeholder="••••••••"
+                className="h-16 w-full rounded-[1.35rem] border border-[#e8eaf5] bg-[#eef2ff] px-6 text-[1.05rem] text-[#111c2d] outline-none transition focus:border-[#c3c0ff] focus:ring-4 focus:ring-[#e2dfff]"
+              />
+            </label>
+          </div>
 
           <label className="flex items-center gap-3 text-[1.05rem] text-[#464555]">
             <input type="checkbox" className="h-5 w-5 rounded border-[#c7c4d8] text-[#3525cd]" />
