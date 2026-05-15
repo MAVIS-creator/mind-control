@@ -24,15 +24,11 @@ export const HallOfFameRoute = () => {
     <AppShell session={session} active="ranks">
       <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-10">
         <section className="mb-8 text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-indigo-600">
-            Ranking board
-          </p>
-          <h1 className="mt-3 font-display text-5xl tracking-[-0.05em] text-slate-900">
+          <h1 className="mt-3 font-display text-5xl tracking-[-0.05em] text-[#3525cd]">
             Hall of Fame
           </h1>
-          <p className="mx-auto mt-3 max-w-2xl text-base leading-7 text-slate-600">
-            Your best classic runs, mapped into a cleaner ranking screen inspired by the
-            stitch leaderboard references.
+          <p className="mx-auto mt-3 max-w-2xl text-base leading-7 text-[#464555]">
+            This is the leaderboard screen for the MVP. In this build, Hall of Fame and leaderboard are the same page.
           </p>
         </section>
 
@@ -42,7 +38,7 @@ export const HallOfFameRoute = () => {
             return (
               <article
                 key={entry.id}
-                className={`glass-panel rounded-[2rem] border-2 p-6 text-center ${medalClasses[index] ?? "border-slate-200 bg-white"}`}
+                className={`glass-panel rounded-[2rem] border p-6 text-center shadow-[0_14px_34px_rgba(53,37,205,0.08)] ${medalClasses[index] ?? "border-slate-200 bg-white"}`}
               >
                 <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-white text-lg font-bold text-slate-900 shadow-sm">
                   {index + 1}
@@ -53,7 +49,7 @@ export const HallOfFameRoute = () => {
                   className="mx-auto mt-4 h-24 w-24 rounded-full border-4 border-white bg-slate-100 shadow-md"
                 />
                 <h2 className="mt-4 text-xl font-semibold text-slate-900">{entry.username}</h2>
-                <p className="mt-1 text-sm uppercase tracking-[0.18em] text-indigo-600">
+                <p className="mt-1 text-sm uppercase tracking-[0.18em] text-[#3525cd]">
                   {formatNumber(entry.score)} pts
                 </p>
                 <p className="mt-2 text-sm text-slate-500">
@@ -66,7 +62,7 @@ export const HallOfFameRoute = () => {
 
         <section className="glass-panel overflow-hidden rounded-[2rem]">
           <div className="border-b border-slate-200/70 px-6 py-5">
-            <h2 className="text-xl font-semibold text-slate-900">Top Players</h2>
+            <h2 className="text-xl font-semibold text-slate-900">Leaderboard</h2>
             <p className="mt-1 text-sm text-slate-500">Classic mode ranking by best recorded runs.</p>
           </div>
           <div className="overflow-x-auto">
@@ -97,7 +93,7 @@ export const HallOfFameRoute = () => {
                             <span className="font-medium text-slate-900">{entry.username}</span>
                           </div>
                         </td>
-                        <td className="px-6 py-4 font-semibold text-indigo-700">{formatNumber(entry.score)}</td>
+                        <td className="px-6 py-4 font-semibold text-[#3525cd]">{formatNumber(entry.score)}</td>
                         <td className="px-6 py-4">{entry.accuracy.toFixed(1)}%</td>
                         <td className="px-6 py-4">x{entry.maxCombo}</td>
                       </tr>

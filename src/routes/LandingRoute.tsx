@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Link, Navigate } from "react-router-dom";
-import { ClockIcon, GridIcon, PlayIcon, TrophyIcon } from "../components/AppIcons";
+import { BrandMarkIcon, ClockIcon, GridIcon, PlayIcon, TrophyIcon } from "../components/AppIcons";
 import { useAppContext } from "../state/AppContext";
 
 export const LandingRoute = () => {
@@ -11,38 +11,40 @@ export const LandingRoute = () => {
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden px-4 py-6 sm:px-6 lg:px-10">
+    <div className="relative min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top_left,_#e2dfff_0%,_#f9f9ff_45%,_#d4e3ff_100%)] px-4 py-6 sm:px-6 lg:px-10">
       <div className="mx-auto max-w-7xl">
-        <section className="glass-panel overflow-hidden rounded-[2.5rem] p-6 sm:p-8 lg:p-10">
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-xs font-semibold uppercase tracking-[0.24em] text-indigo-600"
-          >
-            MindGrid: Neural Clash
-          </motion.p>
+        <section className="glass-panel overflow-hidden rounded-[2.5rem] p-6 shadow-[0_18px_40px_rgba(53,37,205,0.08)] sm:p-8 lg:p-10">
+          <div className="flex items-center gap-4">
+            <BrandMarkIcon className="h-16 w-16" />
+            <motion.p
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-xs font-semibold uppercase tracking-[0.24em] text-[#3525cd]"
+            >
+              MindGrid: Neural Clash
+            </motion.p>
+          </div>
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.08 }}
-            className="mt-4 max-w-4xl font-display text-5xl tracking-[-0.06em] text-slate-900 sm:text-6xl lg:text-7xl"
+            className="mt-6 max-w-4xl font-display text-5xl tracking-[-0.06em] text-[#111c2d] sm:text-6xl lg:text-7xl"
           >
-            Premium memory battles with a cleaner home screen and focused game flow.
+            Master your focus. Enter the grid and climb the ranks.
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.16 }}
-            className="mt-5 max-w-2xl text-base leading-7 text-slate-600"
+            className="mt-5 max-w-2xl text-base leading-7 text-[#464555]"
           >
-            The landing page now stands on its own. Login, register, enter the dashboard,
-            and compete through the Hall of Fame without mixing every screen into one page.
+            Login, register, enter the single-player setup, and track your best runs from the ranking board.
           </motion.p>
 
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
               to="/login"
-              className="inline-flex items-center gap-3 rounded-[1.5rem] bg-indigo-600 px-6 py-4 text-sm font-semibold uppercase tracking-[0.2em] text-white shadow-lg shadow-indigo-200"
+              className="inline-flex items-center gap-3 rounded-[1.5rem] bg-gradient-to-b from-[#4f46e5] to-[#3525cd] px-6 py-4 text-sm font-semibold uppercase tracking-[0.2em] text-white shadow-[0_14px_28px_rgba(53,37,205,0.25)]"
             >
               <PlayIcon className="h-5 w-5" />
               Login

@@ -21,18 +21,18 @@ export const PlayRoute = () => {
   >;
 
   return (
-    <AppShell session={session} active="social">
-      <div className="mx-auto max-w-[1500px] px-5 py-10 sm:px-8">
+    <AppShell session={session} active="home">
+      <div className="min-h-[calc(100vh-84px)] bg-[#0b0f29] px-5 py-10 sm:px-8">
         <div className="mx-auto max-w-5xl">
-          <div className="glass-panel rounded-[2.5rem] px-6 py-8 shadow-[0_18px_42px_rgba(53,37,205,0.08)] sm:px-10 md:px-14">
+          <div className="rounded-[2.5rem] border border-[#e4e5ec] bg-[#b8b8bf] px-6 py-8 shadow-[0_0_0_1px_rgba(255,255,255,0.2),0_20px_48px_rgba(0,0,0,0.16)] sm:px-10 md:px-14">
             <div className="mx-auto max-w-[540px]">
               <div className="mb-8 h-1 rounded-full bg-gradient-to-r from-indigo-700 to-violet-500" />
 
               <div className="mb-8 flex justify-center">
-                <div className="inline-flex rounded-full bg-slate-100 p-1.5 shadow-inner">
+                <div className="inline-flex rounded-full bg-[#dbe1ec] p-1.5 shadow-inner">
                   <button
                     type="button"
-                    className="rounded-full bg-gradient-to-b from-indigo-600 to-indigo-700 px-10 py-3 text-base font-semibold text-white shadow-lg shadow-indigo-200"
+                    className="rounded-full bg-gradient-to-b from-[#4f46e5] to-[#3525cd] px-10 py-3 text-base font-semibold text-white shadow-[0_12px_24px_rgba(53,37,205,0.24)]"
                   >
                     Single Player
                   </button>
@@ -41,7 +41,7 @@ export const PlayRoute = () => {
 
               <div className="space-y-8">
                 <div>
-                  <h2 className="mb-4 text-[1.45rem] font-semibold text-slate-900">Grid Size</h2>
+                  <h2 className="mb-4 text-[1.45rem] font-semibold text-[#111c2d]">Grid Size</h2>
                   <div className="grid gap-3 sm:grid-cols-3">
                     {gridOptions.map(([key, option]) => {
                       const active = settings.gridSize === key;
@@ -52,8 +52,8 @@ export const PlayRoute = () => {
                           onClick={() => updateSettings({ gridSize: key })}
                           className={`inline-flex items-center justify-center gap-3 rounded-full border px-5 py-4 text-lg font-medium transition ${
                             active
-                              ? "border-indigo-200 bg-indigo-50 text-indigo-700 shadow-md"
-                              : "border-slate-200 bg-white text-slate-700"
+                              ? "border-[#d7d9ea] bg-[#b0b0b8] text-[#25354b] shadow-[inset_0_1px_0_rgba(255,255,255,0.55),0_10px_18px_rgba(53,37,205,0.08)]"
+                              : "border-[#eef1f7] bg-white text-[#32445c]"
                           }`}
                         >
                           <GridIcon className="h-5 w-5" />
@@ -65,7 +65,7 @@ export const PlayRoute = () => {
                 </div>
 
                 <div>
-                  <h2 className="mb-4 text-[1.45rem] font-semibold text-slate-900">Match Type</h2>
+                  <h2 className="mb-4 text-[1.45rem] font-semibold text-[#111c2d]">Match Type</h2>
                   <div className="grid gap-3 sm:grid-cols-2">
                     {themeOptions.map((option) => {
                       const active = settings.theme === option.id;
@@ -76,8 +76,8 @@ export const PlayRoute = () => {
                           onClick={() => updateSettings({ theme: option.id })}
                           className={`inline-flex items-center justify-center gap-3 rounded-full border px-5 py-4 text-lg font-medium transition ${
                             active
-                              ? "border-indigo-200 bg-indigo-50 text-indigo-700 shadow-md"
-                              : "border-slate-200 bg-white text-slate-700"
+                              ? "border-[#d7d9ea] bg-[#b0b0b8] text-[#25354b] shadow-[inset_0_1px_0_rgba(255,255,255,0.55),0_10px_18px_rgba(53,37,205,0.08)]"
+                              : "border-[#eef1f7] bg-white text-[#32445c]"
                           }`}
                         >
                           <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-current text-base font-semibold">
@@ -92,7 +92,7 @@ export const PlayRoute = () => {
 
                 <Link
                   to="/play/classic"
-                  className="inline-flex w-full items-center justify-center gap-3 rounded-full bg-gradient-to-b from-indigo-600 to-indigo-700 px-6 py-5 text-[1.35rem] font-semibold text-white shadow-[0_14px_28px_rgba(53,37,205,0.25)]"
+                  className="inline-flex w-full items-center justify-center gap-3 rounded-full bg-gradient-to-b from-[#4f46e5] to-[#3525cd] px-6 py-5 text-[1.35rem] font-semibold text-white shadow-[0_14px_28px_rgba(53,37,205,0.25)]"
                 >
                   <PlayIcon className="h-6 w-6" />
                   Start Game

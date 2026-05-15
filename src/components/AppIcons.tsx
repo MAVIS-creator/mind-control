@@ -116,3 +116,19 @@ export const StarBadgeIcon = (props: IconProps) => (
     <path d="M12 7.2l1.35 2.74 3.02.44-2.18 2.12.52 3-2.71-1.43-2.7 1.43.52-3-2.19-2.12 3.03-.44L12 7.2Z" />
   </svg>
 );
+
+export const BrandMarkIcon = (props: SVGProps<SVGSVGElement>) => (
+  <svg viewBox="0 0 64 64" fill="none" {...props}>
+    <rect x="4" y="4" width="56" height="56" rx="18" fill="url(#brand-gradient)" />
+    <rect x="18" y="18" width="10" height="10" rx="1.5" stroke="white" strokeWidth="4" />
+    <rect x="36" y="18" width="10" height="10" rx="1.5" stroke="white" strokeWidth="4" />
+    <rect x="18" y="36" width="10" height="10" rx="1.5" stroke="white" strokeWidth="4" />
+    <rect x="36" y="36" width="10" height="10" rx="1.5" stroke="white" strokeWidth="4" />
+    <defs>
+      <linearGradient id="brand-gradient" x1="10" y1="8" x2="53" y2="56" gradientUnits="userSpaceOnUse">
+        <stop stopColor="#4f46e5" />
+        <stop offset="1" stopColor="#3525cd" />
+      </linearGradient>
+    </defs>
+  </svg>
+);

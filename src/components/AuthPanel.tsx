@@ -27,13 +27,13 @@ export const AuthPanel = ({ forcedMode }: AuthPanelProps) => {
     () =>
       authMode === "login"
         ? {
-            title: "Welcome back",
-            action: "Login",
+            title: "Welcome Back, Genius",
+            action: "Enter Grid",
             hint: "Jump back in and keep your streak going.",
           }
         : {
-            title: "Create your player account",
-            action: "Register",
+            title: "Join the Grid",
+            action: "Create Account",
             hint: "Pick a username, set your password, and choose a demo avatar.",
           },
     [authMode],

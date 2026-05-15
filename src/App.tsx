@@ -34,13 +34,13 @@ export const App = () => {
     return (
       <div className="flex min-h-screen items-center justify-center px-4">
         <div className="glass-panel rounded-[2rem] px-8 py-6 text-center">
-          <p className="font-display text-xs uppercase tracking-[0.4em] text-cyan/75">
+          <p className="font-display text-xs uppercase tracking-[0.4em] text-[#3525cd]">
             Initializing
           </p>
-          <h1 className="mt-3 font-display text-2xl uppercase tracking-[0.18em] text-white">
+          <h1 className="mt-3 font-display text-2xl tracking-[-0.03em] text-[#111c2d]">
             MindGrid
           </h1>
-          <p className="mt-2 text-sm text-white/60">Loading your game hub...</p>
+          <p className="mt-2 text-sm text-[#464555]">Loading your game hub...</p>
         </div>
       </div>
     );
@@ -51,10 +51,10 @@ export const App = () => {
       fallback={
         <div className="flex min-h-screen items-center justify-center px-4">
           <div className="glass-panel rounded-[2rem] px-8 py-6 text-center">
-            <p className="font-display text-xs uppercase tracking-[0.4em] text-cyan/75">
+            <p className="font-display text-xs uppercase tracking-[0.4em] text-[#3525cd]">
               Routing
             </p>
-            <p className="mt-3 text-sm text-white/60">Opening the next screen...</p>
+            <p className="mt-3 text-sm text-[#464555]">Opening the next screen...</p>
           </div>
         </div>
       }
