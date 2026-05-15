@@ -8,15 +8,15 @@ export const LeaderboardTable = ({ entries }: { entries: LeaderboardEntry[] }) =
   <div className="glass-panel overflow-hidden rounded-[2rem]">
     <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
       <h2 className="font-display text-lg uppercase tracking-[0.28em] text-white">
-        Global Sync Ladder
+        Leaderboard
       </h2>
-      <p className="text-xs uppercase tracking-[0.28em] text-cyan/70">Classic mode</p>
+      <p className="text-xs uppercase tracking-[0.22em] text-amber-100/85">Classic mode</p>
     </div>
     <div className="overflow-x-auto">
       <table className="min-w-full text-left">
         <thead className="text-xs uppercase tracking-[0.28em] text-white/45">
           <tr>
-            <th className="px-5 py-4">Pilot</th>
+            <th className="px-5 py-4">Player</th>
             <th className="px-5 py-4">Score</th>
             <th className="px-5 py-4">Accuracy</th>
             <th className="px-5 py-4">Combo</th>
@@ -37,7 +37,7 @@ export const LeaderboardTable = ({ entries }: { entries: LeaderboardEntry[] }) =
                       <img
                         src={avatar.image}
                         alt={avatar.name}
-                        className="h-11 w-11 rounded-2xl border border-cyan/20 bg-slate-950"
+                        className="h-11 w-11 rounded-2xl border border-white/20 bg-slate-950/20"
                       />
                       <div>
                         <div className="font-medium text-white">{entry.username}</div>
@@ -47,7 +47,7 @@ export const LeaderboardTable = ({ entries }: { entries: LeaderboardEntry[] }) =
                       </div>
                     </div>
                   </td>
-                  <td className="px-5 py-4 font-display tracking-[0.18em] text-cyan">
+                  <td className="px-5 py-4 font-display tracking-[0.18em] text-amber-100">
                     {formatNumber(entry.score)}
                   </td>
                   <td className="px-5 py-4">{formatPercent(entry.accuracy)}</td>

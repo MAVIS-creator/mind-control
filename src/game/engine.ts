@@ -1,5 +1,6 @@
-import { CARD_SYMBOLS } from "./cardPool";
-import { CLASSIC_MODE_CONFIG } from "./config";
+import type { GameSetupSettings } from "../types";
+import { getCardSymbols } from "./cardPool";
+import { createClassicModeConfig } from "./config";
 import { createBoard } from "./createBoard";
 import { calculateScoreBreakdown, comboMultiplierFor } from "./scoring";
 import type { CardNode, GameEvent, GameSessionState } from "./types";
@@ -13,10 +14,15 @@ const createEvent = (
   timestamp: Date.now(),
 });
 
-export const createInitialGameState = (): GameSessionState => ({
-  board: createBoard(CARD_SYMBOLS, CLASSIC_MODE_CONFIG.rows, CLASSIC_MODE_CONFIG.columns),
+export const createInitialGameState = (settings: GameSetupSettings): GameSessionState => {
+  const config = createClassicModeConfig(settings);
+
+  return {
+  board: createBoard(getCardSymbols(settings.theme), config.rows, config.columns),
+  theme: settings.theme,
+  gridSize: settings.gridSize,
   score: 0,
-  timerRemaining: CLASSIC_MODE_CONFIG.totalTimeSeconds,
+  timerRemaining: config.totalTimeSeconds,
   matches: 0,
   mismatches: 0,
   moves: 0,
@@ -25,7 +31,8 @@ export const createInitialGameState = (): GameSessionState => ({
   status: "idle",
   selectedIds: [],
   events: [],
-});
+  };
+};
 
 export const revealCard = (state: GameSessionState, cardId: string): GameSessionState => {
   if (state.status === "won" || state.status === "lost" || state.selectedIds.length >= 2) {
@@ -62,6 +69,10 @@ const withUpdatedCards = (
 
 export const resolveSelection = (state: GameSessionState): GameSessionState => {
   if (state.selectedIds.length !== 2) return state;
+  const config = createClassicModeConfig({
+    theme: state.theme,
+    gridSize: state.gridSize as GameSetupSettings["gridSize"],
+  });
 
   const [firstId, secondId] = state.selectedIds;
   const first = state.board.cards.find((card) => card.id === firstId);
@@ -75,7 +86,7 @@ export const resolveSelection = (state: GameSessionState): GameSessionState => {
   if (isMatch) {
     const nextCombo = state.combo + 1;
     const multiplier = comboMultiplierFor(nextCombo);
-    const nextScore = state.score + CLASSIC_MODE_CONFIG.baseMatchScore * multiplier;
+    const nextScore = state.score + config.baseMatchScore * multiplier;
     const nextState = withUpdatedCards(state, (card) =>
       card.id === firstId || card.id === secondId
         ? { ...card, matched: true, revealed: true }
@@ -109,7 +120,7 @@ export const resolveSelection = (state: GameSessionState): GameSessionState => {
 
   return {
     ...nextState,
-    score: Math.max(0, state.score - CLASSIC_MODE_CONFIG.mistakePenalty),
+    score: Math.max(0, state.score - config.mistakePenalty),
     mismatches: state.mismatches + 1,
     moves: nextMoves,
     combo: 0,
@@ -147,8 +158,13 @@ export const pauseGame = (state: GameSessionState): GameSessionState => ({
 });
 
 export const calculateResults = (state: GameSessionState) => {
+  const config = createClassicModeConfig({
+    theme: state.theme,
+    gridSize: state.gridSize as GameSetupSettings["gridSize"],
+  });
   const accuracy = state.moves ? (state.matches / state.moves) * 100 : 0;
   const breakdown = calculateScoreBreakdown({
+    config,
     matches: state.matches,
     maxCombo: state.maxCombo,
     mistakes: state.mismatches,

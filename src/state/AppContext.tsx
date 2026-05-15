@@ -9,18 +9,23 @@ import {
 } from "react";
 import type {
   AuthSession,
+  GameSetupSettings,
   LeaderboardEntry,
   LoginPayload,
   RegisterPayload,
 } from "../types";
 import { authApi } from "../lib/auth";
+import { loadSettings, saveSettings } from "../lib/storage";
+import { DEFAULT_GAME_SETTINGS } from "../game/config";
 
 type AppContextValue = {
   booting: boolean;
   session: AuthSession | null;
   leaderboard: LeaderboardEntry[];
   authMode: "login" | "register";
+  settings: GameSetupSettings;
   setAuthMode: (mode: "login" | "register") => void;
+  updateSettings: (patch: Partial<GameSetupSettings>) => void;
   register: (payload: RegisterPayload) => Promise<void>;
   login: (payload: LoginPayload) => Promise<void>;
   logout: () => Promise<void>;
@@ -37,18 +42,29 @@ export const AppProvider = ({ children }: PropsWithChildren) => {
   const [session, setSession] = useState<AuthSession | null>(null);
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [authMode, setAuthMode] = useState<"login" | "register">("login");
+  const [settings, setSettings] = useState<GameSetupSettings>(() =>
+    loadSettings(DEFAULT_GAME_SETTINGS),
+  );
 
   useEffect(() => {
     const load = async () => {
-      const [nextSession, nextLeaderboard] = await Promise.all([
-        authApi.bootstrap(),
-        authApi.fetchLeaderboard().catch(() => []),
-      ]);
-      startTransition(() => {
-        setSession(nextSession);
-        setLeaderboard(nextLeaderboard);
-        setBooting(false);
-      });
+      try {
+        const [nextSession, nextLeaderboard] = await Promise.all([
+          authApi.bootstrap().catch(() => null),
+          authApi.fetchLeaderboard().catch(() => []),
+        ]);
+        startTransition(() => {
+          setSession(nextSession);
+          setLeaderboard(nextLeaderboard);
+          setBooting(false);
+        });
+      } catch {
+        startTransition(() => {
+          setSession(null);
+          setLeaderboard([]);
+          setBooting(false);
+        });
+      }
     };
 
     void load();
@@ -60,7 +76,13 @@ export const AppProvider = ({ children }: PropsWithChildren) => {
       session,
       leaderboard,
       authMode,
+      settings,
       setAuthMode,
+      updateSettings: (patch) => {
+        const next = { ...settings, ...patch };
+        setSettings(next);
+        saveSettings(next);
+      },
       register: async (payload) => {
         const nextSession = await authApi.register(payload);
         setSession(nextSession);
@@ -85,7 +107,7 @@ export const AppProvider = ({ children }: PropsWithChildren) => {
         return result.entry;
       },
     }),
-    [authMode, booting, leaderboard, session],
+    [authMode, booting, leaderboard, session, settings],
   );
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

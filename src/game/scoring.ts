@@ -1,4 +1,3 @@
-import { CLASSIC_MODE_CONFIG } from "./config";
 import type { ScoreBreakdown } from "./types";
 
 export const comboMultiplierFor = (combo: number) => {
@@ -9,27 +8,35 @@ export const comboMultiplierFor = (combo: number) => {
 };
 
 export const calculateScoreBreakdown = ({
+  config,
   matches,
   maxCombo,
   mistakes,
   accuracy,
   timeRemaining,
 }: {
+  config: {
+    baseMatchScore: number;
+    timeBonusMultiplier: number;
+    accuracyBonusMultiplier: number;
+    mistakePenalty: number;
+    difficultyMultiplier: number;
+  };
   matches: number;
   maxCombo: number;
   mistakes: number;
   accuracy: number;
   timeRemaining: number;
 }): ScoreBreakdown => {
-  const baseScore = matches * CLASSIC_MODE_CONFIG.baseMatchScore;
+  const baseScore = matches * config.baseMatchScore;
   const comboBonus = maxCombo * 75 * comboMultiplierFor(Math.max(1, maxCombo));
-  const timeBonus = Math.max(0, Math.round(timeRemaining * CLASSIC_MODE_CONFIG.timeBonusMultiplier));
-  const accuracyBonus = Math.round(accuracy * CLASSIC_MODE_CONFIG.accuracyBonusMultiplier);
-  const mistakePenalty = mistakes * CLASSIC_MODE_CONFIG.mistakePenalty;
+  const timeBonus = Math.max(0, Math.round(timeRemaining * config.timeBonusMultiplier));
+  const accuracyBonus = Math.round(accuracy * config.accuracyBonusMultiplier);
+  const mistakePenalty = mistakes * config.mistakePenalty;
   const subtotal = baseScore + comboBonus + timeBonus + accuracyBonus - mistakePenalty;
   const finalScore = Math.max(
     0,
-    Math.round(subtotal * CLASSIC_MODE_CONFIG.difficultyMultiplier),
+    Math.round(subtotal * config.difficultyMultiplier),
   );
 
   return {
@@ -38,7 +45,7 @@ export const calculateScoreBreakdown = ({
     timeBonus,
     accuracyBonus,
     mistakePenalty,
-    difficultyMultiplier: CLASSIC_MODE_CONFIG.difficultyMultiplier,
+    difficultyMultiplier: config.difficultyMultiplier,
     finalScore,
   };
 };

@@ -29,7 +29,7 @@ export const App = () => {
             Initializing
           </p>
           <h1 className="mt-3 font-display text-2xl uppercase tracking-[0.18em] text-white">
-            MindGrid uplink
+            MindGrid
           </h1>
           <p className="mt-2 text-sm text-white/60">Loading your game hub...</p>
         </div>

@@ -38,6 +38,8 @@ export type GameStatus = "idle" | "running" | "won" | "lost" | "paused";
 
 export type GameSessionState = {
   board: BoardLayout;
+  theme: "numbers" | "icons";
+  gridSize: string;
   score: number;
   timerRemaining: number;
   matches: number;

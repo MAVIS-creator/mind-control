@@ -13,4 +13,13 @@ describe("createBoard", () => {
 
     expect(Object.values(counts)).toEqual([2, 2, 2, 2]);
   });
+
+  it("supports larger boards for upgraded game modes", () => {
+    const board = createBoard(
+      ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"],
+      5,
+      6,
+    );
+    expect(board.cards).toHaveLength(30);
+  });
 });

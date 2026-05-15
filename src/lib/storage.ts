@@ -1,9 +1,9 @@
 import type { AppSnapshot, AuthSession, LeaderboardEntry, PlayerProfile } from "../types";
 
-const PROFILE_KEY = "mindgrid.profile";
 const SESSION_KEY = "mindgrid.session";
 const USERS_KEY = "mindgrid.users";
 const BOARD_KEY = "mindgrid.leaderboard";
+const SETTINGS_KEY = "mindgrid.settings";
 
 type StoredUser = {
   profile: PlayerProfile;
@@ -66,11 +66,24 @@ export const snapshotApp = (): AppSnapshot => {
   };
 };
 
+export const loadSettings = <T>(fallback: T): T => {
+  const storage = safeStorage();
+  if (!storage) return fallback;
+  const raw = storage.getItem(SETTINGS_KEY);
+  return raw ? (JSON.parse(raw) as T) : fallback;
+};
+
+export const saveSettings = <T>(value: T) => {
+  const storage = safeStorage();
+  if (!storage) return;
+  storage.setItem(SETTINGS_KEY, JSON.stringify(value));
+};
+
 export const clearAppStorage = () => {
   const storage = safeStorage();
   if (!storage) return;
-  storage.removeItem(PROFILE_KEY);
   storage.removeItem(SESSION_KEY);
   storage.removeItem(USERS_KEY);
   storage.removeItem(BOARD_KEY);
+  storage.removeItem(SETTINGS_KEY);
 };

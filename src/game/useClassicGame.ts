@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useReducer } from "react";
+import type { GameSetupSettings } from "../types";
 import {
   calculateResults,
   createInitialGameState,
@@ -13,9 +14,9 @@ type Action =
   | { type: "resolve" }
   | { type: "tick" }
   | { type: "pause" }
-  | { type: "reset" };
+  | { type: "reset"; settings: GameSetupSettings };
 
-const reducer = (state = createInitialGameState(), action: Action) => {
+const reducer = (state: ReturnType<typeof createInitialGameState>, action: Action) => {
   switch (action.type) {
     case "reveal":
       return revealCard(state, action.cardId);
@@ -26,14 +27,18 @@ const reducer = (state = createInitialGameState(), action: Action) => {
     case "pause":
       return pauseGame(state);
     case "reset":
-      return createInitialGameState();
+      return createInitialGameState(action.settings);
     default:
       return state;
   }
 };
 
-export const useClassicGame = () => {
-  const [state, dispatch] = useReducer(reducer, undefined, createInitialGameState);
+export const useClassicGame = (settings: GameSetupSettings) => {
+  const [state, dispatch] = useReducer(reducer, settings, createInitialGameState);
+
+  useEffect(() => {
+    dispatch({ type: "reset", settings });
+  }, [settings]);
 
   useEffect(() => {
     if (state.selectedIds.length !== 2) return undefined;
@@ -53,7 +58,7 @@ export const useClassicGame = () => {
     state,
     results,
     reveal: useCallback((cardId: string) => dispatch({ type: "reveal", cardId }), []),
-    reset: useCallback(() => dispatch({ type: "reset" }), []),
+    reset: useCallback(() => dispatch({ type: "reset", settings }), [settings]),
     togglePause: useCallback(() => dispatch({ type: "pause" }), []),
   };
 };

@@ -11,6 +11,13 @@ describe("scoring", () => {
 
   it("produces a positive final score with bonuses and penalties", () => {
     const result = calculateScoreBreakdown({
+      config: {
+        baseMatchScore: 100,
+        timeBonusMultiplier: 12,
+        accuracyBonusMultiplier: 350,
+        mistakePenalty: 35,
+        difficultyMultiplier: 1.25,
+      },
       matches: 8,
       maxCombo: 4,
       mistakes: 2,

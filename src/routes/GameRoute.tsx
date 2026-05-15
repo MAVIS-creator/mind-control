@@ -5,11 +5,12 @@ import { useClassicGame } from "../game/useClassicGame";
 import { StatPill } from "../components/StatPill";
 import { formatDuration, formatNumber, formatPercent } from "../lib/utils";
 import { useAppContext } from "../state/AppContext";
+import { GRID_OPTIONS } from "../game/config";
 
 export const GameRoute = () => {
-  const { session, submitRun } = useAppContext();
+  const { session, submitRun, settings } = useAppContext();
   const navigate = useNavigate();
-  const { state, results, reveal, reset, togglePause } = useClassicGame();
+  const { state, results, reveal, reset, togglePause } = useClassicGame(settings);
   const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
@@ -21,7 +22,7 @@ export const GameRoute = () => {
         score: results.breakdown.finalScore,
         accuracy: Number(results.accuracy.toFixed(2)),
         maxCombo: state.maxCombo,
-        duration: 75 - state.timerRemaining,
+        duration: GRID_OPTIONS[settings.gridSize].totalTimeSeconds - state.timerRemaining,
       });
       setSubmitted(true);
       navigate(`/results/${entry.id}`, {
@@ -52,6 +53,7 @@ export const GameRoute = () => {
     if (state.timerRemaining <= 28) return "Unstable";
     return "Nominal";
   }, [state.timerRemaining]);
+  const totalPairs = state.board.cards.length / 2;
 
   if (!session) {
     return <Navigate to="/" replace />;
@@ -60,64 +62,48 @@ export const GameRoute = () => {
   return (
     <div className="min-h-screen px-4 py-6 sm:px-6 lg:px-10">
       <div className="mx-auto max-w-7xl space-y-5">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <Link
-            to="/play"
-            className="rounded-2xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.32em] text-white/60"
-          >
-            Exit to hub
-          </Link>
-          <div className="flex gap-3">
+        <div className="glass-panel flex flex-wrap items-center justify-between gap-3 rounded-[2rem] px-5 py-4">
+          <h1 className="font-display text-3xl uppercase tracking-[0.08em] text-white">
+            Memory
+          </h1>
+          <div className="flex flex-wrap gap-3">
             <button
               type="button"
               onClick={togglePause}
-              className="rounded-2xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.32em] text-white/70"
+              className="rounded-2xl bg-[#304859] px-4 py-3 text-xs uppercase tracking-[0.22em] text-white"
             >
               {state.status === "paused" ? "Resume" : "Pause"}
             </button>
             <button
               type="button"
               onClick={reset}
-              className="rounded-2xl bg-white/12 px-4 py-3 text-xs uppercase tracking-[0.2em] text-white"
+              className="rounded-2xl bg-[#dfe7ec] px-4 py-3 text-xs uppercase tracking-[0.2em] text-[#304859]"
             >
               Restart
             </button>
+            <Link
+              to="/play"
+              className="rounded-2xl bg-[#dfe7ec] px-4 py-3 text-xs uppercase tracking-[0.2em] text-[#304859]"
+            >
+              New game
+            </Link>
           </div>
         </div>
 
-        <div className="grid gap-4 lg:grid-cols-[1fr_320px]">
-          <div className="space-y-4">
-            <div className="grid gap-3 sm:grid-cols-4">
-              <StatPill label="Timer" value={formatDuration(state.timerRemaining)} />
-              <StatPill label="Score" value={formatNumber(results.breakdown.finalScore)} accent="violet" />
-              <StatPill label="Combo" value={`x${Math.max(1, state.combo)}`} />
-              <StatPill label="Accuracy" value={formatPercent(results.accuracy)} accent="violet" />
-            </div>
-            <MindGridCanvas state={state} onReveal={reveal} />
-          </div>
+        <MindGridCanvas state={state} onReveal={reveal} />
 
-          <aside className="glass-panel rounded-[2rem] p-5">
-            <p className="font-display text-xs uppercase tracking-[0.24em] text-amber-100">
-              Match stats
-            </p>
-            <div className="mt-5 space-y-4">
-              {[
-                ["Round state", instability],
-                ["Pairs cleared", `${state.matches}/8`],
-                ["Mismatches", `${state.mismatches}`],
-                ["Moves", `${state.moves}`],
-                ["Max combo", `x${state.maxCombo}`],
-              ].map(([label, value]) => (
-                <div key={label} className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
-                  <div className="text-[0.65rem] uppercase tracking-[0.28em] text-white/45">{label}</div>
-                  <div className="mt-2 font-display text-lg uppercase tracking-[0.12em] text-white">{value}</div>
-                </div>
-              ))}
-            </div>
-            <div className="mt-5 rounded-2xl border border-white/15 bg-white/8 p-4 text-sm leading-6 text-white/65">
-              Match quickly to build higher combo bonuses. Clean rounds with fewer mistakes produce the best final scores.
-            </div>
-          </aside>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+          <StatPill label="Time" value={formatDuration(state.timerRemaining)} />
+          <StatPill label="Moves" value={`${state.moves}`} accent="violet" />
+          <StatPill label="Pairs" value={`${state.matches}/${totalPairs}`} />
+          <StatPill label="Score" value={formatNumber(results.breakdown.finalScore)} accent="violet" />
+          <StatPill label="Theme" value={settings.theme === "numbers" ? "Numbers" : "Icons"} />
+        </div>
+
+        <div className="glass-panel rounded-[2rem] p-5 text-sm leading-7 text-white/70">
+          Current setup: {GRID_OPTIONS[settings.gridSize].label} board, {GRID_OPTIONS[settings.gridSize].totalTimeSeconds}s timer,
+          {settings.theme === "numbers" ? " number" : " icon"} cards, status {instability.toLowerCase()}, accuracy {formatPercent(results.accuracy)},
+          and best combo x{state.maxCombo}.
         </div>
       </div>
     </div>

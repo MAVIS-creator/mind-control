@@ -5,6 +5,14 @@ export type AvatarOption = {
   accent: string;
 };
 
+export type GameTheme = "numbers" | "icons";
+export type GridSize = "4x4" | "5x6" | "6x6";
+
+export type GameSetupSettings = {
+  theme: GameTheme;
+  gridSize: GridSize;
+};
+
 export type RankTitle =
   | "Neural Rookie"
   | "Cipher Agent"
