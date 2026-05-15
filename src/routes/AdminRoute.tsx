@@ -23,6 +23,23 @@ export const AdminRoute = () => {
     () => leaderboard.filter((entry) => entry.audit.reviewedStatus === "flagged").length,
     [leaderboard],
   );
+  const pendingCount = useMemo(
+    () => leaderboard.filter((entry) => entry.audit.reviewedStatus === "pending").length,
+    [leaderboard],
+  );
+  const orderedRuns = useMemo(
+    () =>
+      [...leaderboard].sort((a, b) => {
+        const priority = { flagged: 0, pending: 1, approved: 2 } as const;
+        const statusDiff = priority[a.audit.reviewedStatus] - priority[b.audit.reviewedStatus];
+        if (statusDiff !== 0) return statusDiff;
+        if (b.audit.suspicionScore !== a.audit.suspicionScore) {
+          return b.audit.suspicionScore - a.audit.suspicionScore;
+        }
+        return b.score - a.score;
+      }),
+    [leaderboard],
+  );
 
   const applyReview = async (status: ReviewStatus) => {
     if (!selected) return;
@@ -55,17 +72,18 @@ export const AdminRoute = () => {
           </Link>
         </header>
 
-        <div className="grid gap-4 sm:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-4">
           <AdminStatCard label="Total runs" value={`${leaderboard.length}`} icon={<TrophyIcon className="h-5 w-5" />} />
           <AdminStatCard label="Flagged runs" value={`${flaggedCount}`} icon={<RefreshIcon className="h-5 w-5" />} />
+          <AdminStatCard label="Pending review" value={`${pendingCount}`} icon={<RefreshIcon className="h-5 w-5" />} />
           <AdminStatCard label="Admin" value={session.profile.username} icon={<UserIcon className="h-5 w-5" />} />
         </div>
 
         <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-          <section className="glass-panel overflow-hidden rounded-[2rem]">
+          <section className="rounded-[2rem] border border-white/12 bg-[#20314d]/72 overflow-hidden">
             <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
               <h2 className="font-display text-lg uppercase tracking-[0.18em] text-white">Results</h2>
-              <span className="text-xs uppercase tracking-[0.18em] text-white/50">Read / Update / Delete</span>
+              <span className="text-xs uppercase tracking-[0.18em] text-white/50">Review queue</span>
             </div>
             <div className="overflow-x-auto">
               <table className="min-w-full text-left">
@@ -79,7 +97,7 @@ export const AdminRoute = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {leaderboard.map((entry) => (
+                  {orderedRuns.map((entry) => (
                     <tr key={entry.id} className="border-t border-white/6 text-sm text-white/82">
                       <td className="px-5 py-4">
                         <div className="font-medium text-white">{entry.username}</div>
@@ -91,10 +109,10 @@ export const AdminRoute = () => {
                         <span
                           className={`rounded-full px-3 py-1 text-xs uppercase tracking-[0.14em] ${
                             entry.audit.reviewedStatus === "flagged"
-                              ? "bg-rose-500/15 text-rose-100"
+                              ? "bg-rose-500/18 text-rose-100"
                               : entry.audit.reviewedStatus === "approved"
-                                ? "bg-emerald-500/15 text-emerald-100"
-                                : "bg-white/10 text-white/70"
+                                ? "bg-emerald-500/18 text-emerald-100"
+                                : "bg-amber-300/15 text-amber-50"
                           }`}
                         >
                           {entry.audit.reviewedStatus}
@@ -119,7 +137,7 @@ export const AdminRoute = () => {
             </div>
           </section>
 
-          <section className="glass-panel rounded-[2rem] p-5">
+          <section className="rounded-[2rem] border border-white/12 bg-[#20314d]/72 p-5">
             <h2 className="font-display text-lg uppercase tracking-[0.18em] text-white">Selected run</h2>
             {selected ? (
               <div className="mt-5 space-y-4">
@@ -152,14 +170,14 @@ export const AdminRoute = () => {
                   <button
                     type="button"
                     onClick={() => void applyReview("approved")}
-                    className="rounded-2xl bg-emerald-500/20 px-4 py-3 text-xs uppercase tracking-[0.16em] text-emerald-100"
+                    className="rounded-2xl bg-emerald-500/16 px-4 py-3 text-xs uppercase tracking-[0.16em] text-emerald-100"
                   >
                     Approve
                   </button>
                   <button
                     type="button"
                     onClick={() => void applyReview("flagged")}
-                    className="rounded-2xl bg-rose-500/20 px-4 py-3 text-xs uppercase tracking-[0.16em] text-rose-100"
+                    className="rounded-2xl bg-rose-500/16 px-4 py-3 text-xs uppercase tracking-[0.16em] text-rose-100"
                   >
                     Flag
                   </button>
@@ -174,7 +192,7 @@ export const AdminRoute = () => {
                 <button
                   type="button"
                   onClick={() => void deleteRun(selected.id)}
-                  className="w-full rounded-2xl bg-rose-500/20 px-4 py-3 text-xs uppercase tracking-[0.16em] text-rose-100"
+                  className="w-full rounded-2xl bg-rose-500/16 px-4 py-3 text-xs uppercase tracking-[0.16em] text-rose-100"
                 >
                   Delete run
                 </button>
@@ -200,8 +218,8 @@ const AdminStatCard = ({
   value: string;
   icon: JSX.Element;
 }) => (
-  <div className="glass-panel rounded-[1.6rem] p-4">
-    <div className="inline-flex rounded-2xl bg-white/10 p-2 text-amber-100">{icon}</div>
+  <div className="rounded-[1.6rem] border border-white/12 bg-[#20314d]/72 p-4">
+    <div className="inline-flex rounded-2xl bg-white/8 p-2 text-amber-100">{icon}</div>
     <p className="mt-4 text-[0.65rem] uppercase tracking-[0.18em] text-white/45">{label}</p>
     <p className="mt-2 font-display text-2xl uppercase tracking-[0.08em] text-white">{value}</p>
   </div>
