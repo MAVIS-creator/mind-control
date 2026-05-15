@@ -23,14 +23,14 @@ export const PlayRoute = () => {
   >;
 
   return (
-    <div className="min-h-screen px-4 py-6 sm:px-6 lg:px-10">
+    <div className="min-h-screen px-3 py-4 sm:px-6 sm:py-6 lg:px-10">
       <div className="mx-auto max-w-7xl space-y-6">
-        <header className="glass-panel flex flex-col gap-4 rounded-[2rem] p-5 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-4">
+        <header className="glass-panel flex flex-col gap-4 rounded-[2rem] p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
+          <div className="flex items-center gap-3 sm:gap-4">
             <img
               src={avatar.image}
               alt={avatar.name}
-              className="h-16 w-16 rounded-[1.4rem] border border-white/20 bg-slate-950/20"
+              className="h-14 w-14 rounded-[1.2rem] border border-white/20 bg-slate-950/20 sm:h-16 sm:w-16 sm:rounded-[1.4rem]"
             />
             <div>
               <p className="font-display text-xs uppercase tracking-[0.24em] text-amber-100">
@@ -44,17 +44,17 @@ export const PlayRoute = () => {
               </p>
             </div>
           </div>
-          <div className="flex flex-wrap gap-3">
+          <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:gap-3">
             <Link
               to="/profile"
-              className="rounded-2xl border border-white/10 px-5 py-3 text-sm uppercase tracking-[0.28em] text-white/70"
+              className="rounded-2xl border border-white/10 px-4 py-3 text-center text-xs uppercase tracking-[0.18em] text-white/70 sm:px-5 sm:text-sm sm:tracking-[0.28em]"
             >
               Profile
             </Link>
             <button
               type="button"
               onClick={() => void logout()}
-              className="rounded-2xl border border-white/10 px-5 py-3 text-sm uppercase tracking-[0.28em] text-white/70"
+              className="rounded-2xl border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.18em] text-white/70 sm:px-5 sm:text-sm sm:tracking-[0.28em]"
             >
               Logout
             </button>

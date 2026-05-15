@@ -60,30 +60,30 @@ export const GameRoute = () => {
   }
 
   return (
-    <div className="min-h-screen px-4 py-6 sm:px-6 lg:px-10">
-      <div className="mx-auto max-w-7xl space-y-5">
-        <div className="glass-panel flex flex-wrap items-center justify-between gap-3 rounded-[2rem] px-5 py-4">
-          <h1 className="font-display text-3xl uppercase tracking-[0.08em] text-white">
+    <div className="min-h-screen px-3 py-4 sm:px-6 sm:py-6 lg:px-10">
+      <div className="mx-auto max-w-7xl space-y-4 sm:space-y-5">
+        <div className="glass-panel flex flex-col gap-3 rounded-[2rem] px-4 py-4 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:px-5">
+          <h1 className="font-display text-center text-2xl uppercase tracking-[0.08em] text-white sm:text-left sm:text-3xl">
             Memory
           </h1>
-          <div className="flex flex-wrap gap-3">
+          <div className="grid grid-cols-3 gap-2 sm:flex sm:flex-wrap sm:gap-3">
             <button
               type="button"
               onClick={togglePause}
-              className="rounded-2xl bg-[#304859] px-4 py-3 text-xs uppercase tracking-[0.22em] text-white"
+              className="rounded-2xl bg-[#304859] px-3 py-3 text-[0.65rem] uppercase tracking-[0.18em] text-white sm:px-4 sm:text-xs"
             >
               {state.status === "paused" ? "Resume" : "Pause"}
             </button>
             <button
               type="button"
               onClick={reset}
-              className="rounded-2xl bg-[#dfe7ec] px-4 py-3 text-xs uppercase tracking-[0.2em] text-[#304859]"
+              className="rounded-2xl bg-[#dfe7ec] px-3 py-3 text-[0.65rem] uppercase tracking-[0.16em] text-[#304859] sm:px-4 sm:text-xs"
             >
               Restart
             </button>
             <Link
               to="/play"
-              className="rounded-2xl bg-[#dfe7ec] px-4 py-3 text-xs uppercase tracking-[0.2em] text-[#304859]"
+              className="rounded-2xl bg-[#dfe7ec] px-3 py-3 text-center text-[0.65rem] uppercase tracking-[0.16em] text-[#304859] sm:px-4 sm:text-xs"
             >
               New game
             </Link>
@@ -92,7 +92,7 @@ export const GameRoute = () => {
 
         <MindGridCanvas state={state} onReveal={reveal} />
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
           <StatPill label="Time" value={formatDuration(state.timerRemaining)} />
           <StatPill label="Moves" value={`${state.moves}`} accent="violet" />
           <StatPill label="Pairs" value={`${state.matches}/${totalPairs}`} />
@@ -100,7 +100,7 @@ export const GameRoute = () => {
           <StatPill label="Theme" value={settings.theme === "numbers" ? "Numbers" : "Icons"} />
         </div>
 
-        <div className="glass-panel rounded-[2rem] p-5 text-sm leading-7 text-white/70">
+        <div className="glass-panel rounded-[2rem] p-4 text-sm leading-6 text-white/70 sm:p-5 sm:leading-7">
           Current setup: {GRID_OPTIONS[settings.gridSize].label} board, {GRID_OPTIONS[settings.gridSize].totalTimeSeconds}s timer,
           {settings.theme === "numbers" ? " number" : " icon"} cards, status {instability.toLowerCase()}, accuracy {formatPercent(results.accuracy)},
           and best combo x{state.maxCombo}.

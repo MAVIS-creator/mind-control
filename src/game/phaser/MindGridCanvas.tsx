@@ -47,8 +47,8 @@ export const MindGridCanvas = ({ state, onReveal }: MindGridCanvasProps) => {
   }, [onReveal, state]);
 
   return (
-    <div className="glass-panel relative min-h-[380px] overflow-hidden rounded-[2rem] p-3 sm:p-5">
-      <div ref={hostRef} className="mx-auto aspect-[19/14] w-full max-w-[760px]" />
+    <div className="glass-panel relative min-h-[280px] overflow-hidden rounded-[2rem] p-2 sm:min-h-[380px] sm:p-5">
+      <div ref={hostRef} className="mx-auto aspect-[1/1] w-full max-w-[760px] sm:aspect-[19/14]" />
     </div>
   );
 };

@@ -6,12 +6,16 @@ export class MindGridScene extends Phaser.Scene {
 
   private latestState?: GameSessionState;
 
+  private isReady = false;
+
   constructor() {
     super("mindgrid-scene");
   }
 
   create() {
+    this.isReady = true;
     this.cameras.main.setBackgroundColor("#17345a");
+    this.renderBoard();
   }
 
   bind(
@@ -20,11 +24,16 @@ export class MindGridScene extends Phaser.Scene {
   ) {
     this.latestState = state;
     this.onReveal = onReveal;
+
+    if (!this.isReady) {
+      return;
+    }
+
     this.renderBoard();
   }
 
   private renderBoard() {
-    if (!this.latestState) return;
+    if (!this.latestState || !this.isReady || !this.children) return;
 
     this.children.removeAll();
 
