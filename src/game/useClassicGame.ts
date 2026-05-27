@@ -34,12 +34,13 @@ const reducer = (state: ReturnType<typeof createInitialGameState>, action: Actio
   }
 };
 
-export const useClassicGame = (settings: GameSetupSettings) => {
-  const [state, dispatch] = useReducer(reducer, settings, createInitialGameState);
+export const useClassicGame = (settings: GameSetupSettings, level = 1) => {
+  const settingsWithLevel = useMemo(() => ({ ...settings, level }), [level, settings]);
+  const [state, dispatch] = useReducer(reducer, settingsWithLevel, createInitialGameState as any);
 
   useEffect(() => {
-    dispatch({ type: "reset", settings });
-  }, [settings]);
+    dispatch({ type: "reset", settings: settingsWithLevel as GameSetupSettings });
+  }, [settingsWithLevel]);
 
   useEffect(() => {
     if (state.selectedIds.length !== 2) return undefined;
@@ -60,7 +61,7 @@ export const useClassicGame = (settings: GameSetupSettings) => {
     state,
     results,
     reveal: useCallback((cardId: string) => dispatch({ type: "reveal", cardId }), []),
-    reset: useCallback(() => dispatch({ type: "reset", settings }), [settings]),
+    reset: useCallback(() => dispatch({ type: "reset", settings: settingsWithLevel as GameSetupSettings }), [settingsWithLevel]),
     togglePause: useCallback(() => dispatch({ type: "pause" }), []),
   };
 };

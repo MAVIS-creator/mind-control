@@ -7,6 +7,7 @@ export class MindGridScene extends Phaser.Scene {
   private latestState?: GameSessionState;
 
   private isReady = false;
+  private revealState = new Map<string, boolean>();
 
   constructor() {
     super("mindgrid-scene");
@@ -106,7 +107,7 @@ export class MindGridScene extends Phaser.Scene {
       }
 
       if (revealed) {
-        this.add
+        const symbolText = this.add
           .text(x, y, card.symbol, {
             fontFamily: "Inter",
             fontSize: `${cardSize >= 102 ? 34 : cardSize >= 88 ? 28 : 22}px`,
@@ -114,7 +115,26 @@ export class MindGridScene extends Phaser.Scene {
             fontStyle: card.matched ? "700" : "600",
           })
           .setOrigin(0.5);
+
+        const wasRevealed = this.revealState.get(card.id) ?? false;
+        if (!wasRevealed) {
+          tile.setScale(1, 1);
+          symbolText.setScale(0.1, 1);
+          this.tweens.add({
+            targets: tile,
+            scaleX: { from: 0.05, to: 1 },
+            duration: 160,
+            ease: "Sine.easeInOut",
+          });
+          this.tweens.add({
+            targets: symbolText,
+            scaleX: { from: 0.05, to: 1 },
+            duration: 190,
+            ease: "Back.easeOut",
+          });
+        }
       }
+      this.revealState.set(card.id, revealed);
     });
 
     if (combo >= 2) {

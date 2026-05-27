@@ -18,6 +18,16 @@ export const calculateRank = (xp: number): RankTitle => {
   return "Neural Rookie";
 };
 
+export const getLevelFromXp = (xp: number) => Math.max(1, Math.floor(xp / 500) + 1);
+
+export const getLevelProgress = (xp: number) => {
+  const level = getLevelFromXp(xp);
+  const levelStartXp = (level - 1) * 500;
+  const nextLevelXp = level * 500;
+  const progress = ((xp - levelStartXp) / (nextLevelXp - levelStartXp)) * 100;
+  return { level, levelStartXp, nextLevelXp, progress: Math.min(100, Math.max(0, progress)) };
+};
+
 export const formatNumber = (value: number) =>
   new Intl.NumberFormat("en-GB").format(value);
 
