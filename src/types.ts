@@ -11,6 +11,7 @@ export type GridSize = "4x4" | "5x6" | "6x6";
 export type GameSetupSettings = {
   theme: GameTheme;
   gridSize: GridSize;
+  level?: number;
 };
 
 export type RankTitle =
