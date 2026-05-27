@@ -56,12 +56,27 @@ const mapRemoteProfile = (
   isAdmin,
 });
 
+const normalizeLeaderboardEntry = (entry: LeaderboardEntry): LeaderboardEntry => ({
+  ...entry,
+  rating:
+    typeof entry.rating === "number" && !Number.isNaN(entry.rating)
+      ? entry.rating
+      : computeRating(entry.score, entry.accuracy, entry.maxCombo, entry.duration),
+  totalPoints:
+    typeof entry.totalPoints === "number" && !Number.isNaN(entry.totalPoints)
+      ? entry.totalPoints
+      : entry.score,
+  audit: normalizeAudit(entry.audit ?? createEmptyAudit()),
+});
+
 const sortLeaderboard = (entries: LeaderboardEntry[]) =>
-  [...entries].sort((a, b) => {
-    if (b.rating !== a.rating) return b.rating - a.rating;
-    if (b.score !== a.score) return b.score - a.score;
-    return a.duration - b.duration;
-  });
+  entries
+    .map(normalizeLeaderboardEntry)
+    .sort((a, b) => {
+      if (b.rating !== a.rating) return b.rating - a.rating;
+      if (b.score !== a.score) return b.score - a.score;
+      return a.duration - b.duration;
+    });
 
 const computeRating = (score: number, accuracy: number, maxCombo: number, duration: number) =>
   Math.max(0, Math.round(score + accuracy * 20 + maxCombo * 120 - duration * 2));
