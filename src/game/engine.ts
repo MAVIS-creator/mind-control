@@ -16,13 +16,14 @@ const createEvent = (
 
 export const createInitialGameState = (settings: GameSetupSettings): GameSessionState => {
   const config = createClassicModeConfig(settings);
+  const bonusTime = Math.min(18, Math.max(0, ((settings.level ?? 1) - 1) * 2));
 
   return {
   board: createBoard(getCardSymbols(settings.theme), config.rows, config.columns),
   theme: settings.theme,
   gridSize: settings.gridSize,
   score: 0,
-  timerRemaining: config.totalTimeSeconds,
+  timerRemaining: config.totalTimeSeconds + bonusTime,
   matches: 0,
   mismatches: 0,
   moves: 0,

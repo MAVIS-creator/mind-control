@@ -16,11 +16,13 @@ import { useFairPlayMonitor } from "../game/useFairPlayMonitor";
 import { GRID_OPTIONS } from "../game/config";
 import { formatDuration, formatNumber, formatPercent } from "../lib/utils";
 import { useAppContext } from "../state/AppContext";
+import { getLevelFromXp } from "../lib/utils";
 
 export const GameRoute = () => {
   const { session, submitRun, settings } = useAppContext();
   const navigate = useNavigate();
-  const { state, results, reveal, reset, togglePause } = useClassicGame(settings);
+  const playerLevel = getLevelFromXp(session?.profile.xp ?? 0);
+  const { state, results, reveal, reset, togglePause } = useClassicGame(settings, playerLevel);
   const [submitted, setSubmitted] = useState(false);
   const audit = useFairPlayMonitor(state.events, state.status);
 
@@ -33,6 +35,7 @@ export const GameRoute = () => {
         score: results.breakdown.finalScore,
         accuracy: Number(results.accuracy.toFixed(2)),
         maxCombo: state.maxCombo,
+        gridSize: settings.gridSize,
         duration: GRID_OPTIONS[settings.gridSize].totalTimeSeconds - state.timerRemaining,
         audit,
       });
@@ -102,6 +105,7 @@ export const GameRoute = () => {
           <div className="flex items-center gap-4 sm:gap-8">
             <HudStat label="Time" value={formatDuration(state.timerRemaining)} />
             <HudStat label="Moves" value={`${state.moves}`} />
+            <HudStat label="Level" value={`${playerLevel}`} />
             <div className="flex h-20 w-20 flex-col items-center justify-center rounded-full border border-[#b9d2f4] bg-[#d7e7fb] text-[#0058a8] shadow-inner">
               <span className="text-xs font-semibold uppercase tracking-[0.16em]">Combo</span>
               <span className="mt-1 text-[2rem] font-bold">x{Math.max(state.combo, 1)}</span>

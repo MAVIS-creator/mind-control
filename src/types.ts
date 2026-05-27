@@ -50,7 +50,11 @@ export type LeaderboardEntry = {
   username: string;
   avatarId: string;
   mode: "classic";
+  matchType: "standard";
+  gridSize: GridSize;
   score: number;
+  rating: number;
+  totalPoints: number;
   accuracy: number;
   maxCombo: number;
   duration: number;
