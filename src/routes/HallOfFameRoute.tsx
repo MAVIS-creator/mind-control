@@ -1,4 +1,5 @@
 import { Navigate } from "react-router-dom";
+import { useMemo, useState } from "react";
 import { AppShell } from "../components/AppShell";
 import { avatarOptions } from "../data/avatars";
 import { formatNumber } from "../lib/utils";
@@ -12,27 +13,41 @@ const medalClasses = [
 
 export const HallOfFameRoute = () => {
   const { session, leaderboard } = useAppContext();
+  const [gridFilter, setGridFilter] = useState<"all" | "4x4" | "5x6" | "6x6">("all");
+
+  const filtered = useMemo(
+    () => leaderboard.filter((entry) => (gridFilter === "all" ? true : entry.gridSize === gridFilter)),
+    [gridFilter, leaderboard],
+  );
 
   if (!session) {
     return <Navigate to="/login" replace />;
   }
 
-  const podium = leaderboard.slice(0, 3);
-  const rest = leaderboard.slice(3, 12);
+  const podium = filtered.slice(0, 3);
+  const rest = filtered.slice(3, 12);
 
   return (
     <AppShell session={session} active="ranks">
-      <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-10">
+      <div className="mx-auto w-full max-w-[1200px] px-4 py-6 sm:px-6 lg:px-10">
         <section className="mb-8 text-center">
           <h1 className="mt-3 font-display text-5xl tracking-[-0.05em] text-[#3525cd]">
             Hall of Fame
           </h1>
           <p className="mx-auto mt-3 max-w-2xl text-base leading-7 text-[#464555]">
-            This is the leaderboard screen for the MVP. In this build, Hall of Fame and leaderboard are the same page.
+            Ranked by rating (score + accuracy + combo + speed), with personal totals combined.
           </p>
+          <div className="mt-4">
+            <select className="rounded-xl border px-3 py-2" value={gridFilter} onChange={(e) => setGridFilter(e.target.value as any)}>
+              <option value="all">All grids</option>
+              <option value="4x4">4x4</option>
+              <option value="5x6">5x6</option>
+              <option value="6x6">6x6</option>
+            </select>
+          </div>
         </section>
 
-        <div className="mb-8 grid gap-6 md:grid-cols-3">
+        <div className="mb-8 grid gap-4 sm:gap-6 md:grid-cols-3">
           {podium.map((entry, index) => {
             const avatar = avatarOptions.find((item) => item.id === entry.avatarId) ?? avatarOptions[0];
             return (
@@ -50,10 +65,10 @@ export const HallOfFameRoute = () => {
                 />
                 <h2 className="mt-4 text-xl font-semibold text-slate-900">{entry.username}</h2>
                 <p className="mt-1 text-sm uppercase tracking-[0.18em] text-[#3525cd]">
-                  {formatNumber(entry.score)} pts
+                  {formatNumber(entry.rating)} rating
                 </p>
                 <p className="mt-2 text-sm text-slate-500">
-                  Accuracy {entry.accuracy.toFixed(1)}% • Combo x{entry.maxCombo}
+                  Score {formatNumber(entry.score)} • Total {formatNumber(entry.totalPoints)}
                 </p>
               </article>
             );

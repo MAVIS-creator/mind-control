@@ -36,10 +36,10 @@ export const AppShell = ({ session, active, children }: AppShellProps) => {
   return (
     <div className="min-h-screen pb-24 md:pb-8">
       <header className="sticky top-0 z-40 border-b border-[#ececf6] bg-white/80 backdrop-blur-md">
-        <div className="mx-auto flex max-w-[1400px] items-center justify-between px-5 py-3 sm:px-8">
+        <div className="mx-auto flex w-full max-w-[1200px] items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-10">
           <Link to="/play" className="flex items-center gap-3">
             <BrandMarkIcon className="h-10 w-10 shrink-0" />
-            <span className="font-display text-[2rem] font-extrabold tracking-[-0.05em] text-[#111c2d]">
+            <span className="font-display text-[1.5rem] font-extrabold tracking-[-0.05em] text-[#111c2d] sm:text-[2rem]">
               MindGrid
             </span>
           </Link>

@@ -5,13 +5,13 @@ export default {
   theme: {
     extend: {
       colors: {
-        bg: "#050816",
-        panel: "#0f1730",
-        panelAlt: "#111c39",
-        cyan: "#6cf7ff",
-        indigo: "#5966ff",
-        violet: "#c35fff",
-        haze: "#7c90ff",
+        bg: "#f9f9ff",
+        panel: "#e7eeff",
+        panelAlt: "#dee8ff",
+        cyan: "#64a8fe",
+        indigo: "#3525cd",
+        violet: "#862dd4",
+        haze: "#d8e3fb",
       },
       fontFamily: {
         display: ["Inter", "sans-serif"],

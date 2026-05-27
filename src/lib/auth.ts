@@ -58,9 +58,40 @@ const mapRemoteProfile = (
 
 const sortLeaderboard = (entries: LeaderboardEntry[]) =>
   [...entries].sort((a, b) => {
+    if (b.rating !== a.rating) return b.rating - a.rating;
     if (b.score !== a.score) return b.score - a.score;
     return a.duration - b.duration;
   });
+
+const computeRating = (score: number, accuracy: number, maxCombo: number, duration: number) =>
+  Math.max(0, Math.round(score + accuracy * 20 + maxCombo * 120 - duration * 2));
+
+const mapLeaderboardRow = (row: any): LeaderboardEntry => ({
+  id: row.id,
+  userId: row.user_id,
+  username: row.username,
+  avatarId: row.avatar_id,
+  mode: row.mode,
+  matchType: row.match_type ?? "standard",
+  gridSize: row.grid_size ?? "4x4",
+  score: row.score,
+  rating: row.rating ?? computeRating(row.score, row.accuracy, row.max_combo, row.duration),
+  totalPoints: row.total_points ?? row.score,
+  accuracy: row.accuracy,
+  maxCombo: row.max_combo,
+  duration: row.duration,
+  playedAt: row.played_at,
+  audit: normalizeAudit({
+    suspicionScore: row.suspicion_score,
+    suspicionReasons: row.suspicion_reasons,
+    automationFlag: row.automation_flag,
+    fastInputFlag: row.fast_input_flag,
+    hiddenTabFlag: row.hidden_tab_flag,
+    rapidSequenceCount: row.rapid_sequence_count,
+    reviewedStatus: row.reviewed_status,
+    reviewedNote: row.reviewed_note,
+  }),
+});
 
 const canBeAdminFromEnv = (username: string) =>
   parseAdminUsernames().includes(normalizeUsername(username));
@@ -242,7 +273,7 @@ export const authApi = {
 
   async submitRun(
     session: AuthSession,
-    entry: Omit<LeaderboardEntry, "id" | "playedAt" | "userId" | "username" | "avatarId">,
+    entry: Omit<LeaderboardEntry, "id" | "playedAt" | "userId" | "username" | "avatarId" | "rating" | "totalPoints" | "matchType">,
   ) {
     const completeEntry: LeaderboardEntry = {
       ...entry,
@@ -250,6 +281,10 @@ export const authApi = {
       userId: session.profile.id,
       username: session.profile.username,
       avatarId: session.profile.avatarId,
+      matchType: "standard",
+      gridSize: entry.gridSize,
+      rating: computeRating(entry.score, entry.accuracy, entry.maxCombo, entry.duration),
+      totalPoints: entry.score,
       playedAt: new Date().toISOString(),
       audit: normalizeAudit(entry.audit),
     };
@@ -284,7 +319,10 @@ export const authApi = {
       username: completeEntry.username,
       avatar_id: completeEntry.avatarId,
       mode: completeEntry.mode,
+      match_type: completeEntry.matchType,
+      grid_size: completeEntry.gridSize,
       score: completeEntry.score,
+      rating: completeEntry.rating,
       accuracy: completeEntry.accuracy,
       max_combo: completeEntry.maxCombo,
       duration: completeEntry.duration,
@@ -311,36 +349,15 @@ export const authApi = {
     if (profileError) throw profileError;
 
     const { data: leaderboardRows, error: leaderboardError } = await supabase
-      .from("game_runs")
-      .select("id, user_id, username, avatar_id, mode, score, accuracy, max_combo, duration, played_at, suspicion_score, suspicion_reasons, automation_flag, fast_input_flag, hidden_tab_flag, rapid_sequence_count, reviewed_status, reviewed_note")
-      .order("score", { ascending: false })
+      .from("leaderboard_rankings")
+      .select("*")
+      .order("rating", { ascending: false })
       .order("duration", { ascending: true })
       .limit(20);
 
     if (leaderboardError) throw leaderboardError;
 
-    const leaderboard = (leaderboardRows ?? []).map((row) => ({
-      id: row.id,
-      userId: row.user_id,
-      username: row.username,
-      avatarId: row.avatar_id,
-      mode: row.mode,
-      score: row.score,
-      accuracy: row.accuracy,
-      maxCombo: row.max_combo,
-      duration: row.duration,
-      playedAt: row.played_at,
-      audit: normalizeAudit({
-        suspicionScore: row.suspicion_score,
-        suspicionReasons: row.suspicion_reasons,
-        automationFlag: row.automation_flag,
-        fastInputFlag: row.fast_input_flag,
-        hiddenTabFlag: row.hidden_tab_flag,
-        rapidSequenceCount: row.rapid_sequence_count,
-        reviewedStatus: row.reviewed_status,
-        reviewedNote: row.reviewed_note,
-      }),
-    })) satisfies LeaderboardEntry[];
+    const leaderboard = (leaderboardRows ?? []).map(mapLeaderboardRow) satisfies LeaderboardEntry[];
 
     const nextSession = { profile: updatedProfile };
     saveSession(nextSession);
@@ -357,36 +374,15 @@ export const authApi = {
     }
 
     const { data, error } = await supabase
-      .from("game_runs")
-      .select("id, user_id, username, avatar_id, mode, score, accuracy, max_combo, duration, played_at, suspicion_score, suspicion_reasons, automation_flag, fast_input_flag, hidden_tab_flag, rapid_sequence_count, reviewed_status, reviewed_note")
-      .order("score", { ascending: false })
+      .from("leaderboard_rankings")
+      .select("*")
+      .order("rating", { ascending: false })
       .order("duration", { ascending: true })
       .limit(20);
 
     if (error) throw error;
 
-    const leaderboard = (data ?? []).map((row) => ({
-      id: row.id,
-      userId: row.user_id,
-      username: row.username,
-      avatarId: row.avatar_id,
-      mode: row.mode,
-      score: row.score,
-      accuracy: row.accuracy,
-      maxCombo: row.max_combo,
-      duration: row.duration,
-      playedAt: row.played_at,
-      audit: normalizeAudit({
-        suspicionScore: row.suspicion_score,
-        suspicionReasons: row.suspicion_reasons,
-        automationFlag: row.automation_flag,
-        fastInputFlag: row.fast_input_flag,
-        hiddenTabFlag: row.hidden_tab_flag,
-        rapidSequenceCount: row.rapid_sequence_count,
-        reviewedStatus: row.reviewed_status,
-        reviewedNote: row.reviewed_note,
-      }),
-    })) satisfies LeaderboardEntry[];
+    const leaderboard = (data ?? []).map(mapLeaderboardRow) satisfies LeaderboardEntry[];
     saveLeaderboard(leaderboard);
     return leaderboard;
   },

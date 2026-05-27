@@ -1,6 +1,7 @@
 import { Navigate } from "react-router-dom";
 import { AppShell } from "../components/AppShell";
 import { avatarOptions } from "../data/avatars";
+import { getLevelProgress } from "../lib/utils";
 import { useAppContext } from "../state/AppContext";
 
 export const ProfileRoute = () => {
@@ -10,6 +11,7 @@ export const ProfileRoute = () => {
   }
 
   const avatar = avatarOptions.find((entry) => entry.id === session.profile.avatarId) ?? avatarOptions[0];
+  const level = getLevelProgress(session.profile.xp);
 
   return (
     <AppShell session={session} active={null}>
@@ -35,16 +37,16 @@ export const ProfileRoute = () => {
                     XP Level
                   </span>
                   <span className="text-xs uppercase tracking-[0.18em] text-slate-500">
-                    {session.profile.xp} XP
+                    Lvl {level.level} • {session.profile.xp} XP
                   </span>
                 </div>
                 <div className="h-4 rounded-full bg-[#d8e3fb] p-0.5">
                   <div
                     className="h-full rounded-full bg-gradient-to-r from-[#3525cd] to-[#64a8fe]"
-                    style={{ width: `${Math.min(100, Math.max(12, (session.profile.xp % 1000) / 10))}%` }}
+                    style={{ width: `${Math.max(8, level.progress)}%` }}
                   />
                 </div>
-                <p className="text-base text-[#464555]">Progress toward your next rank tier.</p>
+                <p className="text-base text-[#464555]">Progress to Level {level.level + 1} ({level.nextLevelXp} XP).</p>
               </div>
             </div>
           </div>
