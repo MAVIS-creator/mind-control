@@ -38,7 +38,15 @@ export const HallOfFameRoute = () => {
             Ranked by rating (score + accuracy + combo + speed), with personal totals combined.
           </p>
           <div className="mt-4">
-            <select className="rounded-xl border px-3 py-2" value={gridFilter} onChange={(e) => setGridFilter(e.target.value as any)}>
+            <label htmlFor="grid-filter" className="sr-only">
+              Filter by grid size
+            </label>
+            <select
+              id="grid-filter"
+              className="rounded-xl border px-3 py-2"
+              value={gridFilter}
+              onChange={(e) => setGridFilter(e.target.value as typeof gridFilter)}
+            >
               <option value="all">All grids</option>
               <option value="4x4">4x4</option>
               <option value="5x6">5x6</option>
