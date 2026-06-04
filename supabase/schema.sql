@@ -175,9 +175,14 @@ using (
 );
 
 alter table public.game_runs
-  add column if not exists match_type text not null default 'standard' check (match_type in ('standard')),
+  add column if not exists match_type text not null default 'numbers' check (match_type in ('standard','numbers','icons')),
   add column if not exists grid_size text not null default '4x4' check (grid_size in ('4x4','5x6','6x6')),
   add column if not exists rating integer not null default 0;
+
+alter table public.game_runs drop constraint if exists game_runs_match_type_check;
+alter table public.game_runs
+  add constraint game_runs_match_type_check
+  check (match_type in ('standard','numbers','icons'));
 
 update public.game_runs
 set rating = greatest(0, round(score + accuracy * 20 + max_combo * 120 - duration * 2));

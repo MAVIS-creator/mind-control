@@ -7,10 +7,12 @@ export type AvatarOption = {
 
 export type GameTheme = "numbers" | "icons";
 export type GridSize = "4x4" | "5x6" | "6x6";
+export type MatchType = "standard" | "numbers" | "icons";
 
 export type GameSetupSettings = {
   theme: GameTheme;
   gridSize: GridSize;
+  level?: number;
 };
 
 export type RankTitle =
@@ -50,7 +52,7 @@ export type LeaderboardEntry = {
   username: string;
   avatarId: string;
   mode: "classic";
-  matchType: "standard";
+  matchType: MatchType;
   gridSize: GridSize;
   score: number;
   rating: number;

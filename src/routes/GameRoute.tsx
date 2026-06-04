@@ -32,6 +32,7 @@ export const GameRoute = () => {
     const persist = async () => {
       const entry = await submitRun({
         mode: "classic",
+        matchType: settings.theme,
         score: results.breakdown.finalScore,
         accuracy: Number(results.accuracy.toFixed(2)),
         maxCombo: state.maxCombo,

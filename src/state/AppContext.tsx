@@ -33,7 +33,7 @@ type AppContextValue = {
   updateRun: (entry: LeaderboardEntry) => Promise<void>;
   deleteRun: (runId: string) => Promise<void>;
   submitRun: (
-    entry: Omit<LeaderboardEntry, "id" | "playedAt" | "userId" | "username" | "avatarId" | "rating" | "totalPoints" | "matchType">,
+    entry: Omit<LeaderboardEntry, "id" | "playedAt" | "userId" | "username" | "avatarId" | "rating" | "totalPoints">,
   ) => Promise<LeaderboardEntry>;
 };
 

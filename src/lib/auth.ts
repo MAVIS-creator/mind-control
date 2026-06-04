@@ -1,5 +1,6 @@
 import type {
   AuthSession,
+  MatchType,
   LeaderboardEntry,
   LoginPayload,
   PlayerProfile,
@@ -56,15 +57,39 @@ const mapRemoteProfile = (
   isAdmin,
 });
 
+const normalizeLeaderboardEntry = (entry: LeaderboardEntry): LeaderboardEntry => ({
+  ...entry,
+  matchType: entry.matchType ?? "standard",
+  rating:
+    typeof entry.rating === "number" && !Number.isNaN(entry.rating)
+      ? entry.rating
+      : computeRating(entry.score, entry.accuracy, entry.maxCombo, entry.duration),
+  totalPoints:
+    typeof entry.totalPoints === "number" && !Number.isNaN(entry.totalPoints)
+      ? entry.totalPoints
+      : entry.score,
+  audit: normalizeAudit(entry.audit ?? createEmptyAudit()),
+});
+
+const compareLeaderboardEntries = (a: LeaderboardEntry, b: LeaderboardEntry) => {
+  if (b.rating !== a.rating) return b.rating - a.rating;
+  if (b.totalPoints !== a.totalPoints) return b.totalPoints - a.totalPoints;
+  if (b.score !== a.score) return b.score - a.score;
+  if (b.accuracy !== a.accuracy) return b.accuracy - a.accuracy;
+  if (b.maxCombo !== a.maxCombo) return b.maxCombo - a.maxCombo;
+  return a.duration - b.duration;
+};
+
 const sortLeaderboard = (entries: LeaderboardEntry[]) =>
-  [...entries].sort((a, b) => {
-    if (b.rating !== a.rating) return b.rating - a.rating;
-    if (b.score !== a.score) return b.score - a.score;
-    return a.duration - b.duration;
-  });
+  entries.map(normalizeLeaderboardEntry).sort(compareLeaderboardEntries);
 
 const computeRating = (score: number, accuracy: number, maxCombo: number, duration: number) =>
   Math.max(0, Math.round(score + accuracy * 20 + maxCombo * 120 - duration * 2));
+
+const toStoredMatchType = (matchType: string | null | undefined): MatchType =>
+  matchType === "numbers" || matchType === "icons" || matchType === "standard"
+    ? matchType
+    : "standard";
 
 const mapLeaderboardRow = (row: any): LeaderboardEntry => ({
   id: row.id,
@@ -72,7 +97,7 @@ const mapLeaderboardRow = (row: any): LeaderboardEntry => ({
   username: row.username,
   avatarId: row.avatar_id,
   mode: row.mode,
-  matchType: row.match_type ?? "standard",
+  matchType: toStoredMatchType(row.match_type),
   gridSize: row.grid_size ?? "4x4",
   score: row.score,
   rating: row.rating ?? computeRating(row.score, row.accuracy, row.max_combo, row.duration),
@@ -95,6 +120,46 @@ const mapLeaderboardRow = (row: any): LeaderboardEntry => ({
 
 const canBeAdminFromEnv = (username: string) =>
   parseAdminUsernames().includes(normalizeUsername(username));
+
+const isBetterRun = (candidate: LeaderboardEntry, current: LeaderboardEntry) =>
+  compareLeaderboardEntries(candidate, current) < 0;
+
+const mergeLocalLeaderboard = (entries: LeaderboardEntry[], nextEntry: LeaderboardEntry) => {
+  const currentEntries = sortLeaderboard(entries);
+  const userEntries = currentEntries.filter((entry) => entry.userId === nextEntry.userId);
+  const currentTotalPoints = userEntries[0]?.totalPoints ?? 0;
+  const nextTotalPoints = currentTotalPoints + nextEntry.score;
+
+  const rebasedEntries = currentEntries.map((entry) =>
+    entry.userId === nextEntry.userId ? { ...entry, totalPoints: nextTotalPoints } : entry,
+  );
+
+  const normalizedNextEntry = normalizeLeaderboardEntry({
+    ...nextEntry,
+    totalPoints: nextTotalPoints,
+  });
+
+  const existingBestIndex = rebasedEntries.findIndex(
+    (entry) =>
+      entry.userId === normalizedNextEntry.userId &&
+      entry.mode === normalizedNextEntry.mode &&
+      entry.matchType === normalizedNextEntry.matchType &&
+      entry.gridSize === normalizedNextEntry.gridSize,
+  );
+
+  if (existingBestIndex === -1) {
+    return sortLeaderboard([...rebasedEntries, normalizedNextEntry]);
+  }
+
+  const existingBest = rebasedEntries[existingBestIndex];
+  if (!isBetterRun(normalizedNextEntry, existingBest)) {
+    return sortLeaderboard(rebasedEntries);
+  }
+
+  const nextEntries = [...rebasedEntries];
+  nextEntries.splice(existingBestIndex, 1, normalizedNextEntry);
+  return sortLeaderboard(nextEntries);
+};
 
 const resolveAdminState = async (userId: string, username: string) => {
   if (canBeAdminFromEnv(username)) return true;
@@ -273,7 +338,7 @@ export const authApi = {
 
   async submitRun(
     session: AuthSession,
-    entry: Omit<LeaderboardEntry, "id" | "playedAt" | "userId" | "username" | "avatarId" | "rating" | "totalPoints" | "matchType">,
+    entry: Omit<LeaderboardEntry, "id" | "playedAt" | "userId" | "username" | "avatarId" | "rating" | "totalPoints">,
   ) {
     const completeEntry: LeaderboardEntry = {
       ...entry,
@@ -281,7 +346,7 @@ export const authApi = {
       userId: session.profile.id,
       username: session.profile.username,
       avatarId: session.profile.avatarId,
-      matchType: "standard",
+      matchType: entry.matchType,
       gridSize: entry.gridSize,
       rating: computeRating(entry.score, entry.accuracy, entry.maxCombo, entry.duration),
       totalPoints: entry.score,
@@ -303,10 +368,7 @@ export const authApi = {
           : stored,
       );
       saveUsers(users);
-      const entries = sortLeaderboard([
-        completeEntry,
-        ...loadLeaderboard().map((row) => ({ ...row, audit: normalizeAudit(row.audit) })),
-      ]).slice(0, 20);
+      const entries = mergeLocalLeaderboard(loadLeaderboard(), completeEntry).slice(0, 100);
       saveLeaderboard(entries);
       const nextSession = { profile: updatedProfile };
       saveSession(nextSession);
@@ -352,8 +414,9 @@ export const authApi = {
       .from("leaderboard_rankings")
       .select("*")
       .order("rating", { ascending: false })
+      .order("total_points", { ascending: false })
       .order("duration", { ascending: true })
-      .limit(20);
+      .limit(100);
 
     if (leaderboardError) throw leaderboardError;
 
@@ -368,8 +431,7 @@ export const authApi = {
   async fetchLeaderboard(): Promise<LeaderboardEntry[]> {
     if (!hasSupabase || !supabase) {
       return loadLeaderboard().map((row) => ({
-        ...row,
-        audit: normalizeAudit(row.audit),
+        ...normalizeLeaderboardEntry(row),
       }));
     }
 
@@ -377,8 +439,9 @@ export const authApi = {
       .from("leaderboard_rankings")
       .select("*")
       .order("rating", { ascending: false })
+      .order("total_points", { ascending: false })
       .order("duration", { ascending: true })
-      .limit(20);
+      .limit(100);
 
     if (error) throw error;
 

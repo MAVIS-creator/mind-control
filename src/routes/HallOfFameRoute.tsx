@@ -2,8 +2,9 @@ import { Navigate } from "react-router-dom";
 import { useMemo, useState } from "react";
 import { AppShell } from "../components/AppShell";
 import { avatarOptions } from "../data/avatars";
-import { formatNumber } from "../lib/utils";
+import { formatDuration, formatNumber, formatPercent } from "../lib/utils";
 import { useAppContext } from "../state/AppContext";
+import type { GridSize, LeaderboardEntry, MatchType } from "../types";
 
 const medalClasses = [
   "border-[#ffd166] bg-[#fff7db]",
@@ -11,13 +12,35 @@ const medalClasses = [
   "border-[#f4c7a1] bg-[#fff2e8]",
 ] as const;
 
+const compareLeaderboardEntries = (a: LeaderboardEntry, b: LeaderboardEntry) => {
+  if (b.rating !== a.rating) return b.rating - a.rating;
+  if (b.totalPoints !== a.totalPoints) return b.totalPoints - a.totalPoints;
+  if (b.score !== a.score) return b.score - a.score;
+  if (b.accuracy !== a.accuracy) return b.accuracy - a.accuracy;
+  if (b.maxCombo !== a.maxCombo) return b.maxCombo - a.maxCombo;
+  return a.duration - b.duration;
+};
+
+const matchTypeLabels: Record<MatchType, string> = {
+  standard: "Legacy",
+  numbers: "Numbers",
+  icons: "Icons",
+};
+
 export const HallOfFameRoute = () => {
   const { session, leaderboard } = useAppContext();
-  const [gridFilter, setGridFilter] = useState<"all" | "4x4" | "5x6" | "6x6">("all");
+  const [gridFilter, setGridFilter] = useState<"all" | GridSize>("all");
+  const [matchTypeFilter, setMatchTypeFilter] = useState<"all" | MatchType>("all");
+
+  const hasLegacyRuns = leaderboard.some((entry) => entry.matchType === "standard");
 
   const filtered = useMemo(
-    () => leaderboard.filter((entry) => (gridFilter === "all" ? true : entry.gridSize === gridFilter)),
-    [gridFilter, leaderboard],
+    () =>
+      leaderboard
+        .filter((entry) => (gridFilter === "all" ? true : entry.gridSize === gridFilter))
+        .filter((entry) => (matchTypeFilter === "all" ? true : entry.matchType === matchTypeFilter))
+        .sort(compareLeaderboardEntries),
+    [gridFilter, leaderboard, matchTypeFilter],
   );
 
   if (!session) {
@@ -25,68 +48,112 @@ export const HallOfFameRoute = () => {
   }
 
   const podium = filtered.slice(0, 3);
-  const rest = filtered.slice(3, 12);
+  const rest = filtered.slice(3);
 
   return (
     <AppShell session={session} active="ranks">
-      <div className="mx-auto w-full max-w-[1200px] px-4 py-6 sm:px-6 lg:px-10">
+      <div className="mx-auto w-full max-w-[1260px] px-4 py-6 sm:px-6 lg:px-10">
         <section className="mb-8 text-center">
-          <h1 className="mt-3 font-display text-5xl tracking-[-0.05em] text-[#3525cd]">
-            Hall of Fame
-          </h1>
-          <p className="mx-auto mt-3 max-w-2xl text-base leading-7 text-[#464555]">
-            Ranked by rating (score + accuracy + combo + speed), with personal totals combined.
+          <h1 className="mt-3 font-display text-5xl tracking-[-0.05em] text-[#3525cd]">Hall of Fame</h1>
+          <p className="mx-auto mt-3 max-w-3xl text-base leading-7 text-[#464555]">
+            Best run per player, per board, per match type. Ratings use score, accuracy, combo, and speed, while total points keep stacking across runs.
           </p>
-          <div className="mt-4">
-            <label htmlFor="grid-filter" className="sr-only">
-              Filter by grid size
-            </label>
-            <select
-              id="grid-filter"
-              className="rounded-xl border px-3 py-2"
-              value={gridFilter}
-              onChange={(e) => setGridFilter(e.target.value as typeof gridFilter)}
-            >
-              <option value="all">All grids</option>
-              <option value="4x4">4x4</option>
-              <option value="5x6">5x6</option>
-              <option value="6x6">6x6</option>
-            </select>
+
+          <div className="mt-6 flex flex-col items-center gap-3">
+            <div className="flex flex-wrap items-center justify-center gap-2">
+              {[
+                { id: "all", label: "All Boards" },
+                { id: "4x4", label: "4x4" },
+                { id: "5x6", label: "5x6" },
+                { id: "6x6", label: "6x6" },
+              ].map((option) => {
+                const active = gridFilter === option.id;
+                return (
+                  <button
+                    key={option.id}
+                    type="button"
+                    onClick={() => setGridFilter(option.id as typeof gridFilter)}
+                    className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
+                      active
+                        ? "bg-[#3525cd] text-white shadow-[0_12px_24px_rgba(53,37,205,0.18)]"
+                        : "bg-white/80 text-[#495066] border border-[#dfe4f2]"
+                    }`}
+                  >
+                    {option.label}
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="flex flex-wrap items-center justify-center gap-2">
+              {([
+                { id: "all", label: "All Match Types" },
+                { id: "numbers", label: "Numbers" },
+                { id: "icons", label: "Icons" },
+                ...(hasLegacyRuns ? [{ id: "standard", label: "Legacy" }] : []),
+              ] as const).map((option) => {
+                const active = matchTypeFilter === option.id;
+                return (
+                  <button
+                    key={option.id}
+                    type="button"
+                    onClick={() => setMatchTypeFilter(option.id as typeof matchTypeFilter)}
+                    className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
+                      active
+                        ? "bg-[#4f46e5] text-white shadow-[0_12px_24px_rgba(79,70,229,0.18)]"
+                        : "bg-white/80 text-[#495066] border border-[#dfe4f2]"
+                    }`}
+                  >
+                    {option.label}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </section>
 
         <div className="mb-8 grid gap-4 sm:gap-6 md:grid-cols-3">
-          {podium.map((entry, index) => {
-            const avatar = avatarOptions.find((item) => item.id === entry.avatarId) ?? avatarOptions[0];
-            return (
-              <article
-                key={entry.id}
-                className={`glass-panel rounded-[2rem] border p-6 text-center shadow-[0_14px_34px_rgba(53,37,205,0.08)] ${medalClasses[index] ?? "border-slate-200 bg-white"}`}
-              >
-                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-white text-lg font-bold text-slate-900 shadow-sm">
-                  {index + 1}
-                </div>
-                <img
-                  src={avatar.image}
-                  alt={avatar.name}
-                  className="mx-auto mt-4 h-24 w-24 rounded-full border-4 border-white bg-slate-100 shadow-md"
-                />
-                <h2 className="mt-4 text-xl font-semibold text-slate-900">{entry.username}</h2>
-                <p className="mt-1 text-sm uppercase tracking-[0.18em] text-[#3525cd]">
-                  {formatNumber(entry.rating)} rating
-                </p>
-                <p className="mt-2 text-sm text-slate-500">
-                  Score {formatNumber(entry.score)} • Total {formatNumber(entry.totalPoints)}
-                </p>
-              </article>
-            );
-          })}
+          {podium.length ? (
+            podium.map((entry, index) => {
+              const avatar = avatarOptions.find((item) => item.id === entry.avatarId) ?? avatarOptions[0];
+              return (
+                <article
+                  key={entry.id}
+                  className={`glass-panel rounded-[2rem] border p-6 text-center shadow-[0_14px_34px_rgba(53,37,205,0.08)] ${medalClasses[index] ?? "border-slate-200 bg-white"}`}
+                >
+                  <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-white text-lg font-bold text-slate-900 shadow-sm">
+                    {index + 1}
+                  </div>
+                  <img
+                    src={avatar.image}
+                    alt={avatar.name}
+                    className="mx-auto mt-4 h-24 w-24 rounded-full border-4 border-white bg-slate-100 shadow-md"
+                  />
+                  <h2 className="mt-4 text-xl font-semibold text-slate-900">{entry.username}</h2>
+                  <p className="mt-1 text-sm uppercase tracking-[0.18em] text-[#3525cd]">{formatNumber(entry.rating)} rating</p>
+                  <p className="mt-2 text-sm text-slate-500">
+                    Best {formatNumber(entry.score)} • Total {formatNumber(entry.totalPoints)}
+                  </p>
+                  <div className="mt-3 flex flex-wrap items-center justify-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#667085]">
+                    <span className="rounded-full bg-white/80 px-3 py-1">{entry.gridSize}</span>
+                    <span className="rounded-full bg-white/80 px-3 py-1">{matchTypeLabels[entry.matchType]}</span>
+                  </div>
+                </article>
+              );
+            })
+          ) : (
+            <div className="glass-panel rounded-[2rem] p-8 text-center text-sm text-slate-500 md:col-span-3">
+              No ranked runs match those filters yet.
+            </div>
+          )}
         </div>
 
         <section className="glass-panel overflow-hidden rounded-[2rem]">
           <div className="border-b border-slate-200/70 px-6 py-5">
             <h2 className="text-xl font-semibold text-slate-900">Leaderboard</h2>
-            <p className="mt-1 text-sm text-slate-500">Classic mode ranking by best recorded runs.</p>
+            <p className="mt-1 text-sm text-slate-500">
+              One best row per player in each category, with cumulative total points still counting across all saved runs.
+            </p>
           </div>
           <div className="overflow-x-auto">
             <table className="min-w-full text-left">
@@ -94,18 +161,21 @@ export const HallOfFameRoute = () => {
                 <tr>
                   <th className="px-6 py-4">Rank</th>
                   <th className="px-6 py-4">Player</th>
-                  <th className="px-6 py-4">Score</th>
+                  <th className="px-6 py-4">Rating</th>
+                  <th className="px-6 py-4">Points</th>
+                  <th className="px-6 py-4">Best Score</th>
                   <th className="px-6 py-4">Accuracy</th>
                   <th className="px-6 py-4">Combo</th>
+                  <th className="px-6 py-4">Time</th>
                 </tr>
               </thead>
               <tbody>
-                {rest.length ? (
-                  rest.map((entry, index) => {
+                {filtered.length ? (
+                  filtered.map((entry, index) => {
                     const avatar = avatarOptions.find((item) => item.id === entry.avatarId) ?? avatarOptions[0];
                     return (
                       <tr key={entry.id} className="border-t border-slate-100 text-sm text-slate-700">
-                        <td className="px-6 py-4 font-semibold text-slate-500">{index + 4}</td>
+                        <td className="px-6 py-4 font-semibold text-slate-500">{index + 1}</td>
                         <td className="px-6 py-4">
                           <div className="flex items-center gap-3">
                             <img
@@ -113,18 +183,26 @@ export const HallOfFameRoute = () => {
                               alt={avatar.name}
                               className="h-11 w-11 rounded-full border border-white bg-slate-100"
                             />
-                            <span className="font-medium text-slate-900">{entry.username}</span>
+                            <div>
+                              <div className="font-medium text-slate-900">{entry.username}</div>
+                              <div className="text-xs uppercase tracking-[0.22em] text-slate-400">
+                                {matchTypeLabels[entry.matchType]} • {entry.gridSize}
+                              </div>
+                            </div>
                           </div>
                         </td>
-                        <td className="px-6 py-4 font-semibold text-[#3525cd]">{formatNumber(entry.score)}</td>
-                        <td className="px-6 py-4">{entry.accuracy.toFixed(1)}%</td>
+                        <td className="px-6 py-4 font-semibold text-[#3525cd]">{formatNumber(entry.rating)}</td>
+                        <td className="px-6 py-4 font-semibold text-[#0060ac]">{formatNumber(entry.totalPoints)}</td>
+                        <td className="px-6 py-4">{formatNumber(entry.score)}</td>
+                        <td className="px-6 py-4">{formatPercent(entry.accuracy)}</td>
                         <td className="px-6 py-4">x{entry.maxCombo}</td>
+                        <td className="px-6 py-4">{formatDuration(entry.duration)}</td>
                       </tr>
                     );
                   })
                 ) : (
                   <tr>
-                    <td colSpan={5} className="px-6 py-8 text-sm text-slate-500">
+                    <td colSpan={8} className="px-6 py-8 text-sm text-slate-500">
                       No ranked runs yet. Play a round to place the first Hall of Fame score.
                     </td>
                   </tr>
