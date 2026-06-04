@@ -118,19 +118,33 @@ export class MindGridScene extends Phaser.Scene {
 
         const wasRevealed = this.revealState.get(card.id) ?? false;
         if (!wasRevealed) {
-          tile.setScale(1, 1);
-          symbolText.setScale(0.1, 1);
+          tile.setScale(0.06, 1.04);
+          symbolText.setScale(0.08, 1);
+          symbolText.setAlpha(0.15);
           this.tweens.add({
             targets: tile,
             scaleX: { from: 0.05, to: 1 },
+            scaleY: { from: 1.04, to: 1 },
             duration: 160,
             ease: "Sine.easeInOut",
           });
           this.tweens.add({
             targets: symbolText,
             scaleX: { from: 0.05, to: 1 },
+            alpha: { from: 0.15, to: 1 },
+            delay: 70,
             duration: 190,
             ease: "Back.easeOut",
+          });
+
+          const flare = this.add.rectangle(x, y, cardSize * 0.9, cardSize * 0.9, 0xffffff, 0.24);
+          this.tweens.add({
+            targets: flare,
+            alpha: { from: 0.24, to: 0 },
+            scaleX: { from: 0.7, to: 1.1 },
+            scaleY: { from: 0.7, to: 1.1 },
+            duration: 180,
+            onComplete: () => flare.destroy(),
           });
         }
       }
