@@ -16,17 +16,27 @@ export const LandingRoute = () => {
     return <Navigate to="/play" replace />;
   }
 
-  const previewRanks =
-    leaderboard.length > 0
-      ? leaderboard.slice(0, 3).map((entry) => ({
-          name: entry.username.toUpperCase(),
-          rank: `x${entry.maxCombo} COMBO`,
-          score: entry.score,
-        }))
-      : fallbackRanks;
+  const previewRanks = (() => {
+    if (leaderboard.length === 0) return fallbackRanks;
+    const bestByUser = new Map<string, (typeof leaderboard)[number]>();
+    leaderboard.forEach((entry) => {
+      const current = bestByUser.get(entry.userId);
+      if (!current || entry.rating > current.rating) {
+        bestByUser.set(entry.userId, entry);
+      }
+    });
+    return Array.from(bestByUser.values())
+      .sort((a, b) => b.totalPoints - a.totalPoints || b.rating - a.rating)
+      .slice(0, 3)
+      .map((entry) => ({
+        name: entry.username.toUpperCase(),
+        rank: `${entry.totalPoints.toLocaleString()} TOTAL`,
+        score: entry.totalPoints,
+      }));
+  })();
 
   const bestScore = leaderboard[0]?.score ?? 17983;
-  const totalRuns = leaderboard.length || 42;
+  const totalPlayers = new Set(leaderboard.map((entry) => entry.userId)).size || 42;
 
   return (
     <div className="min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top_left,_#e2dfff_0%,_#f9f9ff_42%,_#d4e3ff_100%)]">
@@ -36,20 +46,20 @@ export const LandingRoute = () => {
         <div className="absolute bottom-10 left-1/3 h-[22rem] w-[22rem] rounded-full bg-[#6b00b7]/10 blur-[110px]" />
       </div>
 
-      <main className="mx-auto max-w-[1500px] px-5 py-8 sm:px-8 lg:py-10">
-        <div className="grid gap-7 lg:grid-cols-[1.45fr_0.78fr]">
+      <main className="mx-auto max-w-[1500px] px-4 py-6 sm:px-6 lg:px-8 lg:py-10">
+        <div className="grid gap-5 lg:grid-cols-[1.45fr_0.78fr] lg:gap-7">
           <section className="space-y-7">
             <motion.div
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
-              className="px-2 pt-6 text-center"
+              className="px-1 pt-3 text-center sm:px-2 sm:pt-6"
             >
               <div className="mx-auto flex max-w-3xl flex-col items-center">
-                <BrandMotionMark className="mb-7 h-28 w-28 sm:h-32 sm:w-32" />
-                <h1 className="font-display text-[3.6rem] font-extrabold tracking-[-0.07em] text-[#3525cd] sm:text-[5rem]">
+                <BrandMotionMark className="mb-5 h-24 w-24 sm:mb-7 sm:h-32 sm:w-32" />
+                <h1 className="font-display text-[2.8rem] font-extrabold tracking-[-0.08em] text-[#3525cd] sm:text-[4.2rem] lg:text-[5rem]">
                   MINDGRID
                 </h1>
-                <p className="mt-5 max-w-2xl text-[1.15rem] leading-9 text-[#4f5568]">
+                <p className="mt-4 max-w-2xl text-[1rem] leading-8 text-[#4f5568] sm:mt-5 sm:text-[1.15rem] sm:leading-9">
                   Memory battles with fast boards, clean score chasing, and a focused single-player flow built for repeat runs.
                 </p>
               </div>
@@ -59,18 +69,18 @@ export const LandingRoute = () => {
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.08 }}
-              className="glass-panel rounded-[2.4rem] px-6 py-8 shadow-[0_20px_45px_rgba(53,37,205,0.08)] sm:px-8"
+              className="glass-panel rounded-[2rem] px-4 py-6 shadow-[0_20px_45px_rgba(53,37,205,0.08)] sm:rounded-[2.4rem] sm:px-8 sm:py-8"
             >
               <div className="flex flex-col items-center gap-6 text-center">
                 <Link
                   to="/login"
-                  className="inline-flex min-w-[18rem] items-center justify-center gap-3 rounded-full bg-gradient-to-b from-[#4f46e5] to-[#3525cd] px-10 py-5 text-[1.15rem] font-semibold text-white shadow-[0_18px_30px_rgba(53,37,205,0.22)] transition hover:scale-[1.01]"
+                  className="inline-flex w-full max-w-[22rem] items-center justify-center gap-3 rounded-full bg-gradient-to-b from-[#4f46e5] to-[#3525cd] px-8 py-4 text-[1.05rem] font-semibold text-white shadow-[0_18px_30px_rgba(53,37,205,0.22)] transition hover:scale-[1.01] sm:px-10 sm:py-5 sm:text-[1.15rem]"
                 >
                   <span className="text-base">▶</span>
                   Play Now
                 </Link>
 
-                <div className="flex flex-wrap items-center justify-center gap-8">
+                <div className="grid w-full gap-4 sm:flex sm:flex-wrap sm:items-center sm:justify-center sm:gap-8">
                   <div className="text-center">
                     <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#7d8395]">Boards</p>
                     <p className="mt-2 text-[2rem] font-bold text-[#3525cd]">3</p>
@@ -87,12 +97,12 @@ export const LandingRoute = () => {
               </div>
             </motion.section>
 
-            <div className="grid gap-6 md:grid-cols-2">
+            <div className="grid gap-5 md:grid-cols-2 md:gap-6">
               <motion.article
                 initial={{ opacity: 0, y: 18 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.12 }}
-                className="glass-panel rounded-[2rem] p-6 shadow-[0_14px_32px_rgba(53,37,205,0.06)]"
+                className="glass-panel rounded-[1.8rem] p-5 shadow-[0_14px_32px_rgba(53,37,205,0.06)] sm:rounded-[2rem] sm:p-6"
               >
                 <div className="mb-6 flex items-start justify-between gap-4">
                   <div>
@@ -119,7 +129,7 @@ export const LandingRoute = () => {
                 initial={{ opacity: 0, y: 18 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.16 }}
-                className="glass-panel rounded-[2rem] p-6 shadow-[0_14px_32px_rgba(53,37,205,0.06)]"
+                className="glass-panel rounded-[1.8rem] p-5 shadow-[0_14px_32px_rgba(53,37,205,0.06)] sm:rounded-[2rem] sm:p-6"
               >
                 <div className="mb-6 flex items-center gap-4">
                   <div className="flex h-16 w-16 items-center justify-center rounded-[1.5rem] bg-gradient-to-br from-[#6b00b7] to-[#4f46e5] text-white shadow-inner">
@@ -132,8 +142,8 @@ export const LandingRoute = () => {
                 </div>
                 <div className="space-y-4">
                   <div className="flex items-center justify-between rounded-[1.2rem] bg-white/78 px-4 py-4 text-sm font-medium text-[#1b2441]">
-                    <span>Saved runs</span>
-                    <span className="text-lg font-bold text-[#3525cd]">{totalRuns}</span>
+                    <span>Ranked players</span>
+                    <span className="text-lg font-bold text-[#3525cd]">{totalPlayers}</span>
                   </div>
                   <div className="flex items-center justify-between rounded-[1.2rem] bg-white/78 px-4 py-4 text-sm font-medium text-[#1b2441]">
                     <span>Best score on record</span>
@@ -147,12 +157,12 @@ export const LandingRoute = () => {
             </div>
           </section>
 
-          <aside className="space-y-6">
+          <aside className="space-y-5 lg:space-y-6">
             <motion.div
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="glass-panel rounded-[2rem] p-6 shadow-[0_14px_32px_rgba(53,37,205,0.06)]"
+              className="glass-panel rounded-[1.8rem] p-5 shadow-[0_14px_32px_rgba(53,37,205,0.06)] sm:rounded-[2rem] sm:p-6"
             >
               <div className="mb-6 flex items-center justify-between">
                 <h2 className="text-[2rem] font-bold tracking-[-0.04em] text-[#111c2d]">Global Rank</h2>
@@ -160,7 +170,7 @@ export const LandingRoute = () => {
               </div>
               <div className="space-y-4">
                 {previewRanks.map((entry, index) => (
-                  <div key={`${entry.name}-${index}`} className="flex items-center justify-between rounded-[1.4rem] bg-white/58 p-4">
+                  <div key={`${entry.name}-${index}`} className="flex items-center justify-between gap-3 rounded-[1.4rem] bg-white/58 p-4">
                     <div className="flex items-center gap-3">
                       <div className="relative">
                         <div className="h-12 w-12 rounded-full bg-[radial-gradient(circle_at_35%_30%,_#a9b3ff_0%,_#6331c0_42%,_#1a2440_100%)]" />
@@ -173,7 +183,7 @@ export const LandingRoute = () => {
                         <p className="text-[0.7rem] font-bold uppercase tracking-[0.14em] text-[#3525cd]">{entry.rank}</p>
                       </div>
                     </div>
-                    <p className="text-[2rem] font-bold tracking-[-0.04em] text-[#3525cd]">
+                    <p className="shrink-0 text-[1.65rem] font-bold tracking-[-0.04em] text-[#3525cd] sm:text-[2rem]">
                       {entry.score >= 1000 ? `${(entry.score / 1000).toFixed(1)}k` : entry.score}
                     </p>
                   </div>
@@ -188,7 +198,7 @@ export const LandingRoute = () => {
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.14 }}
-              className="glass-panel rounded-[2rem] p-6 shadow-[0_14px_32px_rgba(53,37,205,0.06)]"
+              className="glass-panel rounded-[1.8rem] p-5 shadow-[0_14px_32px_rgba(53,37,205,0.06)] sm:rounded-[2rem] sm:p-6"
             >
               <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.22em] text-[#667085]">What&apos;s live</h3>
               <div className="space-y-4">

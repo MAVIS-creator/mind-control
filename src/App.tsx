@@ -1,5 +1,6 @@
 import { Suspense, lazy } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
+import { BrandMotionMark } from "./components/AppIcons";
 import { useAppContext } from "./state/AppContext";
 
 const LandingRoute = lazy(() =>
@@ -32,15 +33,24 @@ export const App = () => {
 
   if (booting) {
     return (
-      <div className="flex min-h-screen items-center justify-center px-4">
-        <div className="glass-panel rounded-[2rem] px-8 py-6 text-center">
-          <p className="font-display text-xs uppercase tracking-[0.4em] text-[#3525cd]">
-            Initializing
-          </p>
-          <h1 className="mt-3 font-display text-2xl tracking-[-0.03em] text-[#111c2d]">
+      <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_top_left,_#e2dfff_0%,_#f9f9ff_42%,_#d4e3ff_100%)] px-4">
+        <div className="fixed inset-0 -z-10 overflow-hidden">
+          <div className="absolute -left-12 top-8 h-[22rem] w-[22rem] rounded-full bg-[#8a70ff]/16 blur-[95px]" />
+          <div className="absolute right-0 top-0 h-[24rem] w-[24rem] rounded-full bg-[#64a8fe]/16 blur-[95px]" />
+          <div className="absolute bottom-0 left-1/3 h-[18rem] w-[18rem] rounded-full bg-[#6b00b7]/10 blur-[100px]" />
+        </div>
+        <div className="glass-panel w-full max-w-md rounded-[2rem] px-6 py-8 text-center shadow-[0_22px_48px_rgba(53,37,205,0.08)] sm:px-8">
+          <BrandMotionMark className="mx-auto mb-6 h-20 w-20 sm:h-24 sm:w-24" />
+          <p className="font-display text-xs uppercase tracking-[0.4em] text-[#3525cd]">Initializing</p>
+          <h1 className="mt-3 font-display text-[2rem] font-extrabold tracking-[-0.05em] text-[#111c2d] sm:text-[2.4rem]">
             MindGrid
           </h1>
-          <p className="mt-2 text-sm text-[#464555]">Loading your game hub...</p>
+          <p className="mt-2 text-sm leading-7 text-[#464555] sm:text-base">
+            Loading your game hub and preparing the next board.
+          </p>
+          <div className="mt-6 h-3 overflow-hidden rounded-full bg-[#d8e3fb]">
+            <div className="h-full w-1/2 animate-pulse rounded-full bg-gradient-to-r from-[#64a8fe] via-[#4f46e5] to-[#6b00b7]" />
+          </div>
         </div>
       </div>
     );
@@ -49,12 +59,11 @@ export const App = () => {
   return (
     <Suspense
       fallback={
-        <div className="flex min-h-screen items-center justify-center px-4">
-          <div className="glass-panel rounded-[2rem] px-8 py-6 text-center">
-            <p className="font-display text-xs uppercase tracking-[0.4em] text-[#3525cd]">
-              Routing
-            </p>
-            <p className="mt-3 text-sm text-[#464555]">Opening the next screen...</p>
+        <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_top_left,_#e2dfff_0%,_#f9f9ff_42%,_#d4e3ff_100%)] px-4">
+          <div className="glass-panel w-full max-w-sm rounded-[2rem] px-6 py-7 text-center shadow-[0_22px_48px_rgba(53,37,205,0.08)]">
+            <BrandMotionMark className="mx-auto mb-5 h-16 w-16" />
+            <p className="font-display text-xs uppercase tracking-[0.4em] text-[#3525cd]">Routing</p>
+            <p className="mt-3 text-sm leading-7 text-[#464555]">Opening the next screen...</p>
           </div>
         </div>
       }

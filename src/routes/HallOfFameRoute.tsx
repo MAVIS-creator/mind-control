@@ -34,7 +34,7 @@ export const HallOfFameRoute = () => {
 
   const hasLegacyRuns = leaderboard.some((entry) => entry.matchType === "standard");
 
-  const filtered = useMemo(
+  const filteredCategoryRows = useMemo(
     () =>
       leaderboard
         .filter((entry) => (gridFilter === "all" ? true : entry.gridSize === gridFilter))
@@ -42,6 +42,17 @@ export const HallOfFameRoute = () => {
         .sort(compareLeaderboardEntries),
     [gridFilter, leaderboard, matchTypeFilter],
   );
+
+  const filtered = useMemo(() => {
+    const bestByUser = new Map<string, LeaderboardEntry>();
+    for (const entry of filteredCategoryRows) {
+      const current = bestByUser.get(entry.userId);
+      if (!current || compareLeaderboardEntries(entry, current) < 0) {
+        bestByUser.set(entry.userId, entry);
+      }
+    }
+    return Array.from(bestByUser.values()).sort(compareLeaderboardEntries);
+  }, [filteredCategoryRows]);
 
   if (!session) {
     return <Navigate to="/login" replace />;
