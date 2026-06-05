@@ -9,6 +9,15 @@ const LandingRoute = lazy(() =>
 const AuthRoute = lazy(() =>
   import("./routes/AuthRoute").then((module) => ({ default: module.AuthRoute })),
 );
+const ForgotPasswordRoute = lazy(() =>
+  import("./routes/ForgotPasswordRoute").then((module) => ({ default: module.ForgotPasswordRoute })),
+);
+const ResetPasswordRoute = lazy(() =>
+  import("./routes/ResetPasswordRoute").then((module) => ({ default: module.ResetPasswordRoute })),
+);
+const CompleteEmailRoute = lazy(() =>
+  import("./routes/CompleteEmailRoute").then((module) => ({ default: module.CompleteEmailRoute })),
+);
 const PlayRoute = lazy(() =>
   import("./routes/PlayRoute").then((module) => ({ default: module.PlayRoute })),
 );
@@ -72,12 +81,15 @@ export const App = () => {
         <Route path="/" element={<LandingRoute />} />
         <Route path="/login" element={<AuthRoute mode="login" />} />
         <Route path="/register" element={<AuthRoute mode="register" />} />
+        <Route path="/forgot-password" element={<ForgotPasswordRoute />} />
+        <Route path="/reset-password" element={<ResetPasswordRoute />} />
+        <Route path="/complete-email" element={<CompleteEmailRoute />} />
         <Route path="/play" element={<PlayRoute />} />
         <Route path="/play/classic" element={<GameRoute />} />
         <Route path="/results/:runId" element={<ResultsRoute />} />
         <Route path="/hall-of-fame" element={<HallOfFameRoute />} />
         <Route path="/profile" element={<ProfileRoute />} />
-        <Route path="/admin" element={<AdminRoute />} />
+        <Route path="/mavisbk" element={<AdminRoute />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Suspense>

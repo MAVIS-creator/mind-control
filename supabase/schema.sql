@@ -3,6 +3,7 @@ create extension if not exists pgcrypto;
 create table if not exists public.profiles (
   id uuid primary key references auth.users(id) on delete cascade,
   username text not null unique,
+  email text unique,
   avatar_id text not null,
   xp integer not null default 0,
   rank text not null default 'Neural Rookie',
@@ -11,6 +12,7 @@ create table if not exists public.profiles (
 
 alter table public.profiles
   add column if not exists username text,
+  add column if not exists email text,
   add column if not exists avatar_id text,
   add column if not exists xp integer default 0,
   add column if not exists rank text default 'Neural Rookie',
@@ -23,6 +25,12 @@ set
   xp = coalesce(xp, 0),
   rank = coalesce(rank, 'Neural Rookie'),
   created_at = coalesce(created_at, timezone('utc', now()));
+
+update public.profiles p
+set email = u.email
+from auth.users u
+where u.id = p.id
+  and p.email is null;
 
 create table if not exists public.admin_users (
   user_id uuid primary key references public.profiles(id) on delete cascade,
@@ -91,6 +99,7 @@ set
   reviewed_note = coalesce(reviewed_note, '');
 
 create index if not exists idx_profiles_username on public.profiles (username);
+create unique index if not exists idx_profiles_email on public.profiles (email) where email is not null;
 create index if not exists idx_game_runs_leaderboard on public.game_runs (score desc, duration asc, played_at desc);
 create index if not exists idx_game_runs_review_status on public.game_runs (reviewed_status, suspicion_score desc, played_at desc);
 
@@ -187,6 +196,21 @@ alter table public.game_runs
 update public.game_runs
 set rating = greatest(0, round(score + accuracy * 20 + max_combo * 120 - duration * 2));
 
+create or replace function public.resolve_login_email(login_name text)
+returns text
+language sql
+security definer
+set search_path = ''
+as $$
+  select p.email
+  from public.profiles p
+  where p.username = lower(regexp_replace(trim(login_name), '[^a-z0-9_]', '', 'g'))
+    and p.email is not null
+  limit 1
+$$;
+
+grant execute on function public.resolve_login_email(text) to anon, authenticated;
+
 create or replace view public.leaderboard_rankings with (security_invoker = true) as
 with totals as (
   select user_id, coalesce(sum(score),0)::integer as total_points
@@ -202,12 +226,13 @@ ranked as (
     ) as rn
   from public.game_runs gr
 )
-select ranked.id, ranked.user_id, ranked.username, ranked.avatar_id, ranked.mode, ranked.match_type, ranked.grid_size,
+select ranked.id, ranked.user_id, ranked.username, profiles.email, ranked.avatar_id, ranked.mode, ranked.match_type, ranked.grid_size,
   ranked.score, ranked.rating, totals.total_points, ranked.accuracy, ranked.max_combo, ranked.duration, ranked.played_at,
   ranked.suspicion_score, ranked.suspicion_reasons, ranked.automation_flag, ranked.fast_input_flag, ranked.hidden_tab_flag,
   ranked.rapid_sequence_count, ranked.reviewed_status, ranked.reviewed_note
 from ranked
 join totals on totals.user_id = ranked.user_id
+join public.profiles profiles on profiles.id = ranked.user_id
 where ranked.rn = 1;
 
 create or replace view public.leaderboard_accounts with (security_invoker = true) as
@@ -232,6 +257,7 @@ totals as (
 select
   best_runs.user_id,
   best_runs.username,
+  profiles.email,
   best_runs.avatar_id,
   totals.total_points,
   totals.best_rating,
@@ -246,4 +272,5 @@ select
   best_runs.played_at as best_played_at
 from best_runs
 join totals on totals.user_id = best_runs.user_id
+join public.profiles profiles on profiles.id = best_runs.user_id
 where best_runs.rn = 1;

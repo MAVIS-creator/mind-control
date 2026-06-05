@@ -47,9 +47,9 @@ export const MindGridCanvas = ({ state, onReveal }: MindGridCanvasProps) => {
   }, [onReveal, state]);
 
   return (
-    <div className="glass-panel relative min-h-[320px] overflow-hidden rounded-[2.2rem] border border-white/70 p-3 shadow-[0_18px_36px_rgba(53,37,205,0.06)] sm:min-h-[500px] sm:p-5">
+    <div className="glass-panel relative min-h-[280px] overflow-hidden rounded-[2rem] border border-white/70 p-2 shadow-[0_18px_36px_rgba(53,37,205,0.06)] sm:min-h-[500px] sm:rounded-[2.2rem] sm:p-5">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(100,168,254,0.18),_transparent_32%),radial-gradient(circle_at_bottom_right,_rgba(79,70,229,0.1),_transparent_30%)]" />
-      <div ref={hostRef} className="relative mx-auto aspect-[1/1] w-full max-w-[920px] sm:aspect-[16/10]" />
+      <div ref={hostRef} className="relative mx-auto aspect-square w-full max-w-[920px] sm:aspect-[16/10]" />
     </div>
   );
 };

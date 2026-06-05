@@ -2,6 +2,7 @@ import { Link, Navigate } from "react-router-dom";
 import { AppShell } from "../components/AppShell";
 import { GridIcon, PlayIcon } from "../components/AppIcons";
 import { GRID_OPTIONS } from "../game/config";
+import { isLegacyAccountEmail } from "../lib/utils";
 import { useAppContext } from "../state/AppContext";
 import type { GameTheme, GridSize } from "../types";
 
@@ -10,6 +11,10 @@ export const PlayRoute = () => {
 
   if (!session) {
     return <Navigate to="/login" replace />;
+  }
+
+  if (!session.profile.email || isLegacyAccountEmail(session.profile.email)) {
+    return <Navigate to="/complete-email" replace />;
   }
 
   const themeOptions: Array<{ id: GameTheme; label: string; icon: string }> = [
@@ -22,14 +27,14 @@ export const PlayRoute = () => {
 
   return (
     <AppShell session={session} active="home">
-      <div className="min-h-[calc(100vh-84px)] bg-[#0b0f29] px-5 py-10 sm:px-8">
+      <div className="min-h-[calc(100vh-84px)] bg-[radial-gradient(circle_at_top_left,_#e2dfff_0%,_#f9f9ff_42%,_#d4e3ff_100%)] px-3 py-5 sm:px-6 sm:py-8">
         <div className="mx-auto max-w-5xl">
-          <div className="rounded-[2.5rem] border border-[#e4e5ec] bg-[#b8b8bf] px-6 py-8 shadow-[0_0_0_1px_rgba(255,255,255,0.2),0_20px_48px_rgba(0,0,0,0.16)] sm:px-10 md:px-14">
+          <div className="glass-panel rounded-[2rem] px-4 py-6 shadow-[0_18px_40px_rgba(53,37,205,0.08)] sm:rounded-[2.5rem] sm:px-8 sm:py-8 md:px-12">
             <div className="mx-auto max-w-[540px]">
               <div className="mb-8 h-1 rounded-full bg-gradient-to-r from-indigo-700 to-violet-500" />
 
               <div className="mb-8 flex justify-center">
-                <div className="inline-flex rounded-full bg-[#dbe1ec] p-1.5 shadow-inner">
+                <div className="inline-flex rounded-full bg-[#eef2ff] p-1.5 shadow-inner">
                   <button
                     type="button"
                     className="rounded-full bg-gradient-to-b from-[#4f46e5] to-[#3525cd] px-10 py-3 text-base font-semibold text-white shadow-[0_12px_24px_rgba(53,37,205,0.24)]"
@@ -41,7 +46,7 @@ export const PlayRoute = () => {
 
               <div className="space-y-8">
                 <div>
-                  <h2 className="mb-4 text-[1.45rem] font-semibold text-[#111c2d]">Grid Size</h2>
+                  <h2 className="mb-4 text-[1.35rem] font-semibold text-[#111c2d] sm:text-[1.45rem]">Grid Size</h2>
                   <div className="grid gap-3 sm:grid-cols-3">
                     {gridOptions.map(([key, option]) => {
                       const active = settings.gridSize === key;
@@ -50,9 +55,9 @@ export const PlayRoute = () => {
                           key={key}
                           type="button"
                           onClick={() => updateSettings({ gridSize: key })}
-                          className={`inline-flex items-center justify-center gap-3 rounded-full border px-5 py-4 text-lg font-medium transition ${
+                          className={`inline-flex items-center justify-center gap-3 rounded-full border px-4 py-4 text-base font-medium transition sm:px-5 sm:text-lg ${
                             active
-                              ? "border-[#d7d9ea] bg-[#b0b0b8] text-[#25354b] shadow-[inset_0_1px_0_rgba(255,255,255,0.55),0_10px_18px_rgba(53,37,205,0.08)]"
+                              ? "border-[#d7d9ea] bg-[#e7eeff] text-[#25354b] shadow-[inset_0_1px_0_rgba(255,255,255,0.55),0_10px_18px_rgba(53,37,205,0.08)]"
                               : "border-[#eef1f7] bg-white text-[#32445c]"
                           }`}
                         >
@@ -65,7 +70,7 @@ export const PlayRoute = () => {
                 </div>
 
                 <div>
-                  <h2 className="mb-4 text-[1.45rem] font-semibold text-[#111c2d]">Match Type</h2>
+                  <h2 className="mb-4 text-[1.35rem] font-semibold text-[#111c2d] sm:text-[1.45rem]">Match Type</h2>
                   <div className="grid gap-3 sm:grid-cols-2">
                     {themeOptions.map((option) => {
                       const active = settings.theme === option.id;
@@ -74,9 +79,9 @@ export const PlayRoute = () => {
                           key={option.id}
                           type="button"
                           onClick={() => updateSettings({ theme: option.id })}
-                          className={`inline-flex items-center justify-center gap-3 rounded-full border px-5 py-4 text-lg font-medium transition ${
+                          className={`inline-flex items-center justify-center gap-3 rounded-full border px-4 py-4 text-base font-medium transition sm:px-5 sm:text-lg ${
                             active
-                              ? "border-[#d7d9ea] bg-[#b0b0b8] text-[#25354b] shadow-[inset_0_1px_0_rgba(255,255,255,0.55),0_10px_18px_rgba(53,37,205,0.08)]"
+                              ? "border-[#d7d9ea] bg-[#e7eeff] text-[#25354b] shadow-[inset_0_1px_0_rgba(255,255,255,0.55),0_10px_18px_rgba(53,37,205,0.08)]"
                               : "border-[#eef1f7] bg-white text-[#32445c]"
                           }`}
                         >
@@ -92,7 +97,7 @@ export const PlayRoute = () => {
 
                 <Link
                   to="/play/classic"
-                  className="inline-flex w-full items-center justify-center gap-3 rounded-full bg-gradient-to-b from-[#4f46e5] to-[#3525cd] px-6 py-5 text-[1.35rem] font-semibold text-white shadow-[0_14px_28px_rgba(53,37,205,0.25)]"
+                  className="inline-flex w-full items-center justify-center gap-3 rounded-full bg-gradient-to-b from-[#4f46e5] to-[#3525cd] px-6 py-4 text-[1.15rem] font-semibold text-white shadow-[0_14px_28px_rgba(53,37,205,0.25)] sm:py-5 sm:text-[1.35rem]"
                 >
                   <PlayIcon className="h-6 w-6" />
                   Start Game

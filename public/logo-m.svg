@@ -1,0 +1,16 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="mindgrid-bg" x1="32" y1="28" x2="214" y2="226" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#4F46E5"/>
+      <stop offset="1" stop-color="#3525CD"/>
+    </linearGradient>
+  </defs>
+  <rect x="14" y="14" width="228" height="228" rx="56" fill="url(#mindgrid-bg)"/>
+  <rect x="52" y="52" width="64" height="64" rx="20" stroke="white" stroke-width="12"/>
+  <circle cx="84" cy="84" r="9" fill="white"/>
+  <path d="M84 94V128C84 145.673 98.3269 160 116 160H173" stroke="white" stroke-width="12" stroke-linecap="round"/>
+  <rect x="140" y="52" width="64" height="64" rx="20" stroke="white" stroke-width="12"/>
+  <rect x="52" y="140" width="64" height="64" rx="20" stroke="white" stroke-width="12"/>
+  <rect x="140" y="140" width="64" height="64" rx="20" fill="white" fill-opacity="0.25"/>
+  <circle cx="172" cy="172" r="9" fill="white"/>
+</svg>

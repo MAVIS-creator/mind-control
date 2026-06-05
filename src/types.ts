@@ -26,6 +26,7 @@ export type RankTitle =
 export type PlayerProfile = {
   id: string;
   username: string;
+  email: string;
   avatarId: string;
   xp: number;
   rank: RankTitle;
@@ -50,6 +51,7 @@ export type LeaderboardEntry = {
   id: string;
   userId: string;
   username: string;
+  email: string;
   avatarId: string;
   mode: "classic";
   matchType: MatchType;
@@ -69,14 +71,20 @@ export type AuthSession = {
   accessToken?: string;
 };
 
+export type RegisterResult = {
+  session: AuthSession | null;
+  verificationEmail?: string;
+};
+
 export type RegisterPayload = {
   username: string;
+  email: string;
   password: string;
   avatarId: string;
 };
 
 export type LoginPayload = {
-  username: string;
+  identifier: string;
   password: string;
 };
 

@@ -12,9 +12,12 @@ type AuthPanelProps = {
 export const AuthPanel = ({ forcedMode }: AuthPanelProps) => {
   const { authMode, setAuthMode, login, register } = useAppContext();
   const [username, setUsername] = useState("");
+  const [identifier, setIdentifier] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [avatarId, setAvatarId] = useState(avatarOptions[0].id);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -29,12 +32,12 @@ export const AuthPanel = ({ forcedMode }: AuthPanelProps) => {
         ? {
             title: "Welcome back",
             action: "Enter Grid",
-            hint: "Sign in to continue your single-player run, save scores, and climb the Hall of Fame.",
+            hint: "Sign in with the email attached to your account to continue your single-player run, save scores, and climb the Hall of Fame.",
           }
         : {
             title: "Join the Grid",
             action: "Create Account",
-            hint: "Choose an avatar, lock in your username, and start building your memory rank.",
+            hint: "Choose an avatar, lock in your username, add your email, and start building your memory rank.",
           },
     [authMode],
   );
@@ -43,12 +46,20 @@ export const AuthPanel = ({ forcedMode }: AuthPanelProps) => {
     event.preventDefault();
     setLoading(true);
     setError(null);
+    setSuccess(null);
 
     try {
       if (authMode === "login") {
-        await login({ username, password });
+        await login({ identifier, password });
       } else {
-        await register({ username, password, avatarId });
+        const result = await register({ username, email, password, avatarId });
+        if (!result.session) {
+          setSuccess(`Verification email sent to ${result.verificationEmail ?? email}. Confirm it before signing in.`);
+          setAuthMode("login");
+          setIdentifier(result.verificationEmail ?? email);
+          setPassword("");
+          return;
+        }
       }
     } catch (nextError) {
       setError(nextError instanceof Error ? nextError.message : "Connection failure.");
@@ -76,14 +87,14 @@ export const AuthPanel = ({ forcedMode }: AuthPanelProps) => {
         <form className="space-y-5" onSubmit={handleSubmit}>
           <label className="block">
             <span className="mb-2 block text-sm font-semibold uppercase tracking-[0.16em] text-[#464555]">
-              Username
+              Email or Username
             </span>
             <input
               required
-              minLength={3}
-              value={username}
-              onChange={(event) => setUsername(event.target.value)}
-              placeholder="player_one"
+              autoComplete="username"
+              value={identifier}
+              onChange={(event) => setIdentifier(event.target.value)}
+              placeholder="you@example.com or player_one"
               className="h-16 w-full rounded-[1.35rem] border border-[#e8eaf5] bg-[#eef2ff] px-6 text-[1.1rem] text-[#111c2d] outline-none transition focus:border-[#c3c0ff] focus:ring-4 focus:ring-[#e2dfff]"
             />
           </label>
@@ -91,11 +102,15 @@ export const AuthPanel = ({ forcedMode }: AuthPanelProps) => {
           <label className="block">
             <div className="mb-2 flex items-center justify-between">
               <span className="text-sm font-semibold uppercase tracking-[0.16em] text-[#464555]">Password</span>
+              <Link to="/forgot-password" className="text-sm font-semibold text-[#3525cd]">
+                Forgot?
+              </Link>
             </div>
             <input
               required
               type="password"
               minLength={6}
+              autoComplete="current-password"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               placeholder="••••••••"
@@ -109,6 +124,12 @@ export const AuthPanel = ({ forcedMode }: AuthPanelProps) => {
             </p>
           ) : null}
 
+          {success ? (
+            <p className="rounded-2xl border border-emerald-300 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+              {success}
+            </p>
+          ) : null}
+
           <button
             type="submit"
             disabled={loading}
@@ -118,7 +139,7 @@ export const AuthPanel = ({ forcedMode }: AuthPanelProps) => {
           </button>
 
           <div className="rounded-[1.6rem] border border-[#e8eaf5] bg-[#f8f9ff] px-5 py-4 text-sm text-[#5a6174]">
-            Use the same username and password you created during registration. Saved runs and leaderboard progress stay tied to this account.
+            You can sign in with either your email or your username. Password reset links always go to the email attached to the account.
           </div>
         </form>
 
@@ -169,12 +190,30 @@ export const AuthPanel = ({ forcedMode }: AuthPanelProps) => {
 
             <label className="block">
               <span className="mb-2 block text-sm font-semibold uppercase tracking-[0.16em] text-[#464555]">
+                Email
+              </span>
+              <input
+                required
+                type="email"
+                autoComplete="email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                placeholder="you@example.com"
+                className="h-16 w-full rounded-[1.35rem] border border-[#e8eaf5] bg-[#eef2ff] px-6 text-[1.05rem] text-[#111c2d] outline-none transition focus:border-[#c3c0ff] focus:ring-4 focus:ring-[#e2dfff]"
+              />
+            </label>
+          </div>
+
+          <div className="grid gap-5 sm:grid-cols-1">
+            <label className="block">
+              <span className="mb-2 block text-sm font-semibold uppercase tracking-[0.16em] text-[#464555]">
                 Password
               </span>
               <input
                 required
                 type="password"
                 minLength={6}
+                autoComplete="new-password"
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
                 placeholder="••••••••"
@@ -193,6 +232,12 @@ export const AuthPanel = ({ forcedMode }: AuthPanelProps) => {
           {error ? (
             <p className="rounded-2xl border border-rose-300 bg-rose-50 px-4 py-3 text-sm text-rose-700">
               {error}
+            </p>
+          ) : null}
+
+          {success ? (
+            <p className="rounded-2xl border border-emerald-300 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+              {success}
             </p>
           ) : null}
 

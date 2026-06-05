@@ -14,7 +14,7 @@ import { MindGridCanvas } from "../game/phaser/MindGridCanvas";
 import { useClassicGame } from "../game/useClassicGame";
 import { useFairPlayMonitor } from "../game/useFairPlayMonitor";
 import { GRID_OPTIONS } from "../game/config";
-import { formatDuration, formatNumber, formatPercent } from "../lib/utils";
+import { formatDuration, formatNumber, formatPercent, isLegacyAccountEmail } from "../lib/utils";
 import { useAppContext } from "../state/AppContext";
 import { getLevelFromXp } from "../lib/utils";
 
@@ -85,12 +85,16 @@ export const GameRoute = () => {
     return <Navigate to="/login" replace />;
   }
 
+  if (!session.profile.email || isLegacyAccountEmail(session.profile.email)) {
+    return <Navigate to="/complete-email" replace />;
+  }
+
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_#e2dfff_0%,_#f6f7ff_40%,_#dce6ff_100%)]">
       <header className="border-b border-[#ececf6] bg-white/84 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-[1500px] flex-wrap items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-3 sm:gap-5">
-            <Link to="/play" className="font-display text-[2rem] font-extrabold tracking-[-0.05em] text-[#3525cd]">
+        <div className="mx-auto grid max-w-[1500px] gap-4 px-4 py-4 sm:px-6 lg:px-8 xl:grid-cols-[auto_1fr_auto] xl:items-center">
+          <div className="flex items-center justify-between gap-3 sm:gap-5 xl:justify-start">
+            <Link to="/play" className="font-display text-[1.7rem] font-extrabold tracking-[-0.05em] text-[#3525cd] sm:text-[2rem]">
               MindGrid
             </Link>
             <button
@@ -103,17 +107,17 @@ export const GameRoute = () => {
             </button>
           </div>
 
-          <div className="flex items-center gap-4 sm:gap-8">
+          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 xl:gap-8">
             <HudStat label="Time" value={formatDuration(state.timerRemaining)} />
             <HudStat label="Moves" value={`${state.moves}`} />
             <HudStat label="Level" value={`${playerLevel}`} />
-            <div className="flex h-20 w-20 flex-col items-center justify-center rounded-full border border-[#b9d2f4] bg-[#d7e7fb] text-[#0058a8] shadow-inner">
+            <div className="flex h-16 w-16 flex-col items-center justify-center rounded-full border border-[#b9d2f4] bg-[#d7e7fb] text-[#0058a8] shadow-inner sm:h-20 sm:w-20">
               <span className="text-xs font-semibold uppercase tracking-[0.16em]">Combo</span>
-              <span className="mt-1 text-[2rem] font-bold">x{Math.max(state.combo, 1)}</span>
+              <span className="mt-1 text-[1.55rem] font-bold sm:text-[2rem]">x{Math.max(state.combo, 1)}</span>
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center justify-center gap-3 xl:justify-end">
             <div className="inline-flex items-center gap-2 rounded-full bg-gradient-to-b from-[#4f46e5] to-[#3525cd] px-5 py-3 text-white shadow-[0_14px_30px_rgba(53,37,205,0.22)]">
               <SparklesIcon className="h-4 w-4" />
               <span className="text-sm font-semibold tracking-[0.04em]">{session.profile.xp} XP</span>
@@ -125,8 +129,8 @@ export const GameRoute = () => {
         </div>
       </header>
 
-      <main className="mx-auto max-w-[1500px] px-4 py-5 sm:px-6 lg:px-8">
-        <div className="grid gap-5 xl:grid-cols-[1fr_18rem]">
+      <main className="mx-auto max-w-[1500px] px-3 py-4 sm:px-6 sm:py-5 lg:px-8">
+        <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_18rem]">
           <section className="min-w-0">
             <div className="mb-4 flex flex-wrap items-center gap-3">
               <Link
@@ -152,7 +156,7 @@ export const GameRoute = () => {
               {boardSummary.map((item) => (
                 <div key={item.label} className="glass-panel rounded-[1.6rem] px-4 py-4">
                   <p className="text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-[#778099]">{item.label}</p>
-                  <p className="mt-2 text-[1.6rem] font-bold tracking-[-0.04em] text-[#1b2441]">{item.value}</p>
+                  <p className="mt-2 break-words text-[1.35rem] font-bold tracking-[-0.04em] text-[#1b2441] sm:text-[1.6rem]">{item.value}</p>
                 </div>
               ))}
             </div>
@@ -207,7 +211,7 @@ export const GameRoute = () => {
 const HudStat = ({ label, value }: { label: string; value: string }) => (
   <div className="text-center">
     <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#7d8395]">{label}</p>
-    <p className="mt-1 text-[2.15rem] font-bold tracking-[-0.05em] text-[#3525cd]">{value}</p>
+    <p className="mt-1 text-[1.6rem] font-bold tracking-[-0.05em] text-[#3525cd] sm:text-[2.15rem]">{value}</p>
   </div>
 );
 

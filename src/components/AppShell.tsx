@@ -5,6 +5,7 @@ import { getLevelFromXp } from "../lib/utils";
 import { useAppContext } from "../state/AppContext";
 import type { AuthSession } from "../types";
 import { BrandMarkIcon, HomeIcon, TrophyIcon, UserIcon } from "./AppIcons";
+import { SiteFooter } from "./SiteFooter";
 
 type AppShellProps = {
   session: AuthSession;
@@ -98,16 +99,6 @@ export const AppShell = ({ session, active, children }: AppShellProps) => {
                     <UserIcon className="h-4 w-4" />
                     Profile
                   </Link>
-                  {session.profile.isAdmin ? (
-                    <Link
-                      to="/admin"
-                      onClick={() => setMenuOpen(false)}
-                      className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-[#464555] transition hover:bg-[#f5f4ff] hover:text-[#3525cd]"
-                    >
-                      <TrophyIcon className="h-4 w-4" />
-                      Admin
-                    </Link>
-                  ) : null}
                   <button
                     type="button"
                     onClick={() => {
@@ -127,6 +118,7 @@ export const AppShell = ({ session, active, children }: AppShellProps) => {
       </header>
 
       <main>{children}</main>
+      <SiteFooter />
 
       <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-[#ececf6] bg-white/80 px-2 py-3 backdrop-blur-xl md:hidden">
         <div className="mx-auto flex max-w-3xl items-center justify-around">

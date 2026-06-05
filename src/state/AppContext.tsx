@@ -12,6 +12,7 @@ import type {
   GameSetupSettings,
   LeaderboardEntry,
   LoginPayload,
+  RegisterResult,
   RegisterPayload,
 } from "../types";
 import { authApi } from "../lib/auth";
@@ -27,14 +28,17 @@ type AppContextValue = {
   settings: GameSetupSettings;
   setAuthMode: (mode: "login" | "register") => void;
   updateSettings: (patch: Partial<GameSetupSettings>) => void;
-  register: (payload: RegisterPayload) => Promise<void>;
+  register: (payload: RegisterPayload) => Promise<RegisterResult>;
   login: (payload: LoginPayload) => Promise<void>;
+  requestPasswordReset: (email: string) => Promise<void>;
+  updatePassword: (password: string) => Promise<void>;
+  updateEmail: (email: string) => Promise<void>;
   logout: () => Promise<void>;
   refreshLeaderboard: () => Promise<void>;
   updateRun: (entry: LeaderboardEntry) => Promise<void>;
   deleteRun: (runId: string) => Promise<void>;
   submitRun: (
-    entry: Omit<LeaderboardEntry, "id" | "playedAt" | "userId" | "username" | "avatarId" | "rating" | "totalPoints">,
+    entry: Omit<LeaderboardEntry, "id" | "playedAt" | "userId" | "username" | "email" | "avatarId" | "rating" | "totalPoints">,
   ) => Promise<LeaderboardEntry>;
 };
 
@@ -91,11 +95,23 @@ export const AppProvider = ({ children }: PropsWithChildren) => {
         saveSettings(next);
       },
       register: async (payload) => {
-        const nextSession = await authApi.register(payload);
-        setSession(nextSession);
+        const result = await authApi.register(payload);
+        setSession(result.session);
+        return result;
       },
       login: async (payload) => {
         const nextSession = await authApi.login(payload);
+        setSession(nextSession);
+      },
+      requestPasswordReset: async (email) => {
+        await authApi.requestPasswordReset(email);
+      },
+      updatePassword: async (password) => {
+        await authApi.updatePassword(password);
+      },
+      updateEmail: async (email) => {
+        if (!session) throw new Error("You need to be logged in.");
+        const nextSession = await authApi.updateEmail(session, email);
         setSession(nextSession);
       },
       logout: async () => {

@@ -1,8 +1,9 @@
 import { motion } from "framer-motion";
 import { Link, Navigate } from "react-router-dom";
 import { BrandMotionMark, GridIcon, HomeIcon, TrophyIcon, UserIcon } from "../components/AppIcons";
+import { SiteFooter } from "../components/SiteFooter";
 import { avatarOptions } from "../data/avatars";
-import { formatNumber } from "../lib/utils";
+import { formatNumber, isLegacyAccountEmail } from "../lib/utils";
 import { useAppContext } from "../state/AppContext";
 
 const fallbackRanks = [
@@ -15,6 +16,9 @@ export const LandingRoute = () => {
   const { session, leaderboard, accountLeaderboard } = useAppContext();
 
   if (session) {
+    if (!session.profile.email || isLegacyAccountEmail(session.profile.email)) {
+      return <Navigate to="/complete-email" replace />;
+    }
     return <Navigate to="/play" replace />;
   }
 
@@ -231,6 +235,7 @@ export const LandingRoute = () => {
           </Link>
         </div>
       </main>
+      <SiteFooter />
     </div>
   );
 };

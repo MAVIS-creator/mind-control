@@ -2,6 +2,7 @@ import type { JSX } from "react";
 import { useMemo, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { ArrowLeftIcon, RefreshIcon, TrophyIcon, UserIcon } from "../components/AppIcons";
+import { isLegacyAccountEmail } from "../lib/utils";
 import { useAppContext } from "../state/AppContext";
 import type { ReviewStatus } from "../types";
 
@@ -9,8 +10,14 @@ export const AdminRoute = () => {
   const { session, leaderboard, updateRun, deleteRun } = useAppContext();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [note, setNote] = useState("");
+  const [emailSubject, setEmailSubject] = useState("MindGrid account review");
+  const [emailBody, setEmailBody] = useState("Hello,\n\nWe are reviewing activity on your MindGrid account.\n\nThanks.");
 
   if (!session) return <Navigate to="/login" replace />;
+
+  if (!session.profile.email || isLegacyAccountEmail(session.profile.email)) {
+    return <Navigate to="/complete-email" replace />;
+  }
 
   if (!session.profile.isAdmin) {
     return (
@@ -152,6 +159,10 @@ export const AdminRoute = () => {
                           onClick={() => {
                             setSelectedId(entry.id);
                             setNote(entry.audit.reviewedNote);
+                            setEmailSubject(`MindGrid review for ${entry.username}`);
+                            setEmailBody(
+                              `Hello ${entry.username},\n\nWe are contacting you about activity on your MindGrid account.\n\nBest regards,\nMindGrid Admin`,
+                            );
                           }}
                           className="rounded-full border border-[#dce1f0] bg-white px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#3525cd]"
                         >
@@ -170,6 +181,7 @@ export const AdminRoute = () => {
             {selected ? (
               <div className="mt-5 space-y-4">
                 <InfoRow label="Player" value={selected.username} />
+                <InfoRow label="Email" value={selected.email || "No email saved"} />
                 <InfoRow label="Score" value={`${selected.score.toLocaleString()}`} />
                 <InfoRow label="Accuracy" value={`${selected.accuracy}%`} />
                 <InfoRow label="Max combo" value={`x${selected.maxCombo}`} />
@@ -194,6 +206,35 @@ export const AdminRoute = () => {
                     className="w-full rounded-[1.4rem] border border-[#dfe4f2] bg-[#f8f9ff] px-4 py-3 text-sm text-[#1f2740] outline-none transition focus:border-[#c5c2ff] focus:ring-4 focus:ring-[#ebe9ff]"
                   />
                 </label>
+                <div className="rounded-[1.5rem] border border-[#e5e8f5] bg-[#fbfbff] p-4">
+                  <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[#7d8395]">Email player</div>
+                  <div className="mt-4 space-y-3">
+                    <input
+                      value={emailSubject}
+                      onChange={(event) => setEmailSubject(event.target.value)}
+                      placeholder="Subject"
+                      className="w-full rounded-[1.2rem] border border-[#dfe4f2] bg-white px-4 py-3 text-sm text-[#1f2740] outline-none transition focus:border-[#c5c2ff] focus:ring-4 focus:ring-[#ebe9ff]"
+                    />
+                    <textarea
+                      value={emailBody}
+                      onChange={(event) => setEmailBody(event.target.value)}
+                      rows={5}
+                      placeholder="Write a message"
+                      className="w-full rounded-[1.2rem] border border-[#dfe4f2] bg-white px-4 py-3 text-sm text-[#1f2740] outline-none transition focus:border-[#c5c2ff] focus:ring-4 focus:ring-[#ebe9ff]"
+                    />
+                    <button
+                      type="button"
+                      disabled={!selected.email}
+                      onClick={() => {
+                        const mailto = `mailto:${selected.email}?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+                        window.location.href = mailto;
+                      }}
+                      className="w-full rounded-full bg-gradient-to-b from-[#4f46e5] to-[#3525cd] px-4 py-3 text-xs font-semibold uppercase tracking-[0.16em] text-white disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      Open Email Draft
+                    </button>
+                  </div>
+                </div>
                 <div className="grid gap-3 sm:grid-cols-3">
                   <button
                     type="button"

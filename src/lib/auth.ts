@@ -4,16 +4,19 @@ import type {
   LeaderboardEntry,
   LoginPayload,
   PlayerProfile,
+  RegisterResult,
   RegisterPayload,
 } from "../types";
 import { avatarOptions } from "../data/avatars";
 import { createEmptyAudit, normalizeAudit } from "./audit";
 import {
   calculateRank,
+  isValidEmail,
+  normalizeEmail,
   normalizeUsername,
   parseAdminUsernames,
   uid,
-  usernameToEmail,
+  usernameToLegacyEmail,
 } from "./utils";
 import {
   loadAccountLeaderboard,
@@ -35,9 +38,18 @@ const ensureValidUsername = (username: string) => {
   return normalized;
 };
 
+const ensureValidEmail = (email: string) => {
+  const normalized = normalizeEmail(email);
+  if (!isValidEmail(normalized)) {
+    throw new Error("Enter a valid email address.");
+  }
+  return normalized;
+};
+
 const createProfile = (payload: RegisterPayload): PlayerProfile => ({
   id: uid(),
   username: ensureValidUsername(payload.username),
+  email: ensureValidEmail(payload.email),
   avatarId: payload.avatarId,
   xp: 0,
   rank: "Neural Rookie",
@@ -45,13 +57,32 @@ const createProfile = (payload: RegisterPayload): PlayerProfile => ({
   isAdmin: parseAdminUsernames().includes(ensureValidUsername(payload.username)),
 });
 
+const mapUserMetaProfile = (user: { id: string; email?: string | null; user_metadata?: Record<string, unknown> }) => ({
+  id: user.id,
+  username:
+    typeof user.user_metadata?.username === "string"
+      ? ensureValidUsername(user.user_metadata.username)
+      : (user.email?.split("@")[0] ?? "player"),
+  email: user.email ?? "",
+  avatarId:
+    typeof user.user_metadata?.avatar_id === "string"
+      ? user.user_metadata.avatar_id
+      : avatarOptions[0].id,
+  xp: 0,
+  rank: "Neural Rookie" as const,
+  createdAt: new Date().toISOString(),
+  isAdmin: false,
+});
+
 const mapRemoteProfile = (
   row: Partial<PlayerProfile> | null,
   fallbackUsername: string,
+  fallbackEmail: string,
   isAdmin: boolean,
 ): PlayerProfile => ({
   id: row?.id ?? uid(),
   username: row?.username ?? fallbackUsername,
+  email: row?.email ?? fallbackEmail,
   avatarId: row?.avatarId ?? avatarOptions[0].id,
   xp: row?.xp ?? 0,
   rank: row?.rank ?? "Neural Rookie",
@@ -61,6 +92,7 @@ const mapRemoteProfile = (
 
 const normalizeLeaderboardEntry = (entry: LeaderboardEntry): LeaderboardEntry => ({
   ...entry,
+  email: entry.email ?? "",
   matchType: entry.matchType ?? "standard",
   rating:
     typeof entry.rating === "number" && !Number.isNaN(entry.rating)
@@ -97,6 +129,7 @@ const mapLeaderboardRow = (row: any): LeaderboardEntry => ({
   id: row.id,
   userId: row.user_id,
   username: row.username,
+  email: row.email ?? "",
   avatarId: row.avatar_id,
   mode: row.mode,
   matchType: toStoredMatchType(row.match_type),
@@ -124,6 +157,7 @@ const mapAccountLeaderboardRow = (row: any): LeaderboardEntry => ({
   id: `account-${row.user_id}`,
   userId: row.user_id,
   username: row.username,
+  email: row.email ?? "",
   avatarId: row.avatar_id,
   mode: row.mode ?? "classic",
   matchType: toStoredMatchType(row.match_type),
@@ -234,6 +268,76 @@ const fetchRemoteLeaderboards = async () => {
   return { leaderboard, accountLeaderboard };
 };
 
+const ensureRemoteProfile = async (user: {
+  id: string;
+  email?: string | null;
+  user_metadata?: Record<string, unknown>;
+}) => {
+  if (!supabase) return null;
+
+  const { data: profileRow, error } = await supabase
+    .from("profiles")
+    .select("id, username, email, avatar_id, xp, rank, created_at")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  if (error) throw error;
+
+  if (profileRow) {
+    if (!profileRow.email && user.email) {
+      await supabase.from("profiles").update({ email: user.email }).eq("id", user.id);
+      return { ...profileRow, email: user.email };
+    }
+    return profileRow;
+  }
+
+  const fallbackProfile = mapUserMetaProfile(user);
+  const { error: insertError } = await supabase.from("profiles").upsert({
+    id: fallbackProfile.id,
+    username: fallbackProfile.username,
+    email: fallbackProfile.email,
+    avatar_id: fallbackProfile.avatarId,
+    xp: fallbackProfile.xp,
+    rank: fallbackProfile.rank,
+    created_at: fallbackProfile.createdAt,
+  });
+
+  if (insertError) throw insertError;
+
+  return {
+    id: fallbackProfile.id,
+    username: fallbackProfile.username,
+    email: fallbackProfile.email,
+    avatar_id: fallbackProfile.avatarId,
+    xp: fallbackProfile.xp,
+    rank: fallbackProfile.rank,
+    created_at: fallbackProfile.createdAt,
+  };
+};
+
+const resolveLoginEmail = async (identifier: string) => {
+  const trimmed = identifier.trim();
+  if (trimmed.includes("@")) {
+    return ensureValidEmail(trimmed);
+  }
+
+  const normalizedUsername = ensureValidUsername(trimmed);
+  if (!supabase) {
+    throw new Error("Email sign-in is required.");
+  }
+
+  const { data, error } = await supabase.rpc("resolve_login_email", {
+    login_name: normalizedUsername,
+  });
+
+  if (error) throw error;
+  if (!data) {
+    return usernameToLegacyEmail(normalizedUsername);
+  }
+
+  return ensureValidEmail(data);
+};
+
 const resolveAdminState = async (userId: string, username: string) => {
   if (canBeAdminFromEnv(username)) return true;
   if (!hasSupabase || !supabase) return false;
@@ -256,6 +360,7 @@ export const authApi = {
         ...session,
         profile: {
           ...session.profile,
+          email: session.profile.email ?? "",
           isAdmin: canBeAdminFromEnv(session.profile.username) || session.profile.isAdmin || false,
         },
       };
@@ -267,13 +372,10 @@ export const authApi = {
 
     if (!session?.user) return null;
 
-    const { data: profileRow } = await supabase
-      .from("profiles")
-      .select("id, username, avatar_id, xp, rank, created_at")
-      .eq("id", session.user.id)
-      .maybeSingle();
+    const profileRow = await ensureRemoteProfile(session.user);
 
     const fallbackUsername = session.user.email?.split("@")[0] ?? "player";
+    const fallbackEmail = session.user.email ?? "";
     const isAdmin = await resolveAdminState(
       session.user.id,
       profileRow?.username ?? fallbackUsername,
@@ -284,6 +386,7 @@ export const authApi = {
         ? {
             id: profileRow.id,
             username: profileRow.username,
+            email: profileRow.email,
             avatarId: profileRow.avatar_id,
             xp: profileRow.xp,
             rank: profileRow.rank,
@@ -291,6 +394,7 @@ export const authApi = {
           }
         : null,
       fallbackUsername,
+      fallbackEmail,
       isAdmin,
     );
     const currentSession = { profile, accessToken: session.access_token };
@@ -298,26 +402,39 @@ export const authApi = {
     return currentSession;
   },
 
-  async register(payload: RegisterPayload): Promise<AuthSession> {
+  async register(payload: RegisterPayload): Promise<RegisterResult> {
     const normalized = ensureValidUsername(payload.username);
 
     if (!hasSupabase || !supabase) {
       const users = loadUsers();
+      const normalizedEmail = ensureValidEmail(payload.email);
       if (users.some((item) => item.profile.username === normalized)) {
         throw new Error("That username is already taken.");
       }
-      const profile = createProfile({ ...payload, username: normalized });
+      if (users.some((item) => normalizeEmail(item.profile.email) === normalizedEmail)) {
+        throw new Error("That email is already in use.");
+      }
+      const profile = createProfile({ ...payload, username: normalized, email: normalizedEmail });
       users.push({ profile, password: payload.password });
       saveUsers(users);
       const session = { profile };
       saveSession(session);
-      return session;
+      return { session };
     }
 
-    const email = usernameToEmail(normalized);
+    const email = ensureValidEmail(payload.email);
     const { data, error } = await supabase.auth.signUp({
       email,
       password: payload.password,
+      options: {
+        emailRedirectTo:
+          (import.meta.env.VITE_EMAIL_CONFIRM_REDIRECT_URL as string | undefined) ??
+          `${window.location.origin}/login`,
+        data: {
+          username: normalized,
+          avatar_id: payload.avatarId,
+        },
+      },
     });
 
     if (error) throw error;
@@ -325,33 +442,45 @@ export const authApi = {
       throw new Error("Registration did not return a player account.");
     }
 
-    const profile = createProfile({ ...payload, username: normalized });
-    profile.id = data.user.id;
+    if (!data.session) {
+      return { session: null, verificationEmail: email };
+    }
 
-    const { error: profileError } = await supabase.from("profiles").upsert({
-      id: profile.id,
-      username: profile.username,
-      avatar_id: profile.avatarId,
-      xp: profile.xp,
-      rank: profile.rank,
-      created_at: profile.createdAt,
-    });
+    const profileRow = await ensureRemoteProfile(data.user);
+    const profile = mapRemoteProfile(
+      profileRow
+        ? {
+            id: profileRow.id,
+            username: profileRow.username,
+            email: profileRow.email,
+            avatarId: profileRow.avatar_id,
+            xp: profileRow.xp,
+            rank: profileRow.rank,
+            createdAt: profileRow.created_at,
+          }
+        : null,
+      normalized,
+      email,
+      canBeAdminFromEnv(normalized),
+    );
 
-    if (profileError) throw profileError;
-
-    const session = { profile, accessToken: data.session?.access_token };
+    const session = { profile, accessToken: data.session.access_token };
     saveSession(session);
-    return session;
+    return { session };
   },
 
   async login(payload: LoginPayload): Promise<AuthSession> {
-    const normalized = ensureValidUsername(payload.username);
+    const identifier = payload.identifier.trim();
 
     if (!hasSupabase || !supabase) {
       const users = loadUsers();
-      const user = users.find((item) => item.profile.username === normalized);
+      const user = users.find(
+        (item) =>
+          normalizeEmail(item.profile.email ?? "") === normalizeEmail(identifier) ||
+          item.profile.username === normalizeUsername(identifier),
+      );
       if (!user || user.password !== payload.password) {
-        throw new Error("Signal mismatch. Check your username and password.");
+        throw new Error("Signal mismatch. Check your email or username, then try again.");
       }
       const session = {
         profile: {
@@ -363,8 +492,10 @@ export const authApi = {
       return session;
     }
 
+    const email = await resolveLoginEmail(identifier);
+
     const { data, error } = await supabase.auth.signInWithPassword({
-      email: usernameToEmail(normalized),
+      email,
       password: payload.password,
     });
 
@@ -373,28 +504,25 @@ export const authApi = {
       throw new Error("Login did not return an active player.");
     }
 
-    const { data: profileRow, error: profileError } = await supabase
-      .from("profiles")
-      .select("id, username, avatar_id, xp, rank, created_at")
-      .eq("id", data.user.id)
-      .maybeSingle();
+    const profileRow = await ensureRemoteProfile(data.user);
 
-    if (profileError) throw profileError;
-
-    const isAdmin = await resolveAdminState(data.user.id, normalized);
+    const fallbackUsername = profileRow?.username ?? data.user.email?.split("@")[0] ?? "player";
+    const isAdmin = await resolveAdminState(data.user.id, fallbackUsername);
 
     const profile = mapRemoteProfile(
       profileRow
         ? {
             id: profileRow.id,
             username: profileRow.username,
+            email: profileRow.email,
             avatarId: profileRow.avatar_id,
             xp: profileRow.xp,
             rank: profileRow.rank,
             createdAt: profileRow.created_at,
           }
         : null,
-      normalized,
+      fallbackUsername,
+      email,
       isAdmin,
     );
     const session = { profile, accessToken: data.session?.access_token };
@@ -411,13 +539,14 @@ export const authApi = {
 
   async submitRun(
     session: AuthSession,
-    entry: Omit<LeaderboardEntry, "id" | "playedAt" | "userId" | "username" | "avatarId" | "rating" | "totalPoints">,
+    entry: Omit<LeaderboardEntry, "id" | "playedAt" | "userId" | "username" | "email" | "avatarId" | "rating" | "totalPoints">,
   ) {
     const completeEntry: LeaderboardEntry = {
       ...entry,
       id: uid(),
       userId: session.profile.id,
       username: session.profile.username,
+      email: session.profile.email,
       avatarId: session.profile.avatarId,
       matchType: entry.matchType,
       gridSize: entry.gridSize,
@@ -489,6 +618,71 @@ export const authApi = {
     const nextSession = { profile: updatedProfile };
     saveSession(nextSession);
     return { entry: completeEntry, session: nextSession, leaderboard, accountLeaderboard };
+  },
+
+  async requestPasswordReset(email: string) {
+    const normalizedEmail = ensureValidEmail(email);
+    if (!hasSupabase || !supabase) {
+      return;
+    }
+
+    const redirectTo =
+      (import.meta.env.VITE_PASSWORD_RESET_REDIRECT_URL as string | undefined) ??
+      `${window.location.origin}/reset-password`;
+
+    const { error } = await supabase.auth.resetPasswordForEmail(normalizedEmail, {
+      redirectTo,
+    });
+
+    if (error) throw error;
+  },
+
+  async updatePassword(password: string) {
+    if (password.trim().length < 6) {
+      throw new Error("Password must be at least 6 characters.");
+    }
+
+    if (!hasSupabase || !supabase) {
+      throw new Error("Password reset needs Supabase to be enabled.");
+    }
+
+    const { error } = await supabase.auth.updateUser({ password });
+    if (error) throw error;
+  },
+
+  async updateEmail(session: AuthSession, email: string) {
+    const normalizedEmail = ensureValidEmail(email);
+
+    if (!hasSupabase || !supabase) {
+      const updatedProfile = { ...session.profile, email: normalizedEmail };
+      const users = loadUsers().map((stored) =>
+        stored.profile.id === session.profile.id ? { ...stored, profile: updatedProfile } : stored,
+      );
+      saveUsers(users);
+      const nextSession = { ...session, profile: updatedProfile };
+      saveSession(nextSession);
+      return nextSession;
+    }
+
+    const { error: authError } = await supabase.auth.updateUser({ email: normalizedEmail });
+    if (authError) throw authError;
+
+    const { error: profileError } = await supabase
+      .from("profiles")
+      .update({ email: normalizedEmail })
+      .eq("id", session.profile.id);
+
+    if (profileError) throw profileError;
+
+    const nextSession = {
+      ...session,
+      profile: {
+        ...session.profile,
+        email: normalizedEmail,
+      },
+    };
+    saveSession(nextSession);
+    return nextSession;
   },
 
   async fetchLeaderboard(): Promise<{ leaderboard: LeaderboardEntry[]; accountLeaderboard: LeaderboardEntry[] }> {

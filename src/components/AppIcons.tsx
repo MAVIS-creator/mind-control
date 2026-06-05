@@ -21,6 +21,20 @@ export const UserIcon = (props: IconProps) => (
   </svg>
 );
 
+export const MailIcon = (props: IconProps) => (
+  <svg {...baseProps} {...props}>
+    <rect x="4" y="6" width="16" height="12" rx="2" />
+    <path d="m5.5 8 6.5 5 6.5-5" />
+  </svg>
+);
+
+export const LockIcon = (props: IconProps) => (
+  <svg {...baseProps} {...props}>
+    <rect x="6" y="11" width="12" height="9" rx="2" />
+    <path d="M9 11V8a3 3 0 1 1 6 0v3" />
+  </svg>
+);
+
 export const TrophyIcon = (props: IconProps) => (
   <svg {...baseProps} {...props}>
     <path d="M8 4h8v3a4 4 0 0 1-8 0V4Z" />
@@ -121,16 +135,19 @@ export const StarBadgeIcon = (props: IconProps) => (
 );
 
 export const BrandMarkIcon = (props: SVGProps<SVGSVGElement>) => (
-  <svg viewBox="0 0 64 64" fill="none" {...props}>
-    <rect x="4" y="4" width="56" height="56" rx="18" fill="url(#brand-gradient)" />
-    <rect x="18" y="18" width="10" height="10" rx="1.5" stroke="white" strokeWidth="4" />
-    <rect x="36" y="18" width="10" height="10" rx="1.5" stroke="white" strokeWidth="4" />
-    <rect x="18" y="36" width="10" height="10" rx="1.5" stroke="white" strokeWidth="4" />
-    <rect x="36" y="36" width="10" height="10" rx="1.5" stroke="white" strokeWidth="4" />
+  <svg viewBox="0 0 256 256" fill="none" {...props}>
+    <rect x="14" y="14" width="228" height="228" rx="56" fill="url(#mindgrid-bg)" />
+    <rect x="52" y="52" width="64" height="64" rx="20" stroke="white" strokeWidth="12" />
+    <circle cx="84" cy="84" r="9" fill="white" />
+    <path d="M84 94V128C84 145.673 98.3269 160 116 160H173" stroke="white" strokeWidth="12" strokeLinecap="round" />
+    <rect x="140" y="52" width="64" height="64" rx="20" stroke="white" strokeWidth="12" />
+    <rect x="52" y="140" width="64" height="64" rx="20" stroke="white" strokeWidth="12" />
+    <rect x="140" y="140" width="64" height="64" rx="20" fill="white" fillOpacity="0.25" />
+    <circle cx="172" cy="172" r="9" fill="white" />
     <defs>
-      <linearGradient id="brand-gradient" x1="10" y1="8" x2="53" y2="56" gradientUnits="userSpaceOnUse">
-        <stop stopColor="#4f46e5" />
-        <stop offset="1" stopColor="#3525cd" />
+      <linearGradient id="mindgrid-bg" x1="32" y1="28" x2="214" y2="226" gradientUnits="userSpaceOnUse">
+        <stop stopColor="#4F46E5" />
+        <stop offset="1" stopColor="#3525CD" />
       </linearGradient>
     </defs>
   </svg>
@@ -138,9 +155,6 @@ export const BrandMarkIcon = (props: SVGProps<SVGSVGElement>) => (
 
 export const BrandMotionMark = ({ className }: BrandMotionMarkProps) => (
   <div className={`brand-motion-mark ${className ?? ""}`.trim()} aria-hidden="true">
-    <span className="brand-motion-cell brand-motion-cell-a" />
-    <span className="brand-motion-cell brand-motion-cell-b" />
-    <span className="brand-motion-cell brand-motion-cell-c" />
-    <span className="brand-motion-cell brand-motion-cell-d" />
+    <img src="/logo-m.svg" alt="" className="h-full w-full object-contain" />
   </div>
 );

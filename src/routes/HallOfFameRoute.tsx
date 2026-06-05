@@ -2,7 +2,7 @@ import { Navigate } from "react-router-dom";
 import { useMemo, useState } from "react";
 import { AppShell } from "../components/AppShell";
 import { avatarOptions } from "../data/avatars";
-import { formatDuration, formatNumber, formatPercent } from "../lib/utils";
+import { formatDuration, formatNumber, formatPercent, isLegacyAccountEmail } from "../lib/utils";
 import { useAppContext } from "../state/AppContext";
 import type { GridSize, LeaderboardEntry, MatchType } from "../types";
 
@@ -27,10 +27,36 @@ const matchTypeLabels: Record<MatchType, string> = {
   icons: "Icons",
 };
 
+type SortKey = "rating" | "points" | "fastest" | "accuracy" | "combo";
+
+const compareBySort = (sortKey: SortKey, a: LeaderboardEntry, b: LeaderboardEntry) => {
+  switch (sortKey) {
+    case "points":
+      if (b.totalPoints !== a.totalPoints) return b.totalPoints - a.totalPoints;
+      return compareLeaderboardEntries(a, b);
+    case "fastest":
+      if (a.duration !== b.duration) return a.duration - b.duration;
+      if (b.score !== a.score) return b.score - a.score;
+      return compareLeaderboardEntries(a, b);
+    case "accuracy":
+      if (b.accuracy !== a.accuracy) return b.accuracy - a.accuracy;
+      if (b.score !== a.score) return b.score - a.score;
+      return compareLeaderboardEntries(a, b);
+    case "combo":
+      if (b.maxCombo !== a.maxCombo) return b.maxCombo - a.maxCombo;
+      if (b.score !== a.score) return b.score - a.score;
+      return compareLeaderboardEntries(a, b);
+    case "rating":
+    default:
+      return compareLeaderboardEntries(a, b);
+  }
+};
+
 export const HallOfFameRoute = () => {
   const { session, leaderboard, accountLeaderboard } = useAppContext();
   const [gridFilter, setGridFilter] = useState<"all" | GridSize>("all");
   const [matchTypeFilter, setMatchTypeFilter] = useState<"all" | MatchType>("all");
+  const [sortKey, setSortKey] = useState<SortKey>("rating");
 
   const hasLegacyRuns = leaderboard.some((entry) => entry.matchType === "standard");
 
@@ -39,26 +65,48 @@ export const HallOfFameRoute = () => {
       leaderboard
         .filter((entry) => (gridFilter === "all" ? true : entry.gridSize === gridFilter))
         .filter((entry) => (matchTypeFilter === "all" ? true : entry.matchType === matchTypeFilter))
-        .sort(compareLeaderboardEntries),
-    [gridFilter, leaderboard, matchTypeFilter],
+        .sort((a, b) => compareBySort(sortKey, a, b)),
+    [gridFilter, leaderboard, matchTypeFilter, sortKey],
   );
 
   const filtered = useMemo(() => {
     const bestByUser = new Map<string, LeaderboardEntry>();
     for (const entry of filteredCategoryRows) {
       const current = bestByUser.get(entry.userId);
-      if (!current || compareLeaderboardEntries(entry, current) < 0) {
+      if (!current || compareBySort(sortKey, entry, current) < 0) {
         bestByUser.set(entry.userId, entry);
       }
     }
-    return Array.from(bestByUser.values()).sort(compareLeaderboardEntries);
-  }, [filteredCategoryRows]);
+    return Array.from(bestByUser.values()).sort((a, b) => compareBySort(sortKey, a, b));
+  }, [filteredCategoryRows, sortKey]);
 
   const usingAccountTotals = gridFilter === "all" && matchTypeFilter === "all";
-  const rankedEntries = usingAccountTotals ? accountLeaderboard : filtered;
+  const accountSorted = useMemo(
+    () => [...accountLeaderboard].sort((a, b) => compareBySort(sortKey, a, b)),
+    [accountLeaderboard, sortKey],
+  );
+  const globalSorted = useMemo(() => {
+    const bestByUser = new Map<string, LeaderboardEntry>();
+    for (const entry of [...leaderboard].sort((a, b) => compareBySort(sortKey, a, b))) {
+      const current = bestByUser.get(entry.userId);
+      if (!current || compareBySort(sortKey, entry, current) < 0) {
+        bestByUser.set(entry.userId, entry);
+      }
+    }
+    return Array.from(bestByUser.values()).sort((a, b) => compareBySort(sortKey, a, b));
+  }, [leaderboard, sortKey]);
+  const rankedEntries = usingAccountTotals
+    ? sortKey === "points"
+      ? accountSorted
+      : globalSorted
+    : filtered;
 
   if (!session) {
     return <Navigate to="/login" replace />;
+  }
+
+  if (!session.profile.email || isLegacyAccountEmail(session.profile.email)) {
+    return <Navigate to="/complete-email" replace />;
   }
 
   const podium = rankedEntries.slice(0, 3);
@@ -95,6 +143,32 @@ export const HallOfFameRoute = () => {
                     }`}
                   >
                     {option.label}
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="flex flex-wrap items-center justify-center gap-2">
+              {([
+                ["rating", "Overall"],
+                ["points", "Points"],
+                ["fastest", "Fastest"],
+                ["accuracy", "Accurate"],
+                ["combo", "Combo"],
+              ] as const).map(([id, label]) => {
+                const active = sortKey === id;
+                return (
+                  <button
+                    key={id}
+                    type="button"
+                    onClick={() => setSortKey(id)}
+                    className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
+                      active
+                        ? "bg-[#3525cd] text-white shadow-[0_12px_24px_rgba(53,37,205,0.18)]"
+                        : "border border-[#dfe4f2] bg-white/80 text-[#495066]"
+                    }`}
+                  >
+                    {label}
                   </button>
                 );
               })}
@@ -178,7 +252,7 @@ export const HallOfFameRoute = () => {
             </p>
           </div>
           <div className="overflow-x-auto">
-            <table className="min-w-[980px] text-left">
+            <table className="w-full min-w-[980px] text-left">
               <thead className="bg-slate-50 text-xs uppercase tracking-[0.22em] text-slate-500">
                 <tr>
                   <th className="px-6 py-4">Rank</th>

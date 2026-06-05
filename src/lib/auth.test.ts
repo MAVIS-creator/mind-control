@@ -8,20 +8,22 @@ describe("local auth fallback", () => {
     clearAppStorage();
   });
 
-  it("registers and logs in a user by username", async () => {
+  it("registers and logs in a user by email or username", async () => {
     const registered = await authApi.register({
       username: "pilot_one",
+      email: "pilot@example.com",
       password: "secure123",
       avatarId: "ace-scout",
     });
 
-    expect(registered.profile.username).toBe("pilot_one");
-    expect(registered.profile.isAdmin).toBe(false);
+    expect(registered.session?.profile.username).toBe("pilot_one");
+    expect(registered.session?.profile.email).toBe("pilot@example.com");
+    expect(registered.session?.profile.isAdmin).toBe(false);
 
     await authApi.logout();
 
     const loggedIn = await authApi.login({
-      username: "pilot_one",
+      identifier: "pilot_one",
       password: "secure123",
     });
 
@@ -29,11 +31,13 @@ describe("local auth fallback", () => {
   });
 
   it("keeps one best row per category while total points continue to accumulate", async () => {
-    const session = await authApi.register({
+    const registered = await authApi.register({
       username: "score_keeper",
+      email: "score@example.com",
       password: "secure123",
       avatarId: "ace-scout",
     });
+    const session = registered.session!;
 
     await authApi.submitRun(session, {
       mode: "classic",

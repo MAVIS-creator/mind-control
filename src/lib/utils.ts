@@ -6,8 +6,16 @@ export const cn = (...classes: Array<string | false | null | undefined>) =>
 export const normalizeUsername = (username: string) =>
   username.trim().toLowerCase().replace(/[^a-z0-9_]/g, "");
 
-export const usernameToEmail = (username: string) =>
+export const normalizeEmail = (email: string) => email.trim().toLowerCase();
+
+export const isValidEmail = (email: string) =>
+  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizeEmail(email));
+
+export const usernameToLegacyEmail = (username: string) =>
   `${normalizeUsername(username)}@mindgridplay.com`;
+
+export const isLegacyAccountEmail = (email: string) =>
+  normalizeEmail(email).endsWith("@mindgridplay.com");
 
 export const calculateRank = (xp: number): RankTitle => {
   if (xp >= 12000) return "System Overlord";

@@ -122,6 +122,17 @@ input {
     inset 0 1px 0 rgba(255, 255, 255, 0.22);
 }
 
+.brand-motion-mark img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform 220ms ease;
+}
+
+.brand-motion-mark:hover img {
+  transform: scale(1.03);
+}
+
 .brand-motion-cell {
   border-radius: 1rem;
   border: 4px solid #fff;

@@ -1,6 +1,8 @@
 import { Navigate } from "react-router-dom";
 import { AuthPanel } from "../components/AuthPanel";
 import { BrandMotionMark } from "../components/AppIcons";
+import { SiteFooter } from "../components/SiteFooter";
+import { isLegacyAccountEmail } from "../lib/utils";
 import { useAppContext } from "../state/AppContext";
 
 type AuthRouteProps = {
@@ -11,6 +13,9 @@ export const AuthRoute = ({ mode }: AuthRouteProps) => {
   const { session } = useAppContext();
 
   if (session) {
+    if (!session.profile.email || isLegacyAccountEmail(session.profile.email)) {
+      return <Navigate to="/complete-email" replace />;
+    }
     return <Navigate to="/play" replace />;
   }
 
@@ -42,6 +47,7 @@ export const AuthRoute = ({ mode }: AuthRouteProps) => {
           <AuthPanel forcedMode={mode} />
         </div>
       </div>
+      <SiteFooter />
     </div>
   );
 };
