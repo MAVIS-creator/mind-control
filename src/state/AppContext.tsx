@@ -22,6 +22,7 @@ type AppContextValue = {
   booting: boolean;
   session: AuthSession | null;
   leaderboard: LeaderboardEntry[];
+  accountLeaderboard: LeaderboardEntry[];
   authMode: "login" | "register";
   settings: GameSetupSettings;
   setAuthMode: (mode: "login" | "register") => void;
@@ -43,6 +44,7 @@ export const AppProvider = ({ children }: PropsWithChildren) => {
   const [booting, setBooting] = useState(true);
   const [session, setSession] = useState<AuthSession | null>(null);
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
+  const [accountLeaderboard, setAccountLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [authMode, setAuthMode] = useState<"login" | "register">("login");
   const [settings, setSettings] = useState<GameSetupSettings>(() =>
     loadSettings(DEFAULT_GAME_SETTINGS),
@@ -53,17 +55,19 @@ export const AppProvider = ({ children }: PropsWithChildren) => {
       try {
         const [nextSession, nextLeaderboard] = await Promise.all([
           authApi.bootstrap().catch(() => null),
-          authApi.fetchLeaderboard().catch(() => []),
+          authApi.fetchLeaderboard().catch(() => ({ leaderboard: [], accountLeaderboard: [] })),
         ]);
         startTransition(() => {
           setSession(nextSession);
-          setLeaderboard(nextLeaderboard);
+          setLeaderboard(nextLeaderboard.leaderboard);
+          setAccountLeaderboard(nextLeaderboard.accountLeaderboard);
           setBooting(false);
         });
       } catch {
         startTransition(() => {
           setSession(null);
           setLeaderboard([]);
+          setAccountLeaderboard([]);
           setBooting(false);
         });
       }
@@ -77,6 +81,7 @@ export const AppProvider = ({ children }: PropsWithChildren) => {
       booting,
       session,
       leaderboard,
+      accountLeaderboard,
       authMode,
       settings,
       setAuthMode,
@@ -99,29 +104,33 @@ export const AppProvider = ({ children }: PropsWithChildren) => {
       },
       refreshLeaderboard: async () => {
         const next = await authApi.fetchLeaderboard();
-        setLeaderboard(next);
+        setLeaderboard(next.leaderboard);
+        setAccountLeaderboard(next.accountLeaderboard);
       },
       updateRun: async (entry) => {
         if (!session) throw new Error("Admin access is required.");
-        const nextEntry = await authApi.updateRun(session, entry);
-        setLeaderboard((current) =>
-          current.map((row) => (row.id === nextEntry.id ? nextEntry : row)),
-        );
+        await authApi.updateRun(session, entry);
+        const next = await authApi.fetchLeaderboard();
+        setLeaderboard(next.leaderboard);
+        setAccountLeaderboard(next.accountLeaderboard);
       },
       deleteRun: async (runId) => {
         if (!session) throw new Error("Admin access is required.");
-        const nextEntries = await authApi.deleteRun(session, runId);
-        setLeaderboard(nextEntries);
+        await authApi.deleteRun(session, runId);
+        const next = await authApi.fetchLeaderboard();
+        setLeaderboard(next.leaderboard);
+        setAccountLeaderboard(next.accountLeaderboard);
       },
       submitRun: async (entry) => {
         if (!session) throw new Error("You need to be logged in before saving a run.");
         const result = await authApi.submitRun(session, entry);
         setSession(result.session);
         setLeaderboard(result.leaderboard);
+        setAccountLeaderboard(result.accountLeaderboard);
         return result.entry;
       },
     }),
-    [authMode, booting, leaderboard, session, settings],
+    [accountLeaderboard, authMode, booting, leaderboard, session, settings],
   );
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

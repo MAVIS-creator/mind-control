@@ -28,7 +28,7 @@ const matchTypeLabels: Record<MatchType, string> = {
 };
 
 export const HallOfFameRoute = () => {
-  const { session, leaderboard } = useAppContext();
+  const { session, leaderboard, accountLeaderboard } = useAppContext();
   const [gridFilter, setGridFilter] = useState<"all" | GridSize>("all");
   const [matchTypeFilter, setMatchTypeFilter] = useState<"all" | MatchType>("all");
 
@@ -54,20 +54,24 @@ export const HallOfFameRoute = () => {
     return Array.from(bestByUser.values()).sort(compareLeaderboardEntries);
   }, [filteredCategoryRows]);
 
+  const usingAccountTotals = gridFilter === "all" && matchTypeFilter === "all";
+  const rankedEntries = usingAccountTotals ? accountLeaderboard : filtered;
+
   if (!session) {
     return <Navigate to="/login" replace />;
   }
 
-  const podium = filtered.slice(0, 3);
-  const rest = filtered.slice(3);
+  const podium = rankedEntries.slice(0, 3);
 
   return (
     <AppShell session={session} active="ranks">
-      <div className="mx-auto w-full max-w-[1260px] px-4 py-6 sm:px-6 lg:px-10">
+      <div className="mx-auto w-full max-w-[1260px] px-3 py-5 sm:px-6 lg:px-10">
         <section className="mb-8 text-center">
-          <h1 className="mt-3 font-display text-5xl tracking-[-0.05em] text-[#3525cd]">Hall of Fame</h1>
-          <p className="mx-auto mt-3 max-w-3xl text-base leading-7 text-[#464555]">
-            Best run per player, per board, per match type. Ratings use score, accuracy, combo, and speed, while total points keep stacking across runs.
+          <h1 className="mt-3 font-display text-4xl tracking-[-0.05em] text-[#3525cd] sm:text-5xl">Hall of Fame</h1>
+          <p className="mx-auto mt-3 max-w-3xl text-sm leading-7 text-[#464555] sm:text-base">
+            {usingAccountTotals
+              ? "One account row per player with cumulative points stacked across every saved run."
+              : "Best run per player inside the selected board and match type, while total points still keep stacking account-wide."}
           </p>
 
           <div className="mt-6 flex flex-col items-center gap-3">
@@ -123,14 +127,19 @@ export const HallOfFameRoute = () => {
           </div>
         </section>
 
-        <div className="mb-8 grid gap-4 sm:gap-6 md:grid-cols-3">
+        <div className="mb-8 grid gap-4 md:grid-cols-3">
           {podium.length ? (
             podium.map((entry, index) => {
               const avatar = avatarOptions.find((item) => item.id === entry.avatarId) ?? avatarOptions[0];
               return (
                 <article
                   key={entry.id}
-                  className={`glass-panel rounded-[2rem] border p-6 text-center shadow-[0_14px_34px_rgba(53,37,205,0.08)] ${medalClasses[index] ?? "border-slate-200 bg-white"}`}
+                  className={`rounded-[2rem] border p-5 text-center shadow-[0_20px_44px_rgba(53,37,205,0.07)] backdrop-blur-xl sm:p-6 ${medalClasses[index] ?? "border-slate-200 bg-white/80"}`}
+                  style={{
+                    background: "rgba(255,255,255,0.74)",
+                    borderColor:
+                      index === 0 ? "#ffd166" : index === 1 ? "#d8e3fb" : index === 2 ? "#f4c7a1" : "#d8e3fb",
+                  }}
                 >
                   <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-white text-lg font-bold text-slate-900 shadow-sm">
                     {index + 1}
@@ -163,11 +172,13 @@ export const HallOfFameRoute = () => {
           <div className="border-b border-slate-200/70 px-6 py-5">
             <h2 className="text-xl font-semibold text-slate-900">Leaderboard</h2>
             <p className="mt-1 text-sm text-slate-500">
-              One best row per player in each category, with cumulative total points still counting across all saved runs.
+              {usingAccountTotals
+                ? "One best row per player, with cumulative total points counting across all saved runs."
+                : "Best row per player inside this filter, with cumulative total points still counting across all saved runs."}
             </p>
           </div>
           <div className="overflow-x-auto">
-            <table className="min-w-full text-left">
+            <table className="min-w-[980px] text-left">
               <thead className="bg-slate-50 text-xs uppercase tracking-[0.22em] text-slate-500">
                 <tr>
                   <th className="px-6 py-4">Rank</th>
@@ -181,8 +192,8 @@ export const HallOfFameRoute = () => {
                 </tr>
               </thead>
               <tbody>
-                {filtered.length ? (
-                  filtered.map((entry, index) => {
+                {rankedEntries.length ? (
+                  rankedEntries.map((entry, index) => {
                     const avatar = avatarOptions.find((item) => item.id === entry.avatarId) ?? avatarOptions[0];
                     return (
                       <tr key={entry.id} className="border-t border-slate-100 text-sm text-slate-700">
@@ -192,7 +203,7 @@ export const HallOfFameRoute = () => {
                             <img
                               src={avatar.image}
                               alt={avatar.name}
-                              className="h-11 w-11 rounded-full border border-white bg-slate-100"
+                              className="h-11 w-11 rounded-full border-2 border-white bg-slate-100 object-cover"
                             />
                             <div>
                               <div className="font-medium text-slate-900">{entry.username}</div>

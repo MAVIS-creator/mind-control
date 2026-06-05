@@ -1,42 +1,38 @@
 import { motion } from "framer-motion";
 import { Link, Navigate } from "react-router-dom";
 import { BrandMotionMark, GridIcon, HomeIcon, TrophyIcon, UserIcon } from "../components/AppIcons";
+import { avatarOptions } from "../data/avatars";
+import { formatNumber } from "../lib/utils";
 import { useAppContext } from "../state/AppContext";
 
 const fallbackRanks = [
-  { name: "SOLO_LEVELER", rank: "ZENITH LORD", score: 12500 },
-  { name: "NEURON_GIRL", rank: "ELITE MIND", score: 10800 },
-  { name: "KINETIC_BOY", rank: "ELITE MIND", score: 9200 },
+  { name: "SOLO_LEVELER", rank: "ZENITH LORD", score: 12500, avatarId: "quantum-ray" },
+  { name: "NEURON_GIRL", rank: "ELITE MIND", score: 10800, avatarId: "luna-spark" },
+  { name: "KINETIC_BOY", rank: "ELITE MIND", score: 9200, avatarId: "ace-scout" },
 ];
 
 export const LandingRoute = () => {
-  const { session, leaderboard } = useAppContext();
+  const { session, leaderboard, accountLeaderboard } = useAppContext();
 
   if (session) {
     return <Navigate to="/play" replace />;
   }
 
   const previewRanks = (() => {
-    if (leaderboard.length === 0) return fallbackRanks;
-    const bestByUser = new Map<string, (typeof leaderboard)[number]>();
-    leaderboard.forEach((entry) => {
-      const current = bestByUser.get(entry.userId);
-      if (!current || entry.rating > current.rating) {
-        bestByUser.set(entry.userId, entry);
-      }
-    });
-    return Array.from(bestByUser.values())
+    if (accountLeaderboard.length === 0) return fallbackRanks;
+    return accountLeaderboard
       .sort((a, b) => b.totalPoints - a.totalPoints || b.rating - a.rating)
       .slice(0, 3)
       .map((entry) => ({
         name: entry.username.toUpperCase(),
         rank: `${entry.totalPoints.toLocaleString()} TOTAL`,
         score: entry.totalPoints,
+        avatarId: entry.avatarId,
       }));
   })();
 
-  const bestScore = leaderboard[0]?.score ?? 17983;
-  const totalPlayers = new Set(leaderboard.map((entry) => entry.userId)).size || 42;
+  const bestScore = accountLeaderboard[0]?.score ?? leaderboard[0]?.score ?? 17983;
+  const totalPlayers = accountLeaderboard.length || new Set(leaderboard.map((entry) => entry.userId)).size || 42;
 
   return (
     <div className="min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top_left,_#e2dfff_0%,_#f9f9ff_42%,_#d4e3ff_100%)]">
@@ -172,8 +168,12 @@ export const LandingRoute = () => {
                 {previewRanks.map((entry, index) => (
                   <div key={`${entry.name}-${index}`} className="flex items-center justify-between gap-3 rounded-[1.4rem] bg-white/58 p-4">
                     <div className="flex items-center gap-3">
-                      <div className="relative">
-                        <div className="h-12 w-12 rounded-full bg-[radial-gradient(circle_at_35%_30%,_#a9b3ff_0%,_#6331c0_42%,_#1a2440_100%)]" />
+                      <div className="relative shrink-0">
+                        <img
+                          src={(avatarOptions.find((avatar) => avatar.id === entry.avatarId) ?? avatarOptions[0]).image}
+                          alt={entry.name}
+                          className="h-12 w-12 rounded-full border-2 border-white object-cover shadow-sm"
+                        />
                         <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#d8e3fb] text-[0.65rem] font-bold text-[#111c2d]">
                           {index + 1}
                         </span>
@@ -184,7 +184,7 @@ export const LandingRoute = () => {
                       </div>
                     </div>
                     <p className="shrink-0 text-[1.65rem] font-bold tracking-[-0.04em] text-[#3525cd] sm:text-[2rem]">
-                      {entry.score >= 1000 ? `${(entry.score / 1000).toFixed(1)}k` : entry.score}
+                      {entry.score >= 1000 ? `${(entry.score / 1000).toFixed(1)}k` : formatNumber(entry.score)}
                     </p>
                   </div>
                 ))}

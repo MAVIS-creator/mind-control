@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { avatarOptions } from "../data/avatars";
+import { getLevelFromXp } from "../lib/utils";
 import { useAppContext } from "../state/AppContext";
 import type { AuthSession } from "../types";
 import { BrandMarkIcon, HomeIcon, TrophyIcon, UserIcon } from "./AppIcons";
@@ -21,6 +22,7 @@ export const AppShell = ({ session, active, children }: AppShellProps) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
   const avatar = avatarOptions.find((entry) => entry.id === session.profile.avatarId) ?? avatarOptions[0];
+  const level = getLevelFromXp(session.profile.xp);
 
   useEffect(() => {
     const onPointerDown = (event: PointerEvent) => {
@@ -71,6 +73,9 @@ export const AppShell = ({ session, active, children }: AppShellProps) => {
                 ★
               </span>
               <span className="text-sm font-semibold tracking-[0.04em]">{session.profile.xp} XP</span>
+              <span className="rounded-full bg-[#f0f3ff] px-2 py-0.5 text-[0.68rem] font-bold uppercase tracking-[0.14em] text-[#4f46e5]">
+                L{level}
+              </span>
             </div>
 
             <div className="relative" ref={menuRef}>

@@ -3,6 +3,7 @@ import type { AppSnapshot, AuthSession, LeaderboardEntry, PlayerProfile } from "
 const SESSION_KEY = "mindgrid.session";
 const USERS_KEY = "mindgrid.users";
 const BOARD_KEY = "mindgrid.leaderboard";
+const ACCOUNT_BOARD_KEY = "mindgrid.accountLeaderboard";
 const SETTINGS_KEY = "mindgrid.settings";
 
 export type StoredUser = {
@@ -58,6 +59,19 @@ export const saveLeaderboard = (entries: LeaderboardEntry[]) => {
   storage.setItem(BOARD_KEY, JSON.stringify(entries));
 };
 
+export const loadAccountLeaderboard = (): LeaderboardEntry[] => {
+  const storage = safeStorage();
+  if (!storage) return [];
+  const raw = storage.getItem(ACCOUNT_BOARD_KEY);
+  return raw ? (JSON.parse(raw) as LeaderboardEntry[]) : [];
+};
+
+export const saveAccountLeaderboard = (entries: LeaderboardEntry[]) => {
+  const storage = safeStorage();
+  if (!storage) return;
+  storage.setItem(ACCOUNT_BOARD_KEY, JSON.stringify(entries));
+};
+
 export const snapshotApp = (): AppSnapshot => {
   const session = loadSession();
   return {
@@ -85,5 +99,6 @@ export const clearAppStorage = () => {
   storage.removeItem(SESSION_KEY);
   storage.removeItem(USERS_KEY);
   storage.removeItem(BOARD_KEY);
+  storage.removeItem(ACCOUNT_BOARD_KEY);
   storage.removeItem(SETTINGS_KEY);
 };

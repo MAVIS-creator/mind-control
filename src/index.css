@@ -5,12 +5,24 @@
 @tailwind utilities;
 
 :root {
-  color: #111c2d;
+  --mindgrid-surface: #f9f9ff;
+  --mindgrid-surface-dim: #cfdaf2;
+  --mindgrid-surface-container: #e7eeff;
+  --mindgrid-surface-high: #dee8ff;
+  --mindgrid-surface-variant: #d8e3fb;
+  --mindgrid-ink: #111c2d;
+  --mindgrid-ink-soft: #464555;
+  --mindgrid-outline: #c7c4d8;
+  --mindgrid-primary: #3525cd;
+  --mindgrid-primary-strong: #4f46e5;
+  --mindgrid-secondary: #0060ac;
+  --mindgrid-tertiary: #6b00b7;
+  color: var(--mindgrid-ink);
   background:
     radial-gradient(circle at 0% 0%, rgba(79, 70, 229, 0.14), transparent 30%),
     radial-gradient(circle at 100% 0%, rgba(107, 0, 183, 0.08), transparent 28%),
     radial-gradient(circle at 50% 100%, rgba(100, 168, 254, 0.14), transparent 34%),
-    #f9f9ff;
+    var(--mindgrid-surface);
   font-family: "Inter", sans-serif;
 }
 
@@ -32,8 +44,8 @@ body {
     radial-gradient(circle at 0% 0%, rgba(79, 70, 229, 0.14), transparent 30%),
     radial-gradient(circle at 100% 0%, rgba(107, 0, 183, 0.08), transparent 28%),
     radial-gradient(circle at 50% 100%, rgba(100, 168, 254, 0.14), transparent 34%),
-    #f9f9ff;
-  color: #111c2d;
+    var(--mindgrid-surface);
+  color: var(--mindgrid-ink);
 }
 
 body::before {
@@ -56,7 +68,7 @@ input {
 
 .glass-panel {
   background: rgba(255, 255, 255, 0.72);
-  border: 1px solid rgba(255, 255, 255, 0.66);
+  border: 1px solid rgba(255, 255, 255, 0.82);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.72),
     0 18px 40px rgba(53, 37, 205, 0.08);
@@ -86,6 +98,21 @@ input {
   transition:
     transform 220ms ease,
     box-shadow 220ms ease;
+}
+
+@media (max-width: 479px) {
+  .brand-motion-mark {
+    width: 6.75rem;
+    height: 6.75rem;
+    padding: 0.85rem;
+    gap: 0.48rem;
+    border-radius: 1.9rem;
+  }
+
+  .brand-motion-cell {
+    border-radius: 0.85rem;
+    border-width: 3px;
+  }
 }
 
 .brand-motion-mark:hover {

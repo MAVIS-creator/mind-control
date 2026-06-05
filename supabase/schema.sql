@@ -187,7 +187,7 @@ alter table public.game_runs
 update public.game_runs
 set rating = greatest(0, round(score + accuracy * 20 + max_combo * 120 - duration * 2));
 
-create or replace view public.leaderboard_rankings as
+create or replace view public.leaderboard_rankings with (security_invoker = true) as
 with totals as (
   select user_id, coalesce(sum(score),0)::integer as total_points
   from public.game_runs
@@ -210,7 +210,7 @@ from ranked
 join totals on totals.user_id = ranked.user_id
 where ranked.rn = 1;
 
-create or replace view public.leaderboard_accounts as
+create or replace view public.leaderboard_accounts with (security_invoker = true) as
 with best_runs as (
   select
     gr.*,

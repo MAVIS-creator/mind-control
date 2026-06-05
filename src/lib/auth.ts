@@ -16,9 +16,11 @@ import {
   usernameToEmail,
 } from "./utils";
 import {
+  loadAccountLeaderboard,
   loadLeaderboard,
   loadSession,
   loadUsers,
+  saveAccountLeaderboard,
   saveLeaderboard,
   saveSession,
   saveUsers,
@@ -118,6 +120,24 @@ const mapLeaderboardRow = (row: any): LeaderboardEntry => ({
   }),
 });
 
+const mapAccountLeaderboardRow = (row: any): LeaderboardEntry => ({
+  id: `account-${row.user_id}`,
+  userId: row.user_id,
+  username: row.username,
+  avatarId: row.avatar_id,
+  mode: row.mode ?? "classic",
+  matchType: toStoredMatchType(row.match_type),
+  gridSize: row.grid_size ?? "4x4",
+  score: row.best_score,
+  rating: row.best_rating ?? computeRating(row.best_score, row.best_accuracy, row.best_max_combo, row.best_duration),
+  totalPoints: row.total_points ?? row.best_score,
+  accuracy: row.best_accuracy,
+  maxCombo: row.best_max_combo,
+  duration: row.best_duration,
+  playedAt: row.best_played_at,
+  audit: createEmptyAudit(),
+});
+
 const canBeAdminFromEnv = (username: string) =>
   parseAdminUsernames().includes(normalizeUsername(username));
 
@@ -159,6 +179,59 @@ const mergeLocalLeaderboard = (entries: LeaderboardEntry[], nextEntry: Leaderboa
   const nextEntries = [...rebasedEntries];
   nextEntries.splice(existingBestIndex, 1, normalizedNextEntry);
   return sortLeaderboard(nextEntries);
+};
+
+const buildAccountLeaderboard = (entries: LeaderboardEntry[]) => {
+  const bestByUser = new Map<string, LeaderboardEntry>();
+
+  for (const entry of sortLeaderboard(entries)) {
+    const current = bestByUser.get(entry.userId);
+    if (!current || compareLeaderboardEntries(entry, current) < 0) {
+      bestByUser.set(entry.userId, normalizeLeaderboardEntry(entry));
+    }
+  }
+
+  return sortLeaderboard(Array.from(bestByUser.values()));
+};
+
+const saveLeaderboards = (leaderboard: LeaderboardEntry[], accountLeaderboard?: LeaderboardEntry[]) => {
+  saveLeaderboard(leaderboard);
+  saveAccountLeaderboard(accountLeaderboard ?? buildAccountLeaderboard(leaderboard));
+};
+
+const fetchRemoteLeaderboards = async () => {
+  if (!supabase) {
+    return {
+      leaderboard: loadLeaderboard().map(normalizeLeaderboardEntry),
+      accountLeaderboard: loadAccountLeaderboard().map(normalizeLeaderboardEntry),
+    };
+  }
+
+  const [{ data: categoryRows, error: categoryError }, { data: accountRows, error: accountError }] =
+    await Promise.all([
+      supabase
+        .from("leaderboard_rankings")
+        .select("*")
+        .order("rating", { ascending: false })
+        .order("total_points", { ascending: false })
+        .order("duration", { ascending: true })
+        .limit(100),
+      supabase
+        .from("leaderboard_accounts")
+        .select("*")
+        .order("best_rating", { ascending: false })
+        .order("total_points", { ascending: false })
+        .order("best_duration", { ascending: true })
+        .limit(100),
+    ]);
+
+  if (categoryError) throw categoryError;
+  if (accountError) throw accountError;
+
+  const leaderboard = (categoryRows ?? []).map(mapLeaderboardRow) satisfies LeaderboardEntry[];
+  const accountLeaderboard = (accountRows ?? []).map(mapAccountLeaderboardRow) satisfies LeaderboardEntry[];
+  saveLeaderboards(leaderboard, accountLeaderboard);
+  return { leaderboard, accountLeaderboard };
 };
 
 const resolveAdminState = async (userId: string, username: string) => {
@@ -369,10 +442,11 @@ export const authApi = {
       );
       saveUsers(users);
       const entries = mergeLocalLeaderboard(loadLeaderboard(), completeEntry).slice(0, 100);
-      saveLeaderboard(entries);
+      const accountLeaderboard = buildAccountLeaderboard(entries).slice(0, 100);
+      saveLeaderboards(entries, accountLeaderboard);
       const nextSession = { profile: updatedProfile };
       saveSession(nextSession);
-      return { entry: completeEntry, session: nextSession, leaderboard: entries };
+      return { entry: completeEntry, session: nextSession, leaderboard: entries, accountLeaderboard };
     }
 
     const { error: runError } = await supabase.from("game_runs").insert({
@@ -410,44 +484,26 @@ export const authApi = {
       .eq("id", updatedProfile.id);
     if (profileError) throw profileError;
 
-    const { data: leaderboardRows, error: leaderboardError } = await supabase
-      .from("leaderboard_rankings")
-      .select("*")
-      .order("rating", { ascending: false })
-      .order("total_points", { ascending: false })
-      .order("duration", { ascending: true })
-      .limit(100);
-
-    if (leaderboardError) throw leaderboardError;
-
-    const leaderboard = (leaderboardRows ?? []).map(mapLeaderboardRow) satisfies LeaderboardEntry[];
+    const { leaderboard, accountLeaderboard } = await fetchRemoteLeaderboards();
 
     const nextSession = { profile: updatedProfile };
     saveSession(nextSession);
-    saveLeaderboard(leaderboard);
-    return { entry: completeEntry, session: nextSession, leaderboard };
+    return { entry: completeEntry, session: nextSession, leaderboard, accountLeaderboard };
   },
 
-  async fetchLeaderboard(): Promise<LeaderboardEntry[]> {
+  async fetchLeaderboard(): Promise<{ leaderboard: LeaderboardEntry[]; accountLeaderboard: LeaderboardEntry[] }> {
     if (!hasSupabase || !supabase) {
-      return loadLeaderboard().map((row) => ({
+      const leaderboard = loadLeaderboard().map((row) => ({
         ...normalizeLeaderboardEntry(row),
       }));
+      const accountLeaderboard = loadAccountLeaderboard().length
+        ? loadAccountLeaderboard().map((row) => ({ ...normalizeLeaderboardEntry(row) }))
+        : buildAccountLeaderboard(leaderboard);
+      saveLeaderboards(leaderboard, accountLeaderboard);
+      return { leaderboard, accountLeaderboard };
     }
 
-    const { data, error } = await supabase
-      .from("leaderboard_rankings")
-      .select("*")
-      .order("rating", { ascending: false })
-      .order("total_points", { ascending: false })
-      .order("duration", { ascending: true })
-      .limit(100);
-
-    if (error) throw error;
-
-    const leaderboard = (data ?? []).map(mapLeaderboardRow) satisfies LeaderboardEntry[];
-    saveLeaderboard(leaderboard);
-    return leaderboard;
+    return fetchRemoteLeaderboards();
   },
 
   async updateRun(session: AuthSession, updatedEntry: LeaderboardEntry) {
@@ -461,7 +517,7 @@ export const authApi = {
       const nextEntries = loadLeaderboard().map((entry) =>
         entry.id === nextEntry.id ? nextEntry : entry,
       );
-      saveLeaderboard(nextEntries);
+      saveLeaderboards(nextEntries);
       return nextEntry;
     }
 
@@ -488,7 +544,7 @@ export const authApi = {
 
     if (!hasSupabase || !supabase) {
       const nextEntries = loadLeaderboard().filter((entry) => entry.id !== runId);
-      saveLeaderboard(nextEntries);
+      saveLeaderboards(nextEntries);
       return nextEntries;
     }
 
