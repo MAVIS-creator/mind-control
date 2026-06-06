@@ -3,28 +3,52 @@ import { Link, Navigate, useNavigate } from "react-router-dom";
 import {
   ArrowLeftIcon,
   ClockIcon,
+  ExitIcon,
   GridIcon,
+  HapticsIcon,
+  MusicIcon,
   PauseIcon,
   PlayIcon,
   RefreshIcon,
   SparklesIcon,
+  VolumeIcon,
 } from "../components/AppIcons";
 import { avatarOptions } from "../data/avatars";
 import { MindGridCanvas } from "../game/phaser/MindGridCanvas";
 import { useClassicGame } from "../game/useClassicGame";
 import { useFairPlayMonitor } from "../game/useFairPlayMonitor";
 import { GRID_OPTIONS } from "../game/config";
-import { formatDuration, formatNumber, formatPercent, isLegacyAccountEmail } from "../lib/utils";
+import { calculateRunXp, formatDuration, formatNumber, formatPercent, isLegacyAccountEmail } from "../lib/utils";
 import { useAppContext } from "../state/AppContext";
 import { getLevelFromXp } from "../lib/utils";
 
 export const GameRoute = () => {
-  const { session, submitRun, settings } = useAppContext();
+  const { session, submitRun, settings, preferences, updatePreferences } = useAppContext();
   const navigate = useNavigate();
   const playerLevel = getLevelFromXp(session?.profile.xp ?? 0);
-  const { state, results, reveal, reset, togglePause } = useClassicGame(settings, playerLevel);
+  const { state, results, reveal, reset, togglePause } = useClassicGame(settings, preferences, playerLevel);
   const [submitted, setSubmitted] = useState(false);
   const audit = useFairPlayMonitor(state.events, state.status);
+  const awardedXp = useMemo(
+    () =>
+      calculateRunXp({
+        score: results.breakdown.finalScore,
+        accuracy: Number(results.accuracy.toFixed(2)),
+        maxCombo: state.maxCombo,
+      }),
+    [results.accuracy, results.breakdown.finalScore, state.maxCombo],
+  );
+
+  useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && (state.status === "running" || state.status === "paused" || state.status === "idle")) {
+        togglePause();
+      }
+    };
+
+    window.addEventListener("keydown", handleEscape);
+    return () => window.removeEventListener("keydown", handleEscape);
+  }, [state.status, togglePause]);
 
   useEffect(() => {
     if (!session || submitted || (state.status !== "won" && state.status !== "lost")) return;
@@ -46,6 +70,7 @@ export const GameRoute = () => {
           entry,
           breakdown: results.breakdown,
           accuracy: results.accuracy,
+          xpAwarded: awardedXp,
           won: state.status === "won",
         },
       });
@@ -64,6 +89,7 @@ export const GameRoute = () => {
     state.timerRemaining,
     submitRun,
     submitted,
+    awardedXp,
   ]);
 
   const totalPairs = state.board.cards.length / 2;
@@ -80,6 +106,10 @@ export const GameRoute = () => {
     ],
     [results.accuracy, settings.gridSize, settings.theme],
   );
+
+  const togglePreference = (key: "soundEffects" | "music" | "haptics") => {
+    updatePreferences({ [key]: !preferences[key] });
+  };
 
   if (!session) {
     return <Navigate to="/login" replace />;
@@ -204,6 +234,103 @@ export const GameRoute = () => {
           </aside>
         </div>
       </main>
+
+      {state.status === "paused" ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#eef2ff]/76 px-4 py-8 backdrop-blur-xl">
+          <div className="relative w-full max-w-[34rem] overflow-hidden rounded-[2.6rem] border border-white/70 bg-white/88 p-6 shadow-[0_28px_64px_rgba(53,37,205,0.16)] sm:p-8">
+            <div className="pointer-events-none absolute inset-y-8 left-5 hidden w-14 rounded-full bg-[#eef2ff] opacity-80 sm:block" />
+            <div className="pointer-events-none absolute inset-y-8 right-5 hidden w-14 rounded-full bg-[#eef2ff] opacity-80 sm:block" />
+
+            <div className="relative z-10">
+              <div className="text-center">
+                <h2 className="font-display text-[3rem] font-extrabold tracking-[-0.07em] text-[#3525cd] sm:text-[3.8rem]">
+                  Paused
+                </h2>
+                <p className="mt-2 text-sm font-semibold uppercase tracking-[0.32em] text-[#7d8395]">
+                  Level {playerLevel} • {session.profile.rank}
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={togglePause}
+                className="mt-8 inline-flex h-20 w-full items-center justify-center gap-3 rounded-full bg-gradient-to-b from-[#4f46e5] to-[#3525cd] text-[1.5rem] font-bold text-white shadow-[0_18px_34px_rgba(53,37,205,0.22)] transition hover:scale-[1.01]"
+              >
+                <PlayIcon className="h-6 w-6" />
+                Resume
+              </button>
+
+              <div className="mt-8">
+                <p className="text-2xl font-semibold tracking-[-0.04em] text-[#1b2441]">Settings</p>
+                <div className="mt-3 h-px bg-[#d8dcef]" />
+              </div>
+
+              <div className="mt-6 space-y-6">
+                <div>
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-3 text-[#1f2740]">
+                      <VolumeIcon className="h-7 w-7 text-[#353964]" />
+                      <span className="text-[1.1rem] font-medium">Master Volume</span>
+                    </div>
+                    <span className="text-[1.1rem] font-semibold text-[#3525cd]">{preferences.masterVolume}%</span>
+                  </div>
+                  <input
+                    type="range"
+                    min={0}
+                    max={100}
+                    step={1}
+                    value={preferences.masterVolume}
+                    onChange={(event) => updatePreferences({ masterVolume: Number(event.target.value) })}
+                    className="mt-4 h-2 w-full cursor-pointer appearance-none rounded-full bg-[#d8e3fb] accent-[#4f46e5]"
+                  />
+                </div>
+
+                <PauseToggleRow
+                  icon={<SparklesIcon className="h-7 w-7 text-[#353964]" />}
+                  label="Sound Effects"
+                  checked={preferences.soundEffects}
+                  onToggle={() => togglePreference("soundEffects")}
+                />
+                <PauseToggleRow
+                  icon={<MusicIcon className="h-7 w-7 text-[#353964]" />}
+                  label="Music"
+                  checked={preferences.music}
+                  onToggle={() => togglePreference("music")}
+                />
+                <PauseToggleRow
+                  icon={<HapticsIcon className="h-7 w-7 text-[#353964]" />}
+                  label="Haptic Feedback"
+                  checked={preferences.haptics}
+                  onToggle={() => togglePreference("haptics")}
+                />
+              </div>
+
+              <div className="mt-8 space-y-3">
+                <button
+                  type="button"
+                  onClick={reset}
+                  className="inline-flex h-16 w-full items-center justify-center gap-3 rounded-full border border-[#cdd6ef] bg-[#f5f7ff] text-[1.15rem] font-semibold text-[#3525cd] transition hover:bg-white"
+                >
+                  <RefreshIcon className="h-5 w-5" />
+                  Restart Level
+                </button>
+                <button
+                  type="button"
+                  onClick={() => navigate("/play")}
+                  className="inline-flex h-16 w-full items-center justify-center gap-3 rounded-full border border-[#f2c8c8] bg-[#fff5f5] text-[1.15rem] font-semibold text-[#c11c1c] transition hover:bg-white"
+                >
+                  <ExitIcon className="h-5 w-5" />
+                  Quit to Lobby
+                </button>
+              </div>
+
+              <p className="mt-8 text-center text-sm font-semibold text-[#a0a5b8]">
+                MindGrid v2.4.0
+              </p>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 };
@@ -230,5 +357,40 @@ const SideStat = ({
       <span className="text-sm font-medium">{label}</span>
     </div>
     <span className="text-lg font-bold text-[#3525cd]">{value}</span>
+  </div>
+);
+
+const PauseToggleRow = ({
+  icon,
+  label,
+  checked,
+  onToggle,
+}: {
+  icon: ReactNode;
+  label: string;
+  checked: boolean;
+  onToggle: () => void;
+}) => (
+  <div className="flex items-center justify-between gap-4">
+    <div className="flex items-center gap-3 text-[#1f2740]">
+      {icon}
+      <span className="text-[1.1rem] font-medium">{label}</span>
+    </div>
+    <button
+      type="button"
+      aria-pressed={checked}
+      onClick={onToggle}
+      className={`relative inline-flex h-11 w-20 items-center rounded-full border transition ${
+        checked
+          ? "border-[#4f46e5] bg-[#3525cd]"
+          : "border-[#cad5f0] bg-[#dbe5ff]"
+      }`}
+    >
+      <span
+        className={`inline-block h-9 w-9 rounded-full bg-white shadow-[0_10px_18px_rgba(53,37,205,0.18)] transition ${
+          checked ? "translate-x-10" : "translate-x-1"
+        }`}
+      />
+    </button>
   </div>
 );

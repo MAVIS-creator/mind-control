@@ -10,6 +10,7 @@ import type {
 import { avatarOptions } from "../data/avatars";
 import { createEmptyAudit, normalizeAudit } from "./audit";
 import {
+  calculateRunXp,
   calculateRank,
   isValidEmail,
   normalizeEmail,
@@ -556,7 +557,11 @@ export const authApi = {
       audit: normalizeAudit(entry.audit),
     };
 
-    const gainedXp = Math.max(140, Math.round(entry.score * 0.12));
+    const gainedXp = calculateRunXp({
+      score: entry.score,
+      accuracy: entry.accuracy,
+      maxCombo: entry.maxCombo,
+    });
     const updatedProfile: PlayerProfile = {
       ...session.profile,
       xp: session.profile.xp + gainedXp,

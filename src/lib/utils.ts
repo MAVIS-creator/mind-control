@@ -26,14 +26,46 @@ export const calculateRank = (xp: number): RankTitle => {
   return "Neural Rookie";
 };
 
-export const getLevelFromXp = (xp: number) => Math.max(1, Math.floor(xp / 500) + 1);
+export const getXpRequiredForLevel = (level: number) => {
+  if (level <= 1) return 0;
+
+  let total = 0;
+  for (let currentLevel = 1; currentLevel < level; currentLevel += 1) {
+    total += 220 + (currentLevel - 1) * 140;
+  }
+  return total;
+};
+
+export const getLevelFromXp = (xp: number) => {
+  let level = 1;
+  while (xp >= getXpRequiredForLevel(level + 1)) {
+    level += 1;
+  }
+  return level;
+};
 
 export const getLevelProgress = (xp: number) => {
   const level = getLevelFromXp(xp);
-  const levelStartXp = (level - 1) * 500;
-  const nextLevelXp = level * 500;
+  const levelStartXp = getXpRequiredForLevel(level);
+  const nextLevelXp = getXpRequiredForLevel(level + 1);
   const progress = ((xp - levelStartXp) / (nextLevelXp - levelStartXp)) * 100;
   return { level, levelStartXp, nextLevelXp, progress: Math.min(100, Math.max(0, progress)) };
+};
+
+export const calculateRunXp = ({
+  score,
+  accuracy,
+  maxCombo,
+}: {
+  score: number;
+  accuracy: number;
+  maxCombo: number;
+}) => {
+  const baseXp = 20;
+  const scoreXp = Math.min(34, Math.floor(score / 900));
+  const accuracyXp = Math.min(18, Math.floor(accuracy / 8));
+  const comboXp = Math.min(16, maxCombo * 2);
+  return Math.max(18, baseXp + scoreXp + accuracyXp + comboXp);
 };
 
 export const formatNumber = (value: number) =>

@@ -1,10 +1,11 @@
-import type { AppSnapshot, AuthSession, LeaderboardEntry, PlayerProfile } from "../types";
+import type { AppSnapshot, AuthSession, GamePreferences, LeaderboardEntry, PlayerProfile } from "../types";
 
 const SESSION_KEY = "mindgrid.session";
 const USERS_KEY = "mindgrid.users";
 const BOARD_KEY = "mindgrid.leaderboard";
 const ACCOUNT_BOARD_KEY = "mindgrid.accountLeaderboard";
 const SETTINGS_KEY = "mindgrid.settings";
+const PREFERENCES_KEY = "mindgrid.preferences";
 
 export type StoredUser = {
   profile: PlayerProfile;
@@ -93,6 +94,19 @@ export const saveSettings = <T>(value: T) => {
   storage.setItem(SETTINGS_KEY, JSON.stringify(value));
 };
 
+export const loadPreferences = <T extends GamePreferences>(fallback: T): T => {
+  const storage = safeStorage();
+  if (!storage) return fallback;
+  const raw = storage.getItem(PREFERENCES_KEY);
+  return raw ? ({ ...fallback, ...(JSON.parse(raw) as Partial<T>) } as T) : fallback;
+};
+
+export const savePreferences = <T extends GamePreferences>(value: T) => {
+  const storage = safeStorage();
+  if (!storage) return;
+  storage.setItem(PREFERENCES_KEY, JSON.stringify(value));
+};
+
 export const clearAppStorage = () => {
   const storage = safeStorage();
   if (!storage) return;
@@ -101,4 +115,5 @@ export const clearAppStorage = () => {
   storage.removeItem(BOARD_KEY);
   storage.removeItem(ACCOUNT_BOARD_KEY);
   storage.removeItem(SETTINGS_KEY);
+  storage.removeItem(PREFERENCES_KEY);
 };

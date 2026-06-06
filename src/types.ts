@@ -15,6 +15,13 @@ export type GameSetupSettings = {
   level?: number;
 };
 
+export type GamePreferences = {
+  masterVolume: number;
+  soundEffects: boolean;
+  music: boolean;
+  haptics: boolean;
+};
+
 export type RankTitle =
   | "Neural Rookie"
   | "Cipher Agent"

@@ -89,6 +89,41 @@ export const PauseIcon = (props: IconProps) => (
   </svg>
 );
 
+export const VolumeIcon = (props: IconProps) => (
+  <svg {...baseProps} {...props}>
+    <path d="M5 14h3l4 4V6L8 10H5z" />
+    <path d="M16 9a4 4 0 0 1 0 6" />
+    <path d="M18.5 6.5a7.5 7.5 0 0 1 0 11" />
+  </svg>
+);
+
+export const MusicIcon = (props: IconProps) => (
+  <svg {...baseProps} {...props}>
+    <path d="M10 18a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z" />
+    <path d="M18 16a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z" />
+    <path d="M10 18V7l8-2v11" />
+  </svg>
+);
+
+export const HapticsIcon = (props: IconProps) => (
+  <svg {...baseProps} {...props}>
+    <rect x="8" y="3.5" width="8" height="17" rx="2" />
+    <path d="M10.5 6h3" />
+    <path d="M4.5 9.5v5" />
+    <path d="M19.5 9.5v5" />
+    <path d="M2.5 11.5v1" />
+    <path d="M21.5 11.5v1" />
+  </svg>
+);
+
+export const ExitIcon = (props: IconProps) => (
+  <svg {...baseProps} {...props}>
+    <path d="M10 6H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h4" />
+    <path d="M14 8l4 4-4 4" />
+    <path d="M18 12h-8" />
+  </svg>
+);
+
 export const ArrowLeftIcon = (props: IconProps) => (
   <svg {...baseProps} {...props}>
     <path d="M15 18l-6-6 6-6" />

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useReducer } from "react";
-import type { GameSetupSettings } from "../types";
+import type { GamePreferences, GameSetupSettings } from "../types";
 import {
   calculateResults,
   createInitialGameState,
@@ -34,7 +34,7 @@ const reducer = (state: ReturnType<typeof createInitialGameState>, action: Actio
   }
 };
 
-export const useClassicGame = (settings: GameSetupSettings, level = 1) => {
+export const useClassicGame = (settings: GameSetupSettings, preferences: GamePreferences, level = 1) => {
   const settingsWithLevel = useMemo(() => ({ ...settings, level }), [level, settings]);
   const [state, dispatch] = useReducer(reducer, settingsWithLevel, createInitialGameState as any);
 
@@ -55,7 +55,7 @@ export const useClassicGame = (settings: GameSetupSettings, level = 1) => {
   }, [state.status]);
 
   const results = useMemo(() => calculateResults(state), [state]);
-  useGameAudio(state.events);
+  useGameAudio(state.events, preferences, state.status);
 
   return {
     state,

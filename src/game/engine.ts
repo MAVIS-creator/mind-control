@@ -16,7 +16,7 @@ const createEvent = (
 
 export const createInitialGameState = (settings: GameSetupSettings): GameSessionState => {
   const config = createClassicModeConfig(settings);
-  const bonusTime = Math.min(18, Math.max(0, ((settings.level ?? 1) - 1) * 2));
+  const bonusTime = Math.min(6, Math.max(0, Math.floor(Math.max(0, (settings.level ?? 1) - 1) / 3) * 2));
 
   return {
   board: createBoard(getCardSymbols(settings.theme), config.rows, config.columns),
@@ -36,7 +36,12 @@ export const createInitialGameState = (settings: GameSetupSettings): GameSession
 };
 
 export const revealCard = (state: GameSessionState, cardId: string): GameSessionState => {
-  if (state.status === "won" || state.status === "lost" || state.selectedIds.length >= 2) {
+  if (
+    state.status === "won" ||
+    state.status === "lost" ||
+    state.status === "paused" ||
+    state.selectedIds.length >= 2
+  ) {
     return state;
   }
 
@@ -155,7 +160,12 @@ export const tickGame = (state: GameSessionState): GameSessionState => {
 
 export const pauseGame = (state: GameSessionState): GameSessionState => ({
   ...state,
-  status: state.status === "paused" ? "running" : "paused",
+  status:
+    state.status === "paused"
+      ? "running"
+      : state.status === "idle" || state.status === "running"
+        ? "paused"
+        : state.status,
 });
 
 export const calculateResults = (state: GameSessionState) => {

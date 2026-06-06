@@ -8,18 +8,21 @@ import {
   SparklesIcon,
   TrophyIcon,
 } from "../components/AppIcons";
+import { useAppContext } from "../state/AppContext";
 import type { LeaderboardEntry } from "../types";
 import type { ScoreBreakdown } from "../game/types";
-import { formatDuration, formatNumber, formatPercent } from "../lib/utils";
+import { formatDuration, formatNumber, formatPercent, getLevelProgress } from "../lib/utils";
 
 type ResultsState = {
   entry: LeaderboardEntry;
   breakdown: ScoreBreakdown;
   accuracy: number;
+  xpAwarded?: number;
   won: boolean;
 };
 
 export const ResultsRoute = () => {
+  const { session } = useAppContext();
   const location = useLocation();
   const state = location.state as ResultsState | undefined;
 
@@ -55,7 +58,16 @@ export const ResultsRoute = () => {
       </div>
 
       <main className="mx-auto flex min-h-screen max-w-5xl items-center justify-center px-4 py-24 sm:px-6">
-        {state.won ? <SuccessSummary state={state} avatar={avatar.image} /> : <GameOverSummary state={state} avatar={avatar.image} />}
+        {state.won ? (
+          <SuccessSummary
+            state={state}
+            avatar={avatar.image}
+            currentXp={session?.profile.xp ?? 0}
+            rankLabel={session?.profile.rank ?? "Neural Rookie"}
+          />
+        ) : (
+          <GameOverSummary state={state} avatar={avatar.image} />
+        )}
       </main>
     </div>
   );
@@ -64,62 +76,116 @@ export const ResultsRoute = () => {
 const SuccessSummary = ({
   state,
   avatar,
+  currentXp,
+  rankLabel,
 }: {
   state: ResultsState;
   avatar: string;
+  currentXp: number;
+  rankLabel: string;
 }) => (
-  <div className="relative w-full max-w-md">
-    <div className="glass-panel relative overflow-visible rounded-[2.2rem] p-8 text-center shadow-[0_24px_54px_rgba(53,37,205,0.10)] sm:p-10">
-      <div className="relative mb-6 inline-flex">
-        <div className="flex h-24 w-24 items-center justify-center rounded-full border-4 border-white/80 bg-[#64a8fe] shadow-[0_16px_32px_rgba(0,96,172,0.16)]">
-          <span className="text-[3rem] font-black text-white">✓</span>
+  <SuccessSummaryCard state={state} avatar={avatar} currentXp={currentXp} rankLabel={rankLabel} />
+);
+
+const SuccessSummaryCard = ({
+  state,
+  avatar,
+  currentXp,
+  rankLabel,
+}: {
+  state: ResultsState;
+  avatar: string;
+  currentXp: number;
+  rankLabel: string;
+}) => {
+  const progress = getLevelProgress(currentXp);
+  const totalMatches = Math.round(state.breakdown.baseScore / 100);
+
+  return (
+    <section className="relative w-full max-w-xl">
+      <div className="glass-panel relative overflow-hidden rounded-[2.3rem] p-6 shadow-[0_24px_54px_rgba(53,37,205,0.10)] sm:p-8">
+        <div className="absolute right-0 top-0 rounded-bl-[1.4rem] rounded-tr-[2.3rem] bg-[#6b00b7] px-5 py-2 text-xs font-bold uppercase tracking-[0.18em] text-white">
+          Level Up!
         </div>
-        <span className="absolute -right-1 -top-1 h-4 w-4 rounded-full bg-[#ddb7ff] animate-pulse" />
-        <span className="absolute -bottom-1 -left-4 h-3 w-3 rounded-full bg-[#d4e3ff]" />
+
+        <div className="text-center">
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#3525cd]">Session Complete</p>
+          <h1 className="mt-3 font-display text-[3rem] font-extrabold tracking-[-0.07em] text-[#111c2d] sm:text-[4rem]">
+            Excellent Focus!
+          </h1>
+        </div>
+
+        <div className="mt-7 rounded-[2rem] border border-white/70 bg-white/45 px-6 py-7 text-center shadow-inner">
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#7d8395]">Final Score</p>
+          <p className="my-2 text-[4.2rem] font-black leading-none tracking-[-0.08em] text-[#3525cd] sm:text-[5rem]">
+            {formatNumber(state.breakdown.finalScore)}
+          </p>
+          <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-[#eef1ff] px-4 py-2 text-sm font-semibold text-[#3525cd]">
+            <SparklesIcon className="h-4 w-4" />
+            +{state.xpAwarded ?? 0} XP
+          </div>
+        </div>
+
+        <div className="mt-6 grid gap-4 sm:grid-cols-2">
+          <GameOverTile
+            icon={<GridIcon className="h-5 w-5" />}
+            accent="text-[#0060ac]"
+            label="Total Matches"
+            value={`${totalMatches}`}
+          />
+          <GameOverTile
+            icon={<ClockIcon className="h-5 w-5" />}
+            accent="text-[#6b00b7]"
+            label="Time Taken"
+            value={formatDuration(state.entry.duration)}
+          />
+        </div>
+
+        <div className="mt-7 space-y-3">
+          <div className="flex items-end justify-between gap-4">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#7d8395]">Rank Progress</p>
+              <p className="mt-1 text-[2rem] font-bold tracking-[-0.05em] text-[#111c2d]">{rankLabel}</p>
+            </div>
+            <img src={avatar} alt="Player avatar" className="h-16 w-16 rounded-full border-2 border-white bg-slate-100 shadow-sm" />
+          </div>
+          <div className="flex items-end justify-between gap-4">
+            <div>
+              <p className="text-lg font-bold text-[#111c2d]">{progress.level > 1 ? `Level ${progress.level}` : "Neural Rookie"}</p>
+              <p className="text-sm text-[#5a6174]">Keep pushing your best runs to climb higher.</p>
+            </div>
+            <span className="text-sm font-semibold text-[#3525cd]">
+              {currentXp} / {progress.nextLevelXp} XP
+            </span>
+          </div>
+          <div className="h-4 w-full rounded-full bg-[#d8e3fb] p-0.5 shadow-inner">
+            <div
+              className="h-full rounded-full bg-gradient-to-r from-[#64a8fe] via-[#4f46e5] to-[#6b00b7]"
+              style={{ width: `${Math.max(8, progress.progress)}%` }}
+            />
+          </div>
+        </div>
       </div>
 
-      <h1 className="font-display text-[2.9rem] font-extrabold tracking-[-0.07em] text-[#3525cd] sm:text-[3.3rem]">
-        PERFECT MATCH!
-      </h1>
-      <p className="mx-auto mt-3 max-w-sm text-[1rem] leading-7 text-[#5a6174]">
-        Your run is saved. Clean focus, solid accuracy, and a strong finish.
-      </p>
-
-      <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-        <RewardChip tone="blue" label={`+${Math.max(Math.round(state.breakdown.accuracyBonus / 10), 15)} XP`} />
-        <RewardChip tone="violet" label={`x${state.entry.maxCombo} Max Combo`} />
-      </div>
-
-      <div className="mt-8 grid gap-3 sm:grid-cols-2">
-        <ResultStat label="Final Score" value={formatNumber(state.breakdown.finalScore)} />
-        <ResultStat label="Accuracy" value={formatPercent(state.accuracy)} />
-        <ResultStat label="Duration" value={formatDuration(state.entry.duration)} />
-        <ResultStat label="Best Combo" value={`x${state.entry.maxCombo}`} />
-      </div>
-
-      <div className="mt-8 flex flex-col gap-3">
+      <div className="mt-5 flex flex-col gap-3">
         <Link
           to="/play/classic"
-          className="inline-flex w-full items-center justify-center gap-3 rounded-full bg-gradient-to-b from-[#4f46e5] to-[#3525cd] px-6 py-4 text-lg font-bold text-white shadow-[0_18px_34px_rgba(53,37,205,0.22)] transition hover:scale-[1.01]"
+          className="inline-flex h-16 w-full items-center justify-center gap-3 rounded-[1.4rem] bg-gradient-to-b from-[#4f46e5] to-[#3525cd] text-lg font-bold text-white shadow-[0_18px_34px_rgba(53,37,205,0.22)] transition hover:scale-[1.01]"
         >
-          Continue
+          <PlayIcon className="h-5 w-5" />
+          Play Again
         </Link>
         <Link
           to="/play"
-          className="inline-flex w-full items-center justify-center gap-3 rounded-full border border-[#d8dcee] bg-white/70 px-6 py-4 text-base font-semibold text-[#0060ac] transition hover:bg-white"
+          className="inline-flex h-14 w-full items-center justify-center gap-3 rounded-[1.4rem] border border-[#bcd1f6] bg-white/65 text-base font-bold text-[#0060ac] transition hover:bg-white"
         >
+          <GridIcon className="h-5 w-5" />
           Back to Lobby
         </Link>
       </div>
-    </div>
-
-    <img
-      src={avatar}
-      alt="Player avatar"
-      className="absolute -right-2 top-4 hidden h-14 w-14 rounded-full border-2 border-[#4f46e5]/20 bg-white shadow-sm sm:block"
-    />
-  </div>
-);
+    </section>
+  );
+};
 
 const GameOverSummary = ({
   state,
@@ -209,31 +275,6 @@ const GameOverSummary = ({
     </section>
   );
 };
-
-const RewardChip = ({
-  label,
-  tone,
-}: {
-  label: string;
-  tone: "blue" | "violet";
-}) => (
-  <div
-    className={`rounded-full border px-4 py-2 text-sm font-semibold ${
-      tone === "blue"
-        ? "border-[#64a8fe]/20 bg-[#d4e3ff]/65 text-[#3525cd]"
-        : "border-[#862dd4]/20 bg-[#f0dbff]/65 text-[#6b00b7]"
-    }`}
-  >
-    {label}
-  </div>
-);
-
-const ResultStat = ({ label, value }: { label: string; value: string }) => (
-  <div className="rounded-[1.5rem] border border-[#e2e7f5] bg-white/72 p-4 text-left">
-    <div className="text-[0.68rem] font-semibold uppercase tracking-[0.26em] text-[#7d8395]">{label}</div>
-    <div className="mt-2 text-lg font-bold tracking-[-0.03em] text-[#111c2d]">{value}</div>
-  </div>
-);
 
 const GameOverTile = ({
   icon,

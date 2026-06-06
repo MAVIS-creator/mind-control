@@ -38,6 +38,13 @@ export const DEFAULT_GAME_SETTINGS: GameSetupSettings = {
   gridSize: "4x4",
 };
 
+export const DEFAULT_GAME_PREFERENCES = {
+  masterVolume: 72,
+  soundEffects: true,
+  music: true,
+  haptics: false,
+} as const;
+
 export const createClassicModeConfig = (settings: GameSetupSettings) => {
   const grid = GRID_OPTIONS[settings.gridSize];
 

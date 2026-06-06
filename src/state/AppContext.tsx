@@ -9,6 +9,7 @@ import {
 } from "react";
 import type {
   AuthSession,
+  GamePreferences,
   GameSetupSettings,
   LeaderboardEntry,
   LoginPayload,
@@ -16,8 +17,8 @@ import type {
   RegisterPayload,
 } from "../types";
 import { authApi } from "../lib/auth";
-import { loadSettings, saveSettings } from "../lib/storage";
-import { DEFAULT_GAME_SETTINGS } from "../game/config";
+import { loadPreferences, loadSettings, savePreferences, saveSettings } from "../lib/storage";
+import { DEFAULT_GAME_PREFERENCES, DEFAULT_GAME_SETTINGS } from "../game/config";
 
 type AppContextValue = {
   booting: boolean;
@@ -26,8 +27,10 @@ type AppContextValue = {
   accountLeaderboard: LeaderboardEntry[];
   authMode: "login" | "register";
   settings: GameSetupSettings;
+  preferences: GamePreferences;
   setAuthMode: (mode: "login" | "register") => void;
   updateSettings: (patch: Partial<GameSetupSettings>) => void;
+  updatePreferences: (patch: Partial<GamePreferences>) => void;
   register: (payload: RegisterPayload) => Promise<RegisterResult>;
   login: (payload: LoginPayload) => Promise<void>;
   requestPasswordReset: (email: string) => Promise<void>;
@@ -52,6 +55,9 @@ export const AppProvider = ({ children }: PropsWithChildren) => {
   const [authMode, setAuthMode] = useState<"login" | "register">("login");
   const [settings, setSettings] = useState<GameSetupSettings>(() =>
     loadSettings(DEFAULT_GAME_SETTINGS),
+  );
+  const [preferences, setPreferences] = useState<GamePreferences>(() =>
+    loadPreferences(DEFAULT_GAME_PREFERENCES),
   );
 
   useEffect(() => {
@@ -88,11 +94,17 @@ export const AppProvider = ({ children }: PropsWithChildren) => {
       accountLeaderboard,
       authMode,
       settings,
+      preferences,
       setAuthMode,
       updateSettings: (patch) => {
         const next = { ...settings, ...patch };
         setSettings(next);
         saveSettings(next);
+      },
+      updatePreferences: (patch) => {
+        const next = { ...preferences, ...patch };
+        setPreferences(next);
+        savePreferences(next);
       },
       register: async (payload) => {
         const result = await authApi.register(payload);
@@ -146,7 +158,7 @@ export const AppProvider = ({ children }: PropsWithChildren) => {
         return result.entry;
       },
     }),
-    [accountLeaderboard, authMode, booting, leaderboard, session, settings],
+    [accountLeaderboard, authMode, booting, leaderboard, preferences, session, settings],
   );
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
