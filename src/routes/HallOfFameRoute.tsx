@@ -113,7 +113,7 @@ export const HallOfFameRoute = () => {
 
   return (
     <AppShell session={session} active="ranks">
-      <div className="mx-auto w-full max-w-[1260px] px-3 py-5 sm:px-6 lg:px-10">
+      <div className="mx-auto w-full max-w-[1260px] px-3 py-5 pb-32 sm:px-6 sm:pb-36 lg:px-10 md:pb-10">
         <section className="mb-8 text-center">
           <h1 className="mt-3 font-display text-4xl tracking-[-0.05em] text-[#3525cd] sm:text-5xl">Hall of Fame</h1>
           <p className="mx-auto mt-3 max-w-3xl text-sm leading-7 text-[#464555] sm:text-base">

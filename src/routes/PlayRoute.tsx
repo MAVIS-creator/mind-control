@@ -27,7 +27,7 @@ export const PlayRoute = () => {
 
   return (
     <AppShell session={session} active="home">
-      <div className="min-h-[calc(100vh-84px)] bg-[radial-gradient(circle_at_top_left,_#e2dfff_0%,_#f9f9ff_42%,_#d4e3ff_100%)] px-3 py-5 sm:px-6 sm:py-8">
+      <div className="min-h-[calc(100vh-84px)] bg-[radial-gradient(circle_at_top_left,_#e2dfff_0%,_#f9f9ff_42%,_#d4e3ff_100%)] px-3 py-5 pb-32 sm:px-6 sm:py-8 sm:pb-36 md:pb-10">
         <div className="mx-auto max-w-5xl">
           <div className="glass-panel rounded-[2rem] px-4 py-6 shadow-[0_18px_40px_rgba(53,37,205,0.08)] sm:rounded-[2.5rem] sm:px-8 sm:py-8 md:px-12">
             <div className="mx-auto max-w-[540px]">

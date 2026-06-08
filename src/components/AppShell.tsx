@@ -39,9 +39,12 @@ export const AppShell = ({ session, active, children }: AppShellProps) => {
   return (
     <div className="min-h-screen pb-24 md:pb-8">
       <header className="sticky top-0 z-40 border-b border-[#ececf6] bg-white/80 backdrop-blur-md">
-        <div className="mx-auto flex w-full max-w-[1200px] items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-10">
-          <Link to="/play" className="flex items-center gap-3">
-            <BrandMarkIcon className="h-10 w-auto shrink-0 object-contain sm:h-12" />
+        <div className="mx-auto flex w-full max-w-[1200px] items-center justify-between gap-2 px-3 py-3 sm:gap-3 sm:px-6 lg:px-10">
+          <Link to="/play" className="flex min-w-0 shrink items-center gap-2 overflow-hidden sm:gap-3">
+            <BrandMarkIcon className="h-10 w-10 shrink-0 object-contain sm:h-11 sm:w-11" />
+            <span className="truncate font-display text-[1.9rem] font-extrabold tracking-[-0.06em] text-[#111c2d] sm:text-[2.2rem]">
+              MindGrid
+            </span>
           </Link>
 
           <nav className="hidden items-center gap-4 md:flex">
@@ -65,13 +68,14 @@ export const AppShell = ({ session, active, children }: AppShellProps) => {
             })}
           </nav>
 
-          <div className="flex items-center gap-3 sm:gap-5">
-            <div className="inline-flex items-center gap-2 rounded-full border border-[#d9d8eb] bg-white px-4 py-2 text-[#3525cd] shadow-sm">
-              <span className="inline-flex h-5 w-5 items-center justify-center rounded-full border border-current text-[0.72rem] font-bold">
+          <div className="ml-auto flex shrink-0 items-center gap-2 sm:gap-5">
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-[#d9d8eb] bg-white px-2.5 py-1.5 text-[#3525cd] shadow-sm sm:gap-2 sm:px-4 sm:py-2">
+              <span className="inline-flex h-4 w-4 items-center justify-center rounded-full border border-current text-[0.62rem] font-bold sm:h-5 sm:w-5 sm:text-[0.72rem]">
                 ★
               </span>
-              <span className="text-sm font-semibold tracking-[0.04em]">{session.profile.xp} XP</span>
-              <span className="rounded-full bg-[#f0f3ff] px-2 py-0.5 text-[0.68rem] font-bold uppercase tracking-[0.14em] text-[#4f46e5]">
+              <span className="text-xs font-semibold tracking-[0.03em] sm:text-sm">{session.profile.xp}</span>
+              <span className="text-xs font-semibold tracking-[0.03em] sm:text-sm">XP</span>
+              <span className="rounded-full bg-[#f0f3ff] px-1.5 py-0.5 text-[0.62rem] font-bold uppercase tracking-[0.12em] text-[#4f46e5] sm:px-2 sm:text-[0.68rem]">
                 L{level}
               </span>
             </div>
@@ -80,10 +84,10 @@ export const AppShell = ({ session, active, children }: AppShellProps) => {
               <button
                 type="button"
                 onClick={() => setMenuOpen((current) => !current)}
-                className="rounded-full border-2 border-white bg-slate-100 shadow-sm"
+                className="shrink-0 rounded-full border-2 border-white bg-slate-100 shadow-sm"
                 aria-label="Profile menu"
               >
-                <img src={avatar.image} alt={avatar.name} className="h-12 w-12 rounded-full" />
+                <img src={avatar.image} alt={avatar.name} className="h-10 w-10 rounded-full object-cover sm:h-12 sm:w-12" />
               </button>
 
               {menuOpen ? (

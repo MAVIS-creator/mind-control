@@ -160,7 +160,7 @@ export const GameRoute = () => {
       </header>
 
       <main className="mx-auto max-w-[1500px] px-3 py-4 sm:px-6 sm:py-5 lg:px-8">
-        <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_18rem]">
+        <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_18rem] xl:gap-5">
           <section className="min-w-0">
             <div className="mb-4 flex flex-wrap items-center gap-3">
               <Link
@@ -182,18 +182,18 @@ export const GameRoute = () => {
 
             <MindGridCanvas state={state} onReveal={reveal} />
 
-            <div className="mt-5 grid gap-4 sm:grid-cols-3">
+            <div className="mt-4 grid grid-cols-3 gap-3 sm:mt-5 sm:gap-4">
               {boardSummary.map((item) => (
-                <div key={item.label} className="glass-panel rounded-[1.6rem] px-4 py-4">
+                <div key={item.label} className="glass-panel rounded-[1.35rem] px-3 py-3 sm:rounded-[1.6rem] sm:px-4 sm:py-4">
                   <p className="text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-[#778099]">{item.label}</p>
-                  <p className="mt-2 break-words text-[1.35rem] font-bold tracking-[-0.04em] text-[#1b2441] sm:text-[1.6rem]">{item.value}</p>
+                  <p className="mt-2 break-words text-[1.05rem] font-bold tracking-[-0.04em] text-[#1b2441] sm:text-[1.6rem]">{item.value}</p>
                 </div>
               ))}
             </div>
           </section>
 
-          <aside className="space-y-4">
-            <div className="glass-panel rounded-[1.9rem] p-5">
+          <aside className="grid grid-cols-2 gap-3 lg:grid-cols-1 lg:gap-4">
+            <div className="glass-panel rounded-[1.6rem] p-4 sm:rounded-[1.9rem] sm:p-5">
               <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#3f4457]">Match Progress</p>
               <div className="mt-5 flex items-center justify-between text-[1.05rem] text-[#2a3148]">
                 <span>Matches</span>
@@ -207,14 +207,14 @@ export const GameRoute = () => {
                   style={{ width: `${matchPercent}%` }}
                 />
               </div>
-              <div className="mt-5 rounded-[1.5rem] border border-[#d7dcf5] bg-[#f3f4ff] px-4 py-4 text-[1.05rem] leading-7 text-[#3525cd]">
+              <div className="mt-5 rounded-[1.25rem] border border-[#d7dcf5] bg-[#f3f4ff] px-3 py-3 text-sm leading-6 text-[#3525cd] sm:rounded-[1.5rem] sm:px-4 sm:py-4 sm:text-[1.05rem] sm:leading-7">
                 {state.matches === totalPairs
                   ? "Board cleared. Saving your result now."
                   : `Match ${Math.max(totalPairs - state.matches, 0)} more pair${totalPairs - state.matches === 1 ? "" : "s"} to finish this run.`}
               </div>
             </div>
 
-            <div className="glass-panel rounded-[1.9rem] p-5">
+            <div className="glass-panel rounded-[1.6rem] p-4 sm:rounded-[1.9rem] sm:p-5">
               <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#3f4457]">Run Score</p>
               <div className="mt-4 space-y-3">
                 <SideStat icon={<GridIcon className="h-4 w-4" />} label="Score" value={formatNumber(results.breakdown.finalScore)} />
@@ -224,7 +224,7 @@ export const GameRoute = () => {
             </div>
 
             {audit.suspicionScore > 0 ? (
-              <div className="rounded-[1.9rem] border border-amber-200 bg-white/86 p-5 shadow-[0_14px_32px_rgba(53,37,205,0.05)]">
+              <div className="col-span-2 rounded-[1.6rem] border border-amber-200 bg-white/86 p-4 shadow-[0_14px_32px_rgba(53,37,205,0.05)] sm:rounded-[1.9rem] sm:p-5 lg:col-span-1">
                 <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#7b5d10]">Fair Play Review</p>
                 <p className="mt-3 text-sm leading-7 text-[#5b6073]">
                   This run has {audit.suspicionScore} suspicious signal{audit.suspicionScore > 1 ? "s" : ""} logged. It will still save, and the admin review desk can inspect it later.
@@ -351,12 +351,12 @@ const SideStat = ({
   label: string;
   value: string;
 }) => (
-  <div className="flex items-center justify-between rounded-[1.35rem] bg-white/74 px-4 py-4">
-    <div className="flex items-center gap-3 text-[#2a3148]">
-      <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#eef2ff] text-[#3525cd]">{icon}</span>
-      <span className="text-sm font-medium">{label}</span>
+  <div className="flex items-center justify-between gap-3 rounded-[1.2rem] bg-white/74 px-3 py-3 sm:rounded-[1.35rem] sm:px-4 sm:py-4">
+    <div className="flex min-w-0 items-center gap-3 text-[#2a3148]">
+      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#eef2ff] text-[#3525cd] sm:h-10 sm:w-10">{icon}</span>
+      <span className="truncate text-sm font-medium">{label}</span>
     </div>
-    <span className="text-lg font-bold text-[#3525cd]">{value}</span>
+    <span className="shrink-0 text-base font-bold text-[#3525cd] sm:text-lg">{value}</span>
   </div>
 );
 
