@@ -18,11 +18,7 @@
   --mindgrid-secondary: #0060ac;
   --mindgrid-tertiary: #6b00b7;
   color: var(--mindgrid-ink);
-  background:
-    radial-gradient(circle at 0% 0%, rgba(79, 70, 229, 0.14), transparent 30%),
-    radial-gradient(circle at 100% 0%, rgba(107, 0, 183, 0.08), transparent 28%),
-    radial-gradient(circle at 50% 100%, rgba(100, 168, 254, 0.14), transparent 34%),
-    var(--mindgrid-surface);
+  background: linear-gradient(180deg, #f8faff 0%, #f9f9ff 45%, #eef4ff 100%);
   font-family: "Inter", sans-serif;
 }
 
@@ -45,11 +41,7 @@ body {
   margin: 0;
   min-height: 100vh;
   overflow-x: hidden;
-  background:
-    radial-gradient(circle at 0% 0%, rgba(79, 70, 229, 0.14), transparent 30%),
-    radial-gradient(circle at 100% 0%, rgba(107, 0, 183, 0.08), transparent 28%),
-    radial-gradient(circle at 50% 100%, rgba(100, 168, 254, 0.14), transparent 34%),
-    var(--mindgrid-surface);
+  background: linear-gradient(180deg, #f8faff 0%, #f9f9ff 45%, #eef4ff 100%);
   color: var(--mindgrid-ink);
 }
 
@@ -58,11 +50,8 @@ body::before {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  background:
-    radial-gradient(circle at 14% 18%, rgba(255, 255, 255, 0.85), transparent 14%),
-    radial-gradient(circle at 82% 14%, rgba(226, 223, 255, 0.7), transparent 18%),
-    radial-gradient(circle at 70% 76%, rgba(212, 227, 255, 0.75), transparent 20%);
-  opacity: 0.95;
+  background: radial-gradient(circle at 18% 14%, rgba(255, 255, 255, 0.72), transparent 16%);
+  opacity: 0.8;
   z-index: -1;
 }
 
@@ -71,10 +60,8 @@ body::after {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  background:
-    radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.42), transparent 24%),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.18), transparent 12%, transparent 88%, rgba(255, 255, 255, 0.16));
-  opacity: 0.7;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.14), transparent 14%, transparent 86%, rgba(255, 255, 255, 0.14));
+  opacity: 0.5;
   z-index: -1;
 }
 

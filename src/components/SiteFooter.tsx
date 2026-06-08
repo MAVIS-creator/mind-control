@@ -1,5 +1,5 @@
 export const SiteFooter = () => (
-  <footer className="mt-10 border-t border-[#cfe0ff] bg-[rgba(241,245,255,0.92)] backdrop-blur-xl">
+  <footer className="mt-10 border-t border-[#cfe0ff] bg-[#f3f7ff] backdrop-blur-xl">
     <div className="mx-auto flex max-w-[1440px] flex-col items-center justify-between gap-4 px-4 py-5 text-center sm:flex-row sm:px-6 sm:text-left lg:px-8 xl:px-10">
       <div className="flex items-center gap-3">
         <img src="/klyvex_logo.svg" alt="Klyvex Studios" className="h-12 w-12 object-contain sm:h-14 sm:w-14" />

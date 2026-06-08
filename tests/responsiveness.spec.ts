@@ -15,6 +15,7 @@ test.describe('Responsiveness and User Flow', () => {
 
     // Verify "Play Now" option exists
     await expect(page.getByText('Play Now')).toBeVisible();
+    await expect(page.locator('footer')).toHaveCSS('background-color', 'rgb(243, 247, 255)');
   });
 
   test('should allow account creation and be responsive', async ({ page, isMobile }) => {
@@ -70,5 +71,31 @@ test.describe('Responsiveness and User Flow', () => {
 
     await page.goto('/hall-of-fame');
     await expect(page.getByRole('heading', { name: 'Hall of Fame' })).toBeVisible();
+  });
+
+  test('should show a start-of-match modal before playing', async ({ page }) => {
+    await page.addInitScript(({ sessionKey, session }) => {
+      localStorage.setItem(sessionKey, JSON.stringify(session));
+    }, {
+      sessionKey: 'mindgrid.session',
+      session: {
+        profile: {
+          id: `test-${Date.now()}`,
+          username: testUsername,
+          email: testEmail,
+          avatarId: 'ace-scout',
+          xp: 0,
+          rank: 'Neural Rookie',
+          createdAt: new Date().toISOString(),
+          isAdmin: false,
+        },
+      },
+    });
+
+    await page.goto('/play/classic');
+
+    await expect(page.getByRole('heading', { name: 'Ready to play this match?' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Continue Match' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Quit to Lobby' })).toBeVisible();
   });
 });
