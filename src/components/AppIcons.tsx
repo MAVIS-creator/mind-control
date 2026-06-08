@@ -1,9 +1,10 @@
-import type { SVGProps } from "react";
+import type { ImgHTMLAttributes, SVGProps } from "react";
 
 type IconProps = SVGProps<SVGSVGElement>;
 type BrandMotionMarkProps = {
   className?: string;
 };
+type BrandImageProps = Omit<ImgHTMLAttributes<HTMLImageElement>, "src" | "alt">;
 
 const baseProps = {
   fill: "none",
@@ -169,27 +170,17 @@ export const StarBadgeIcon = (props: IconProps) => (
   </svg>
 );
 
-export const BrandMarkIcon = (props: SVGProps<SVGSVGElement>) => (
-  <svg viewBox="0 0 256 256" fill="none" {...props}>
-    <rect x="14" y="14" width="228" height="228" rx="56" fill="url(#mindgrid-bg)" />
-    <rect x="52" y="52" width="64" height="64" rx="20" stroke="white" strokeWidth="12" />
-    <circle cx="84" cy="84" r="9" fill="white" />
-    <path d="M84 94V128C84 145.673 98.3269 160 116 160H173" stroke="white" strokeWidth="12" strokeLinecap="round" />
-    <rect x="140" y="52" width="64" height="64" rx="20" stroke="white" strokeWidth="12" />
-    <rect x="52" y="140" width="64" height="64" rx="20" stroke="white" strokeWidth="12" />
-    <rect x="140" y="140" width="64" height="64" rx="20" fill="white" fillOpacity="0.25" />
-    <circle cx="172" cy="172" r="9" fill="white" />
-    <defs>
-      <linearGradient id="mindgrid-bg" x1="32" y1="28" x2="214" y2="226" gradientUnits="userSpaceOnUse">
-        <stop stopColor="#4F46E5" />
-        <stop offset="1" stopColor="#3525CD" />
-      </linearGradient>
-    </defs>
-  </svg>
+export const BrandMarkIcon = ({ className, ...props }: BrandImageProps) => (
+  <img
+    src="/logo-m.png"
+    alt="MindGrid"
+    className={className}
+    {...props}
+  />
 );
 
 export const BrandMotionMark = ({ className }: BrandMotionMarkProps) => (
   <div className={`brand-motion-mark ${className ?? ""}`.trim()} aria-hidden="true">
-    <img src="/logo-m.svg" alt="" className="h-full w-full object-contain" />
+    <img src="/logo-m.png" alt="" className="h-full w-full object-contain" />
   </div>
 );
