@@ -49,11 +49,8 @@ export const App = () => {
           <div className="absolute bottom-0 left-1/3 h-[18rem] w-[18rem] rounded-full bg-[#6b00b7]/10 blur-[100px]" />
         </div>
         <div className="glass-panel w-full max-w-md rounded-[2rem] px-6 py-8 text-center shadow-[0_22px_48px_rgba(53,37,205,0.08)] sm:px-8">
-          <BrandMotionMark className="mx-auto mb-6 h-20 w-20 sm:h-24 sm:w-24" />
+          <BrandMotionMark className="mx-auto mb-6 w-[11rem] sm:w-[14rem]" />
           <p className="font-display text-xs uppercase tracking-[0.4em] text-[#3525cd]">Initializing</p>
-          <h1 className="mt-3 font-display text-[2rem] font-extrabold tracking-[-0.05em] text-[#111c2d] sm:text-[2.4rem]">
-            MindGrid
-          </h1>
           <p className="mt-2 text-sm leading-7 text-[#464555] sm:text-base">
             Loading your game hub and preparing the next board.
           </p>
@@ -70,7 +67,7 @@ export const App = () => {
       fallback={
         <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_top_left,_#e2dfff_0%,_#f9f9ff_42%,_#d4e3ff_100%)] px-4">
           <div className="glass-panel w-full max-w-sm rounded-[2rem] px-6 py-7 text-center shadow-[0_22px_48px_rgba(53,37,205,0.08)]">
-            <BrandMotionMark className="mx-auto mb-5 h-16 w-16" />
+            <BrandMotionMark className="mx-auto mb-5 w-[9rem] sm:w-[11rem]" />
             <p className="font-display text-xs uppercase tracking-[0.4em] text-[#3525cd]">Routing</p>
             <p className="mt-3 text-sm leading-7 text-[#464555]">Opening the next screen...</p>
           </div>

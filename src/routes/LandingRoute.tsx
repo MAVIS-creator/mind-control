@@ -55,11 +55,11 @@ export const LandingRoute = () => {
               className="px-1 pt-3 text-center sm:px-2 sm:pt-6"
             >
               <div className="mx-auto flex max-w-3xl flex-col items-center">
-                <BrandMotionMark className="mb-5 h-24 w-24 sm:mb-7 sm:h-32 sm:w-32" />
-                <h1 className="font-display text-[2.8rem] font-extrabold tracking-[-0.08em] text-[#3525cd] sm:text-[4.2rem] lg:text-[5rem]">
-                  MINDGRID
+                <BrandMotionMark className="mb-5 w-[16rem] sm:mb-7 sm:w-[24rem] lg:w-[28rem]" />
+                <h1 className="font-display text-[2.8rem] font-extrabold tracking-[-0.08em] text-[#3525cd] sm:text-[4rem] lg:text-[4.6rem]">
+                  MindGrid
                 </h1>
-                <p className="mt-4 max-w-2xl text-[1rem] leading-8 text-[#4f5568] sm:mt-5 sm:text-[1.15rem] sm:leading-9">
+                <p className="mt-2 max-w-2xl text-[1rem] leading-8 text-[#4f5568] sm:mt-3 sm:text-[1.15rem] sm:leading-9">
                   Memory battles with fast boards, clean score chasing, and a focused single-player flow built for repeat runs.
                 </p>
               </div>

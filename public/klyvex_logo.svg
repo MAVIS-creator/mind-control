@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <linearGradient id="border-grad" x1="58" y1="40" x2="454" y2="472" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1EDBFF"/>
+      <stop offset="0.42" stop-color="#3A7EFF"/>
+      <stop offset="0.73" stop-color="#A54CF9"/>
+      <stop offset="1" stop-color="#FF2F98"/>
+    </linearGradient>
+    <linearGradient id="k-vert" x1="146" y1="142" x2="146" y2="370" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#16D7FF"/>
+      <stop offset="0.72" stop-color="#51A5FF"/>
+      <stop offset="1" stop-color="#8E71FF"/>
+    </linearGradient>
+    <linearGradient id="k-diag" x1="222" y1="166" x2="382" y2="382" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#5E99FF"/>
+      <stop offset="0.48" stop-color="#A562FD"/>
+      <stop offset="1" stop-color="#FF2F98"/>
+    </linearGradient>
+    <filter id="glow-cyan" x="90" y="90" width="112" height="332" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="10" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0.12 0 0 0 0 0.85 0 0 0 0 1 0 0 0 0.95 0"/>
+      <feBlend in="SourceGraphic" mode="screen"/>
+    </filter>
+    <filter id="glow-pink" x="170" y="130" width="254" height="254" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="12" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="0 0 0 0 1 0 0 0 0 0.24 0 0 0 0 0.7 0 0 0 0.85 0"/>
+      <feBlend in="SourceGraphic" mode="screen"/>
+    </filter>
+  </defs>
+
+  <!-- rounded border frame -->
+  <rect x="40" y="40" width="432" height="432" rx="72" fill="#010A1B"/>
+  <rect x="40" y="40" width="432" height="432" rx="72" stroke="url(#border-grad)" stroke-width="16"/>
+
+  <!-- K vertical -->
+  <g filter="url(#glow-cyan)">
+    <rect x="118" y="132" width="56" height="248" rx="28" fill="url(#k-vert)"/>
+  </g>
+
+  <!-- K diagonals joined as one stroked shape -->
+  <g filter="url(#glow-pink)">
+    <path d="M338 168L222 284L338 400" stroke="url(#k-diag)" stroke-width="56" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

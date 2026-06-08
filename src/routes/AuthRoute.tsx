@@ -29,10 +29,7 @@ export const AuthRoute = ({ mode }: AuthRouteProps) => {
 
       <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
         <section className="flex flex-col items-center justify-center text-center lg:min-h-[42rem]">
-          <BrandMotionMark className="mb-8 h-28 w-28 sm:h-32 sm:w-32" />
-          <h1 className="font-display text-[3.7rem] font-extrabold tracking-[-0.07em] text-[#3525cd] sm:text-[4.4rem]">
-            MindGrid
-          </h1>
+          <BrandMotionMark className="mb-8 w-[15rem] sm:w-[20rem]" />
           <p className="mt-3 text-sm font-semibold uppercase tracking-[0.36em] text-[#464555]">
             {mode === "login" ? "Welcome Back" : "Connect To Clarity"}
           </p>

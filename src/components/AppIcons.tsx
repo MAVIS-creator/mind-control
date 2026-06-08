@@ -172,7 +172,7 @@ export const StarBadgeIcon = (props: IconProps) => (
 
 export const BrandMarkIcon = ({ className, ...props }: BrandImageProps) => (
   <img
-    src="/logo-m.png"
+    src="/mindgrid_logo.svg"
     alt="MindGrid"
     className={className}
     {...props}
@@ -180,7 +180,9 @@ export const BrandMarkIcon = ({ className, ...props }: BrandImageProps) => (
 );
 
 export const BrandMotionMark = ({ className }: BrandMotionMarkProps) => (
-  <div className={`brand-motion-mark ${className ?? ""}`.trim()} aria-hidden="true">
-    <img src="/logo-m.png" alt="" className="h-full w-full object-contain" />
-  </div>
+  <img
+    src="/mindgrid_logo.svg"
+    alt="MindGrid"
+    className={`brand-motion-mark ${className ?? ""}`.trim()}
+  />
 );

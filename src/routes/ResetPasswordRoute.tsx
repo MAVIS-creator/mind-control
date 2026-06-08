@@ -48,7 +48,7 @@ export const ResetPasswordRoute = () => {
 
       <div className="mx-auto flex max-w-5xl items-center justify-center">
         <section className="glass-panel w-full max-w-[32rem] rounded-[2.5rem] px-6 py-8 shadow-[0_26px_60px_rgba(53,37,205,0.08)] sm:px-8">
-          <BrandMotionMark className="mx-auto mb-6 h-20 w-20 sm:h-24 sm:w-24" />
+          <BrandMotionMark className="mx-auto mb-6 w-[11rem] sm:w-[14rem]" />
           <p className="text-center text-xs font-semibold uppercase tracking-[0.3em] text-[#667085]">Create New Password</p>
           <h1 className="mt-3 text-center font-display text-[2.4rem] font-extrabold tracking-[-0.06em] text-[#111c2d]">
             Secure your account

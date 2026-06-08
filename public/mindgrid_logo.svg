@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <linearGradient id="mg-bg" x1="128" y1="96" x2="384" y2="416" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#4035F0"/>
+      <stop offset="1" stop-color="#3426DE"/>
+    </linearGradient>
+    <filter id="mg-shadow" x="32" y="32" width="448" height="448" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="10" stdDeviation="18" flood-color="#2d22c9" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+
+  <g filter="url(#mg-shadow)">
+    <rect x="96" y="96" width="320" height="320" rx="54" fill="url(#mg-bg)"/>
+  </g>
+
+  <rect x="160" y="144" width="96" height="96" rx="28" stroke="white" stroke-width="12"/>
+  <rect x="256" y="144" width="96" height="96" rx="28" stroke="white" stroke-width="12"/>
+  <rect x="160" y="240" width="96" height="96" rx="28" stroke="white" stroke-width="12"/>
+  <rect x="256" y="240" width="96" height="96" rx="28" fill="#D9D7FF"/>
+
+  <circle cx="208" cy="192" r="16" fill="white"/>
+  <circle cx="304" cy="288" r="16" fill="white"/>
+
+  <!-- connector lines -->
+  <path d="M208 208V256" stroke="white" stroke-width="12" stroke-linecap="round"/>
+  <path d="M208 256C208 273.673 222.327 288 240 288H288" stroke="white" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
