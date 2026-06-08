@@ -92,10 +92,11 @@ test.describe('Responsiveness and User Flow', () => {
       },
     });
 
-    await page.goto('/play/classic');
+    await page.goto('/play');
+    await page.getByRole('button', { name: 'Start Game' }).click();
 
-    await expect(page.getByRole('heading', { name: 'Ready to play this match?' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Continue Match' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Quit to Lobby' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Ready to start this match?' })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Start Match' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Stay Here' })).toBeVisible();
   });
 });

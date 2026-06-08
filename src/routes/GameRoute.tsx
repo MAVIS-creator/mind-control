@@ -29,7 +29,7 @@ export const GameRoute = () => {
   const playerLevel = getLevelFromXp(session?.profile.xp ?? 0);
   const { state, results, reveal, reset, togglePause } = useClassicGame(settings, preferences, playerLevel);
   const [submitted, setSubmitted] = useState(false);
-  const [showStartModal, setShowStartModal] = useState(true);
+  const [showQuitConfirm, setShowQuitConfirm] = useState(false);
   const audit = useFairPlayMonitor(state.events, state.status);
   const awardedXp = useMemo(
     () =>
@@ -113,12 +113,12 @@ export const GameRoute = () => {
     updatePreferences({ [key]: !preferences[key] });
   };
 
-  const handleContinueMatch = () => {
-    setShowStartModal(false);
-  };
+  const handleBackClick = () => {
+    if (state.status === "running" || state.status === "paused") {
+      setShowQuitConfirm(true);
+      return;
+    }
 
-  const handleQuitMatch = () => {
-    setShowStartModal(false);
     navigate("/play");
   };
 
@@ -177,13 +177,14 @@ export const GameRoute = () => {
         <div className="grid min-h-0 w-full gap-4 lg:grid-cols-[minmax(0,1fr)_18rem] xl:gap-5">
           <section className="flex min-w-0 min-h-0 flex-col">
             <div className="mb-3 flex flex-wrap items-center gap-3">
-              <Link
-                to="/play"
+              <button
+                type="button"
+                onClick={handleBackClick}
                 className="inline-flex items-center gap-2 rounded-full border border-[#dbdef0] bg-white/88 px-4 py-3 text-sm font-semibold text-[#495066]"
               >
                 <ArrowLeftIcon className="h-4 w-4" />
                 Back
-              </Link>
+              </button>
               <button
                 type="button"
                 onClick={reset}
@@ -251,36 +252,7 @@ export const GameRoute = () => {
         </div>
       </main>
 
-      {showStartModal ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#eef2ff]/78 px-4 py-8 backdrop-blur-xl">
-          <div className="w-full max-w-[34rem] rounded-[2.6rem] border border-white/70 bg-white/92 p-6 shadow-[0_28px_64px_rgba(53,37,205,0.16)] sm:p-8">
-            <p className="text-xs font-semibold uppercase tracking-[0.32em] text-[#7d8395]">Match start</p>
-            <h2 className="mt-3 font-display text-[2.5rem] font-extrabold tracking-[-0.06em] text-[#111c2d] sm:text-[3rem]">
-              Ready to play this match?
-            </h2>
-            <p className="mt-3 text-sm leading-7 text-[#5a6174] sm:text-[1rem]">
-              You can continue now, or quit back to the lobby before the run begins.
-            </p>
-
-            <div className="mt-7 grid gap-3 sm:grid-cols-2">
-              <button
-                type="button"
-                onClick={handleContinueMatch}
-                className="inline-flex h-14 items-center justify-center rounded-full bg-gradient-to-b from-[#4f46e5] to-[#3525cd] px-6 text-[1rem] font-semibold text-white shadow-[0_14px_30px_rgba(53,37,205,0.22)] transition hover:scale-[1.01]"
-              >
-                Continue Match
-              </button>
-              <button
-                type="button"
-                onClick={handleQuitMatch}
-                className="inline-flex h-14 items-center justify-center rounded-full border border-[#d4ddf4] bg-[#f7f9ff] px-6 text-[1rem] font-semibold text-[#2f46d7] transition hover:bg-white"
-              >
-                Quit to Lobby
-              </button>
-            </div>
-          </div>
-        </div>
-      ) : state.status === "paused" ? (
+      {state.status === "paused" ? (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#eef2ff]/76 px-4 py-8 backdrop-blur-xl">
           <div className="relative w-full max-w-[34rem] overflow-hidden rounded-[2.6rem] border border-white/70 bg-white/88 p-6 shadow-[0_28px_64px_rgba(53,37,205,0.16)] sm:p-8">
             <div className="pointer-events-none absolute inset-y-8 left-5 hidden w-14 rounded-full bg-[#eef2ff] opacity-80 sm:block" />
@@ -372,6 +344,37 @@ export const GameRoute = () => {
               <p className="mt-8 text-center text-sm font-semibold text-[#a0a5b8]">
                 MindGrid v2.4.0
               </p>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {showQuitConfirm ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#eef2ff]/78 px-4 py-8 backdrop-blur-xl">
+          <div className="w-full max-w-[34rem] rounded-[2.6rem] border border-white/70 bg-white/92 p-6 shadow-[0_28px_64px_rgba(53,37,205,0.16)] sm:p-8">
+            <p className="text-xs font-semibold uppercase tracking-[0.32em] text-[#7d8395]">Quit match</p>
+            <h2 className="mt-3 font-display text-[2.4rem] font-extrabold tracking-[-0.06em] text-[#111c2d] sm:text-[2.9rem]">
+              Leave this run?
+            </h2>
+            <p className="mt-3 text-sm leading-7 text-[#5a6174] sm:text-[1rem]">
+              Your current match is still in progress. If you leave now, this run will be abandoned.
+            </p>
+
+            <div className="mt-7 grid gap-3 sm:grid-cols-2">
+              <button
+                type="button"
+                onClick={() => setShowQuitConfirm(false)}
+                className="inline-flex h-14 items-center justify-center rounded-full border border-[#d4ddf4] bg-[#f7f9ff] px-6 text-[1rem] font-semibold text-[#2f46d7] transition hover:bg-white"
+              >
+                Keep Playing
+              </button>
+              <button
+                type="button"
+                onClick={() => navigate("/play")}
+                className="inline-flex h-14 items-center justify-center rounded-full bg-gradient-to-b from-[#4f46e5] to-[#3525cd] px-6 text-[1rem] font-semibold text-white shadow-[0_14px_30px_rgba(53,37,205,0.22)] transition hover:scale-[1.01]"
+              >
+                Quit Match
+              </button>
             </div>
           </div>
         </div>
