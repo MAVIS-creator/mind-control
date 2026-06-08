@@ -47,15 +47,16 @@ export class MindGridScene extends Phaser.Scene {
     const frame = this.add.graphics();
     frame.lineStyle(2, 0xe3e8f7, 0.95);
     frame.fillStyle(0xf9fbff, 0.86);
-    frame.fillRoundedRect(width * 0.04, height * 0.05, width * 0.92, height * 0.9, 28);
-    frame.strokeRoundedRect(width * 0.04, height * 0.05, width * 0.92, height * 0.9, 28);
+    frame.fillRoundedRect(width * 0.04, height * 0.05, width * 0.92, height * 0.9, 24);
+    frame.strokeRoundedRect(width * 0.04, height * 0.05, width * 0.92, height * 0.9, 24);
 
-    const margin = 24;
-    const gap = board.columns >= 6 ? 12 : 18;
+    const compact = width < 420;
+    const margin = compact ? 12 : 18;
+    const gap = compact ? (board.columns >= 6 ? 7 : 9) : board.columns >= 6 ? 10 : 14;
     const cardSize = Math.min(
       (width - margin * 2 - gap * (board.columns - 1)) / board.columns,
       (height - margin * 2 - gap * (board.rows - 1)) / board.rows,
-      board.columns >= 6 ? 88 : 110,
+      compact ? (board.columns >= 6 ? 64 : 78) : board.columns >= 6 ? 82 : 102,
     );
     const gridWidth = cardSize * board.columns + gap * (board.columns - 1);
     const gridHeight = cardSize * board.rows + gap * (board.rows - 1);
@@ -110,7 +111,7 @@ export class MindGridScene extends Phaser.Scene {
         const symbolText = this.add
           .text(x, y, card.symbol, {
             fontFamily: "Inter",
-            fontSize: `${cardSize >= 102 ? 34 : cardSize >= 88 ? 28 : 22}px`,
+            fontSize: `${cardSize >= 102 ? 34 : cardSize >= 88 ? 28 : cardSize >= 72 ? 24 : 18}px`,
             color: textColor,
             fontStyle: card.matched ? "700" : "600",
           })
@@ -155,7 +156,7 @@ export class MindGridScene extends Phaser.Scene {
       this.add
         .text(width - 26, 24, `COMBO x${combo}`, {
           fontFamily: "Inter",
-          fontSize: "18px",
+          fontSize: compact ? "14px" : "18px",
           color: "#f59e0b",
         })
         .setOrigin(1, 0)

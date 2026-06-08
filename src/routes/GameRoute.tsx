@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import {
   ArrowLeftIcon,
+  BrandMarkIcon,
   ClockIcon,
   ExitIcon,
   GridIcon,
@@ -120,12 +121,15 @@ export const GameRoute = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_#e2dfff_0%,_#f6f7ff_40%,_#dce6ff_100%)]">
-      <header className="border-b border-[#ececf6] bg-white/84 backdrop-blur-xl">
+    <div className="flex min-h-screen flex-col overflow-hidden bg-[radial-gradient(circle_at_top_left,_#e2dfff_0%,_#f6f7ff_40%,_#dce6ff_100%)]">
+      <header className="shrink-0 border-b border-[#cfe0ff] bg-[rgba(241,245,255,0.92)] backdrop-blur-xl">
         <div className="mx-auto grid max-w-[1500px] gap-4 px-4 py-4 sm:px-6 lg:px-8 xl:grid-cols-[auto_1fr_auto] xl:items-center">
           <div className="flex items-center justify-between gap-3 sm:gap-5 xl:justify-start">
-            <Link to="/play" className="font-display text-[1.7rem] font-extrabold tracking-[-0.05em] text-[#3525cd] sm:text-[2rem]">
-              MindGrid
+            <Link to="/play" className="flex items-center gap-2 sm:gap-3">
+              <BrandMarkIcon className="h-10 w-10 shrink-0 object-contain sm:h-11 sm:w-11" />
+              <span className="font-display text-[1.7rem] font-extrabold tracking-[-0.05em] text-[#3525cd] sm:text-[2rem]">
+                MindGrid
+              </span>
             </Link>
             <button
               type="button"
@@ -159,10 +163,10 @@ export const GameRoute = () => {
         </div>
       </header>
 
-      <main className="mx-auto max-w-[1500px] px-3 py-4 sm:px-6 sm:py-5 lg:px-8">
-        <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_18rem] xl:gap-5">
-          <section className="min-w-0">
-            <div className="mb-4 flex flex-wrap items-center gap-3">
+      <main className="mx-auto flex min-h-0 w-full max-w-[1500px] flex-1 overflow-hidden px-3 py-3 sm:px-6 sm:py-4 lg:px-8">
+        <div className="grid min-h-0 w-full gap-4 lg:grid-cols-[minmax(0,1fr)_18rem] xl:gap-5">
+          <section className="flex min-w-0 min-h-0 flex-col">
+            <div className="mb-3 flex flex-wrap items-center gap-3">
               <Link
                 to="/play"
                 className="inline-flex items-center gap-2 rounded-full border border-[#dbdef0] bg-white/88 px-4 py-3 text-sm font-semibold text-[#495066]"
@@ -180,9 +184,11 @@ export const GameRoute = () => {
               </button>
             </div>
 
-            <MindGridCanvas state={state} onReveal={reveal} />
+            <div className="min-h-0 flex-1">
+              <MindGridCanvas state={state} onReveal={reveal} />
+            </div>
 
-            <div className="mt-4 grid grid-cols-3 gap-3 sm:mt-5 sm:gap-4">
+            <div className="mt-3 grid grid-cols-3 gap-3 sm:mt-4 sm:gap-4">
               {boardSummary.map((item) => (
                 <div key={item.label} className="glass-panel rounded-[1.35rem] px-3 py-3 sm:rounded-[1.6rem] sm:px-4 sm:py-4">
                   <p className="text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-[#778099]">{item.label}</p>
@@ -192,7 +198,7 @@ export const GameRoute = () => {
             </div>
           </section>
 
-          <aside className="grid grid-cols-2 gap-3 lg:grid-cols-1 lg:gap-4">
+          <aside className="grid grid-cols-2 gap-3 lg:grid-cols-1 lg:gap-4 xl:min-h-0">
             <div className="glass-panel rounded-[1.6rem] p-4 sm:rounded-[1.9rem] sm:p-5">
               <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#3f4457]">Match Progress</p>
               <div className="mt-5 flex items-center justify-between text-[1.05rem] text-[#2a3148]">

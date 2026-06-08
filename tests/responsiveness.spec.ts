@@ -32,7 +32,9 @@ test.describe('Responsiveness and User Flow', () => {
     await page.getByPlaceholder('••••••••').fill(testPassword);
     
     // Check Terms of Service
-    await page.getByRole('checkbox').check();
+    const termsCheckbox = page.getByRole('checkbox', { name: /i agree to the terms of service/i });
+    await termsCheckbox.scrollIntoViewIfNeeded();
+    await termsCheckbox.click({ force: true });
     
     // Submit form
     await page.getByRole('button', { name: 'Create Account' }).click();

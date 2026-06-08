@@ -277,19 +277,25 @@ export const LandingRoute = () => {
               transition={{ delay: 0.14 }}
               className="glass-panel rounded-[1.8rem] p-5 shadow-[0_14px_32px_rgba(53,37,205,0.06)] sm:rounded-[2rem] sm:p-6"
             >
-              <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.22em] text-[#667085]">What&apos;s live</h3>
+              <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.22em] text-[#667085]">About the game</h3>
               <div className="space-y-4">
-                <div className="flex items-center justify-between rounded-[1.1rem] bg-white/55 px-4 py-4 text-[1.02rem] text-[#111c2d]">
-                  <span>Single-player mode</span>
-                  <span className="font-bold text-[#3525cd]">Classic Sync</span>
+                <div className="rounded-[1.1rem] bg-white/55 px-4 py-4 text-[1.02rem] text-[#111c2d]">
+                  <p className="font-semibold text-[#3525cd]">Flip fast</p>
+                  <p className="mt-1 text-sm leading-6 text-[#586074]">
+                    Match pairs before the clock gets tight and keep your route clean.
+                  </p>
                 </div>
-                <div className="flex items-center justify-between rounded-[1.1rem] bg-white/55 px-4 py-4 text-[1.02rem] text-[#111c2d]">
-                  <span>Card themes</span>
-                  <span className="font-bold text-[#3525cd]">Numbers / Icons</span>
+                <div className="rounded-[1.1rem] bg-white/55 px-4 py-4 text-[1.02rem] text-[#111c2d]">
+                  <p className="font-semibold text-[#3525cd]">Build combos</p>
+                  <p className="mt-1 text-sm leading-6 text-[#586074]">
+                    Every clean match adds pressure, rhythm, and score momentum.
+                  </p>
                 </div>
-                <div className="flex items-center justify-between rounded-[1.1rem] bg-white/55 px-4 py-4 text-[1.02rem] text-[#111c2d]">
-                  <span>Score saving</span>
-                  <span className="font-bold text-[#3525cd]">Enabled</span>
+                <div className="rounded-[1.1rem] bg-white/55 px-4 py-4 text-[1.02rem] text-[#111c2d]">
+                  <p className="font-semibold text-[#3525cd]">Climb ranks</p>
+                  <p className="mt-1 text-sm leading-6 text-[#586074]">
+                    Chase personal bests and push your score into the Hall of Fame.
+                  </p>
                 </div>
               </div>
             </motion.div>

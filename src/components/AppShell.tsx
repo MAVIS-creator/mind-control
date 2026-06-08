@@ -38,16 +38,16 @@ export const AppShell = ({ session, active, children }: AppShellProps) => {
 
   return (
     <div className="min-h-screen pb-24 md:pb-8">
-      <header className="sticky top-0 z-40 border-b border-[#ececf6] bg-white/80 backdrop-blur-md">
-        <div className="mx-auto flex w-full max-w-[1200px] items-center justify-between gap-2 px-3 py-3 sm:gap-3 sm:px-6 lg:px-10">
+      <header className="sticky top-0 z-40 border-b border-[#cfe0ff] bg-[rgba(241,245,255,0.9)] backdrop-blur-xl">
+        <div className="mx-auto grid w-full max-w-[1440px] grid-cols-[auto,1fr,auto] items-center gap-4 px-3 py-3 sm:px-6 lg:px-8 xl:px-10">
           <Link to="/play" className="flex min-w-0 shrink items-center gap-2 overflow-hidden sm:gap-3">
             <BrandMarkIcon className="h-10 w-10 shrink-0 object-contain sm:h-11 sm:w-11" />
-            <span className="truncate font-display text-[1.9rem] font-extrabold tracking-[-0.06em] text-[#111c2d] sm:text-[2.2rem]">
+            <span className="truncate font-display text-[1.9rem] font-extrabold tracking-[-0.06em] text-[#15274a] sm:text-[2.2rem]">
               MindGrid
             </span>
           </Link>
 
-          <nav className="hidden items-center gap-4 md:flex">
+          <nav className="hidden items-center justify-center gap-3 md:flex">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = active === item.id;
@@ -55,10 +55,10 @@ export const AppShell = ({ session, active, children }: AppShellProps) => {
                 <Link
                   key={item.id}
                   to={item.to}
-                  className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-[1.02rem] font-medium transition ${
+                  className={`inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-[1.02rem] font-semibold transition ${
                     isActive
-                      ? "bg-[#f3f1ff] text-[#3525cd]"
-                      : "text-[#667085] hover:bg-[#f7f6ff] hover:text-[#3525cd]"
+                      ? "bg-white text-[#2f46d7] shadow-[0_12px_24px_rgba(53,37,205,0.12)]"
+                      : "text-[#5e6d8f] hover:bg-white/70 hover:text-[#2f46d7]"
                   }`}
                 >
                   <Icon className="h-4 w-4" />
@@ -69,7 +69,7 @@ export const AppShell = ({ session, active, children }: AppShellProps) => {
           </nav>
 
           <div className="ml-auto flex shrink-0 items-center gap-2 sm:gap-5">
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-[#d9d8eb] bg-white px-2.5 py-1.5 text-[#3525cd] shadow-sm sm:gap-2 sm:px-4 sm:py-2">
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-[#c9dcff] bg-white px-2.5 py-1.5 text-[#3525cd] shadow-[0_12px_24px_rgba(53,37,205,0.08)] sm:gap-2 sm:px-4 sm:py-2">
               <span className="inline-flex h-4 w-4 items-center justify-center rounded-full border border-current text-[0.62rem] font-bold sm:h-5 sm:w-5 sm:text-[0.72rem]">
                 ★
               </span>
@@ -84,7 +84,7 @@ export const AppShell = ({ session, active, children }: AppShellProps) => {
               <button
                 type="button"
                 onClick={() => setMenuOpen((current) => !current)}
-                className="shrink-0 rounded-full border-2 border-white bg-slate-100 shadow-sm"
+                className="shrink-0 rounded-full border-2 border-white bg-slate-100 shadow-[0_10px_20px_rgba(53,37,205,0.1)]"
                 aria-label="Profile menu"
               >
                 <img src={avatar.image} alt={avatar.name} className="h-10 w-10 rounded-full object-cover sm:h-12 sm:w-12" />
@@ -121,7 +121,7 @@ export const AppShell = ({ session, active, children }: AppShellProps) => {
       <main>{children}</main>
       <SiteFooter />
 
-      <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-[#ececf6] bg-white/80 px-2 py-3 backdrop-blur-xl md:hidden">
+      <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-[#cfe0ff] bg-[rgba(241,245,255,0.9)] px-2 py-3 backdrop-blur-xl md:hidden">
         <div className="mx-auto flex max-w-3xl items-center justify-around">
           {navItems.map((item) => {
             const Icon = item.icon;
@@ -131,7 +131,7 @@ export const AppShell = ({ session, active, children }: AppShellProps) => {
                 key={item.id}
                 to={item.to}
                 className={`flex min-w-[78px] flex-col items-center rounded-2xl px-4 py-2 text-xs font-semibold transition ${
-                  isActive ? "bg-[#4f46e5] text-white shadow-[0_12px_24px_rgba(79,70,229,0.24)]" : "text-[#464555]"
+                  isActive ? "bg-[#4f46e5] text-white shadow-[0_12px_24px_rgba(79,70,229,0.24)]" : "text-[#5e6d8f]"
                 }`}
               >
                 <Icon className="h-5 w-5" />

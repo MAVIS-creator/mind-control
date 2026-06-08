@@ -29,11 +29,13 @@ export const MindGridCanvas = ({ state, onReveal }: MindGridCanvasProps) => {
 
     const update = () => {
       const nextWidth = Math.max(260, Math.floor(node.clientWidth - 2));
+      const availableHeight = Math.max(280, Math.floor(node.clientHeight - 2));
       const compact = nextWidth < 420;
       const ratio = Math.max(rows / columns, 0.84);
-      const nextHeight = compact
+      const widthBasedHeight = compact
         ? Math.max(300, Math.round(nextWidth * (ratio + 0.12)))
         : Math.max(420, Math.round(nextWidth * Math.min(0.76, ratio + 0.08)));
+      const nextHeight = Math.min(widthBasedHeight, availableHeight);
 
       setCanvasSize((current) =>
         current.width === nextWidth && current.height === nextHeight
@@ -90,12 +92,12 @@ export const MindGridCanvas = ({ state, onReveal }: MindGridCanvasProps) => {
   return (
     <div
       ref={containerRef}
-      className="glass-panel relative min-h-[280px] overflow-hidden rounded-[1.75rem] border border-white/70 p-2 shadow-[0_18px_36px_rgba(53,37,205,0.06)] sm:min-h-[500px] sm:rounded-[2.2rem] sm:p-5"
+      className="glass-panel relative h-full min-h-0 overflow-hidden rounded-[1.75rem] border border-white/70 p-2 shadow-[0_18px_36px_rgba(53,37,205,0.06)] sm:rounded-[2.2rem] sm:p-4 lg:p-5"
     >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(100,168,254,0.18),_transparent_32%),radial-gradient(circle_at_bottom_right,_rgba(79,70,229,0.1),_transparent_30%)]" />
       <div
         ref={hostRef}
-        className={`relative mx-auto w-full max-w-[920px] ${aspectClass}`}
+        className={`relative mx-auto h-full w-full max-w-[920px] min-h-0 ${aspectClass}`}
         style={{ minHeight: `${canvasSize.height}px` }}
       />
     </div>
