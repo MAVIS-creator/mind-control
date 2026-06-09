@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Phaser from "phaser";
 import type { GameSessionState } from "../types";
 import { MindGridScene } from "./MindGridScene";
@@ -16,13 +16,6 @@ export const MindGridCanvas = ({ state, onReveal }: MindGridCanvasProps) => {
   const [canvasSize, setCanvasSize] = useState({ width: 760, height: 560 });
   const { rows, columns } = state.board;
 
-  const aspectClass = useMemo(() => {
-    if (columns >= 6 || rows >= 6) {
-      return "aspect-[1/1.02] sm:aspect-[16/10]";
-    }
-    return "aspect-[1/1.06] sm:aspect-[16/10]";
-  }, [columns, rows]);
-
   useEffect(() => {
     const node = containerRef.current;
     if (!node || typeof ResizeObserver === "undefined") return undefined;
@@ -33,7 +26,7 @@ export const MindGridCanvas = ({ state, onReveal }: MindGridCanvasProps) => {
       const compact = nextWidth < 420;
       const ratio = Math.max(rows / columns, 0.84);
       const widthBasedHeight = compact
-        ? Math.max(300, Math.round(nextWidth * (ratio + 0.12)))
+        ? Math.max(320, Math.round(nextWidth * Math.max(ratio + 0.06, 1)))
         : Math.max(420, Math.round(nextWidth * Math.min(0.76, ratio + 0.08)));
       const nextHeight = Math.min(widthBasedHeight, availableHeight);
 
@@ -92,13 +85,17 @@ export const MindGridCanvas = ({ state, onReveal }: MindGridCanvasProps) => {
   return (
     <div
       ref={containerRef}
-      className="glass-panel relative h-full min-h-0 overflow-hidden rounded-[1.75rem] border border-white/70 p-2 shadow-[0_18px_36px_rgba(53,37,205,0.06)] sm:rounded-[2.2rem] sm:p-4 lg:p-5"
+      className="glass-panel relative flex h-full min-h-[320px] min-w-0 items-center justify-center overflow-hidden rounded-[1.75rem] border border-white/70 p-2 shadow-[0_18px_36px_rgba(53,37,205,0.06)] sm:min-h-[420px] sm:rounded-[2.2rem] sm:p-4 lg:p-5"
     >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(100,168,254,0.18),_transparent_32%),radial-gradient(circle_at_bottom_right,_rgba(79,70,229,0.1),_transparent_30%)]" />
       <div
         ref={hostRef}
-        className={`relative mx-auto h-full w-full max-w-[920px] min-h-0 ${aspectClass}`}
-        style={{ minHeight: `${canvasSize.height}px` }}
+        className="relative mx-auto min-w-0 max-w-full overflow-hidden"
+        style={{
+          width: `${canvasSize.width}px`,
+          height: `${canvasSize.height}px`,
+          maxWidth: "100%",
+        }}
       />
     </div>
   );
