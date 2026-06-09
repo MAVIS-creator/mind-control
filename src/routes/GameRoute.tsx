@@ -136,18 +136,18 @@ export const GameRoute = () => {
   return (
     <div className="flex min-h-[100dvh] flex-col bg-[linear-gradient(180deg,#f6f8ff_0%,#eef4ff_100%)] lg:h-[100dvh] lg:overflow-hidden">
       <header className="shrink-0 border-b border-[#cfe0ff] bg-[linear-gradient(180deg,rgba(245,249,255,0.96),rgba(236,243,255,0.92))] backdrop-blur-xl">
-        <div className="mx-auto grid max-w-[1440px] gap-3 px-4 py-3 sm:px-6 lg:px-8 xl:grid-cols-[minmax(0,auto)_1fr_auto] xl:items-center xl:px-10">
-          <div className="flex items-center justify-between gap-3 sm:gap-5 xl:justify-start">
-            <Link to="/play" className="flex items-center gap-2 sm:gap-3">
-              <BrandMarkIcon className="h-10 w-10 shrink-0 object-contain sm:h-11 sm:w-11" />
-              <span className="font-display text-[1.7rem] font-extrabold tracking-[-0.05em] text-[#3525cd] sm:text-[2rem]">
+        <div className="mx-auto grid max-w-[1440px] gap-3 px-3 py-3 sm:px-6 lg:px-8 xl:grid-cols-[minmax(0,auto)_1fr_auto] xl:items-center xl:px-10">
+          <div className="flex items-center justify-between gap-2 sm:gap-5 xl:justify-start">
+            <Link to="/play" className="flex min-w-0 items-center gap-2 sm:gap-3">
+              <BrandMarkIcon className="h-9 w-9 shrink-0 object-contain sm:h-11 sm:w-11" />
+              <span className="truncate font-display text-[1.45rem] font-extrabold tracking-[-0.05em] text-[#3525cd] sm:text-[2rem]">
                 MindGrid
               </span>
             </Link>
             <button
               type="button"
               onClick={togglePause}
-              className="inline-flex items-center gap-2 rounded-full bg-white/84 px-4 py-2.5 text-sm font-semibold uppercase tracking-[0.16em] text-[#3525cd] shadow-[0_10px_22px_rgba(53,37,205,0.08)]"
+              className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-white/84 px-3 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[#3525cd] shadow-[0_10px_22px_rgba(53,37,205,0.08)] sm:gap-2 sm:px-4 sm:py-2.5 sm:text-sm"
             >
               {state.status === "paused" ? <PlayIcon className="h-4 w-4" /> : <PauseIcon className="h-4 w-4" />}
               {state.status === "paused" ? "Resume" : "Pause"}
@@ -164,13 +164,13 @@ export const GameRoute = () => {
             </div>
           </div>
 
-          <div className="flex items-center justify-center gap-3 xl:justify-end">
-            <div className="inline-flex items-center gap-2 rounded-full bg-gradient-to-b from-[#4f46e5] to-[#3525cd] px-4 py-2.5 text-white shadow-[0_14px_30px_rgba(53,37,205,0.18)]">
+          <div className="flex items-center justify-center gap-2 xl:justify-end">
+            <div className="inline-flex min-w-0 items-center gap-1.5 rounded-full bg-gradient-to-b from-[#4f46e5] to-[#3525cd] px-3 py-2 text-white shadow-[0_14px_30px_rgba(53,37,205,0.18)] sm:gap-2 sm:px-4 sm:py-2.5">
               <SparklesIcon className="h-4 w-4" />
-              <span className="text-sm font-semibold tracking-[0.04em]">{session.profile.xp} XP</span>
+              <span className="truncate text-[0.74rem] font-semibold tracking-[0.03em] sm:text-sm">{session.profile.xp} XP</span>
             </div>
-            <Link to="/profile" className="rounded-full border-2 border-white bg-slate-100 shadow-sm">
-              <img src={avatar.image} alt={avatar.name} className="h-12 w-12 rounded-full" />
+            <Link to="/profile" className="shrink-0 rounded-full border-2 border-white bg-slate-100 shadow-sm">
+              <img src={avatar.image} alt={avatar.name} className="h-10 w-10 rounded-full sm:h-12 sm:w-12" />
             </Link>
           </div>
         </div>

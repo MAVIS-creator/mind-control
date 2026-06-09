@@ -39,15 +39,15 @@ export const AppShell = ({ session, active, children }: AppShellProps) => {
   return (
     <div className="flex min-h-[100dvh] flex-col pb-24 md:pb-0">
       <header className="sticky top-0 z-40 border-b border-[#cfe0ff] bg-[linear-gradient(180deg,rgba(245,249,255,0.96),rgba(236,243,255,0.92))] backdrop-blur-xl">
-        <div className="mx-auto grid w-full max-w-[1440px] grid-cols-[minmax(0,auto)_1fr_auto] items-center gap-3 px-3 py-3 sm:gap-4 sm:px-6 lg:px-8 xl:px-10">
-          <Link to="/play" className="flex min-w-0 shrink items-center gap-2 overflow-hidden sm:gap-3">
-            <BrandMarkIcon className="h-10 w-10 shrink-0 object-contain sm:h-11 sm:w-11" />
-            <span className="truncate font-display text-[1.9rem] font-extrabold tracking-[-0.06em] text-[#15274a] sm:text-[2.2rem]">
+        <div className="mx-auto grid w-full max-w-[1440px] grid-cols-[minmax(0,1fr)_auto] items-center gap-x-2 gap-y-3 px-3 py-3 sm:gap-4 sm:px-6 md:grid-cols-[minmax(0,auto)_1fr_auto] lg:px-8 xl:px-10">
+          <Link to="/play" className="flex min-w-0 items-center gap-2 overflow-hidden sm:gap-3">
+            <BrandMarkIcon className="h-9 w-9 shrink-0 object-contain sm:h-11 sm:w-11" />
+            <span className="truncate font-display text-[1.55rem] font-extrabold tracking-[-0.06em] text-[#15274a] sm:text-[2.2rem]">
               MindGrid
             </span>
           </Link>
 
-          <nav className="hidden items-center justify-center gap-2 md:flex lg:gap-3">
+          <nav className="col-span-2 hidden items-center justify-center gap-2 md:col-span-1 md:flex lg:gap-3">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = active === item.id;
@@ -68,14 +68,14 @@ export const AppShell = ({ session, active, children }: AppShellProps) => {
             })}
           </nav>
 
-          <div className="ml-auto flex shrink-0 items-center justify-self-end gap-2 sm:gap-4">
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-[#c9dcff] bg-white px-2.5 py-1.5 text-[#3525cd] shadow-[0_12px_24px_rgba(53,37,205,0.08)] sm:gap-2 sm:px-4 sm:py-2">
-              <span className="inline-flex h-4 w-4 items-center justify-center rounded-full border border-current text-[0.62rem] font-bold sm:h-5 sm:w-5 sm:text-[0.72rem]">
+          <div className="flex min-w-0 shrink-0 items-center justify-self-end gap-2 sm:gap-4">
+            <div className="inline-flex min-w-0 items-center gap-1 rounded-full border border-[#c9dcff] bg-white px-2 py-1.5 text-[#3525cd] shadow-[0_12px_24px_rgba(53,37,205,0.08)] sm:gap-2 sm:px-4 sm:py-2">
+              <span className="inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-current text-[0.58rem] font-bold sm:h-5 sm:w-5 sm:text-[0.72rem]">
                 ★
               </span>
-              <span className="text-xs font-semibold tracking-[0.03em] sm:text-sm">{session.profile.xp}</span>
-              <span className="text-xs font-semibold tracking-[0.03em] sm:text-sm">XP</span>
-              <span className="rounded-full bg-[#f0f3ff] px-1.5 py-0.5 text-[0.62rem] font-bold uppercase tracking-[0.12em] text-[#4f46e5] sm:px-2 sm:text-[0.68rem]">
+              <span className="truncate text-[0.7rem] font-semibold tracking-[0.02em] sm:text-sm">{session.profile.xp}</span>
+              <span className="text-[0.7rem] font-semibold tracking-[0.02em] sm:text-sm">XP</span>
+              <span className="rounded-full bg-[#f0f3ff] px-1.5 py-0.5 text-[0.56rem] font-bold uppercase tracking-[0.1em] text-[#4f46e5] sm:px-2 sm:text-[0.68rem]">
                 L{level}
               </span>
             </div>
@@ -87,7 +87,7 @@ export const AppShell = ({ session, active, children }: AppShellProps) => {
                 className="shrink-0 rounded-full border-2 border-white bg-slate-100 shadow-[0_10px_20px_rgba(53,37,205,0.1)]"
                 aria-label="Profile menu"
               >
-                <img src={avatar.image} alt={avatar.name} className="h-10 w-10 rounded-full object-cover sm:h-12 sm:w-12" />
+                <img src={avatar.image} alt={avatar.name} className="h-9 w-9 rounded-full object-cover sm:h-12 sm:w-12" />
               </button>
 
               {menuOpen ? (
