@@ -37,9 +37,9 @@ export const AppShell = ({ session, active, children }: AppShellProps) => {
   }, []);
 
   return (
-    <div className="min-h-screen pb-24 md:pb-8">
-      <header className="sticky top-0 z-40 border-b border-[#cfe0ff] bg-[rgba(241,245,255,0.9)] backdrop-blur-xl">
-        <div className="mx-auto grid w-full max-w-[1440px] grid-cols-[auto,1fr,auto] items-center gap-4 px-3 py-3 sm:px-6 lg:px-8 xl:px-10">
+    <div className="flex min-h-[100dvh] flex-col pb-24 md:pb-0">
+      <header className="sticky top-0 z-40 border-b border-[#cfe0ff] bg-[linear-gradient(180deg,rgba(245,249,255,0.96),rgba(236,243,255,0.92))] backdrop-blur-xl">
+        <div className="mx-auto grid w-full max-w-[1440px] grid-cols-[minmax(0,auto)_1fr_auto] items-center gap-3 px-3 py-3 sm:gap-4 sm:px-6 lg:px-8 xl:px-10">
           <Link to="/play" className="flex min-w-0 shrink items-center gap-2 overflow-hidden sm:gap-3">
             <BrandMarkIcon className="h-10 w-10 shrink-0 object-contain sm:h-11 sm:w-11" />
             <span className="truncate font-display text-[1.9rem] font-extrabold tracking-[-0.06em] text-[#15274a] sm:text-[2.2rem]">
@@ -47,7 +47,7 @@ export const AppShell = ({ session, active, children }: AppShellProps) => {
             </span>
           </Link>
 
-          <nav className="hidden items-center justify-center gap-3 md:flex">
+          <nav className="hidden items-center justify-center gap-2 md:flex lg:gap-3">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = active === item.id;
@@ -55,7 +55,7 @@ export const AppShell = ({ session, active, children }: AppShellProps) => {
                 <Link
                   key={item.id}
                   to={item.to}
-                  className={`inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-[1.02rem] font-semibold transition ${
+                  className={`inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-[0.98rem] font-semibold transition lg:px-5 lg:text-[1.02rem] ${
                     isActive
                       ? "bg-white text-[#2f46d7] shadow-[0_12px_24px_rgba(53,37,205,0.12)]"
                       : "text-[#5e6d8f] hover:bg-white/70 hover:text-[#2f46d7]"
@@ -68,7 +68,7 @@ export const AppShell = ({ session, active, children }: AppShellProps) => {
             })}
           </nav>
 
-          <div className="ml-auto flex shrink-0 items-center gap-2 sm:gap-5">
+          <div className="ml-auto flex shrink-0 items-center justify-self-end gap-2 sm:gap-4">
             <div className="inline-flex items-center gap-1.5 rounded-full border border-[#c9dcff] bg-white px-2.5 py-1.5 text-[#3525cd] shadow-[0_12px_24px_rgba(53,37,205,0.08)] sm:gap-2 sm:px-4 sm:py-2">
               <span className="inline-flex h-4 w-4 items-center justify-center rounded-full border border-current text-[0.62rem] font-bold sm:h-5 sm:w-5 sm:text-[0.72rem]">
                 ★
@@ -118,10 +118,10 @@ export const AppShell = ({ session, active, children }: AppShellProps) => {
         </div>
       </header>
 
-      <main>{children}</main>
+      <main className="flex-1">{children}</main>
       <SiteFooter />
 
-      <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-[#cfe0ff] bg-[rgba(241,245,255,0.9)] px-2 py-3 backdrop-blur-xl md:hidden">
+      <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-[#cfe0ff] bg-[linear-gradient(180deg,rgba(245,249,255,0.98),rgba(236,243,255,0.94))] px-2 py-3 backdrop-blur-xl md:hidden">
         <div className="mx-auto flex max-w-3xl items-center justify-around">
           {navItems.map((item) => {
             const Icon = item.icon;

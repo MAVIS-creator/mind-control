@@ -7,6 +7,7 @@ export const GRID_OPTIONS: Record<
     rows: number;
     columns: number;
     totalTimeSeconds: number;
+    maxMoves: number;
     difficultyMultiplier: number;
   }
 > = {
@@ -15,6 +16,7 @@ export const GRID_OPTIONS: Record<
     rows: 4,
     columns: 4,
     totalTimeSeconds: 75,
+    maxMoves: 16,
     difficultyMultiplier: 1.25,
   },
   "5x6": {
@@ -22,6 +24,7 @@ export const GRID_OPTIONS: Record<
     rows: 5,
     columns: 6,
     totalTimeSeconds: 120,
+    maxMoves: 32,
     difficultyMultiplier: 1.55,
   },
   "6x6": {
@@ -29,6 +32,7 @@ export const GRID_OPTIONS: Record<
     rows: 6,
     columns: 6,
     totalTimeSeconds: 145,
+    maxMoves: 40,
     difficultyMultiplier: 1.8,
   },
 };

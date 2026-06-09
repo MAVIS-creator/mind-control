@@ -19,19 +19,20 @@ export const createInitialGameState = (settings: GameSetupSettings): GameSession
   const bonusTime = Math.min(6, Math.max(0, Math.floor(Math.max(0, (settings.level ?? 1) - 1) / 3) * 2));
 
   return {
-  board: createBoard(getCardSymbols(settings.theme), config.rows, config.columns),
-  theme: settings.theme,
-  gridSize: settings.gridSize,
-  score: 0,
-  timerRemaining: config.totalTimeSeconds + bonusTime,
-  matches: 0,
-  mismatches: 0,
-  moves: 0,
-  combo: 0,
-  maxCombo: 0,
-  status: "idle",
-  selectedIds: [],
-  events: [],
+    board: createBoard(getCardSymbols(settings.theme), config.rows, config.columns),
+    theme: settings.theme,
+    gridSize: settings.gridSize,
+    score: 0,
+    timerRemaining: config.totalTimeSeconds + bonusTime,
+    matches: 0,
+    mismatches: 0,
+    moves: 0,
+    moveLimit: config.maxMoves,
+    combo: 0,
+    maxCombo: 0,
+    status: "idle",
+    selectedIds: [],
+    events: [],
   };
 };
 
@@ -102,6 +103,8 @@ export const resolveSelection = (state: GameSessionState): GameSessionState => {
     const matches = state.matches + 1;
     const won = matches === nextState.board.cards.length / 2;
 
+    const exhaustedMoves = nextMoves >= state.moveLimit && !won;
+
     return {
       ...nextState,
       score: nextScore,
@@ -110,12 +113,12 @@ export const resolveSelection = (state: GameSessionState): GameSessionState => {
       combo: nextCombo,
       maxCombo: Math.max(state.maxCombo, nextCombo),
       selectedIds: [],
-      status: won ? "won" : nextState.status,
+      status: won ? "won" : exhaustedMoves ? "lost" : nextState.status,
       events: [
         ...nextState.events,
         createEvent("match_resolved", { symbol: first.symbol, combo: nextCombo, match: true }),
         createEvent("combo_changed", { combo: nextCombo }),
-        ...(won ? [createEvent("game_finished", { won: true })] : []),
+        ...(won || exhaustedMoves ? [createEvent("game_finished", { won })] : []),
       ],
     };
   }
@@ -124,6 +127,8 @@ export const resolveSelection = (state: GameSessionState): GameSessionState => {
     card.id === firstId || card.id === secondId ? { ...card, revealed: false } : card,
   );
 
+  const exhaustedMoves = nextMoves >= state.moveLimit;
+
   return {
     ...nextState,
     score: Math.max(0, state.score - config.mistakePenalty),
@@ -131,11 +136,13 @@ export const resolveSelection = (state: GameSessionState): GameSessionState => {
     moves: nextMoves,
     combo: 0,
     selectedIds: [],
+    status: exhaustedMoves ? "lost" : nextState.status,
     events: [
       ...nextState.events,
       createEvent("match_resolved", { symbol: first.symbol, combo: 0, match: false }),
       createEvent("combo_changed", { combo: 0 }),
       createEvent("corruption_triggered", { mismatches: state.mismatches + 1 }),
+      ...(exhaustedMoves ? [createEvent("game_finished", { won: false })] : []),
     ],
   };
 };

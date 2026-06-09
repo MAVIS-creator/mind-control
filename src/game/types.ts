@@ -45,6 +45,7 @@ export type GameSessionState = {
   matches: number;
   mismatches: number;
   moves: number;
+  moveLimit: number;
   combo: number;
   maxCombo: number;
   status: GameStatus;

@@ -86,6 +86,7 @@ export const App = () => {
         <Route path="/results/:runId" element={<ResultsRoute />} />
         <Route path="/hall-of-fame" element={<HallOfFameRoute />} />
         <Route path="/profile" element={<ProfileRoute />} />
+        <Route path="/profile/:userId" element={<ProfileRoute />} />
         <Route path="/mavisbk" element={<AdminRoute />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

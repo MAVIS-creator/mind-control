@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { TrophyIcon } from "./AppIcons";
 import { avatarOptions } from "../data/avatars";
 import type { LeaderboardEntry } from "../types";
@@ -50,7 +51,9 @@ export const LeaderboardTable = ({
                         className="h-11 w-11 rounded-2xl border border-white bg-slate-100"
                       />
                       <div>
-                        <div className="font-medium text-slate-900">{entry.username}</div>
+                        <Link to={`/profile/${entry.userId}`} className="font-medium text-slate-900 hover:text-indigo-700">
+                          {entry.username}
+                        </Link>
                         <div className="text-xs uppercase tracking-[0.24em] text-slate-400">
                           {new Date(entry.playedAt).toLocaleDateString("en-GB")}
                         </div>

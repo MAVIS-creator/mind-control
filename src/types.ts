@@ -41,6 +41,24 @@ export type PlayerProfile = {
   isAdmin: boolean;
 };
 
+export type PlayerStats = {
+  totalGames: number;
+  wins: number;
+  losses: number;
+  winRate: number;
+  averageScore: number;
+  bestScore: number;
+  bestAccuracy: number;
+  bestCombo: number;
+  totalPoints: number;
+};
+
+export type PlayerSnapshot = {
+  profile: PlayerProfile;
+  stats: PlayerStats;
+  recentRuns: LeaderboardEntry[];
+};
+
 export type ReviewStatus = "pending" | "approved" | "flagged";
 
 export type RunAudit = {
@@ -66,9 +84,12 @@ export type LeaderboardEntry = {
   score: number;
   rating: number;
   totalPoints: number;
+  won: boolean;
   accuracy: number;
   maxCombo: number;
   duration: number;
+  movesUsed: number;
+  moveLimit: number;
   playedAt: string;
   audit: RunAudit;
 };

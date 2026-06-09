@@ -1,27 +1,67 @@
-import { useState } from "react";
-import { Navigate } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import { Link, Navigate, useParams } from "react-router-dom";
 import { AppShell } from "../components/AppShell";
 import { avatarOptions } from "../data/avatars";
-import { getLevelProgress, isLegacyAccountEmail } from "../lib/utils";
+import { authApi } from "../lib/auth";
+import { formatNumber, formatPercent, getLevelProgress, isLegacyAccountEmail } from "../lib/utils";
 import { useAppContext } from "../state/AppContext";
+import type { PlayerSnapshot } from "../types";
 
 export const ProfileRoute = () => {
   const { session, updateEmail } = useAppContext();
-  const [email, setEmail] = useState(session?.profile.email ?? "");
+  const { userId } = useParams();
+  const safeProfile = session?.profile ?? {
+    id: "",
+    username: "",
+    email: "",
+    avatarId: avatarOptions[0].id,
+    xp: 0,
+    rank: "Neural Rookie" as const,
+    createdAt: new Date().toISOString(),
+    isAdmin: false,
+  };
+  const targetUserId = userId ?? safeProfile.id;
+  const isOwnProfile = targetUserId === safeProfile.id;
+  const [email, setEmail] = useState(safeProfile.email);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  if (!session) {
-    return <Navigate to="/login" replace />;
-  }
+  const [snapshot, setSnapshot] = useState<PlayerSnapshot | null>(null);
+  const [loadingProfile, setLoadingProfile] = useState(true);
+  const [profileError, setProfileError] = useState<string | null>(null);
 
-  if (!session.profile.email || isLegacyAccountEmail(session.profile.email)) {
-    return <Navigate to="/complete-email" replace />;
-  }
+  useEffect(() => {
+    if (!session) return;
+    let cancelled = false;
 
-  const avatar = avatarOptions.find((entry) => entry.id === session.profile.avatarId) ?? avatarOptions[0];
-  const level = getLevelProgress(session.profile.xp);
-  const legacyEmail = isLegacyAccountEmail(session.profile.email);
+    const loadSnapshot = async () => {
+      setLoadingProfile(true);
+      setProfileError(null);
+
+      try {
+        const nextSnapshot = await authApi.fetchPlayerSnapshot(targetUserId);
+        if (!cancelled) {
+          setSnapshot(nextSnapshot);
+          if (isOwnProfile) {
+            setEmail(nextSnapshot.profile.email);
+          }
+        }
+      } catch (nextError) {
+        if (!cancelled) {
+          setProfileError(nextError instanceof Error ? nextError.message : "Unable to load player profile.");
+        }
+      } finally {
+        if (!cancelled) {
+          setLoadingProfile(false);
+        }
+      }
+    };
+
+    void loadSnapshot();
+    return () => {
+      cancelled = true;
+    };
+  }, [isOwnProfile, session, targetUserId]);
 
   const handleEmailUpdate = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -39,90 +79,197 @@ export const ProfileRoute = () => {
     }
   };
 
+  const resolvedSnapshot = snapshot ?? {
+    profile: safeProfile,
+    stats: {
+      totalGames: 0,
+      wins: 0,
+      losses: 0,
+      winRate: 0,
+      averageScore: 0,
+      bestScore: 0,
+      bestAccuracy: 0,
+      bestCombo: 0,
+      totalPoints: 0,
+    },
+    recentRuns: [],
+  };
+
+  const avatar = avatarOptions.find((entry) => entry.id === resolvedSnapshot.profile.avatarId) ?? avatarOptions[0];
+  const level = getLevelProgress(resolvedSnapshot.profile.xp);
+  const recentHighlights = useMemo(
+    () => [
+      ["Win Rate", formatPercent(resolvedSnapshot.stats.winRate)],
+      ["Games Played", formatNumber(resolvedSnapshot.stats.totalGames)],
+      ["Best Score", formatNumber(resolvedSnapshot.stats.bestScore)],
+      ["Average Score", formatNumber(resolvedSnapshot.stats.averageScore)],
+      ["Best Accuracy", formatPercent(resolvedSnapshot.stats.bestAccuracy)],
+      ["Best Combo", `x${resolvedSnapshot.stats.bestCombo}`],
+    ],
+    [resolvedSnapshot.stats],
+  );
+
+  if (!session) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (!session.profile.email || isLegacyAccountEmail(session.profile.email)) {
+    return <Navigate to="/complete-email" replace />;
+  }
+
   return (
     <AppShell session={session} active={null}>
-      <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-10">
-        <section className="glass-panel rounded-[2rem] p-8 shadow-[0_14px_34px_rgba(53,37,205,0.08)] sm:p-10 md:p-12">
-          <div className="grid gap-8 lg:grid-cols-[240px_1fr] lg:items-center">
-            <div className="relative">
-              <img
-                src={avatar.image}
-                alt={avatar.name}
-                className="w-full max-w-[240px] rounded-full border-4 border-white bg-slate-100 shadow-lg ring-4 ring-[#e2dfff]"
-              />
-            </div>
-            <div>
-              <h1 className="font-display text-5xl tracking-[-0.05em] text-slate-900">
-                {session.profile.username}
-              </h1>
-              <p className="mt-2 text-[1.9rem] text-[#464555]">{session.profile.rank}</p>
-
-              <div className="mt-6 space-y-3">
-                <div className="flex items-end justify-between">
-                  <span className="text-xs font-semibold uppercase tracking-[0.22em] text-[#3525cd]">
-                    XP Level
-                  </span>
-                  <span className="text-xs uppercase tracking-[0.18em] text-slate-500">
-                    Lvl {level.level} • {session.profile.xp} XP
-                  </span>
-                </div>
-                <div className="h-4 rounded-full bg-[#d8e3fb] p-0.5">
-                  <div
-                    className="h-full rounded-full bg-gradient-to-r from-[#3525cd] to-[#64a8fe]"
-                    style={{ width: `${Math.max(8, level.progress)}%` }}
+      <div className="mx-auto flex min-h-full w-full max-w-[1440px] flex-col px-4 py-5 sm:px-6 lg:px-8 xl:px-10">
+        {loadingProfile ? (
+          <div className="glass-panel flex min-h-[20rem] items-center justify-center rounded-[2rem] px-6 py-10 text-center text-[#5a6174]">
+            Loading player profile...
+          </div>
+        ) : profileError ? (
+          <div className="glass-panel rounded-[2rem] px-6 py-10 text-center text-rose-700">
+            {profileError}
+          </div>
+        ) : (
+          <>
+            <section className="glass-panel rounded-[2rem] p-6 shadow-[0_14px_34px_rgba(53,37,205,0.08)] sm:p-8 lg:p-10">
+              <div className="grid gap-8 lg:grid-cols-[220px_1fr] lg:items-center">
+                <div className="relative mx-auto w-full max-w-[220px]">
+                  <img
+                    src={avatar.image}
+                    alt={avatar.name}
+                    className="w-full rounded-full border-4 border-white bg-slate-100 shadow-lg ring-4 ring-[#e2dfff]"
                   />
                 </div>
-                <p className="text-base text-[#464555]">Progress to Level {level.level + 1} ({level.nextLevelXp} XP).</p>
+                <div>
+                  <div className="flex flex-wrap items-center gap-3">
+                    <h1 className="font-display text-4xl tracking-[-0.05em] text-slate-900 sm:text-5xl">
+                      {resolvedSnapshot.profile.username}
+                    </h1>
+                    {!isOwnProfile ? (
+                      <Link
+                        to="/hall-of-fame"
+                        className="rounded-full border border-[#d7dcf5] bg-white/78 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#3525cd]"
+                      >
+                        Back to Ranks
+                      </Link>
+                    ) : null}
+                  </div>
+                  <p className="mt-2 text-[1.45rem] text-[#464555]">{resolvedSnapshot.profile.rank}</p>
+
+                  <div className="mt-6 space-y-3">
+                    <div className="flex items-end justify-between gap-4">
+                      <span className="text-xs font-semibold uppercase tracking-[0.22em] text-[#3525cd]">
+                        XP Level
+                      </span>
+                      <span className="text-xs uppercase tracking-[0.18em] text-slate-500">
+                        Lvl {level.level} • {resolvedSnapshot.profile.xp} XP
+                      </span>
+                    </div>
+                    <div className="h-4 rounded-full bg-[#d8e3fb] p-0.5">
+                      <div
+                        className="h-full rounded-full bg-gradient-to-r from-[#3525cd] to-[#64a8fe]"
+                        style={{ width: `${Math.max(8, level.progress)}%` }}
+                      />
+                    </div>
+                    <p className="text-base text-[#464555]">
+                      Progress to Level {level.level + 1} ({level.nextLevelXp} XP).
+                    </p>
+                  </div>
+                </div>
               </div>
+            </section>
+
+            <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+              {recentHighlights.map(([title, value]) => (
+                <div key={title} className="glass-panel rounded-[1.6rem] p-5 shadow-[0_10px_26px_rgba(53,37,205,0.05)]">
+                  <div className="text-[0.65rem] uppercase tracking-[0.24em] text-slate-500">{title}</div>
+                  <div className="mt-3 text-lg font-semibold text-slate-900">{value}</div>
+                </div>
+              ))}
             </div>
-          </div>
-        </section>
 
-        <div className="mt-6 grid gap-4 md:grid-cols-3">
-          {[
-            ["XP", `${session.profile.xp}`],
-            ["Email", session.profile.email],
-            ["Joined", new Date(session.profile.createdAt).toLocaleDateString("en-GB")],
-          ].map(([title, value]) => (
-            <div key={title} className="glass-panel rounded-[1.6rem] p-6 shadow-[0_10px_26px_rgba(53,37,205,0.05)]">
-              <div className="text-[0.65rem] uppercase tracking-[0.24em] text-slate-500">{title}</div>
-              <div className="mt-3 text-lg font-semibold text-slate-900">{value}</div>
+            <div className="mt-6 grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
+              <section className="glass-panel rounded-[1.8rem] p-6 shadow-[0_10px_26px_rgba(53,37,205,0.05)]">
+                <h2 className="text-lg font-semibold text-slate-900">Player Overview</h2>
+                <div className="mt-5 grid gap-4 sm:grid-cols-2">
+                  {[
+                    ["Wins", formatNumber(resolvedSnapshot.stats.wins)],
+                    ["Losses", formatNumber(resolvedSnapshot.stats.losses)],
+                    ["Total Points", formatNumber(resolvedSnapshot.stats.totalPoints)],
+                    ["Joined", new Date(resolvedSnapshot.profile.createdAt).toLocaleDateString("en-GB")],
+                  ].map(([title, value]) => (
+                    <div key={title} className="rounded-[1.3rem] border border-[#e0e6f4] bg-white/68 px-4 py-4">
+                      <div className="text-[0.68rem] uppercase tracking-[0.22em] text-slate-500">{title}</div>
+                      <div className="mt-2 text-base font-semibold text-slate-900">{value}</div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+
+              {isOwnProfile ? (
+                <section className="glass-panel rounded-[1.8rem] p-6 shadow-[0_10px_26px_rgba(53,37,205,0.05)]">
+                  <h2 className="text-lg font-semibold text-slate-900">Account Email</h2>
+                  <p className="mt-2 text-sm leading-7 text-[#5a6174]">
+                    Change the email attached to your account anytime here.
+                  </p>
+
+                  <form className="mt-5 flex flex-col gap-4" onSubmit={handleEmailUpdate}>
+                    <label className="block flex-1">
+                      <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-[#7d8395]">
+                        Email
+                      </span>
+                      <input
+                        required
+                        type="email"
+                        autoComplete="email"
+                        value={email}
+                        onChange={(event) => setEmail(event.target.value)}
+                        className="h-14 w-full rounded-[1.2rem] border border-[#dfe4f2] bg-[#f8f9ff] px-4 text-sm text-[#1f2740] outline-none transition focus:border-[#c5c2ff] focus:ring-4 focus:ring-[#ebe9ff]"
+                      />
+                    </label>
+                    <button
+                      type="submit"
+                      disabled={saving}
+                      className="h-14 rounded-full bg-gradient-to-b from-[#4f46e5] to-[#3525cd] px-6 text-sm font-semibold text-white shadow-[0_14px_28px_rgba(53,37,205,0.2)] disabled:opacity-60"
+                    >
+                      {saving ? "Saving..." : "Update Email"}
+                    </button>
+                  </form>
+
+                  {message ? <p className="mt-4 text-sm text-emerald-700">{message}</p> : null}
+                  {error ? <p className="mt-4 text-sm text-rose-700">{error}</p> : null}
+                </section>
+              ) : (
+                <section className="glass-panel rounded-[1.8rem] p-6 shadow-[0_10px_26px_rgba(53,37,205,0.05)]">
+                  <h2 className="text-lg font-semibold text-slate-900">Recent Form</h2>
+                  <div className="mt-5 space-y-3">
+                    {resolvedSnapshot.recentRuns.slice(0, 4).map((run) => (
+                      <div key={run.id} className="rounded-[1.3rem] border border-[#e0e6f4] bg-white/68 px-4 py-4">
+                        <div className="flex items-center justify-between gap-3">
+                          <span className="text-sm font-semibold text-slate-900">
+                            {run.gridSize} • {run.matchType === "numbers" ? "Numbers" : run.matchType === "icons" ? "Icons" : "Legacy"}
+                          </span>
+                          <span
+                            className={`rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] ${
+                              run.won ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-700"
+                            }`}
+                          >
+                            {run.won ? "Win" : "Loss"}
+                          </span>
+                        </div>
+                        <div className="mt-2 text-sm text-[#5a6174]">
+                          Score {formatNumber(run.score)} • Accuracy {formatPercent(run.accuracy)} • Combo x{run.maxCombo}
+                        </div>
+                      </div>
+                    ))}
+                    {!resolvedSnapshot.recentRuns.length ? (
+                      <p className="text-sm text-[#5a6174]">No public runs recorded yet.</p>
+                    ) : null}
+                  </div>
+                </section>
+              )}
             </div>
-          ))}
-        </div>
-
-        <section className="glass-panel mt-6 rounded-[1.8rem] p-6 shadow-[0_10px_26px_rgba(53,37,205,0.05)]">
-          <h2 className="text-lg font-semibold text-slate-900">Account Email</h2>
-          <p className="mt-2 text-sm leading-7 text-[#5a6174]">
-            {legacyEmail
-              ? "This account is still using a legacy sign-in email. Replace it with your real email so you can receive password reset and account verification messages."
-              : "Change the email attached to your account anytime here."}
-          </p>
-
-          <form className="mt-5 flex flex-col gap-4 sm:flex-row sm:items-end" onSubmit={handleEmailUpdate}>
-            <label className="block flex-1">
-              <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-[#7d8395]">Email</span>
-              <input
-                required
-                type="email"
-                autoComplete="email"
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-                className="h-14 w-full rounded-[1.2rem] border border-[#dfe4f2] bg-[#f8f9ff] px-4 text-sm text-[#1f2740] outline-none transition focus:border-[#c5c2ff] focus:ring-4 focus:ring-[#ebe9ff]"
-              />
-            </label>
-            <button
-              type="submit"
-              disabled={saving}
-              className="h-14 rounded-full bg-gradient-to-b from-[#4f46e5] to-[#3525cd] px-6 text-sm font-semibold text-white shadow-[0_14px_28px_rgba(53,37,205,0.2)] disabled:opacity-60"
-            >
-              {saving ? "Saving..." : "Update Email"}
-            </button>
-          </form>
-
-          {message ? <p className="mt-4 text-sm text-emerald-700">{message}</p> : null}
-          {error ? <p className="mt-4 text-sm text-rose-700">{error}</p> : null}
-        </section>
+          </>
+        )}
       </div>
     </AppShell>
   );

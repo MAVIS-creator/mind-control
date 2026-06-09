@@ -1,4 +1,4 @@
-import { Navigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { useMemo, useState } from "react";
 import { AppShell } from "../components/AppShell";
 import { avatarOptions } from "../data/avatars";
@@ -113,7 +113,7 @@ export const HallOfFameRoute = () => {
 
   return (
     <AppShell session={session} active="ranks">
-      <div className="mx-auto w-full max-w-[1260px] px-3 py-5 pb-32 sm:px-6 sm:pb-36 lg:px-10 md:pb-10">
+      <div className="mx-auto min-h-full w-full max-w-[1260px] px-3 py-5 pb-32 sm:px-6 sm:pb-36 lg:px-10 md:pb-10">
         <section className="mb-8 text-center">
           <h1 className="mt-3 font-display text-4xl tracking-[-0.05em] text-[#3525cd] sm:text-5xl">Hall of Fame</h1>
           <p className="mx-auto mt-3 max-w-3xl text-sm leading-7 text-[#464555] sm:text-base">
@@ -223,7 +223,9 @@ export const HallOfFameRoute = () => {
                     alt={avatar.name}
                     className="mx-auto mt-4 h-24 w-24 rounded-full border-4 border-white bg-slate-100 shadow-md"
                   />
-                  <h2 className="mt-4 text-xl font-semibold text-slate-900">{entry.username}</h2>
+                  <Link to={`/profile/${entry.userId}`} className="mt-4 inline-block text-xl font-semibold text-slate-900 hover:text-[#3525cd]">
+                    {entry.username}
+                  </Link>
                   <p className="mt-1 text-sm uppercase tracking-[0.18em] text-[#3525cd]">{formatNumber(entry.rating)} rating</p>
                   <p className="mt-2 text-sm text-slate-500">
                     Best {formatNumber(entry.score)} • Total {formatNumber(entry.totalPoints)}
@@ -280,7 +282,9 @@ export const HallOfFameRoute = () => {
                               className="h-11 w-11 rounded-full border-2 border-white bg-slate-100 object-cover"
                             />
                             <div>
-                              <div className="font-medium text-slate-900">{entry.username}</div>
+                              <Link to={`/profile/${entry.userId}`} className="font-medium text-slate-900 hover:text-[#3525cd]">
+                                {entry.username}
+                              </Link>
                               <div className="text-xs uppercase tracking-[0.22em] text-slate-400">
                                 {matchTypeLabels[entry.matchType]} • {entry.gridSize}
                               </div>

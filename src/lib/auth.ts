@@ -4,6 +4,8 @@ import type {
   LeaderboardEntry,
   LoginPayload,
   PlayerProfile,
+  PlayerSnapshot,
+  PlayerStats,
   RegisterResult,
   RegisterPayload,
 } from "../types";
@@ -95,6 +97,7 @@ const normalizeLeaderboardEntry = (entry: LeaderboardEntry): LeaderboardEntry =>
   ...entry,
   email: entry.email ?? "",
   matchType: entry.matchType ?? "standard",
+  won: entry.won ?? true,
   rating:
     typeof entry.rating === "number" && !Number.isNaN(entry.rating)
       ? entry.rating
@@ -103,6 +106,14 @@ const normalizeLeaderboardEntry = (entry: LeaderboardEntry): LeaderboardEntry =>
     typeof entry.totalPoints === "number" && !Number.isNaN(entry.totalPoints)
       ? entry.totalPoints
       : entry.score,
+  movesUsed:
+    typeof entry.movesUsed === "number" && !Number.isNaN(entry.movesUsed)
+      ? entry.movesUsed
+      : 0,
+  moveLimit:
+    typeof entry.moveLimit === "number" && !Number.isNaN(entry.moveLimit)
+      ? entry.moveLimit
+      : 0,
   audit: normalizeAudit(entry.audit ?? createEmptyAudit()),
 });
 
@@ -138,9 +149,12 @@ const mapLeaderboardRow = (row: any): LeaderboardEntry => ({
   score: row.score,
   rating: row.rating ?? computeRating(row.score, row.accuracy, row.max_combo, row.duration),
   totalPoints: row.total_points ?? row.score,
+  won: row.won ?? true,
   accuracy: row.accuracy,
   maxCombo: row.max_combo,
   duration: row.duration,
+  movesUsed: row.moves_used ?? 0,
+  moveLimit: row.move_limit ?? 0,
   playedAt: row.played_at,
   audit: normalizeAudit({
     suspicionScore: row.suspicion_score,
@@ -166,12 +180,36 @@ const mapAccountLeaderboardRow = (row: any): LeaderboardEntry => ({
   score: row.best_score,
   rating: row.best_rating ?? computeRating(row.best_score, row.best_accuracy, row.best_max_combo, row.best_duration),
   totalPoints: row.total_points ?? row.best_score,
+  won: row.best_won ?? true,
   accuracy: row.best_accuracy,
   maxCombo: row.best_max_combo,
   duration: row.best_duration,
+  movesUsed: row.best_moves_used ?? 0,
+  moveLimit: row.best_move_limit ?? 0,
   playedAt: row.best_played_at,
   audit: createEmptyAudit(),
 });
+
+const calculatePlayerStats = (runs: LeaderboardEntry[]): PlayerStats => {
+  const normalizedRuns = runs.map(normalizeLeaderboardEntry);
+  const totalGames = normalizedRuns.length;
+  const wins = normalizedRuns.filter((run) => run.won).length;
+  const losses = Math.max(totalGames - wins, 0);
+  const totalScore = normalizedRuns.reduce((sum, run) => sum + run.score, 0);
+  const totalPoints = normalizedRuns.reduce((sum, run) => sum + run.score, 0);
+
+  return {
+    totalGames,
+    wins,
+    losses,
+    winRate: totalGames ? (wins / totalGames) * 100 : 0,
+    averageScore: totalGames ? Math.round(totalScore / totalGames) : 0,
+    bestScore: normalizedRuns.reduce((best, run) => Math.max(best, run.score), 0),
+    bestAccuracy: normalizedRuns.reduce((best, run) => Math.max(best, run.accuracy), 0),
+    bestCombo: normalizedRuns.reduce((best, run) => Math.max(best, run.maxCombo), 0),
+    totalPoints,
+  };
+};
 
 const canBeAdminFromEnv = (username: string) =>
   parseAdminUsernames().includes(normalizeUsername(username));
@@ -553,6 +591,9 @@ export const authApi = {
       gridSize: entry.gridSize,
       rating: computeRating(entry.score, entry.accuracy, entry.maxCombo, entry.duration),
       totalPoints: entry.score,
+      won: entry.won,
+      movesUsed: entry.movesUsed,
+      moveLimit: entry.moveLimit,
       playedAt: new Date().toISOString(),
       audit: normalizeAudit(entry.audit),
     };
@@ -593,9 +634,12 @@ export const authApi = {
       grid_size: completeEntry.gridSize,
       score: completeEntry.score,
       rating: completeEntry.rating,
+      won: completeEntry.won,
       accuracy: completeEntry.accuracy,
       max_combo: completeEntry.maxCombo,
       duration: completeEntry.duration,
+      moves_used: completeEntry.movesUsed,
+      move_limit: completeEntry.moveLimit,
       played_at: completeEntry.playedAt,
       suspicion_score: completeEntry.audit.suspicionScore,
       suspicion_reasons: completeEntry.audit.suspicionReasons,
@@ -703,6 +747,68 @@ export const authApi = {
     }
 
     return fetchRemoteLeaderboards();
+  },
+
+  async fetchPlayerSnapshot(userId: string): Promise<PlayerSnapshot> {
+    if (!hasSupabase || !supabase) {
+      const users = loadUsers();
+      const user = users.find((entry) => entry.profile.id === userId);
+      if (!user) {
+        throw new Error("Player profile not found.");
+      }
+
+      const leaderboard = loadLeaderboard()
+        .map(normalizeLeaderboardEntry)
+        .filter((entry) => entry.userId === userId)
+        .sort((a, b) => +new Date(b.playedAt) - +new Date(a.playedAt));
+
+      return {
+        profile: user.profile,
+        stats: calculatePlayerStats(leaderboard),
+        recentRuns: leaderboard.slice(0, 8),
+      };
+    }
+
+    const [{ data: profileRow, error: profileError }, { data: runRows, error: runsError }] = await Promise.all([
+      supabase
+        .from("profiles")
+        .select("id, username, email, avatar_id, xp, rank, created_at")
+        .eq("id", userId)
+        .maybeSingle(),
+      supabase
+        .from("game_runs")
+        .select("*")
+        .eq("user_id", userId)
+        .order("played_at", { ascending: false }),
+    ]);
+
+    if (profileError) throw profileError;
+    if (runsError) throw runsError;
+    if (!profileRow) {
+      throw new Error("Player profile not found.");
+    }
+
+    const profile = mapRemoteProfile(
+      {
+        id: profileRow.id,
+        username: profileRow.username,
+        email: profileRow.email,
+        avatarId: profileRow.avatar_id,
+        xp: profileRow.xp,
+        rank: profileRow.rank,
+        createdAt: profileRow.created_at,
+      },
+      profileRow.username,
+      profileRow.email ?? "",
+      await resolveAdminState(profileRow.id, profileRow.username),
+    );
+    const recentRuns = (runRows ?? []).map(mapLeaderboardRow);
+
+    return {
+      profile,
+      stats: calculatePlayerStats(recentRuns),
+      recentRuns: recentRuns.slice(0, 8),
+    };
   },
 
   async updateRun(session: AuthSession, updatedEntry: LeaderboardEntry) {

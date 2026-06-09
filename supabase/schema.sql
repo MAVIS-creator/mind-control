@@ -47,9 +47,12 @@ create table if not exists public.game_runs (
   avatar_id text not null,
   mode text not null check (mode in ('classic')),
   score integer not null check (score >= 0),
+  won boolean not null default true,
   accuracy numeric(5,2) not null check (accuracy >= 0 and accuracy <= 100),
   max_combo integer not null check (max_combo >= 0),
   duration integer not null check (duration >= 0),
+  moves_used integer not null default 0 check (moves_used >= 0),
+  move_limit integer not null default 0 check (move_limit >= 0),
   played_at timestamptz not null default timezone('utc', now()),
   suspicion_score integer not null default 0 check (suspicion_score >= 0),
   suspicion_reasons text[] not null default '{}',
@@ -66,9 +69,12 @@ alter table public.game_runs
   add column if not exists avatar_id text,
   add column if not exists mode text default 'classic',
   add column if not exists score integer default 0,
+  add column if not exists won boolean default true,
   add column if not exists accuracy numeric(5,2) default 0,
   add column if not exists max_combo integer default 0,
   add column if not exists duration integer default 0,
+  add column if not exists moves_used integer default 0,
+  add column if not exists move_limit integer default 0,
   add column if not exists played_at timestamptz default timezone('utc', now()),
   add column if not exists suspicion_score integer default 0,
   add column if not exists suspicion_reasons text[] default '{}',
@@ -85,9 +91,12 @@ set
   avatar_id = coalesce(avatar_id, 'avatar-01'),
   mode = coalesce(mode, 'classic'),
   score = coalesce(score, 0),
+  won = coalesce(won, true),
   accuracy = coalesce(accuracy, 0),
   max_combo = coalesce(max_combo, 0),
   duration = coalesce(duration, 0),
+  moves_used = coalesce(moves_used, 0),
+  move_limit = coalesce(move_limit, 0),
   played_at = coalesce(played_at, timezone('utc', now())),
   suspicion_score = coalesce(suspicion_score, 0),
   suspicion_reasons = coalesce(suspicion_reasons, '{}'),
@@ -227,7 +236,7 @@ ranked as (
   from public.game_runs gr
 )
 select ranked.id, ranked.user_id, ranked.username, profiles.email, ranked.avatar_id, ranked.mode, ranked.match_type, ranked.grid_size,
-  ranked.score, ranked.rating, totals.total_points, ranked.accuracy, ranked.max_combo, ranked.duration, ranked.played_at,
+  ranked.score, ranked.rating, totals.total_points, ranked.won, ranked.accuracy, ranked.max_combo, ranked.duration, ranked.moves_used, ranked.move_limit, ranked.played_at,
   ranked.suspicion_score, ranked.suspicion_reasons, ranked.automation_flag, ranked.fast_input_flag, ranked.hidden_tab_flag,
   ranked.rapid_sequence_count, ranked.reviewed_status, ranked.reviewed_note
 from ranked
@@ -266,9 +275,12 @@ select
   best_runs.match_type,
   best_runs.grid_size,
   best_runs.score as best_score,
+  best_runs.won as best_won,
   best_runs.accuracy as best_accuracy,
   best_runs.max_combo as best_max_combo,
   best_runs.duration as best_duration,
+  best_runs.moves_used as best_moves_used,
+  best_runs.move_limit as best_move_limit,
   best_runs.played_at as best_played_at
 from best_runs
 join totals on totals.user_id = best_runs.user_id

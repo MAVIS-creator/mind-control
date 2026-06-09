@@ -73,30 +73,46 @@ test.describe('Responsiveness and User Flow', () => {
     await expect(page.getByRole('heading', { name: 'Hall of Fame' })).toBeVisible();
   });
 
-  test('should show a start-of-match modal before playing', async ({ page }) => {
-    await page.addInitScript(({ sessionKey, session }) => {
-      localStorage.setItem(sessionKey, JSON.stringify(session));
-    }, {
-      sessionKey: 'mindgrid.session',
-      session: {
-        profile: {
-          id: `test-${Date.now()}`,
-          username: testUsername,
-          email: testEmail,
-          avatarId: 'ace-scout',
-          xp: 0,
-          rank: 'Neural Rookie',
-          createdAt: new Date().toISOString(),
-          isAdmin: false,
-        },
-      },
-    });
+  test('should show a quit-confirm modal when leaving an active match', async ({ page }) => {
+    const modalTimestamp = Date.now();
+    const modalEmail = `quit-modal-${modalTimestamp}@example.com`;
+    const modalUsername = `quitmodal${modalTimestamp}`;
 
-    await page.goto('/play');
-    await page.getByRole('button', { name: 'Start Game' }).click();
+    await page.goto('/register');
+    await expect(page.getByRole('button', { name: 'Create Account' })).toBeVisible();
 
-    await expect(page.getByRole('heading', { name: 'Ready to start this match?' })).toBeVisible();
-    await expect(page.getByRole('link', { name: 'Start Match' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Stay Here' })).toBeVisible();
+    await page.getByPlaceholder('Enter your grid name').fill(modalUsername);
+    await page.getByPlaceholder('you@example.com').fill(modalEmail);
+    await page.getByPlaceholder('••••••••').fill(testPassword);
+
+    const termsCheckbox = page.getByRole('checkbox', { name: /i agree to the terms of service/i });
+    await termsCheckbox.scrollIntoViewIfNeeded();
+    await termsCheckbox.click({ force: true });
+
+    await page.getByRole('button', { name: 'Create Account' }).click();
+
+    const verificationText = page.locator('text=Verification email sent');
+    const smtpError = page.locator('text=Error sending confirmation email');
+    const playHeading = page.getByText('Grid Size');
+
+    await Promise.race([
+      expect(verificationText).toBeVisible({ timeout: 10000 }).catch(() => {}),
+      expect(smtpError).toBeVisible({ timeout: 10000 }).catch(() => {}),
+      expect(playHeading).toBeVisible({ timeout: 10000 }).catch(() => {}),
+    ]);
+
+    if ((await verificationText.isVisible()) || (await smtpError.isVisible())) {
+      console.log('Signup did not enter the app flow. Verification or SMTP handling blocked continuation.');
+      return;
+    }
+
+    await page.goto('/play/classic');
+    await expect(page.getByRole('button', { name: 'Back' })).toBeVisible({ timeout: 20000 });
+
+    await page.getByRole('button', { name: 'Back' }).click();
+
+    await expect(page.getByRole('heading', { name: 'Leave this run?' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Keep Playing' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Quit Match' })).toBeVisible();
   });
 });

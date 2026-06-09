@@ -44,9 +44,12 @@ describe("local auth fallback", () => {
       matchType: "numbers",
       gridSize: "4x4",
       score: 1000,
+      won: true,
       accuracy: 80,
       maxCombo: 2,
       duration: 60,
+      movesUsed: 10,
+      moveLimit: 16,
       audit: createEmptyAudit(),
     });
 
@@ -55,9 +58,12 @@ describe("local auth fallback", () => {
       matchType: "numbers",
       gridSize: "4x4",
       score: 900,
+      won: false,
       accuracy: 70,
       maxCombo: 1,
       duration: 65,
+      movesUsed: 16,
+      moveLimit: 16,
       audit: createEmptyAudit(),
     });
 
@@ -70,9 +76,12 @@ describe("local auth fallback", () => {
       matchType: "icons",
       gridSize: "4x4",
       score: 1200,
+      won: true,
       accuracy: 82,
       maxCombo: 3,
       duration: 58,
+      movesUsed: 9,
+      moveLimit: 16,
       audit: createEmptyAudit(),
     });
 

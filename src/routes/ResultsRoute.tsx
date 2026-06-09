@@ -195,6 +195,7 @@ const GameOverSummary = ({
   avatar: string;
 }) => {
   const totalMatches = Math.round(state.breakdown.baseScore / 100);
+  const ranOutOfMoves = state.entry.movesUsed >= state.entry.moveLimit;
 
   return (
     <section className="w-full max-w-2xl">
@@ -206,10 +207,12 @@ const GameOverSummary = ({
       <div className="text-center">
         <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#3525cd]">Round Summary</p>
         <h1 className="mt-3 font-display text-[2.8rem] font-extrabold tracking-[-0.07em] text-[#111c2d] sm:text-[3.6rem]">
-          Time Over
+          {ranOutOfMoves ? "Moves Over" : "Time Over"}
         </h1>
         <p className="mx-auto mt-4 max-w-xl text-[1rem] leading-8 text-[#5a6174]">
-          The run still saved. Review the breakdown, tighten the mistakes, and jump back in for a cleaner finish.
+          {ranOutOfMoves
+            ? "You ran out of moves before clearing the board. Review the breakdown, tighten the mistakes, and jump back in for a cleaner finish."
+            : "The run still saved. Review the breakdown, tighten the mistakes, and jump back in for a cleaner finish."}
         </p>
       </div>
 
@@ -234,8 +237,8 @@ const GameOverSummary = ({
         <GameOverTile
           icon={<ClockIcon className="h-5 w-5" />}
           accent="text-[#6b00b7]"
-          label="Time Taken"
-          value={formatDuration(state.entry.duration)}
+          label={ranOutOfMoves ? "Moves Used" : "Time Taken"}
+          value={ranOutOfMoves ? `${state.entry.movesUsed}/${state.entry.moveLimit}` : formatDuration(state.entry.duration)}
         />
       </div>
 

@@ -60,10 +60,13 @@ export const GameRoute = () => {
         mode: "classic",
         matchType: settings.theme,
         score: results.breakdown.finalScore,
+        won: state.status === "won",
         accuracy: Number(results.accuracy.toFixed(2)),
         maxCombo: state.maxCombo,
         gridSize: settings.gridSize,
         duration: GRID_OPTIONS[settings.gridSize].totalTimeSeconds - state.timerRemaining,
+        movesUsed: state.moves,
+        moveLimit: state.moveLimit,
         audit,
       });
       setSubmitted(true);
@@ -104,9 +107,9 @@ export const GameRoute = () => {
     () => [
       { label: "Board", value: GRID_OPTIONS[settings.gridSize].label },
       { label: "Theme", value: settings.theme === "numbers" ? "Numbers" : "Icons" },
-      { label: "Accuracy", value: formatPercent(results.accuracy) },
+      { label: "Win Pace", value: `${Math.max(state.moveLimit - state.moves, 0)} moves left` },
     ],
-    [results.accuracy, settings.gridSize, settings.theme],
+    [settings.gridSize, settings.theme, state.moveLimit, state.moves],
   );
 
   const togglePreference = (key: "soundEffects" | "music" | "haptics") => {
@@ -131,9 +134,9 @@ export const GameRoute = () => {
   }
 
   return (
-    <div className="flex min-h-screen flex-col overflow-hidden bg-[radial-gradient(circle_at_top_left,_#e2dfff_0%,_#f6f7ff_40%,_#dce6ff_100%)]">
-      <header className="shrink-0 border-b border-[#cfe0ff] bg-[rgba(241,245,255,0.92)] backdrop-blur-xl">
-        <div className="mx-auto grid max-w-[1500px] gap-4 px-4 py-4 sm:px-6 lg:px-8 xl:grid-cols-[auto_1fr_auto] xl:items-center">
+    <div className="flex min-h-[100dvh] flex-col bg-[linear-gradient(180deg,#f6f8ff_0%,#eef4ff_100%)] lg:h-[100dvh] lg:overflow-hidden">
+      <header className="shrink-0 border-b border-[#cfe0ff] bg-[linear-gradient(180deg,rgba(245,249,255,0.96),rgba(236,243,255,0.92))] backdrop-blur-xl">
+        <div className="mx-auto grid max-w-[1440px] gap-3 px-4 py-3 sm:px-6 lg:px-8 xl:grid-cols-[minmax(0,auto)_1fr_auto] xl:items-center xl:px-10">
           <div className="flex items-center justify-between gap-3 sm:gap-5 xl:justify-start">
             <Link to="/play" className="flex items-center gap-2 sm:gap-3">
               <BrandMarkIcon className="h-10 w-10 shrink-0 object-contain sm:h-11 sm:w-11" />
@@ -144,25 +147,25 @@ export const GameRoute = () => {
             <button
               type="button"
               onClick={togglePause}
-              className="inline-flex items-center gap-2 rounded-full bg-[#f1efff] px-4 py-3 text-sm font-semibold uppercase tracking-[0.16em] text-[#3525cd]"
+              className="inline-flex items-center gap-2 rounded-full bg-white/84 px-4 py-2.5 text-sm font-semibold uppercase tracking-[0.16em] text-[#3525cd] shadow-[0_10px_22px_rgba(53,37,205,0.08)]"
             >
               {state.status === "paused" ? <PlayIcon className="h-4 w-4" /> : <PauseIcon className="h-4 w-4" />}
               {state.status === "paused" ? "Resume" : "Pause"}
             </button>
           </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 xl:gap-8">
+          <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-5 xl:gap-7">
             <HudStat label="Time" value={formatDuration(state.timerRemaining)} />
-            <HudStat label="Moves" value={`${state.moves}`} />
+            <HudStat label="Moves" value={`${state.moves}/${state.moveLimit}`} />
             <HudStat label="Level" value={`${playerLevel}`} />
-            <div className="flex h-16 w-16 flex-col items-center justify-center rounded-full border border-[#b9d2f4] bg-[#d7e7fb] text-[#0058a8] shadow-inner sm:h-20 sm:w-20">
+            <div className="flex h-16 w-16 flex-col items-center justify-center rounded-full border border-[#b9d2f4] bg-[#d7e7fb] text-[#0058a8] shadow-inner sm:h-[4.6rem] sm:w-[4.6rem]">
               <span className="text-xs font-semibold uppercase tracking-[0.16em]">Combo</span>
-              <span className="mt-1 text-[1.55rem] font-bold sm:text-[2rem]">x{Math.max(state.combo, 1)}</span>
+              <span className="mt-1 text-[1.45rem] font-bold sm:text-[1.8rem]">x{Math.max(state.combo, 1)}</span>
             </div>
           </div>
 
           <div className="flex items-center justify-center gap-3 xl:justify-end">
-            <div className="inline-flex items-center gap-2 rounded-full bg-gradient-to-b from-[#4f46e5] to-[#3525cd] px-5 py-3 text-white shadow-[0_14px_30px_rgba(53,37,205,0.22)]">
+            <div className="inline-flex items-center gap-2 rounded-full bg-gradient-to-b from-[#4f46e5] to-[#3525cd] px-4 py-2.5 text-white shadow-[0_14px_30px_rgba(53,37,205,0.18)]">
               <SparklesIcon className="h-4 w-4" />
               <span className="text-sm font-semibold tracking-[0.04em]">{session.profile.xp} XP</span>
             </div>
@@ -173,14 +176,14 @@ export const GameRoute = () => {
         </div>
       </header>
 
-      <main className="mx-auto flex min-h-0 w-full max-w-[1500px] flex-1 overflow-hidden px-3 py-3 sm:px-6 sm:py-4 lg:px-8">
-        <div className="grid min-h-0 w-full gap-4 lg:grid-cols-[minmax(0,1fr)_18rem] xl:gap-5">
-          <section className="flex min-w-0 min-h-0 flex-col">
-            <div className="mb-3 flex flex-wrap items-center gap-3">
+      <main className="mx-auto flex min-h-0 w-full max-w-[1440px] flex-1 overflow-visible px-3 py-2 sm:px-6 sm:py-3 lg:overflow-hidden lg:px-8 xl:px-10">
+        <div className="grid min-h-0 w-full gap-3 lg:grid-cols-[minmax(0,1fr)_17.5rem] xl:gap-4">
+          <section className="grid min-h-0 min-w-0 grid-rows-[auto_minmax(0,1fr)_auto] gap-3">
+            <div className="flex flex-wrap items-center gap-3">
               <button
                 type="button"
                 onClick={handleBackClick}
-                className="inline-flex items-center gap-2 rounded-full border border-[#dbdef0] bg-white/88 px-4 py-3 text-sm font-semibold text-[#495066]"
+                className="inline-flex items-center gap-2 rounded-full border border-[#dbdef0] bg-white/88 px-4 py-2.5 text-sm font-semibold text-[#495066]"
               >
                 <ArrowLeftIcon className="h-4 w-4" />
                 Back
@@ -188,7 +191,7 @@ export const GameRoute = () => {
               <button
                 type="button"
                 onClick={reset}
-                className="inline-flex items-center gap-2 rounded-full border border-[#dbdef0] bg-white/88 px-4 py-3 text-sm font-semibold text-[#495066]"
+                className="inline-flex items-center gap-2 rounded-full border border-[#dbdef0] bg-white/88 px-4 py-2.5 text-sm font-semibold text-[#495066]"
               >
                 <RefreshIcon className="h-4 w-4" />
                 Restart
@@ -199,44 +202,45 @@ export const GameRoute = () => {
               <MindGridCanvas state={state} onReveal={reveal} />
             </div>
 
-            <div className="mt-3 grid grid-cols-3 gap-3 sm:mt-4 sm:gap-4">
+            <div className="grid grid-cols-3 gap-2 sm:gap-3">
               {boardSummary.map((item) => (
-                <div key={item.label} className="glass-panel rounded-[1.35rem] px-3 py-3 sm:rounded-[1.6rem] sm:px-4 sm:py-4">
+                <div key={item.label} className="glass-panel rounded-[1.15rem] px-3 py-2.5 sm:rounded-[1.35rem] sm:px-4 sm:py-3">
                   <p className="text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-[#778099]">{item.label}</p>
-                  <p className="mt-2 break-words text-[1.05rem] font-bold tracking-[-0.04em] text-[#1b2441] sm:text-[1.6rem]">{item.value}</p>
+                  <p className="mt-1.5 break-words text-[0.98rem] font-bold tracking-[-0.04em] text-[#1b2441] sm:text-[1.25rem]">{item.value}</p>
                 </div>
               ))}
             </div>
           </section>
 
-          <aside className="grid grid-cols-2 gap-3 lg:grid-cols-1 lg:gap-4 xl:min-h-0">
-            <div className="glass-panel rounded-[1.6rem] p-4 sm:rounded-[1.9rem] sm:p-5">
+          <aside className="grid grid-cols-2 gap-3 lg:grid-cols-1 lg:grid-rows-[minmax(0,1fr)_minmax(0,1fr)_auto] lg:gap-3 xl:min-h-0">
+            <div className="glass-panel rounded-[1.4rem] p-4 sm:rounded-[1.6rem] sm:p-[1.125rem]">
               <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#3f4457]">Match Progress</p>
-              <div className="mt-5 flex items-center justify-between text-[1.05rem] text-[#2a3148]">
+              <div className="mt-4 flex items-center justify-between text-[1rem] text-[#2a3148]">
                 <span>Matches</span>
                 <span className="font-bold text-[#3525cd]">
                   {state.matches}/{totalPairs}
                 </span>
               </div>
-              <div className="mt-3 h-4 overflow-hidden rounded-full bg-[#d9e5fb]">
+              <div className="mt-3 h-3 overflow-hidden rounded-full bg-[#d9e5fb]">
                 <div
                   className="h-full rounded-full bg-gradient-to-r from-[#64a8fe] via-[#4f46e5] to-[#3525cd]"
                   style={{ width: `${matchPercent}%` }}
                 />
               </div>
-              <div className="mt-5 rounded-[1.25rem] border border-[#d7dcf5] bg-[#f3f4ff] px-3 py-3 text-sm leading-6 text-[#3525cd] sm:rounded-[1.5rem] sm:px-4 sm:py-4 sm:text-[1.05rem] sm:leading-7">
+              <div className="mt-4 rounded-[1.15rem] border border-[#d7dcf5] bg-[#f3f4ff] px-3 py-3 text-sm leading-6 text-[#3525cd] sm:rounded-[1.3rem] sm:px-4 sm:py-3.5">
                 {state.matches === totalPairs
                   ? "Board cleared. Saving your result now."
                   : `Match ${Math.max(totalPairs - state.matches, 0)} more pair${totalPairs - state.matches === 1 ? "" : "s"} to finish this run.`}
               </div>
             </div>
 
-            <div className="glass-panel rounded-[1.6rem] p-4 sm:rounded-[1.9rem] sm:p-5">
+            <div className="glass-panel rounded-[1.4rem] p-4 sm:rounded-[1.6rem] sm:p-[1.125rem]">
               <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#3f4457]">Run Score</p>
-              <div className="mt-4 space-y-3">
+              <div className="mt-3 space-y-2.5">
                 <SideStat icon={<GridIcon className="h-4 w-4" />} label="Score" value={formatNumber(results.breakdown.finalScore)} />
                 <SideStat icon={<ClockIcon className="h-4 w-4" />} label="Mistakes" value={`${state.mismatches}`} />
                 <SideStat icon={<SparklesIcon className="h-4 w-4" />} label="Best combo" value={`x${state.maxCombo}`} />
+                <SideStat icon={<RefreshIcon className="h-4 w-4" />} label="Moves left" value={`${Math.max(state.moveLimit - state.moves, 0)}`} />
               </div>
             </div>
 
