@@ -19,3 +19,7 @@ tailwind.config.d.ts
 /playwright-video
 /test-results/ 
 /test-screenshots/ 
+
+
+
+public/bugs/

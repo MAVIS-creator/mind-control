@@ -134,13 +134,13 @@ export const GameRoute = () => {
   }
 
   return (
-    <div className="flex min-h-[100dvh] flex-col bg-[linear-gradient(180deg,#f6f8ff_0%,#eef4ff_100%)] lg:h-[100dvh] lg:overflow-hidden">
-      <header className="shrink-0 border-b border-[#cfe0ff] bg-[linear-gradient(180deg,rgba(245,249,255,0.96),rgba(236,243,255,0.92))] backdrop-blur-xl">
-        <div className="mx-auto grid max-w-[1440px] gap-3 px-3 py-3 sm:px-6 lg:px-8 xl:grid-cols-[minmax(0,auto)_1fr_auto] xl:items-center xl:px-10">
-          <div className="flex items-center justify-between gap-2 sm:gap-5 xl:justify-start">
+    <div className="flex min-h-[100dvh] flex-col bg-[linear-gradient(180deg,#f6f8ff_0%,#eef4ff_100%)] lg:h-screen lg:max-h-screen lg:overflow-hidden">
+      <header className="shrink-0 border-b border-[#cfe0ff] bg-[linear-gradient(180deg,rgba(248,251,255,0.98),rgba(238,245,255,0.94))] backdrop-blur-xl">
+        <div className="mx-auto flex max-w-[1440px] flex-col gap-3 px-3 py-3 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8 xl:px-10">
+          <div className="flex min-w-0 items-center justify-between gap-2 lg:flex-1 lg:justify-start">
             <Link to="/play" className="flex min-w-0 items-center gap-2 sm:gap-3">
               <BrandMarkIcon className="h-9 w-9 shrink-0 object-contain sm:h-11 sm:w-11" />
-              <span className="truncate font-display text-[1.45rem] font-extrabold tracking-[-0.05em] text-[#3525cd] sm:text-[2rem]">
+              <span className="truncate font-display text-[1.45rem] font-extrabold text-[#3525cd] sm:text-[2rem]">
                 MindGrid
               </span>
             </Link>
@@ -154,17 +154,17 @@ export const GameRoute = () => {
             </button>
           </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-5 xl:gap-7">
+          <div className="mx-auto flex w-full max-w-[33rem] items-center justify-between gap-2 rounded-[1.5rem] border border-white/80 bg-white/62 px-3 py-2 shadow-[0_16px_36px_rgba(53,37,205,0.08)] sm:gap-4 sm:px-5 lg:w-auto lg:max-w-none lg:justify-center lg:rounded-full">
             <HudStat label="Time" value={formatDuration(state.timerRemaining)} />
             <HudStat label="Moves" value={`${state.moves}/${state.moveLimit}`} />
             <HudStat label="Level" value={`${playerLevel}`} />
-            <div className="flex h-16 w-16 flex-col items-center justify-center rounded-full border border-[#b9d2f4] bg-[#d7e7fb] text-[#0058a8] shadow-inner sm:h-[4.6rem] sm:w-[4.6rem]">
-              <span className="text-xs font-semibold uppercase tracking-[0.16em]">Combo</span>
-              <span className="mt-1 text-[1.45rem] font-bold sm:text-[1.8rem]">x{Math.max(state.combo, 1)}</span>
+            <div className="flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-full border border-[#b9d2f4] bg-[#d7e7fb] text-[#0058a8] shadow-inner sm:h-16 sm:w-16">
+              <span className="text-[0.62rem] font-semibold uppercase">Combo</span>
+              <span className="text-[1.25rem] font-bold sm:text-[1.45rem]">x{Math.max(state.combo, 1)}</span>
             </div>
           </div>
 
-          <div className="flex items-center justify-center gap-2 xl:justify-end">
+          <div className="flex items-center justify-center gap-2 lg:flex-1 lg:justify-end">
             <div className="inline-flex min-w-0 items-center gap-1.5 rounded-full bg-gradient-to-b from-[#4f46e5] to-[#3525cd] px-3 py-2 text-white shadow-[0_14px_30px_rgba(53,37,205,0.18)] sm:gap-2 sm:px-4 sm:py-2.5">
               <SparklesIcon className="h-4 w-4" />
               <span className="truncate text-[0.74rem] font-semibold tracking-[0.03em] sm:text-sm">{session.profile.xp} XP</span>
@@ -176,9 +176,9 @@ export const GameRoute = () => {
         </div>
       </header>
 
-      <main className="mx-auto flex min-h-0 w-full max-w-[1440px] flex-1 overflow-visible px-3 py-2 sm:px-6 sm:py-3 lg:overflow-hidden lg:px-8 xl:px-10">
+      <main className="mx-auto flex min-h-0 w-full max-w-[1440px] flex-1 overflow-visible px-3 py-2 sm:px-6 sm:py-3 lg:max-h-[calc(100vh-8.5rem)] lg:overflow-hidden lg:px-8 xl:px-10">
         <div className="grid min-h-0 w-full gap-3 lg:grid-cols-[minmax(0,1fr)_17.5rem] xl:gap-4">
-          <section className="grid min-h-0 min-w-0 grid-rows-[auto_minmax(0,1fr)_auto] gap-3">
+          <section className="flex min-h-0 min-w-0 flex-col gap-3 lg:grid lg:grid-rows-[auto_minmax(0,1fr)_auto]">
             <div className="flex flex-wrap items-center gap-3">
               <button
                 type="button"
@@ -198,7 +198,7 @@ export const GameRoute = () => {
               </button>
             </div>
 
-            <div className="min-h-0 flex-1">
+            <div className="min-h-0 lg:flex lg:flex-1 lg:items-center lg:justify-center">
               <MindGridCanvas state={state} onReveal={reveal} />
             </div>
 
@@ -257,17 +257,18 @@ export const GameRoute = () => {
       </main>
 
       {state.status === "paused" ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#eef2ff]/76 px-4 py-8 backdrop-blur-xl">
-          <div className="relative w-full max-w-[34rem] overflow-hidden rounded-[2.6rem] border border-white/70 bg-white/88 p-6 shadow-[0_28px_64px_rgba(53,37,205,0.16)] sm:p-8">
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-[#eef2ff]/76 px-4 py-4 backdrop-blur-xl sm:py-8">
+          <div className="mx-auto flex min-h-full w-full max-w-[34rem] items-center">
+          <div className="relative w-full overflow-hidden rounded-[2rem] border border-white/70 bg-white/88 p-5 shadow-[0_28px_64px_rgba(53,37,205,0.16)] sm:rounded-[2.6rem] sm:p-8">
             <div className="pointer-events-none absolute inset-y-8 left-5 hidden w-14 rounded-full bg-[#eef2ff] opacity-80 sm:block" />
             <div className="pointer-events-none absolute inset-y-8 right-5 hidden w-14 rounded-full bg-[#eef2ff] opacity-80 sm:block" />
 
             <div className="relative z-10">
               <div className="text-center">
-                <h2 className="font-display text-[3rem] font-extrabold tracking-[-0.07em] text-[#3525cd] sm:text-[3.8rem]">
+                <h2 className="font-display text-[2.35rem] font-extrabold tracking-[-0.04em] text-[#3525cd] sm:text-[3.8rem]">
                   Paused
                 </h2>
-                <p className="mt-2 text-sm font-semibold uppercase tracking-[0.32em] text-[#7d8395]">
+                <p className="mt-1 text-xs font-semibold uppercase tracking-[0.22em] text-[#7d8395] sm:mt-2 sm:text-sm sm:tracking-[0.32em]">
                   Level {playerLevel} • {session.profile.rank}
                 </p>
               </div>
@@ -275,25 +276,25 @@ export const GameRoute = () => {
               <button
                 type="button"
                 onClick={togglePause}
-                className="mt-8 inline-flex h-20 w-full items-center justify-center gap-3 rounded-full bg-gradient-to-b from-[#4f46e5] to-[#3525cd] text-[1.5rem] font-bold text-white shadow-[0_18px_34px_rgba(53,37,205,0.22)] transition hover:scale-[1.01]"
+                className="mt-5 inline-flex h-14 w-full items-center justify-center gap-3 rounded-full bg-gradient-to-b from-[#4f46e5] to-[#3525cd] text-[1.2rem] font-bold text-white shadow-[0_18px_34px_rgba(53,37,205,0.22)] transition hover:scale-[1.01] sm:mt-8 sm:h-20 sm:text-[1.5rem]"
               >
                 <PlayIcon className="h-6 w-6" />
                 Resume
               </button>
 
-              <div className="mt-8">
-                <p className="text-2xl font-semibold tracking-[-0.04em] text-[#1b2441]">Settings</p>
+              <div className="mt-5 sm:mt-8">
+                <p className="text-xl font-semibold tracking-[-0.02em] text-[#1b2441] sm:text-2xl">Settings</p>
                 <div className="mt-3 h-px bg-[#d8dcef]" />
               </div>
 
-              <div className="mt-6 space-y-6">
+              <div className="mt-4 space-y-4 sm:mt-6 sm:space-y-6">
                 <div>
                   <div className="flex items-center justify-between gap-4">
                     <div className="flex items-center gap-3 text-[#1f2740]">
-                      <VolumeIcon className="h-7 w-7 text-[#353964]" />
-                      <span className="text-[1.1rem] font-medium">Master Volume</span>
+                      <VolumeIcon className="h-6 w-6 text-[#353964] sm:h-7 sm:w-7" />
+                      <span className="text-[0.98rem] font-medium sm:text-[1.1rem]">Master Volume</span>
                     </div>
-                    <span className="text-[1.1rem] font-semibold text-[#3525cd]">{preferences.masterVolume}%</span>
+                    <span className="text-[0.98rem] font-semibold text-[#3525cd] sm:text-[1.1rem]">{preferences.masterVolume}%</span>
                   </div>
                   <input
                     type="range"
@@ -326,11 +327,11 @@ export const GameRoute = () => {
                 />
               </div>
 
-              <div className="mt-8 space-y-3">
+              <div className="mt-5 space-y-3 sm:mt-8">
                 <button
                   type="button"
                   onClick={reset}
-                  className="inline-flex h-16 w-full items-center justify-center gap-3 rounded-full border border-[#cdd6ef] bg-[#f5f7ff] text-[1.15rem] font-semibold text-[#3525cd] transition hover:bg-white"
+                  className="inline-flex h-12 w-full items-center justify-center gap-3 rounded-full border border-[#cdd6ef] bg-[#f5f7ff] text-[1rem] font-semibold text-[#3525cd] transition hover:bg-white sm:h-16 sm:text-[1.15rem]"
                 >
                   <RefreshIcon className="h-5 w-5" />
                   Restart Level
@@ -338,17 +339,18 @@ export const GameRoute = () => {
                 <button
                   type="button"
                   onClick={() => navigate("/play")}
-                  className="inline-flex h-16 w-full items-center justify-center gap-3 rounded-full border border-[#f2c8c8] bg-[#fff5f5] text-[1.15rem] font-semibold text-[#c11c1c] transition hover:bg-white"
+                  className="inline-flex h-12 w-full items-center justify-center gap-3 rounded-full border border-[#f2c8c8] bg-[#fff5f5] text-[1rem] font-semibold text-[#c11c1c] transition hover:bg-white sm:h-16 sm:text-[1.15rem]"
                 >
                   <ExitIcon className="h-5 w-5" />
                   Quit to Lobby
                 </button>
               </div>
 
-              <p className="mt-8 text-center text-sm font-semibold text-[#a0a5b8]">
+              <p className="mt-5 text-center text-xs font-semibold text-[#a0a5b8] sm:mt-8 sm:text-sm">
                 MindGrid v2.4.0
               </p>
             </div>
+          </div>
           </div>
         </div>
       ) : null}
@@ -388,9 +390,9 @@ export const GameRoute = () => {
 };
 
 const HudStat = ({ label, value }: { label: string; value: string }) => (
-  <div className="text-center">
-    <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#7d8395]">{label}</p>
-    <p className="mt-1 text-[1.6rem] font-bold tracking-[-0.05em] text-[#3525cd] sm:text-[2.15rem]">{value}</p>
+  <div className="min-w-[3.5rem] text-center sm:min-w-[4.5rem]">
+    <p className="text-[0.64rem] font-semibold uppercase tracking-[0.12em] text-[#7d8395] sm:text-xs">{label}</p>
+    <p className="mt-0.5 text-[1.35rem] font-bold text-[#3525cd] sm:text-[1.8rem]">{value}</p>
   </div>
 );
 
@@ -426,21 +428,21 @@ const PauseToggleRow = ({
   <div className="flex items-center justify-between gap-4">
     <div className="flex items-center gap-3 text-[#1f2740]">
       {icon}
-      <span className="text-[1.1rem] font-medium">{label}</span>
+      <span className="text-[0.98rem] font-medium sm:text-[1.1rem]">{label}</span>
     </div>
     <button
       type="button"
       aria-pressed={checked}
       onClick={onToggle}
-      className={`relative inline-flex h-11 w-20 items-center rounded-full border transition ${
+      className={`relative inline-flex h-10 w-[4.35rem] shrink-0 items-center rounded-full border transition sm:h-11 sm:w-20 ${
         checked
           ? "border-[#4f46e5] bg-[#3525cd]"
           : "border-[#cad5f0] bg-[#dbe5ff]"
       }`}
     >
       <span
-        className={`inline-block h-9 w-9 rounded-full bg-white shadow-[0_10px_18px_rgba(53,37,205,0.18)] transition ${
-          checked ? "translate-x-10" : "translate-x-1"
+        className={`inline-block h-8 w-8 rounded-full bg-white shadow-[0_10px_18px_rgba(53,37,205,0.18)] transition sm:h-9 sm:w-9 ${
+          checked ? "translate-x-9 sm:translate-x-10" : "translate-x-1"
         }`}
       />
     </button>
