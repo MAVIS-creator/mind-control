@@ -9,6 +9,8 @@ import {
 } from "react";
 import type {
   AuthSession,
+  AdminEmailPayload,
+  AdminEmailResult,
   GamePreferences,
   GameSetupSettings,
   LeaderboardEntry,
@@ -40,6 +42,7 @@ type AppContextValue = {
   refreshLeaderboard: () => Promise<void>;
   updateRun: (entry: LeaderboardEntry) => Promise<void>;
   deleteRun: (runId: string) => Promise<void>;
+  sendAdminEmail: (payload: AdminEmailPayload) => Promise<AdminEmailResult>;
   submitRun: (
     entry: Omit<LeaderboardEntry, "id" | "playedAt" | "userId" | "username" | "email" | "avatarId" | "rating" | "totalPoints">,
   ) => Promise<LeaderboardEntry>;
@@ -148,6 +151,10 @@ export const AppProvider = ({ children }: PropsWithChildren) => {
         const next = await authApi.fetchLeaderboard();
         setLeaderboard(next.leaderboard);
         setAccountLeaderboard(next.accountLeaderboard);
+      },
+      sendAdminEmail: async (payload) => {
+        if (!session) throw new Error("Admin access is required.");
+        return authApi.sendAdminEmail(session, payload);
       },
       submitRun: async (entry) => {
         if (!session) throw new Error("You need to be logged in before saving a run.");

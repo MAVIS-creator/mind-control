@@ -1,50 +1,55 @@
 import type { JSX } from "react";
 import { useMemo, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
-import { ArrowLeftIcon, RefreshIcon, TrophyIcon, UserIcon } from "../components/AppIcons";
-import { isLegacyAccountEmail } from "../lib/utils";
+import {
+  ArrowLeftIcon,
+  ClockIcon,
+  RefreshIcon,
+  SparklesIcon,
+  TrophyIcon,
+  UserIcon,
+} from "../components/AppIcons";
+import { avatarOptions } from "../data/avatars";
+import { formatDuration, formatNumber, formatPercent, isLegacyAccountEmail } from "../lib/utils";
 import { useAppContext } from "../state/AppContext";
-import type { ReviewStatus } from "../types";
+import type { LeaderboardEntry, ReviewStatus } from "../types";
+
+type AdminPlayer = {
+  userId: string;
+  username: string;
+  email: string;
+  avatarId: string;
+  totalRuns: number;
+  bestScore: number;
+  totalPoints: number;
+  latestRun?: string;
+};
 
 export const AdminRoute = () => {
-  const { session, leaderboard, updateRun, deleteRun } = useAppContext();
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const {
+    session,
+    leaderboard,
+    accountLeaderboard,
+    updateRun,
+    deleteRun,
+    sendAdminEmail,
+  } = useAppContext();
+  const [selectedRunId, setSelectedRunId] = useState<string | null>(null);
+  const [selectedUserIds, setSelectedUserIds] = useState<string[]>([]);
   const [note, setNote] = useState("");
-  const [emailSubject, setEmailSubject] = useState("MindGrid account review");
-  const [emailBody, setEmailBody] = useState("Hello,\n\nWe are reviewing activity on your MindGrid account.\n\nThanks.");
-
-  if (!session) return <Navigate to="/login" replace />;
-
-  if (!session.profile.email || isLegacyAccountEmail(session.profile.email)) {
-    return <Navigate to="/complete-email" replace />;
-  }
-
-  if (!session.profile.isAdmin) {
-    return (
-      <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_#e2dfff_0%,_#f9f9ff_42%,_#d4e3ff_100%)] px-4 py-10">
-        <div className="mx-auto max-w-2xl">
-          <div className="glass-panel rounded-[2.4rem] p-8 text-center shadow-[0_22px_48px_rgba(53,37,205,0.08)]">
-            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#7d8395]">Admin access</p>
-            <h1 className="mt-4 font-display text-[2.8rem] font-extrabold tracking-[-0.06em] text-[#111c2d]">
-              This account cannot open the review desk.
-            </h1>
-            <p className="mt-4 text-[1rem] leading-8 text-[#5a6174]">
-              Sign in with an admin-enabled account if you need to moderate runs or inspect fair-play flags.
-            </p>
-            <Link
-              to="/play"
-              className="mt-8 inline-flex items-center gap-2 rounded-full bg-gradient-to-b from-[#4f46e5] to-[#3525cd] px-7 py-4 text-sm font-semibold uppercase tracking-[0.18em] text-white"
-            >
-              <ArrowLeftIcon className="h-4 w-4" />
-              Back to Game Hub
-            </Link>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  const selected = leaderboard.find((entry) => entry.id === selectedId) ?? null;
+  const [emailSubject, setEmailSubject] = useState("MindGrid account message");
+  const [emailBody, setEmailBody] = useState(
+    "Hello,\n\nWe are reaching out from the MindGrid admin team about your account.\n\nThank you,\nMindGrid Admin",
+  );
+  const [sending, setSending] = useState(false);
+  const [sendMessage, setSendMessage] = useState<string | null>(null);
+  const [sendError, setSendError] = useState<string | null>(null);
+  const players = useMemo(
+    () => buildAdminPlayers(leaderboard, accountLeaderboard),
+    [accountLeaderboard, leaderboard],
+  );
+  const selectedRun = leaderboard.find((entry) => entry.id === selectedRunId) ?? null;
+  const selectedPlayers = players.filter((player) => selectedUserIds.includes(player.userId));
   const flaggedCount = useMemo(
     () => leaderboard.filter((entry) => entry.audit.reviewedStatus === "flagged").length,
     [leaderboard],
@@ -59,114 +64,278 @@ export const AdminRoute = () => {
         const priority = { flagged: 0, pending: 1, approved: 2 } as const;
         const statusDiff = priority[a.audit.reviewedStatus] - priority[b.audit.reviewedStatus];
         if (statusDiff !== 0) return statusDiff;
-        if (b.audit.suspicionScore !== a.audit.suspicionScore) {
-          return b.audit.suspicionScore - a.audit.suspicionScore;
-        }
-        return b.score - a.score;
+        if (b.audit.suspicionScore !== a.audit.suspicionScore) return b.audit.suspicionScore - a.audit.suspicionScore;
+        return +new Date(b.playedAt) - +new Date(a.playedAt);
       }),
     [leaderboard],
   );
 
+  if (!session) return <Navigate to="/login" replace />;
+
+  if (!session.profile.email || isLegacyAccountEmail(session.profile.email)) {
+    return <Navigate to="/complete-email" replace />;
+  }
+
+  if (!session.profile.isAdmin) {
+    return (
+      <div className="min-h-screen bg-[linear-gradient(180deg,#f6f8ff_0%,#eef4ff_100%)] px-4 py-10">
+        <div className="mx-auto max-w-2xl">
+          <div className="rounded-[1.8rem] border border-white/70 bg-white/84 p-8 text-center shadow-[0_22px_48px_rgba(53,37,205,0.08)]">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#7d8395]">Admin access</p>
+            <h1 className="mt-4 font-display text-[2.4rem] font-extrabold text-[#111c2d]">
+              This account cannot open the admin panel.
+            </h1>
+            <p className="mt-4 text-[1rem] leading-8 text-[#5a6174]">
+              Sign in with an admin-enabled account to review runs and message players.
+            </p>
+            <Link
+              to="/play"
+              className="mt-8 inline-flex items-center gap-2 rounded-full bg-gradient-to-b from-[#4f46e5] to-[#3525cd] px-7 py-4 text-sm font-semibold uppercase tracking-[0.14em] text-white"
+            >
+              <ArrowLeftIcon className="h-4 w-4" />
+              Back to Game Hub
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const togglePlayer = (player: AdminPlayer) => {
+    setSendMessage(null);
+    setSendError(null);
+    setSelectedUserIds((current) =>
+      current.includes(player.userId)
+        ? current.filter((id) => id !== player.userId)
+        : [...current, player.userId],
+    );
+  };
+
+  const selectRun = (entry: LeaderboardEntry) => {
+    setSelectedRunId(entry.id);
+    setNote(entry.audit.reviewedNote);
+    setSelectedUserIds([entry.userId]);
+    setEmailSubject(`MindGrid account message for ${entry.username}`);
+    setEmailBody(
+      `Hello ${entry.username},\n\nWe are reaching out from the MindGrid admin team about your account activity.\n\nThank you,\nMindGrid Admin`,
+    );
+    setSendMessage(null);
+    setSendError(null);
+  };
+
   const applyReview = async (status: ReviewStatus) => {
-    if (!selected) return;
+    if (!selectedRun) return;
     await updateRun({
-      ...selected,
+      ...selectedRun,
       audit: {
-        ...selected.audit,
+        ...selectedRun.audit,
         reviewedStatus: status,
         reviewedNote: note,
       },
     });
   };
 
+  const handleSendEmail = async () => {
+    setSending(true);
+    setSendMessage(null);
+    setSendError(null);
+
+    try {
+      const result = await sendAdminEmail({
+        recipientIds: selectedUserIds,
+        subject: emailSubject,
+        message: emailBody,
+      });
+      setSendMessage(`Message sent to ${result.sent} player${result.sent === 1 ? "" : "s"}.`);
+    } catch (error) {
+      setSendError(error instanceof Error ? error.message : "Unable to send message.");
+    } finally {
+      setSending(false);
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_#e2dfff_0%,_#f9f9ff_42%,_#d4e3ff_100%)] px-4 py-6 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-[1500px] space-y-6">
-        <header className="glass-panel flex flex-col gap-4 rounded-[2.4rem] px-6 py-6 shadow-[0_22px_48px_rgba(53,37,205,0.08)] sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#7d8395]">Admin review desk</p>
-            <h1 className="mt-3 font-display text-[2.8rem] font-extrabold tracking-[-0.06em] text-[#111c2d]">
-              Review saved runs
-            </h1>
-          </div>
-          <div className="flex flex-wrap gap-3">
-            <Link
-              to="/play"
-              className="inline-flex items-center gap-2 rounded-full border border-[#d9deee] bg-white/86 px-5 py-3 text-sm font-semibold text-[#495066]"
-            >
-              <ArrowLeftIcon className="h-4 w-4" />
-              Back to Hub
-            </Link>
-            <Link
-              to="/hall-of-fame"
-              className="inline-flex items-center gap-2 rounded-full bg-gradient-to-b from-[#4f46e5] to-[#3525cd] px-5 py-3 text-sm font-semibold text-white"
-            >
-              <TrophyIcon className="h-4 w-4" />
-              View Ranks
-            </Link>
+    <div className="min-h-screen bg-[linear-gradient(180deg,#f6f8ff_0%,#eef4ff_100%)] px-4 py-5 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-[1500px] space-y-5">
+        <header className="rounded-[1.6rem] border border-white/70 bg-white/84 px-5 py-5 shadow-[0_18px_40px_rgba(53,37,205,0.07)] sm:px-6">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#7d8395]">Admin panel</p>
+              <h1 className="mt-2 font-display text-[2.2rem] font-extrabold text-[#111c2d] sm:text-[3rem]">
+                Players, messages, and run reviews
+              </h1>
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-[#5a6174]">
+                Pick players from the account list, write one clear message, and send it to their registered emails.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <Link
+                to="/play"
+                className="inline-flex items-center gap-2 rounded-full border border-[#d9deee] bg-white px-5 py-3 text-sm font-semibold text-[#495066]"
+              >
+                <ArrowLeftIcon className="h-4 w-4" />
+                Hub
+              </Link>
+              <Link
+                to="/hall-of-fame"
+                className="inline-flex items-center gap-2 rounded-full bg-gradient-to-b from-[#4f46e5] to-[#3525cd] px-5 py-3 text-sm font-semibold text-white"
+              >
+                <TrophyIcon className="h-4 w-4" />
+                Ranks
+              </Link>
+            </div>
           </div>
         </header>
 
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          <AdminStatCard label="Total runs" value={`${leaderboard.length}`} icon={<TrophyIcon className="h-5 w-5" />} />
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          <AdminStatCard label="Players" value={`${players.length}`} icon={<UserIcon className="h-5 w-5" />} />
+          <AdminStatCard label="Runs" value={`${leaderboard.length}`} icon={<TrophyIcon className="h-5 w-5" />} />
           <AdminStatCard label="Flagged" value={`${flaggedCount}`} icon={<RefreshIcon className="h-5 w-5" />} />
-          <AdminStatCard label="Pending" value={`${pendingCount}`} icon={<RefreshIcon className="h-5 w-5" />} />
-          <AdminStatCard label="Reviewer" value={session.profile.username} icon={<UserIcon className="h-5 w-5" />} />
+          <AdminStatCard label="Pending" value={`${pendingCount}`} icon={<ClockIcon className="h-5 w-5" />} />
         </div>
 
-        <div className="grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
-          <section className="glass-panel overflow-hidden rounded-[2rem] shadow-[0_16px_36px_rgba(53,37,205,0.06)]">
-            <div className="flex items-center justify-between border-b border-[#ececf6] px-6 py-5">
-              <h2 className="text-lg font-semibold uppercase tracking-[0.18em] text-[#1a2340]">Review queue</h2>
-              <span className="text-xs font-semibold uppercase tracking-[0.18em] text-[#7d8395]">Sorted by risk</span>
+        <div className="grid gap-5 xl:grid-cols-[0.8fr_1fr]">
+          <section className="rounded-[1.6rem] border border-white/70 bg-white/84 shadow-[0_16px_36px_rgba(53,37,205,0.06)]">
+            <PanelHeader
+              title="Player emails"
+              caption={`${selectedUserIds.length} selected`}
+              helper="Select who receives the admin message."
+            />
+            <div className="max-h-[34rem] overflow-y-auto p-3">
+              {players.length ? (
+                <div className="space-y-2">
+                  {players.map((player) => {
+                    const avatar = avatarOptions.find((entry) => entry.id === player.avatarId) ?? avatarOptions[0];
+                    const selected = selectedUserIds.includes(player.userId);
+                    return (
+                      <button
+                        key={player.userId}
+                        type="button"
+                        onClick={() => togglePlayer(player)}
+                        className={`flex w-full items-center gap-3 rounded-[1.2rem] border p-3 text-left transition ${
+                          selected
+                            ? "border-[#4f46e5] bg-[#eef2ff]"
+                            : "border-[#e5e9f5] bg-white hover:border-[#c9d5f6]"
+                        }`}
+                      >
+                        <img src={avatar.image} alt="" className="h-12 w-12 rounded-full border-2 border-white bg-slate-100" />
+                        <div className="min-w-0 flex-1">
+                          <div className="truncate font-semibold text-[#1a2340]">{player.username}</div>
+                          <div className="truncate text-xs text-[#6c7489]">{player.email || "No email saved"}</div>
+                          <div className="mt-1 text-xs font-semibold text-[#3525cd]">
+                            {formatNumber(player.totalPoints)} pts · best {formatNumber(player.bestScore)}
+                          </div>
+                        </div>
+                        <span
+                          className={`h-5 w-5 rounded-full border ${
+                            selected ? "border-[#3525cd] bg-[#3525cd]" : "border-[#cdd6ef] bg-white"
+                          }`}
+                        />
+                      </button>
+                    );
+                  })}
+                </div>
+              ) : (
+                <EmptyPanel text="No players with saved runs yet. Players will appear here after they submit runs." />
+              )}
             </div>
+          </section>
+
+          <section className="rounded-[1.6rem] border border-white/70 bg-white/84 shadow-[0_16px_36px_rgba(53,37,205,0.06)]">
+            <PanelHeader
+              title="Send email message"
+              caption={selectedPlayers.length ? `${selectedPlayers.length} recipient${selectedPlayers.length === 1 ? "" : "s"}` : "No recipient"}
+              helper="This sends through the secure Supabase function, using registered profile emails."
+            />
+            <div className="space-y-4 p-5">
+              <div className="rounded-[1.2rem] border border-[#e5e9f5] bg-[#f8faff] p-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#7d8395]">Recipients</p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {selectedPlayers.length ? (
+                    selectedPlayers.map((player) => (
+                      <span key={player.userId} className="rounded-full bg-white px-3 py-1.5 text-xs font-semibold text-[#3525cd]">
+                        {player.username}
+                      </span>
+                    ))
+                  ) : (
+                    <span className="text-sm text-[#6c7489]">Choose one or more players from the list.</span>
+                  )}
+                </div>
+              </div>
+
+              <label className="block">
+                <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-[#7d8395]">Subject</span>
+                <input
+                  value={emailSubject}
+                  onChange={(event) => setEmailSubject(event.target.value)}
+                  className="h-13 w-full rounded-[1.1rem] border border-[#dfe4f2] bg-white px-4 py-3 text-sm text-[#1f2740] outline-none transition focus:border-[#c5c2ff] focus:ring-4 focus:ring-[#ebe9ff]"
+                />
+              </label>
+
+              <label className="block">
+                <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-[#7d8395]">Message</span>
+                <textarea
+                  value={emailBody}
+                  onChange={(event) => setEmailBody(event.target.value)}
+                  rows={8}
+                  className="w-full rounded-[1.1rem] border border-[#dfe4f2] bg-white px-4 py-3 text-sm leading-6 text-[#1f2740] outline-none transition focus:border-[#c5c2ff] focus:ring-4 focus:ring-[#ebe9ff]"
+                />
+              </label>
+
+              {sendMessage ? <p className="rounded-[1rem] border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{sendMessage}</p> : null}
+              {sendError ? <p className="rounded-[1rem] border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">{sendError}</p> : null}
+
+              <button
+                type="button"
+                disabled={sending || !selectedUserIds.length}
+                onClick={() => void handleSendEmail()}
+                className="inline-flex h-14 w-full items-center justify-center gap-2 rounded-full bg-gradient-to-b from-[#4f46e5] to-[#3525cd] text-sm font-bold uppercase tracking-[0.14em] text-white shadow-[0_14px_30px_rgba(53,37,205,0.18)] disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <SparklesIcon className="h-4 w-4" />
+                {sending ? "Sending..." : "Send Email"}
+              </button>
+            </div>
+          </section>
+        </div>
+
+        <div className="grid gap-5 xl:grid-cols-[1fr_0.75fr]">
+          <section className="rounded-[1.6rem] border border-white/70 bg-white/84 shadow-[0_16px_36px_rgba(53,37,205,0.06)]">
+            <PanelHeader title="Run review queue" caption="Fair play" helper="Open a run to review flags, save notes, or remove a bad result." />
             <div className="overflow-x-auto">
               <table className="min-w-full text-left">
-                <thead className="bg-[#f7f8ff] text-xs uppercase tracking-[0.18em] text-[#7d8395]">
+                <thead className="bg-[#f7f8ff] text-xs uppercase tracking-[0.16em] text-[#7d8395]">
                   <tr>
-                    <th className="px-6 py-4">Player</th>
-                    <th className="px-6 py-4">Mode</th>
-                    <th className="px-6 py-4">Score</th>
-                    <th className="px-6 py-4">Status</th>
-                    <th className="px-6 py-4">Open</th>
+                    <th className="px-5 py-4">Player</th>
+                    <th className="px-5 py-4">Run</th>
+                    <th className="px-5 py-4">Flags</th>
+                    <th className="px-5 py-4">Status</th>
+                    <th className="px-5 py-4">Action</th>
                   </tr>
                 </thead>
                 <tbody>
                   {orderedRuns.map((entry) => (
                     <tr key={entry.id} className="border-t border-[#edf0f8] text-sm text-[#1f2740]">
-                      <td className="px-6 py-4">
+                      <td className="px-5 py-4">
                         <div className="font-semibold">{entry.username}</div>
-                        <div className="text-xs text-[#7d8395]">{new Date(entry.playedAt).toLocaleString("en-GB")}</div>
+                        <div className="text-xs text-[#7d8395]">{entry.email || "No email"}</div>
                       </td>
-                      <td className="px-6 py-4 uppercase">{entry.mode}</td>
-                      <td className="px-6 py-4 font-semibold text-[#3525cd]">{entry.score.toLocaleString()}</td>
-                      <td className="px-6 py-4">
-                        <span
-                          className={`rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] ${
-                            entry.audit.reviewedStatus === "flagged"
-                              ? "bg-rose-100 text-rose-700"
-                              : entry.audit.reviewedStatus === "approved"
-                                ? "bg-emerald-100 text-emerald-700"
-                                : "bg-amber-100 text-amber-700"
-                          }`}
-                        >
-                          {entry.audit.reviewedStatus}
-                        </span>
+                      <td className="px-5 py-4">
+                        <div className="font-semibold text-[#3525cd]">{formatNumber(entry.score)}</div>
+                        <div className="text-xs text-[#7d8395]">
+                          {entry.gridSize} · {entry.matchType} · {formatDuration(entry.duration)}
+                        </div>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-5 py-4">{entry.audit.suspicionScore}</td>
+                      <td className="px-5 py-4">
+                        <StatusBadge status={entry.audit.reviewedStatus} />
+                      </td>
+                      <td className="px-5 py-4">
                         <button
                           type="button"
-                          onClick={() => {
-                            setSelectedId(entry.id);
-                            setNote(entry.audit.reviewedNote);
-                            setEmailSubject(`MindGrid review for ${entry.username}`);
-                            setEmailBody(
-                              `Hello ${entry.username},\n\nWe are contacting you about activity on your MindGrid account.\n\nBest regards,\nMindGrid Admin`,
-                            );
-                          }}
-                          className="rounded-full border border-[#dce1f0] bg-white px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#3525cd]"
+                          onClick={() => selectRun(entry)}
+                          className="rounded-full border border-[#dce1f0] bg-white px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#3525cd]"
                         >
-                          Review
+                          Open
                         </button>
                       </td>
                     </tr>
@@ -176,100 +345,57 @@ export const AdminRoute = () => {
             </div>
           </section>
 
-          <section className="glass-panel rounded-[2rem] p-6 shadow-[0_16px_36px_rgba(53,37,205,0.06)]">
-            <h2 className="text-lg font-semibold uppercase tracking-[0.18em] text-[#1a2340]">Selected run</h2>
-            {selected ? (
+          <section className="rounded-[1.6rem] border border-white/70 bg-white/84 p-5 shadow-[0_16px_36px_rgba(53,37,205,0.06)]">
+            <h2 className="text-lg font-semibold uppercase tracking-[0.16em] text-[#1a2340]">Run details</h2>
+            {selectedRun ? (
               <div className="mt-5 space-y-4">
-                <InfoRow label="Player" value={selected.username} />
-                <InfoRow label="Email" value={selected.email || "No email saved"} />
-                <InfoRow label="Score" value={`${selected.score.toLocaleString()}`} />
-                <InfoRow label="Accuracy" value={`${selected.accuracy}%`} />
-                <InfoRow label="Max combo" value={`x${selected.maxCombo}`} />
-                <InfoRow label="Duration" value={`${selected.duration}s`} />
-                <InfoRow label="Suspicion score" value={`${selected.audit.suspicionScore}`} />
-                <div className="rounded-[1.5rem] border border-[#e5e8f5] bg-[#fbfbff] p-4">
-                  <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[#7d8395]">Reasons</div>
-                  <ul className="mt-3 space-y-2 text-sm leading-7 text-[#5a6174]">
-                    {selected.audit.suspicionReasons.length ? (
-                      selected.audit.suspicionReasons.map((reason) => <li key={reason}>• {reason}</li>)
+                <InfoGrid
+                  items={[
+                    ["Player", selectedRun.username],
+                    ["Email", selectedRun.email || "No email saved"],
+                    ["Score", formatNumber(selectedRun.score)],
+                    ["Accuracy", formatPercent(selectedRun.accuracy)],
+                    ["Combo", `x${selectedRun.maxCombo}`],
+                    ["Duration", formatDuration(selectedRun.duration)],
+                  ]}
+                />
+
+                <div className="rounded-[1.2rem] border border-[#e5e8f5] bg-[#fbfbff] p-4">
+                  <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[#7d8395]">Fair play reasons</div>
+                  <ul className="mt-3 space-y-2 text-sm leading-6 text-[#5a6174]">
+                    {selectedRun.audit.suspicionReasons.length ? (
+                      selectedRun.audit.suspicionReasons.map((reason) => <li key={reason}>{reason}</li>)
                     ) : (
                       <li>No flags recorded.</li>
                     )}
                   </ul>
                 </div>
+
                 <label className="block">
-                  <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-[#7d8395]">Review note</span>
+                  <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-[#7d8395]">Admin note</span>
                   <textarea
                     value={note}
                     onChange={(event) => setNote(event.target.value)}
-                    rows={5}
-                    className="w-full rounded-[1.4rem] border border-[#dfe4f2] bg-[#f8f9ff] px-4 py-3 text-sm text-[#1f2740] outline-none transition focus:border-[#c5c2ff] focus:ring-4 focus:ring-[#ebe9ff]"
+                    rows={4}
+                    className="w-full rounded-[1.2rem] border border-[#dfe4f2] bg-[#f8f9ff] px-4 py-3 text-sm text-[#1f2740] outline-none transition focus:border-[#c5c2ff] focus:ring-4 focus:ring-[#ebe9ff]"
                   />
                 </label>
-                <div className="rounded-[1.5rem] border border-[#e5e8f5] bg-[#fbfbff] p-4">
-                  <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[#7d8395]">Email player</div>
-                  <div className="mt-4 space-y-3">
-                    <input
-                      value={emailSubject}
-                      onChange={(event) => setEmailSubject(event.target.value)}
-                      placeholder="Subject"
-                      className="w-full rounded-[1.2rem] border border-[#dfe4f2] bg-white px-4 py-3 text-sm text-[#1f2740] outline-none transition focus:border-[#c5c2ff] focus:ring-4 focus:ring-[#ebe9ff]"
-                    />
-                    <textarea
-                      value={emailBody}
-                      onChange={(event) => setEmailBody(event.target.value)}
-                      rows={5}
-                      placeholder="Write a message"
-                      className="w-full rounded-[1.2rem] border border-[#dfe4f2] bg-white px-4 py-3 text-sm text-[#1f2740] outline-none transition focus:border-[#c5c2ff] focus:ring-4 focus:ring-[#ebe9ff]"
-                    />
-                    <button
-                      type="button"
-                      disabled={!selected.email}
-                      onClick={() => {
-                        const mailto = `mailto:${selected.email}?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
-                        window.location.href = mailto;
-                      }}
-                      className="w-full rounded-full bg-gradient-to-b from-[#4f46e5] to-[#3525cd] px-4 py-3 text-xs font-semibold uppercase tracking-[0.16em] text-white disabled:cursor-not-allowed disabled:opacity-50"
-                    >
-                      Open Email Draft
-                    </button>
-                  </div>
-                </div>
+
                 <div className="grid gap-3 sm:grid-cols-3">
-                  <button
-                    type="button"
-                    onClick={() => void applyReview("approved")}
-                    className="rounded-full bg-emerald-100 px-4 py-3 text-xs font-semibold uppercase tracking-[0.16em] text-emerald-700"
-                  >
-                    Approve
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => void applyReview("flagged")}
-                    className="rounded-full bg-rose-100 px-4 py-3 text-xs font-semibold uppercase tracking-[0.16em] text-rose-700"
-                  >
-                    Flag
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => void applyReview("pending")}
-                    className="rounded-full bg-[#eef2ff] px-4 py-3 text-xs font-semibold uppercase tracking-[0.16em] text-[#3525cd]"
-                  >
-                    Reset
-                  </button>
+                  <ReviewButton label="Approve" tone="good" onClick={() => void applyReview("approved")} />
+                  <ReviewButton label="Flag" tone="bad" onClick={() => void applyReview("flagged")} />
+                  <ReviewButton label="Pending" tone="neutral" onClick={() => void applyReview("pending")} />
                 </div>
                 <button
                   type="button"
-                  onClick={() => void deleteRun(selected.id)}
-                  className="w-full rounded-full border border-rose-200 bg-rose-50 px-4 py-3 text-xs font-semibold uppercase tracking-[0.16em] text-rose-700"
+                  onClick={() => void deleteRun(selectedRun.id)}
+                  className="w-full rounded-full border border-rose-200 bg-rose-50 px-4 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-rose-700"
                 >
                   Delete Run
                 </button>
               </div>
             ) : (
-              <div className="mt-5 rounded-[1.6rem] border border-[#e5e8f5] bg-[#fbfbff] p-5 text-sm leading-7 text-[#5a6174]">
-                Pick a run from the queue to inspect flags, write notes, or moderate the result.
-              </div>
+              <EmptyPanel text="Open a run from the table to inspect details and save review notes." />
             )}
           </section>
         </div>
@@ -277,6 +403,56 @@ export const AdminRoute = () => {
     </div>
   );
 };
+
+const buildAdminPlayers = (runs: LeaderboardEntry[], accounts: LeaderboardEntry[]): AdminPlayer[] => {
+  const byUser = new Map<string, AdminPlayer>();
+
+  for (const entry of [...accounts, ...runs]) {
+    const current = byUser.get(entry.userId);
+    const userRuns = runs.filter((run) => run.userId === entry.userId);
+    const totalRuns = userRuns.length || 1;
+    const totalPoints = userRuns.reduce((sum, run) => sum + run.score, 0) || entry.totalPoints || entry.score;
+    const bestScore = Math.max(entry.score, current?.bestScore ?? 0, ...userRuns.map((run) => run.score));
+    const latestRun = userRuns
+      .map((run) => run.playedAt)
+      .sort((a, b) => +new Date(b) - +new Date(a))[0] ?? entry.playedAt;
+
+    byUser.set(entry.userId, {
+      userId: entry.userId,
+      username: entry.username,
+      email: entry.email,
+      avatarId: entry.avatarId,
+      totalRuns,
+      bestScore,
+      totalPoints,
+      latestRun,
+    });
+  }
+
+  return Array.from(byUser.values()).sort((a, b) => b.totalPoints - a.totalPoints);
+};
+
+const PanelHeader = ({
+  title,
+  caption,
+  helper,
+}: {
+  title: string;
+  caption: string;
+  helper: string;
+}) => (
+  <div className="border-b border-[#ececf6] px-5 py-4">
+    <div className="flex items-start justify-between gap-3">
+      <div>
+        <h2 className="text-lg font-semibold uppercase tracking-[0.16em] text-[#1a2340]">{title}</h2>
+        <p className="mt-1 text-sm text-[#6c7489]">{helper}</p>
+      </div>
+      <span className="shrink-0 rounded-full bg-[#eef2ff] px-3 py-1 text-xs font-semibold text-[#3525cd]">
+        {caption}
+      </span>
+    </div>
+  </div>
+);
 
 const AdminStatCard = ({
   label,
@@ -287,16 +463,67 @@ const AdminStatCard = ({
   value: string;
   icon: JSX.Element;
 }) => (
-  <div className="glass-panel rounded-[1.7rem] p-5 shadow-[0_16px_32px_rgba(53,37,205,0.05)]">
+  <div className="rounded-[1.35rem] border border-white/70 bg-white/84 p-5 shadow-[0_16px_32px_rgba(53,37,205,0.05)]">
     <div className="inline-flex rounded-2xl bg-[#eef2ff] p-2 text-[#3525cd]">{icon}</div>
     <p className="mt-4 text-xs font-semibold uppercase tracking-[0.18em] text-[#7d8395]">{label}</p>
-    <p className="mt-2 text-[1.9rem] font-bold tracking-[-0.04em] text-[#1a2340]">{value}</p>
+    <p className="mt-2 text-[1.8rem] font-bold text-[#1a2340]">{value}</p>
   </div>
 );
 
-const InfoRow = ({ label, value }: { label: string; value: string }) => (
-  <div className="rounded-[1.4rem] border border-[#e4e8f5] bg-[#fbfbff] px-4 py-3">
-    <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[#7d8395]">{label}</div>
-    <div className="mt-1 text-sm text-[#1f2740]">{value}</div>
+const StatusBadge = ({ status }: { status: ReviewStatus }) => (
+  <span
+    className={`rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.12em] ${
+      status === "flagged"
+        ? "bg-rose-100 text-rose-700"
+        : status === "approved"
+          ? "bg-emerald-100 text-emerald-700"
+          : "bg-amber-100 text-amber-700"
+    }`}
+  >
+    {status}
+  </span>
+);
+
+const InfoGrid = ({ items }: { items: Array<[string, string]> }) => (
+  <div className="grid gap-3 sm:grid-cols-2">
+    {items.map(([label, value]) => (
+      <div key={label} className="rounded-[1rem] border border-[#e4e8f5] bg-[#fbfbff] px-4 py-3">
+        <div className="text-xs font-semibold uppercase tracking-[0.16em] text-[#7d8395]">{label}</div>
+        <div className="mt-1 break-words text-sm font-semibold text-[#1f2740]">{value}</div>
+      </div>
+    ))}
+  </div>
+);
+
+const ReviewButton = ({
+  label,
+  tone,
+  onClick,
+}: {
+  label: string;
+  tone: "good" | "bad" | "neutral";
+  onClick: () => void;
+}) => {
+  const className =
+    tone === "good"
+      ? "bg-emerald-100 text-emerald-700"
+      : tone === "bad"
+        ? "bg-rose-100 text-rose-700"
+        : "bg-[#eef2ff] text-[#3525cd]";
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`rounded-full px-4 py-3 text-xs font-semibold uppercase tracking-[0.14em] ${className}`}
+    >
+      {label}
+    </button>
+  );
+};
+
+const EmptyPanel = ({ text }: { text: string }) => (
+  <div className="m-5 rounded-[1.2rem] border border-[#e5e8f5] bg-[#fbfbff] p-5 text-sm leading-7 text-[#5a6174]">
+    {text}
   </div>
 );

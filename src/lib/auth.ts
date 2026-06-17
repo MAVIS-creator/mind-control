@@ -1,5 +1,7 @@
 import type {
   AuthSession,
+  AdminEmailPayload,
+  AdminEmailResult,
   MatchType,
   LeaderboardEntry,
   LoginPayload,
@@ -856,5 +858,46 @@ export const authApi = {
     const { error } = await supabase.from("game_runs").delete().eq("id", runId);
     if (error) throw error;
     return this.fetchLeaderboard();
+  },
+
+  async sendAdminEmail(
+    session: AuthSession,
+    payload: AdminEmailPayload,
+  ): Promise<AdminEmailResult> {
+    if (!session.profile.isAdmin) {
+      throw new Error("Admin access is required.");
+    }
+
+    const recipientIds = Array.from(new Set(payload.recipientIds)).filter(Boolean);
+    if (!recipientIds.length) {
+      throw new Error("Choose at least one player.");
+    }
+    if (!payload.subject.trim()) {
+      throw new Error("Add an email subject.");
+    }
+    if (!payload.message.trim()) {
+      throw new Error("Write a message before sending.");
+    }
+
+    if (!hasSupabase || !supabase) {
+      const users = loadUsers().filter((stored) => recipientIds.includes(stored.profile.id));
+      const recipients = users.map((stored) => stored.profile.email).filter(Boolean);
+      if (!recipients.length) {
+        throw new Error("The selected players do not have saved emails.");
+      }
+      window.location.href = `mailto:${recipients.join(",")}?subject=${encodeURIComponent(payload.subject)}&body=${encodeURIComponent(payload.message)}`;
+      return { sent: recipients.length, recipients };
+    }
+
+    const { data, error } = await supabase.functions.invoke("admin-send-email", {
+      body: {
+        recipientIds,
+        subject: payload.subject,
+        message: payload.message,
+      },
+    });
+
+    if (error) throw error;
+    return data as AdminEmailResult;
   },
 };

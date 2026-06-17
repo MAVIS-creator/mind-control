@@ -116,6 +116,17 @@ export type LoginPayload = {
   password: string;
 };
 
+export type AdminEmailPayload = {
+  recipientIds: string[];
+  subject: string;
+  message: string;
+};
+
+export type AdminEmailResult = {
+  sent: number;
+  recipients: string[];
+};
+
 export type AppSnapshot = {
   profile: PlayerProfile | null;
   leaderboard: LeaderboardEntry[];
