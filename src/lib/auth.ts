@@ -621,7 +621,7 @@ export const authApi = {
       const entries = mergeLocalLeaderboard(loadLeaderboard(), completeEntry).slice(0, 100);
       const accountLeaderboard = buildAccountLeaderboard(entries).slice(0, 100);
       saveLeaderboards(entries, accountLeaderboard);
-      const nextSession = { profile: updatedProfile };
+      const nextSession = { profile: updatedProfile, accessToken: session.accessToken };
       saveSession(nextSession);
       return { entry: completeEntry, session: nextSession, leaderboard: entries, accountLeaderboard };
     }
@@ -666,7 +666,7 @@ export const authApi = {
 
     const { leaderboard, accountLeaderboard } = await fetchRemoteLeaderboards();
 
-    const nextSession = { profile: updatedProfile };
+    const nextSession = { profile: updatedProfile, accessToken: session.accessToken };
     saveSession(nextSession);
     return { entry: completeEntry, session: nextSession, leaderboard, accountLeaderboard };
   },
@@ -880,16 +880,31 @@ export const authApi = {
     }
 
     if (!hasSupabase || !supabase) {
-      const users = loadUsers().filter((stored) => recipientIds.includes(stored.profile.id));
-      const recipients = users.map((stored) => stored.profile.email).filter(Boolean);
+      const localProfiles = loadUsers().map((stored) => stored.profile);
+      const localLeaderboardRows = [...loadLeaderboard(), ...loadAccountLeaderboard()].map(normalizeLeaderboardEntry);
+      const recipients = recipientIds
+        .map((recipientId) => {
+          const profileEmail = localProfiles.find((profile) => profile.id === recipientId)?.email;
+          const runEmail = localLeaderboardRows.find((entry) => entry.userId === recipientId)?.email;
+          return profileEmail || runEmail || "";
+        })
+        .filter((email, index, list) => isValidEmail(email) && list.indexOf(email) === index);
+
       if (!recipients.length) {
-        throw new Error("The selected players do not have saved emails.");
+        throw new Error(
+          "The selected players do not have saved emails in this local browser. Restart the dev server so localhost uses Supabase, then refresh the admin page.",
+        );
       }
       window.location.href = `mailto:${recipients.join(",")}?subject=${encodeURIComponent(payload.subject)}&body=${encodeURIComponent(payload.message)}`;
       return { sent: recipients.length, recipients };
     }
 
     const { data, error } = await supabase.functions.invoke("admin-send-email", {
+      headers: session.accessToken
+        ? {
+            Authorization: `Bearer ${session.accessToken}`,
+          }
+        : undefined,
       body: {
         recipientIds,
         subject: payload.subject,
@@ -897,7 +912,19 @@ export const authApi = {
       },
     });
 
-    if (error) throw error;
+    if (error) {
+      let details = "";
+      const maybeContext = (error as { context?: unknown }).context;
+      if (maybeContext instanceof Response) {
+        try {
+          const body = (await maybeContext.clone().json()) as { error?: string; details?: string };
+          details = [body.error, body.details].filter(Boolean).join(" ");
+        } catch {
+          details = await maybeContext.clone().text().catch(() => "");
+        }
+      }
+      throw new Error(details || error.message || "Unable to send admin email.");
+    }
     return data as AdminEmailResult;
   },
 };

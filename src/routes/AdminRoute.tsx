@@ -253,8 +253,13 @@ export const AdminRoute = () => {
                 <div className="mt-3 flex flex-wrap gap-2">
                   {selectedPlayers.length ? (
                     selectedPlayers.map((player) => (
-                      <span key={player.userId} className="rounded-full bg-white px-3 py-1.5 text-xs font-semibold text-[#3525cd]">
+                      <span
+                        key={player.userId}
+                        className="rounded-full bg-white px-3 py-1.5 text-xs font-semibold text-[#3525cd]"
+                        title={player.email || "No saved email"}
+                      >
                         {player.username}
+                        {player.email ? ` · ${player.email}` : " · no email"}
                       </span>
                     ))
                   ) : (
