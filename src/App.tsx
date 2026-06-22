@@ -1,6 +1,7 @@
 import { Suspense, lazy } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { BrandMotionMark } from "./components/AppIcons";
+import { Seo } from "./components/Seo";
 import { useAppContext } from "./state/AppContext";
 
 const LandingRoute = lazy(() =>
@@ -74,6 +75,7 @@ export const App = () => {
         </div>
       }
     >
+      <Seo />
       <Routes>
         <Route path="/" element={<LandingRoute />} />
         <Route path="/login" element={<AuthRoute mode="login" />} />
