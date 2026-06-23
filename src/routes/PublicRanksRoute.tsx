@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { PublicSiteShell } from "../components/PublicSiteShell";
 import { TrophyIcon } from "../components/AppIcons";
@@ -7,7 +7,7 @@ import { formatDuration, formatNumber, formatPercent } from "../lib/utils";
 import { useAppContext } from "../state/AppContext";
 import type { LeaderboardEntry } from "../types";
 
-const PAGE_SIZE = 20;
+const PUBLIC_PREVIEW_LIMIT = 6;
 
 const compareRanks = (a: LeaderboardEntry, b: LeaderboardEntry) => {
   if (b.rating !== a.rating) return b.rating - a.rating;
@@ -26,41 +26,16 @@ const fallbackRows = [
 
 export const PublicRanksRoute = () => {
   const { accountLeaderboard, leaderboard } = useAppContext();
-  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
-  const sentinelRef = useRef<HTMLDivElement | null>(null);
 
   const rankedEntries = useMemo(() => {
     const source = accountLeaderboard.length ? accountLeaderboard : leaderboard;
     return [...source].sort(compareRanks);
   }, [accountLeaderboard, leaderboard]);
 
-  const visibleEntries = rankedEntries.slice(0, visibleCount);
-  const canLoadMore = visibleCount < rankedEntries.length;
-
-  useEffect(() => {
-    setVisibleCount(PAGE_SIZE);
-  }, [rankedEntries.length]);
-
-  useEffect(() => {
-    if (!canLoadMore) return;
-    const node = sentinelRef.current;
-    if (!node) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry?.isIntersecting) {
-          setVisibleCount((current) => Math.min(current + PAGE_SIZE, rankedEntries.length));
-        }
-      },
-      { rootMargin: "320px" },
-    );
-
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, [canLoadMore, rankedEntries.length]);
-
+  const visibleEntries = rankedEntries.slice(0, PUBLIC_PREVIEW_LIMIT);
   const podium = rankedEntries.slice(0, 3);
   const empty = rankedEntries.length === 0;
+  const hiddenPlayerCount = Math.max(rankedEntries.length - PUBLIC_PREVIEW_LIMIT, 0);
 
   return (
     <PublicSiteShell active="ranks">
@@ -111,7 +86,7 @@ export const PublicRanksRoute = () => {
           <div className="border-b border-slate-200/70 px-5 py-5 sm:px-7">
             <h2 className="text-2xl font-bold tracking-[-0.04em] text-slate-900">Leaderboard</h2>
             <p className="mt-1 text-sm leading-6 text-slate-500">
-              Live player standings from saved runs. More challengers appear as you scroll.
+              A preview of the strongest players right now. Create an account to compete for the full Hall of Fame.
             </p>
           </div>
 
@@ -153,16 +128,27 @@ export const PublicRanksRoute = () => {
             </div>
           )}
 
-          <div ref={sentinelRef} className="h-2" />
-          {canLoadMore ? (
-            <div className="border-t border-slate-100 px-5 py-5 text-center">
-              <button
-                type="button"
-                onClick={() => setVisibleCount((current) => Math.min(current + PAGE_SIZE, rankedEntries.length))}
-                className="rounded-full border border-[#d9d8eb] bg-white/80 px-6 py-3 text-sm font-semibold text-[#3525cd] shadow-sm"
-              >
-                Load More Players
-              </button>
+          {!empty ? (
+            <div className="border-t border-slate-100 px-5 py-6 text-center">
+              <p className="text-sm leading-6 text-slate-500">
+                {hiddenPlayerCount > 0
+                  ? `${hiddenPlayerCount} more ranked players are waiting inside the full Hall of Fame.`
+                  : "The full Hall of Fame unlocks after you join and save your first run."}
+              </p>
+              <div className="mt-4 flex flex-col justify-center gap-3 sm:flex-row">
+                <Link
+                  to="/register"
+                  className="rounded-full bg-gradient-to-b from-[#4f46e5] to-[#3525cd] px-6 py-3 text-sm font-semibold text-white shadow-[0_14px_26px_rgba(53,37,205,0.18)]"
+                >
+                  Join the Leaderboard
+                </Link>
+                <Link
+                  to="/login"
+                  className="rounded-full border border-[#d9d8eb] bg-white/80 px-6 py-3 text-sm font-semibold text-[#3525cd] shadow-sm"
+                >
+                  Sign In to View More
+                </Link>
+              </div>
             </div>
           ) : null}
         </section>
