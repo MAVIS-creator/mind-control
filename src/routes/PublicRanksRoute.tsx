@@ -73,7 +73,7 @@ export const PublicRanksRoute = () => {
             MindGrid Ranks
           </h1>
           <p className="mx-auto mt-4 max-w-3xl text-base leading-8 text-[#4f5568] sm:text-lg">
-            See the top players, best scores, total points, accuracy, combos, and times. Join the board when you are ready to compete.
+            Track the strongest MindGrid runs across rating, total points, best scores, accuracy, combo strength, and clear time.
           </p>
           <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
             <Link to="/register" className="rounded-full bg-gradient-to-b from-[#4f46e5] to-[#3525cd] px-8 py-4 font-semibold text-white shadow-[0_18px_30px_rgba(53,37,205,0.22)]">
@@ -111,13 +111,13 @@ export const PublicRanksRoute = () => {
           <div className="border-b border-slate-200/70 px-5 py-5 sm:px-7">
             <h2 className="text-2xl font-bold tracking-[-0.04em] text-slate-900">Leaderboard</h2>
             <p className="mt-1 text-sm leading-6 text-slate-500">
-              Showing one account row per player. More players load as you scroll.
+              Live player standings from saved runs. More challengers appear as you scroll.
             </p>
           </div>
 
           {empty ? (
             <div className="px-5 py-10 text-center text-sm text-slate-500">
-              No live ranked runs are available yet. Create an account and place the first score.
+              The public board is warming up. Create an account, finish a run, and become one of the first ranked players.
             </div>
           ) : (
             <div className="divide-y divide-slate-100">

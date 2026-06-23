@@ -269,6 +269,38 @@ const buildAccountLeaderboard = (entries: LeaderboardEntry[]) => {
   return sortLeaderboard(Array.from(bestByUser.values()));
 };
 
+const buildPublicLeaderboardsFromRuns = (rows: any[]) => {
+  const runs = rows.map(mapLeaderboardRow);
+  const totals = new Map<string, number>();
+
+  for (const run of runs) {
+    totals.set(run.userId, (totals.get(run.userId) ?? 0) + run.score);
+  }
+
+  const runsWithTotals = runs.map((run) =>
+    normalizeLeaderboardEntry({
+      ...run,
+      totalPoints: totals.get(run.userId) ?? run.score,
+    }),
+  );
+
+  const bestByCategory = new Map<string, LeaderboardEntry>();
+
+  for (const run of sortLeaderboard(runsWithTotals)) {
+    const key = `${run.userId}:${run.mode}:${run.matchType}:${run.gridSize}`;
+    const current = bestByCategory.get(key);
+    if (!current || compareLeaderboardEntries(run, current) < 0) {
+      bestByCategory.set(key, run);
+    }
+  }
+
+  const leaderboard = sortLeaderboard(Array.from(bestByCategory.values()));
+  return {
+    leaderboard,
+    accountLeaderboard: buildAccountLeaderboard(runsWithTotals),
+  };
+};
+
 const saveLeaderboards = (leaderboard: LeaderboardEntry[], accountLeaderboard?: LeaderboardEntry[]) => {
   saveLeaderboard(leaderboard);
   saveAccountLeaderboard(accountLeaderboard ?? buildAccountLeaderboard(leaderboard));
@@ -282,31 +314,47 @@ const fetchRemoteLeaderboards = async () => {
     };
   }
 
-  const [{ data: categoryRows, error: categoryError }, { data: accountRows, error: accountError }] =
-    await Promise.all([
-      supabase
-        .from("leaderboard_rankings")
-        .select("*")
-        .order("rating", { ascending: false })
-        .order("total_points", { ascending: false })
-        .order("duration", { ascending: true })
-        .limit(100),
-      supabase
-        .from("leaderboard_accounts")
-        .select("*")
-        .order("best_rating", { ascending: false })
-        .order("total_points", { ascending: false })
-        .order("best_duration", { ascending: true })
-        .limit(100),
-    ]);
+  try {
+    const [{ data: categoryRows, error: categoryError }, { data: accountRows, error: accountError }] =
+      await Promise.all([
+        supabase
+          .from("public_leaderboard_rankings")
+          .select("*")
+          .order("rating", { ascending: false })
+          .order("total_points", { ascending: false })
+          .order("duration", { ascending: true })
+          .limit(200),
+        supabase
+          .from("public_leaderboard_accounts")
+          .select("*")
+          .order("best_rating", { ascending: false })
+          .order("total_points", { ascending: false })
+          .order("best_duration", { ascending: true })
+          .limit(200),
+      ]);
 
-  if (categoryError) throw categoryError;
-  if (accountError) throw accountError;
+    if (categoryError) throw categoryError;
+    if (accountError) throw accountError;
 
-  const leaderboard = (categoryRows ?? []).map(mapLeaderboardRow) satisfies LeaderboardEntry[];
-  const accountLeaderboard = (accountRows ?? []).map(mapAccountLeaderboardRow) satisfies LeaderboardEntry[];
-  saveLeaderboards(leaderboard, accountLeaderboard);
-  return { leaderboard, accountLeaderboard };
+    const leaderboard = (categoryRows ?? []).map(mapLeaderboardRow) satisfies LeaderboardEntry[];
+    const accountLeaderboard = (accountRows ?? []).map(mapAccountLeaderboardRow) satisfies LeaderboardEntry[];
+    saveLeaderboards(leaderboard, accountLeaderboard);
+    return { leaderboard, accountLeaderboard };
+  } catch {
+    const { data: runRows, error: runsError } = await supabase
+      .from("game_runs")
+      .select("*")
+      .order("rating", { ascending: false })
+      .order("score", { ascending: false })
+      .order("duration", { ascending: true })
+      .limit(500);
+
+    if (runsError) throw runsError;
+
+    const next = buildPublicLeaderboardsFromRuns(runRows ?? []);
+    saveLeaderboards(next.leaderboard, next.accountLeaderboard);
+    return next;
+  }
 };
 
 const ensureRemoteProfile = async (user: {
