@@ -5,7 +5,9 @@ Disallow: /register
 Disallow: /forgot-password
 Disallow: /reset-password
 Disallow: /complete-email
+Disallow: /play
 Disallow: /play/classic
+Disallow: /hall-of-fame
 Disallow: /results/
 Disallow: /profile
 Disallow: /mavisbk

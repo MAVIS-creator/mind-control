@@ -13,11 +13,23 @@ const routeMeta: Record<string, { title: string; description: string; robots?: s
     title: "Play MindGrid - Choose Your Memory Board",
     description:
       "Choose a MindGrid board size and match type, then start a focused single-player memory challenge.",
+    robots: "noindex, nofollow",
+  },
+  "/ranks": {
+    title: "MindGrid Ranks - Public Memory Game Leaderboard",
+    description:
+      "View public MindGrid ranks, top memory game players, ratings, total points, best scores, accuracy, combo, and time.",
+  },
+  "/contact": {
+    title: "Contact MindGrid - Feedback and Support",
+    description:
+      "Contact MindGrid for player feedback, bug reports, account support, and game improvement ideas.",
   },
   "/hall-of-fame": {
     title: "MindGrid Hall of Fame - Memory Game Leaderboard",
     description:
       "View the MindGrid Hall of Fame leaderboard and compare top memory game scores, ratings, accuracy, combos, and times.",
+    robots: "noindex, nofollow",
   },
   "/login": {
     title: "Login - MindGrid",

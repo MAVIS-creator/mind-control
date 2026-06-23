@@ -25,6 +25,12 @@ const PlayRoute = lazy(() =>
 const HallOfFameRoute = lazy(() =>
   import("./routes/HallOfFameRoute").then((module) => ({ default: module.HallOfFameRoute })),
 );
+const PublicRanksRoute = lazy(() =>
+  import("./routes/PublicRanksRoute").then((module) => ({ default: module.PublicRanksRoute })),
+);
+const ContactRoute = lazy(() =>
+  import("./routes/ContactRoute").then((module) => ({ default: module.ContactRoute })),
+);
 const ProfileRoute = lazy(() =>
   import("./routes/ProfileRoute").then((module) => ({ default: module.ProfileRoute })),
 );
@@ -86,6 +92,8 @@ export const App = () => {
         <Route path="/play" element={<PlayRoute />} />
         <Route path="/play/classic" element={<GameRoute />} />
         <Route path="/results/:runId" element={<ResultsRoute />} />
+        <Route path="/ranks" element={<PublicRanksRoute />} />
+        <Route path="/contact" element={<ContactRoute />} />
         <Route path="/hall-of-fame" element={<HallOfFameRoute />} />
         <Route path="/profile" element={<ProfileRoute />} />
         <Route path="/profile/:userId" element={<ProfileRoute />} />

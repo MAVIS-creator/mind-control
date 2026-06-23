@@ -1,5 +1,5 @@
 import { Link, Navigate } from "react-router-dom";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { AppShell } from "../components/AppShell";
 import { avatarOptions } from "../data/avatars";
 import { formatDuration, formatNumber, formatPercent, isLegacyAccountEmail } from "../lib/utils";
@@ -11,6 +11,8 @@ const medalClasses = [
   "border-[#c7d2fe] bg-[#eef2ff]",
   "border-[#f4c7a1] bg-[#fff2e8]",
 ] as const;
+
+const PAGE_SIZE = 20;
 
 const compareLeaderboardEntries = (a: LeaderboardEntry, b: LeaderboardEntry) => {
   if (b.rating !== a.rating) return b.rating - a.rating;
@@ -57,6 +59,8 @@ export const HallOfFameRoute = () => {
   const [gridFilter, setGridFilter] = useState<"all" | GridSize>("all");
   const [matchTypeFilter, setMatchTypeFilter] = useState<"all" | MatchType>("all");
   const [sortKey, setSortKey] = useState<SortKey>("rating");
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const sentinelRef = useRef<HTMLDivElement | null>(null);
 
   const hasLegacyRuns = leaderboard.some((entry) => entry.matchType === "standard");
 
@@ -100,6 +104,31 @@ export const HallOfFameRoute = () => {
       ? accountSorted
       : globalSorted
     : filtered;
+
+  const visibleEntries = rankedEntries.slice(0, visibleCount);
+  const canLoadMore = visibleCount < rankedEntries.length;
+
+  useEffect(() => {
+    setVisibleCount(PAGE_SIZE);
+  }, [gridFilter, matchTypeFilter, sortKey, rankedEntries.length]);
+
+  useEffect(() => {
+    if (!canLoadMore) return;
+    const node = sentinelRef.current;
+    if (!node) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry?.isIntersecting) {
+          setVisibleCount((current) => Math.min(current + PAGE_SIZE, rankedEntries.length));
+        }
+      },
+      { rootMargin: "320px" },
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [canLoadMore, rankedEntries.length]);
 
   if (!session) {
     return <Navigate to="/login" replace />;
@@ -269,7 +298,7 @@ export const HallOfFameRoute = () => {
               </thead>
               <tbody>
                 {rankedEntries.length ? (
-                  rankedEntries.map((entry, index) => {
+                  visibleEntries.map((entry, index) => {
                     const avatar = avatarOptions.find((item) => item.id === entry.avatarId) ?? avatarOptions[0];
                     return (
                       <tr key={entry.id} className="border-t border-slate-100 text-sm text-slate-700">
@@ -310,6 +339,18 @@ export const HallOfFameRoute = () => {
               </tbody>
             </table>
           </div>
+          <div ref={sentinelRef} className="h-2" />
+          {canLoadMore ? (
+            <div className="border-t border-slate-100 px-6 py-5 text-center">
+              <button
+                type="button"
+                onClick={() => setVisibleCount((current) => Math.min(current + PAGE_SIZE, rankedEntries.length))}
+                className="rounded-full border border-[#d9d8eb] bg-white/80 px-6 py-3 text-sm font-semibold text-[#3525cd] shadow-sm transition hover:bg-white"
+              >
+                Load More Players
+              </button>
+            </div>
+          ) : null}
         </section>
       </div>
     </AppShell>
