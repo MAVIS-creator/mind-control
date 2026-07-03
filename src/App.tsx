@@ -113,6 +113,7 @@ export const App = () => {
         <Route path="/profile" element={<ProfileRoute />} />
         <Route path="/profile/:userId" element={<ProfileRoute />} />
         <Route path="/mavisbk" element={<AdminRoute />} />
+        <Route path="/mavisbk/:adminSection" element={<AdminRoute />} />
         <Route path="/:eventSlug" element={<EventJoinRoute />} />
         <Route path="/:eventSlug/play" element={<EventGameRoute />} />
         <Route path="/:eventSlug/bonus" element={<EventBonusRoute />} />

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import { generateEventEditionWithAi } from "../lib/eventAi";
 import {
   createEventEditionDraft,
   fetchAdminEventEditions,
@@ -25,6 +26,12 @@ export const EventEditionAdminPanel = ({ session }: { session: AuthSession }) =>
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [generating, setGenerating] = useState(false);
+  const [aiPrompt, setAiPrompt] = useState(
+    "Create a one-time MindGrid tournament about cybersecurity careers for students. Include 3 memory rounds and 3 safe bonus questions.",
+  );
+  const [aiNotes, setAiNotes] = useState<string[]>([]);
+  const [unsupportedRequests, setUnsupportedRequests] = useState<string[]>([]);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -107,6 +114,39 @@ export const EventEditionAdminPanel = ({ session }: { session: AuthSession }) =>
     }
   };
 
+  const generateWithAi = async () => {
+    if (!selectedEdition) return;
+    setGenerating(true);
+    setMessage(null);
+    setError(null);
+    setAiNotes([]);
+    setUnsupportedRequests([]);
+    try {
+      const draft = await generateEventEditionWithAi({
+        session,
+        prompt: aiPrompt,
+        edition: selectedEdition,
+      });
+      setEditions((current) =>
+        current.map((edition) => (edition.id === selectedEdition.id ? draft.edition : edition)),
+      );
+      setSelectedId(draft.edition.id);
+      setJsonDrafts({
+        rounds: JSON.stringify(draft.edition.config.rounds, null, 2),
+        challenges: JSON.stringify(draft.edition.config.challenges, null, 2),
+        categories: JSON.stringify(draft.edition.config.categories, null, 2),
+        rules: JSON.stringify(draft.edition.config.rules, null, 2),
+      });
+      setAiNotes(draft.notes ?? []);
+      setUnsupportedRequests(draft.unsupportedRequests ?? []);
+      setMessage("AI draft applied. Review it, then save when it looks right.");
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : "Unable to generate event draft.");
+    } finally {
+      setGenerating(false);
+    }
+  };
+
   return (
     <section className="rounded-[1.6rem] border border-white/70 bg-white/84 shadow-[0_16px_36px_rgba(53,37,205,0.06)]">
       <div className="border-b border-[#ececf6] px-5 py-4">
@@ -169,6 +209,52 @@ export const EventEditionAdminPanel = ({ session }: { session: AuthSession }) =>
 
         {selectedEdition ? (
           <div className="space-y-4">
+            <div className="rounded-[1.4rem] border border-[#dfe4f2] bg-[#f8faff] p-4">
+              <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#3525cd]">
+                    AI tournament helper
+                  </p>
+                  <p className="mt-2 text-sm leading-6 text-[#6c7489]">
+                    Describe the event you want. The AI can draft supported rounds, rules, categories, and bonus
+                    challenges. New gameplay features still need code support first.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => void generateWithAi()}
+                  disabled={generating}
+                  className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-gradient-to-b from-[#4f46e5] to-[#3525cd] px-5 py-3 text-xs font-bold uppercase tracking-[0.12em] text-white disabled:opacity-60"
+                >
+                  <SparklesIcon className="h-4 w-4" />
+                  {generating ? "Drafting..." : "AI Draft"}
+                </button>
+              </div>
+              <textarea
+                value={aiPrompt}
+                onChange={(event) => setAiPrompt(event.target.value)}
+                rows={4}
+                className="mt-4 w-full rounded-[1.1rem] border border-[#dfe4f2] bg-white px-4 py-3 text-sm leading-6 text-[#1f2740] outline-none"
+                placeholder="Example: Create a Valentine's memory tournament with 3 rounds, a cute leaderboard title, and bonus questions."
+              />
+              {aiNotes.length ? (
+                <div className="mt-3 rounded-[1rem] border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm leading-6 text-emerald-800">
+                  <p className="font-bold">AI notes</p>
+                  {aiNotes.map((note) => (
+                    <p key={note}>{note}</p>
+                  ))}
+                </div>
+              ) : null}
+              {unsupportedRequests.length ? (
+                <div className="mt-3 rounded-[1rem] border border-amber-200 bg-amber-50 px-4 py-3 text-sm leading-6 text-amber-800">
+                  <p className="font-bold">Needs code support before it can work</p>
+                  {unsupportedRequests.map((item) => (
+                    <p key={item}>{item}</p>
+                  ))}
+                </div>
+              ) : null}
+            </div>
+
             <div className="grid gap-3 md:grid-cols-2">
               <EventInput
                 label="Event title"

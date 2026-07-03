@@ -1,6 +1,6 @@
 import type { JSX } from "react";
 import { useMemo, useState } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, NavLink, useParams } from "react-router-dom";
 import {
   ArrowLeftIcon,
   ClockIcon,
@@ -27,6 +27,7 @@ type AdminPlayer = {
 };
 
 export const AdminRoute = () => {
+  const { adminSection } = useParams();
   const {
     session,
     leaderboard,
@@ -70,6 +71,8 @@ export const AdminRoute = () => {
       }),
     [leaderboard],
   );
+  const section = isAdminSection(adminSection) ? adminSection : "overview";
+  const sectionMeta = ADMIN_SECTIONS.find((item) => item.id === section) ?? ADMIN_SECTIONS[0];
 
   if (!session) return <Navigate to="/login" replace />;
 
@@ -163,10 +166,10 @@ export const AdminRoute = () => {
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#7d8395]">Admin panel</p>
               <h1 className="mt-2 font-display text-[2.2rem] font-extrabold text-[#111c2d] sm:text-[3rem]">
-                Players, messages, and run reviews
+                {sectionMeta.title}
               </h1>
               <p className="mt-2 max-w-2xl text-sm leading-6 text-[#5a6174]">
-                Pick players from the account list, write one clear message, and send it to their registered emails.
+                {sectionMeta.helper}
               </p>
             </div>
             <div className="flex flex-wrap gap-3">
@@ -188,16 +191,40 @@ export const AdminRoute = () => {
           </div>
         </header>
 
-        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-          <AdminStatCard label="Players" value={`${players.length}`} icon={<UserIcon className="h-5 w-5" />} />
-          <AdminStatCard label="Runs" value={`${leaderboard.length}`} icon={<TrophyIcon className="h-5 w-5" />} />
-          <AdminStatCard label="Flagged" value={`${flaggedCount}`} icon={<RefreshIcon className="h-5 w-5" />} />
-          <AdminStatCard label="Pending" value={`${pendingCount}`} icon={<ClockIcon className="h-5 w-5" />} />
-        </div>
+        <AdminNav />
 
-        <EventEditionAdminPanel session={session} />
+        {section === "overview" ? (
+          <>
+            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+              <AdminStatCard label="Players" value={`${players.length}`} icon={<UserIcon className="h-5 w-5" />} />
+              <AdminStatCard label="Runs" value={`${leaderboard.length}`} icon={<TrophyIcon className="h-5 w-5" />} />
+              <AdminStatCard label="Flagged" value={`${flaggedCount}`} icon={<RefreshIcon className="h-5 w-5" />} />
+              <AdminStatCard label="Pending" value={`${pendingCount}`} icon={<ClockIcon className="h-5 w-5" />} />
+            </div>
 
-        <div className="grid gap-5 xl:grid-cols-[0.8fr_1fr]">
+            <div className="grid gap-4 lg:grid-cols-3">
+              <AdminShortcut
+                to="/mavisbk/events"
+                title="Event builder"
+                text="Create one-time tournaments, edit slugs, and draft supported configs with AI."
+              />
+              <AdminShortcut
+                to="/mavisbk/messages"
+                title="Player messages"
+                text="Select registered accounts and send styled email messages."
+              />
+              <AdminShortcut
+                to="/mavisbk/reviews"
+                title="Fair-play reviews"
+                text="Review flagged runs, add notes, approve, flag, or delete bad runs."
+              />
+            </div>
+          </>
+        ) : null}
+
+        {section === "events" ? <EventEditionAdminPanel session={session} /> : null}
+
+        {section === "messages" ? <div className="grid gap-5 xl:grid-cols-[0.8fr_1fr]">
           <section className="rounded-[1.6rem] border border-white/70 bg-white/84 shadow-[0_16px_36px_rgba(53,37,205,0.06)]">
             <PanelHeader
               title="Player emails"
@@ -304,9 +331,9 @@ export const AdminRoute = () => {
               </button>
             </div>
           </section>
-        </div>
+        </div> : null}
 
-        <div className="grid gap-5 xl:grid-cols-[1fr_0.75fr]">
+        {section === "reviews" ? <div className="grid gap-5 xl:grid-cols-[1fr_0.75fr]">
           <section className="rounded-[1.6rem] border border-white/70 bg-white/84 shadow-[0_16px_36px_rgba(53,37,205,0.06)]">
             <PanelHeader title="Run review queue" caption="Fair play" helper="Open a run to review flags, save notes, or remove a bad result." />
             <div className="overflow-x-auto">
@@ -406,11 +433,74 @@ export const AdminRoute = () => {
               <EmptyPanel text="Open a run from the table to inspect details and save review notes." />
             )}
           </section>
-        </div>
+        </div> : null}
       </div>
     </div>
   );
 };
+
+type AdminSection = "overview" | "events" | "messages" | "reviews";
+
+const ADMIN_SECTIONS: Array<{ id: AdminSection; title: string; helper: string; path: string }> = [
+  {
+    id: "overview",
+    title: "Admin overview",
+    helper: "Jump into events, messages, or fair-play reviews without one long page.",
+    path: "/mavisbk",
+  },
+  {
+    id: "events",
+    title: "Events and tournaments",
+    helper: "Create backend-driven event pages, edit routes, and ask AI to draft supported tournament configs.",
+    path: "/mavisbk/events",
+  },
+  {
+    id: "messages",
+    title: "Player messages",
+    helper: "Pick players from the account list, write one clear message, and send it to registered emails.",
+    path: "/mavisbk/messages",
+  },
+  {
+    id: "reviews",
+    title: "Fair-play reviews",
+    helper: "Inspect suspicious runs, save review notes, and keep the leaderboard clean.",
+    path: "/mavisbk/reviews",
+  },
+];
+
+const isAdminSection = (value: string | undefined): value is AdminSection =>
+  value === "overview" || value === "events" || value === "messages" || value === "reviews";
+
+const AdminNav = () => (
+  <nav className="flex gap-2 overflow-x-auto rounded-[1.4rem] border border-white/70 bg-white/84 p-2 shadow-[0_14px_30px_rgba(53,37,205,0.05)]">
+    {ADMIN_SECTIONS.map((item) => (
+      <NavLink
+        key={item.id}
+        to={item.path}
+        end={item.id === "overview"}
+        className={({ isActive }) =>
+          `shrink-0 rounded-full px-5 py-3 text-sm font-bold transition ${
+            isActive
+              ? "bg-gradient-to-b from-[#4f46e5] to-[#3525cd] text-white shadow-[0_12px_24px_rgba(53,37,205,0.18)]"
+              : "text-[#5a6174] hover:bg-[#eef2ff] hover:text-[#3525cd]"
+          }`
+        }
+      >
+        {item.title.replace("Admin ", "")}
+      </NavLink>
+    ))}
+  </nav>
+);
+
+const AdminShortcut = ({ to, title, text }: { to: string; title: string; text: string }) => (
+  <Link
+    to={to}
+    className="rounded-[1.6rem] border border-white/70 bg-white/84 p-6 shadow-[0_16px_32px_rgba(53,37,205,0.05)] transition hover:-translate-y-0.5 hover:shadow-[0_20px_40px_rgba(53,37,205,0.1)]"
+  >
+    <p className="text-xl font-bold tracking-[-0.04em] text-[#111c2d]">{title}</p>
+    <p className="mt-2 text-sm leading-7 text-[#5a6174]">{text}</p>
+  </Link>
+);
 
 const buildAdminPlayers = (runs: LeaderboardEntry[], accounts: LeaderboardEntry[]): AdminPlayer[] => {
   const byUser = new Map<string, AdminPlayer>();
