@@ -1,37 +1,39 @@
-import { CYBERPATH_EVENT_ID, CYBERPATH_EVENT_LABEL } from "../data/cyberpathRounds";
+import type { EventEdition } from "./eventEditions";
 import { hasSupabase, supabase } from "./supabase";
 import { normalizeUsername, uid } from "./utils";
 
-const PARTICIPANT_KEY = "mindgrid.cyberpath.participant";
-const RUNS_KEY = "mindgrid.cyberpath.runs";
+const participantKey = (slug: string) => `mindgrid.event.${slug}.participant`;
+const runsKey = (eventId: string) => `mindgrid.event.${eventId}.runs`;
 
-export type CyberPathStage = "Round 1" | "Round 2" | "Round 3" | "Bonus Round" | "Completed";
+export type EventRunStage = "Round 1" | "Round 2" | "Round 3" | "Bonus Round" | "Completed";
 
-export type CyberPathParticipant = {
+export type EventParticipant = {
   eventId: string;
   eventLabel: string;
+  eventSlug: string;
   nickname: string;
   matricNumber: string;
   participantCode: string;
   startedAt: string;
 };
 
-export type CyberPathRoundResult = {
+export type EventRoundResult = {
   roundId: string;
   title: string;
   score: number;
   matches: number;
+  totalPairs: number;
   mistakes: number;
   duration: number;
 };
 
-export type CyberPathRun = {
+export type EventRun = {
   id: string;
   eventId: string;
   nickname: string;
   participantCode: string;
-  currentStage: CyberPathStage;
-  roundResults: CyberPathRoundResult[];
+  currentStage: EventRunStage;
+  roundResults: EventRoundResult[];
   roundOneScore: number;
   roundTwoScore: number;
   roundThreeScore: number;
@@ -51,65 +53,70 @@ const safeStorage = () => {
 
 export const createParticipantCode = () => `CP-${Math.floor(100 + Math.random() * 900)}`;
 
-export const saveCyberPathParticipant = (payload: {
+export const saveEventParticipant = (payload: {
+  edition: EventEdition;
   nickname: string;
   matricNumber?: string;
 }) => {
-  const participant: CyberPathParticipant = {
-    eventId: CYBERPATH_EVENT_ID,
-    eventLabel: CYBERPATH_EVENT_LABEL,
+  const participant: EventParticipant = {
+    eventId: payload.edition.id,
+    eventLabel: payload.edition.config.eventLabel,
+    eventSlug: payload.edition.slug,
     nickname: normalizeUsername(payload.nickname) || "cyberpath_player",
     matricNumber: payload.matricNumber?.trim() ?? "",
     participantCode: createParticipantCode(),
     startedAt: new Date().toISOString(),
   };
 
-  safeStorage()?.setItem(PARTICIPANT_KEY, JSON.stringify(participant));
+  safeStorage()?.setItem(participantKey(payload.edition.slug), JSON.stringify(participant));
   return participant;
 };
 
-export const loadCyberPathParticipant = (): CyberPathParticipant | null => {
-  const raw = safeStorage()?.getItem(PARTICIPANT_KEY);
-  return raw ? (JSON.parse(raw) as CyberPathParticipant) : null;
+export const loadEventParticipant = (slug = "cyberpath"): EventParticipant | null => {
+  const raw = safeStorage()?.getItem(participantKey(slug));
+  return raw ? (JSON.parse(raw) as EventParticipant) : null;
 };
 
-export const loadCyberPathRuns = (): CyberPathRun[] => {
-  const raw = safeStorage()?.getItem(RUNS_KEY);
-  return raw ? (JSON.parse(raw) as CyberPathRun[]) : [];
+export const loadEventRuns = (eventId = "cyberpath-seminar-2026"): EventRun[] => {
+  const raw = safeStorage()?.getItem(runsKey(eventId));
+  return raw ? (JSON.parse(raw) as EventRun[]) : [];
 };
 
-const saveCyberPathRuns = (runs: CyberPathRun[]) => {
-  safeStorage()?.setItem(RUNS_KEY, JSON.stringify(runs));
+const saveEventRuns = (eventId: string, runs: EventRun[]) => {
+  safeStorage()?.setItem(runsKey(eventId), JSON.stringify(runs));
 };
 
-export const calculateCyberPathRoundScore = ({
+export const calculateEventRoundScore = ({
   matches,
   mistakes,
   duration,
+  totalPairs = 8,
 }: {
   matches: number;
   mistakes: number;
   duration: number;
+  totalPairs?: number;
 }) => {
   const base = matches * 100;
-  const completion = matches === 8 ? 250 : 0;
-  const timeBonus = matches === 8 ? Math.max(0, 50 - Math.floor(duration / 6)) : 0;
+  const completion = matches === totalPairs ? 250 : 0;
+  const timeBonus = matches === totalPairs ? Math.max(0, 50 - Math.floor(duration / 6)) : 0;
   const mistakePenalty = mistakes * 15;
   return Math.max(0, base + completion + timeBonus - mistakePenalty);
 };
 
-export const createCyberPathRun = (
-  participant: CyberPathParticipant,
-  roundResults: CyberPathRoundResult[],
+export const createEventRun = (
+  participant: EventParticipant,
+  roundResults: EventRoundResult[],
   bonusScore = 0,
-): CyberPathRun => {
+  qualificationScore = 2400,
+): EventRun => {
   const [one, two, three] = roundResults;
   const memoryScore = roundResults.reduce((sum, round) => sum + round.score, 0);
   const totalTimeSeconds = roundResults.reduce((sum, round) => sum + round.duration, 0);
   const qualifiedForBonus =
     roundResults.length === 3 &&
-    roundResults.every((round) => round.matches === 8) &&
-    memoryScore >= 2400;
+    roundResults.every((round) => round.matches === round.totalPairs) &&
+    memoryScore >= qualificationScore;
 
   return {
     id: uid(),
@@ -131,9 +138,9 @@ export const createCyberPathRun = (
   };
 };
 
-export const upsertCyberPathRun = async (run: CyberPathRun) => {
-  const existing = loadCyberPathRuns().filter((entry) => entry.id !== run.id);
-  saveCyberPathRuns([run, ...existing].sort(compareCyberPathRuns));
+export const upsertEventRun = async (run: EventRun) => {
+  const existing = loadEventRuns(run.eventId).filter((entry) => entry.id !== run.id);
+  saveEventRuns(run.eventId, [run, ...existing].sort(compareEventRuns));
 
   if (!hasSupabase || !supabase) return run;
 
@@ -162,19 +169,20 @@ export const upsertCyberPathRun = async (run: CyberPathRun) => {
   return run;
 };
 
-export const fetchCyberPathLeaderboard = async () => {
+export const fetchEventLeaderboard = async (eventId = "cyberpath-seminar-2026") => {
   if (!hasSupabase || !supabase) {
-    return loadCyberPathRuns().sort(compareCyberPathRuns);
+    return loadEventRuns(eventId).sort(compareEventRuns);
   }
 
   const { data, error } = await supabase
     .from("cyberpath_public_leaderboard")
     .select("*")
+    .eq("event_id", eventId)
     .order("total_score", { ascending: false })
     .order("total_time_seconds", { ascending: true })
     .limit(100);
 
-  if (error) return loadCyberPathRuns().sort(compareCyberPathRuns);
+  if (error) return loadEventRuns(eventId).sort(compareEventRuns);
 
   return (data ?? []).map((row) => ({
     id: row.id,
@@ -193,16 +201,29 @@ export const fetchCyberPathLeaderboard = async () => {
     qualifiedForBonus: row.qualified_for_bonus,
     completedAt: row.completed_at,
     reviewStatus: row.review_status,
-  })) satisfies CyberPathRun[];
+  })) satisfies EventRun[];
 };
 
-export const compareCyberPathRuns = (a: CyberPathRun, b: CyberPathRun) => {
+export const compareEventRuns = (a: EventRun, b: EventRun) => {
   if (b.totalScore !== a.totalScore) return b.totalScore - a.totalScore;
   if (a.totalTimeSeconds !== b.totalTimeSeconds) return a.totalTimeSeconds - b.totalTimeSeconds;
   if (b.memoryScore !== a.memoryScore) return b.memoryScore - a.memoryScore;
   return new Date(a.completedAt).getTime() - new Date(b.completedAt).getTime();
 };
 
-export const clearCyberPathEvent = () => {
-  safeStorage()?.removeItem(RUNS_KEY);
+export const clearEventRuns = (eventId = "cyberpath-seminar-2026") => {
+  safeStorage()?.removeItem(runsKey(eventId));
 };
+
+export const saveCyberPathParticipant = saveEventParticipant;
+export const loadCyberPathParticipant = loadEventParticipant;
+export const loadCyberPathRuns = loadEventRuns;
+export const calculateCyberPathRoundScore = calculateEventRoundScore;
+export const createCyberPathRun = createEventRun;
+export const upsertCyberPathRun = upsertEventRun;
+export const fetchCyberPathLeaderboard = fetchEventLeaderboard;
+export const compareCyberPathRuns = compareEventRuns;
+export const clearCyberPathEvent = clearEventRuns;
+export type CyberPathParticipant = EventParticipant;
+export type CyberPathRoundResult = EventRoundResult;
+export type CyberPathRun = EventRun;

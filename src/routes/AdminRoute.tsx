@@ -9,6 +9,7 @@ import {
   TrophyIcon,
   UserIcon,
 } from "../components/AppIcons";
+import { EventEditionAdminPanel } from "../components/EventEditionAdminPanel";
 import { avatarOptions } from "../data/avatars";
 import { formatDuration, formatNumber, formatPercent, isLegacyAccountEmail } from "../lib/utils";
 import { useAppContext } from "../state/AppContext";
@@ -193,6 +194,8 @@ export const AdminRoute = () => {
           <AdminStatCard label="Flagged" value={`${flaggedCount}`} icon={<RefreshIcon className="h-5 w-5" />} />
           <AdminStatCard label="Pending" value={`${pendingCount}`} icon={<ClockIcon className="h-5 w-5" />} />
         </div>
+
+        <EventEditionAdminPanel session={session} />
 
         <div className="grid gap-5 xl:grid-cols-[0.8fr_1fr]">
           <section className="rounded-[1.6rem] border border-white/70 bg-white/84 shadow-[0_16px_36px_rgba(53,37,205,0.06)]">

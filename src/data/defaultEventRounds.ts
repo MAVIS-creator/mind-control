@@ -1,22 +1,22 @@
-export type CyberPathPair = {
+export type EventPair = {
   id: string;
   prompt: string;
   answer: string;
 };
 
-export type CyberPathRound = {
-  id: "careers" | "terms" | "scenarios";
+export type EventRound = {
+  id: string;
   number: number;
   title: string;
   subtitle: string;
   summary: string;
-  pairs: CyberPathPair[];
+  pairs: EventPair[];
 };
 
-export const CYBERPATH_EVENT_ID = "cyberpath-seminar-2026";
-export const CYBERPATH_EVENT_LABEL = "CyberPath Seminar 2026";
+export const DEFAULT_EVENT_ID = "cyberpath-seminar-2026";
+export const DEFAULT_EVENT_LABEL = "CyberPath Seminar 2026";
 
-export const cyberpathRounds: CyberPathRound[] = [
+export const defaultEventRounds: EventRound[] = [
   {
     id: "careers",
     number: 1,

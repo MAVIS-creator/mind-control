@@ -1,20 +1,30 @@
-import { useMemo, useState } from "react";
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import { Navigate, useLocation, useNavigate, useParams } from "react-router-dom";
 import { PlayIcon, SparklesIcon } from "../components/AppIcons";
-import { CyberPathShell } from "../components/CyberPathShell";
-import { cyberpathChallenges } from "../data/cyberpathChallenges";
-import { loadCyberPathRuns, type CyberPathRun, upsertCyberPathRun } from "../lib/cyberpath";
+import { EventEditionShell } from "../components/EventEditionShell";
+import { fetchEventEdition, type EventEdition } from "../lib/eventEditions";
+import { loadEventRuns, type EventRun, upsertEventRun } from "../lib/eventRuntime";
 import { formatNumber } from "../lib/utils";
 
-export const CyberPathBonusRoute = () => {
+export const EventBonusRoute = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const latestRun = (location.state as { run?: CyberPathRun } | undefined)?.run ?? loadCyberPathRuns()[0];
+  const { eventSlug = "cyberpath" } = useParams();
+  const [edition, setEdition] = useState<EventEdition | null | undefined>(undefined);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [submitted, setSubmitted] = useState(false);
 
+  useEffect(() => {
+    void fetchEventEdition(eventSlug).then(setEdition);
+  }, [eventSlug]);
+
+  const latestRun =
+    (location.state as { run?: EventRun } | undefined)?.run ??
+    (edition ? loadEventRuns(edition.id)[0] : undefined);
+  const challenges = edition?.config.challenges ?? [];
+
   const result = useMemo(() => {
-    const correct = cyberpathChallenges.filter(
+    const correct = challenges.filter(
       (challenge) =>
         answers[challenge.id]?.trim().toUpperCase() === challenge.expectedAnswer.toUpperCase(),
     );
@@ -22,10 +32,12 @@ export const CyberPathBonusRoute = () => {
       correctCount: correct.length,
       score: correct.reduce((sum, challenge) => sum + challenge.points, 0),
     };
-  }, [answers]);
+  }, [answers, challenges]);
 
-  if (!latestRun) return <Navigate to="/cyberpath" replace />;
-  if (!latestRun.qualifiedForBonus) return <Navigate to="/cyberpath/results" state={{ run: latestRun }} replace />;
+  if (edition === undefined) return <EventEditionShell edition={edition}><main className="p-8 text-center font-bold text-[#3525cd]">Loading event...</main></EventEditionShell>;
+  if (!edition) return <Navigate to="/" replace />;
+  if (!latestRun) return <Navigate to={`/${edition.slug}`} replace />;
+  if (!latestRun.qualifiedForBonus) return <Navigate to={`/${edition.slug}/results`} state={{ run: latestRun }} replace />;
 
   const finishBonus = async () => {
     const nextRun = {
@@ -35,24 +47,24 @@ export const CyberPathBonusRoute = () => {
       totalScore: latestRun.memoryScore + result.score,
       completedAt: new Date().toISOString(),
     };
-    await upsertCyberPathRun(nextRun);
-    navigate("/cyberpath/results", { state: { run: nextRun } });
+    await upsertEventRun(nextRun);
+    navigate(`/${edition.slug}/results`, { state: { run: nextRun } });
   };
 
   return (
-    <CyberPathShell>
+    <EventEditionShell edition={edition}>
       <main className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
         <section className="mb-7 text-center">
           <SparklesIcon className="mx-auto h-12 w-12 text-[#3525cd]" />
           <p className="mt-4 text-xs font-bold uppercase tracking-[0.24em] text-[#3525cd]">Bonus Round Unlocked</p>
           <h1 className="mt-2 text-4xl font-black tracking-[-0.06em] text-[#111c2d] sm:text-6xl">Safe CTF Challenges</h1>
           <p className="mx-auto mt-4 max-w-2xl text-base leading-8 text-[#586074]">
-            Solve three safe puzzles. Each correct answer adds 100 points to your CyberPath score.
+            Solve safe bonus puzzles. Correct answers add to your event score.
           </p>
         </section>
 
         <section className="grid gap-4">
-          {cyberpathChallenges.map((challenge, index) => {
+          {challenges.map((challenge, index) => {
             const isCorrect =
               submitted && answers[challenge.id]?.trim().toUpperCase() === challenge.expectedAnswer.toUpperCase();
             return (
@@ -108,6 +120,6 @@ export const CyberPathBonusRoute = () => {
           )}
         </div>
       </main>
-    </CyberPathShell>
+    </EventEditionShell>
   );
 };

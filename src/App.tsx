@@ -43,20 +43,20 @@ const ResultsRoute = lazy(() =>
 const AdminRoute = lazy(() =>
   import("./routes/AdminRoute").then((module) => ({ default: module.AdminRoute })),
 );
-const CyberPathJoinRoute = lazy(() =>
-  import("./routes/CyberPathJoinRoute").then((module) => ({ default: module.CyberPathJoinRoute })),
+const EventJoinRoute = lazy(() =>
+  import("./routes/EventJoinRoute").then((module) => ({ default: module.EventJoinRoute })),
 );
-const CyberPathGameRoute = lazy(() =>
-  import("./routes/CyberPathGameRoute").then((module) => ({ default: module.CyberPathGameRoute })),
+const EventGameRoute = lazy(() =>
+  import("./routes/EventGameRoute").then((module) => ({ default: module.EventGameRoute })),
 );
-const CyberPathBonusRoute = lazy(() =>
-  import("./routes/CyberPathBonusRoute").then((module) => ({ default: module.CyberPathBonusRoute })),
+const EventBonusRoute = lazy(() =>
+  import("./routes/EventBonusRoute").then((module) => ({ default: module.EventBonusRoute })),
 );
-const CyberPathResultsRoute = lazy(() =>
-  import("./routes/CyberPathResultsRoute").then((module) => ({ default: module.CyberPathResultsRoute })),
+const EventResultsRoute = lazy(() =>
+  import("./routes/EventResultsRoute").then((module) => ({ default: module.EventResultsRoute })),
 );
-const CyberPathLiveRoute = lazy(() =>
-  import("./routes/CyberPathLiveRoute").then((module) => ({ default: module.CyberPathLiveRoute })),
+const EventLiveRoute = lazy(() =>
+  import("./routes/EventLiveRoute").then((module) => ({ default: module.EventLiveRoute })),
 );
 
 export const App = () => {
@@ -113,11 +113,11 @@ export const App = () => {
         <Route path="/profile" element={<ProfileRoute />} />
         <Route path="/profile/:userId" element={<ProfileRoute />} />
         <Route path="/mavisbk" element={<AdminRoute />} />
-        <Route path="/cyberpath" element={<CyberPathJoinRoute />} />
-        <Route path="/cyberpath/play" element={<CyberPathGameRoute />} />
-        <Route path="/cyberpath/bonus" element={<CyberPathBonusRoute />} />
-        <Route path="/cyberpath/results" element={<CyberPathResultsRoute />} />
-        <Route path="/cyberpath/live" element={<CyberPathLiveRoute />} />
+        <Route path="/:eventSlug" element={<EventJoinRoute />} />
+        <Route path="/:eventSlug/play" element={<EventGameRoute />} />
+        <Route path="/:eventSlug/bonus" element={<EventBonusRoute />} />
+        <Route path="/:eventSlug/results" element={<EventResultsRoute />} />
+        <Route path="/:eventSlug/live" element={<EventLiveRoute />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Suspense>

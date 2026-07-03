@@ -1,10 +1,10 @@
-export type CyberPathCategory = {
+export type EventCategory = {
   title: string;
   paths: string[];
   beginnerNotes?: Array<{ term: string; meaning: string }>;
 };
 
-export const cyberpathCategories: CyberPathCategory[] = [
+export const defaultEventCategories: EventCategory[] = [
   {
     title: "Security Operations and Defence",
     paths: [

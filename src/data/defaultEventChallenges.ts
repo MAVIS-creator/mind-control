@@ -1,4 +1,4 @@
-export type CyberPathChallenge = {
+export type EventChallenge = {
   id: string;
   title: string;
   prompt: string;
@@ -8,7 +8,7 @@ export type CyberPathChallenge = {
   hint: string;
 };
 
-export const cyberpathChallenges: CyberPathChallenge[] = [
+export const defaultEventChallenges: EventChallenge[] = [
   {
     id: "decode-message",
     title: "Decode the message",

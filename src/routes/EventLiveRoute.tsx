@@ -1,42 +1,55 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useParams } from "react-router-dom";
 import { RefreshIcon, TrophyIcon } from "../components/AppIcons";
-import { CyberPathShell } from "../components/CyberPathShell";
+import { EventEditionShell } from "../components/EventEditionShell";
+import { fetchEventEdition, type EventEdition } from "../lib/eventEditions";
 import {
-  clearCyberPathEvent,
-  compareCyberPathRuns,
-  fetchCyberPathLeaderboard,
-  type CyberPathRun,
-} from "../lib/cyberpath";
+  clearEventRuns,
+  compareEventRuns,
+  fetchEventLeaderboard,
+  type EventRun,
+} from "../lib/eventRuntime";
 import { formatDuration, formatNumber } from "../lib/utils";
 
-export const CyberPathLiveRoute = () => {
-  const [runs, setRuns] = useState<CyberPathRun[]>([]);
+export const EventLiveRoute = () => {
+  const { eventSlug = "cyberpath" } = useParams();
+  const [edition, setEdition] = useState<EventEdition | null | undefined>(undefined);
+  const [runs, setRuns] = useState<EventRun[]>([]);
+
+  useEffect(() => {
+    void fetchEventEdition(eventSlug).then(setEdition);
+  }, [eventSlug]);
 
   const refresh = async () => {
-    const nextRuns = await fetchCyberPathLeaderboard();
-    setRuns(nextRuns.sort(compareCyberPathRuns));
+    if (!edition) return;
+    const nextRuns = await fetchEventLeaderboard(edition.id);
+    setRuns(nextRuns.sort(compareEventRuns));
   };
 
   useEffect(() => {
+    if (!edition) return undefined;
     void refresh();
     const interval = window.setInterval(() => void refresh(), 8000);
     return () => window.clearInterval(interval);
-  }, []);
+  }, [edition]);
 
   const resetLocal = () => {
-    clearCyberPathEvent();
+    if (!edition) return;
+    clearEventRuns(edition.id);
     void refresh();
   };
 
+  if (edition === undefined) return <EventEditionShell edition={edition}><main className="p-8 text-center font-bold text-[#3525cd]">Loading event...</main></EventEditionShell>;
+  if (!edition) return <Navigate to="/" replace />;
+
   return (
-    <CyberPathShell>
+    <EventEditionShell edition={edition}>
       <main className="mx-auto max-w-[1320px] px-4 py-8 sm:px-6 lg:px-8">
         <section className="mb-7 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.28em] text-[#3525cd]">Projector Leaderboard</p>
-            <h1 className="mt-2 text-4xl font-black tracking-[-0.06em] text-[#111c2d] sm:text-6xl">CyberPath Live</h1>
-            <p className="mt-3 max-w-2xl text-base leading-8 text-[#586074]">Nicknames only. Scores refresh automatically for the seminar display.</p>
+            <h1 className="mt-2 text-4xl font-black tracking-[-0.06em] text-[#111c2d] sm:text-6xl">{edition.title}</h1>
+            <p className="mt-3 max-w-2xl text-base leading-8 text-[#586074]">Nicknames only. Scores refresh automatically for this event display.</p>
           </div>
           <div className="flex gap-2">
             <button type="button" onClick={() => void refresh()} className="rounded-full border border-[#d9d8eb] bg-white/80 px-5 py-3 font-bold text-[#3525cd]">
@@ -80,8 +93,8 @@ export const CyberPathLiveRoute = () => {
             ) : (
               <div className="px-5 py-14 text-center">
                 <TrophyIcon className="mx-auto h-12 w-12 text-[#3525cd]" />
-                <p className="mt-4 text-lg font-bold text-[#111c2d]">No CyberPath runs yet.</p>
-                <Link to="/cyberpath" className="mt-4 inline-flex rounded-full bg-[#3525cd] px-6 py-3 font-bold text-white">
+                <p className="mt-4 text-lg font-bold text-[#111c2d]">No event runs yet.</p>
+                <Link to={`/${edition.slug}`} className="mt-4 inline-flex rounded-full bg-[#3525cd] px-6 py-3 font-bold text-white">
                   Start first participant
                 </Link>
               </div>
@@ -89,6 +102,6 @@ export const CyberPathLiveRoute = () => {
           </div>
         </section>
       </main>
-    </CyberPathShell>
+    </EventEditionShell>
   );
 };

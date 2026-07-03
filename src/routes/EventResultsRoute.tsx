@@ -1,22 +1,34 @@
 import { Link, Navigate, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { GridIcon, PlayIcon, TrophyIcon } from "../components/AppIcons";
-import { CyberPathShell } from "../components/CyberPathShell";
-import { loadCyberPathRuns, type CyberPathRun } from "../lib/cyberpath";
+import { EventEditionShell } from "../components/EventEditionShell";
+import { fetchEventEdition, type EventEdition } from "../lib/eventEditions";
+import { loadEventRuns, type EventRun } from "../lib/eventRuntime";
 import { formatDuration, formatNumber } from "../lib/utils";
 
-export const CyberPathResultsRoute = () => {
+export const EventResultsRoute = () => {
+  const { eventSlug = "cyberpath" } = useParams();
   const location = useLocation();
-  const run = (location.state as { run?: CyberPathRun } | undefined)?.run ?? loadCyberPathRuns()[0];
+  const [edition, setEdition] = useState<EventEdition | null | undefined>(undefined);
 
-  if (!run) return <Navigate to="/cyberpath" replace />;
+  useEffect(() => {
+    void fetchEventEdition(eventSlug).then(setEdition);
+  }, [eventSlug]);
+
+  const run = (location.state as { run?: EventRun } | undefined)?.run ?? (edition ? loadEventRuns(edition.id)[0] : undefined);
+
+  if (edition === undefined) return <EventEditionShell edition={edition}><main className="p-8 text-center font-bold text-[#3525cd]">Loading event...</main></EventEditionShell>;
+  if (!edition) return <Navigate to="/" replace />;
+  if (!run) return <Navigate to={`/${edition.slug}`} replace />;
 
   return (
-    <CyberPathShell>
+    <EventEditionShell edition={edition}>
       <main className="mx-auto flex min-h-[calc(100svh-92px)] max-w-5xl items-center justify-center px-4 py-8 sm:px-6 lg:px-8">
         <section className="w-full max-w-3xl text-center">
           <div className="glass-panel rounded-[2.4rem] p-6 shadow-[0_24px_60px_rgba(53,37,205,0.12)] sm:p-9">
             <TrophyIcon className="mx-auto h-14 w-14 text-[#3525cd]" />
-            <p className="mt-5 text-xs font-bold uppercase tracking-[0.26em] text-[#3525cd]">CyberPath Complete</p>
+            <p className="mt-5 text-xs font-bold uppercase tracking-[0.26em] text-[#3525cd]">Event Complete</p>
             <h1 className="mt-2 text-5xl font-black tracking-[-0.06em] text-[#111c2d] sm:text-7xl">
               {formatNumber(run.totalScore)}
             </h1>
@@ -37,7 +49,7 @@ export const CyberPathResultsRoute = () => {
                     <div>
                       <p className="font-bold text-[#111c2d]">{round.title}</p>
                       <p className="text-sm text-[#586074]">
-                        {round.matches}/8 matched • {round.mistakes} mistakes • {formatDuration(round.duration)}
+                        {round.matches}/{round.totalPairs ?? 8} matched • {round.mistakes} mistakes • {formatDuration(round.duration)}
                       </p>
                     </div>
                     <p className="font-black text-[#3525cd]">{formatNumber(round.score)}</p>
@@ -52,18 +64,18 @@ export const CyberPathResultsRoute = () => {
           </div>
 
           <div className="mt-5 flex flex-col justify-center gap-3 sm:flex-row">
-            <Link to="/cyberpath/play" className="inline-flex items-center justify-center gap-3 rounded-full bg-gradient-to-b from-[#4f46e5] to-[#3525cd] px-8 py-4 font-bold text-white">
+            <Link to={`/${edition.slug}/play`} className="inline-flex items-center justify-center gap-3 rounded-full bg-gradient-to-b from-[#4f46e5] to-[#3525cd] px-8 py-4 font-bold text-white">
               <PlayIcon className="h-5 w-5" />
               Play Again
             </Link>
-            <Link to="/cyberpath/live" className="inline-flex items-center justify-center gap-3 rounded-full border border-[#d9d8eb] bg-white/80 px-8 py-4 font-bold text-[#3525cd]">
+            <Link to={`/${edition.slug}/live`} className="inline-flex items-center justify-center gap-3 rounded-full border border-[#d9d8eb] bg-white/80 px-8 py-4 font-bold text-[#3525cd]">
               <GridIcon className="h-5 w-5" />
               View Live Board
             </Link>
           </div>
         </section>
       </main>
-    </CyberPathShell>
+    </EventEditionShell>
   );
 };
 
