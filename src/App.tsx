@@ -43,6 +43,21 @@ const ResultsRoute = lazy(() =>
 const AdminRoute = lazy(() =>
   import("./routes/AdminRoute").then((module) => ({ default: module.AdminRoute })),
 );
+const CyberPathJoinRoute = lazy(() =>
+  import("./routes/CyberPathJoinRoute").then((module) => ({ default: module.CyberPathJoinRoute })),
+);
+const CyberPathGameRoute = lazy(() =>
+  import("./routes/CyberPathGameRoute").then((module) => ({ default: module.CyberPathGameRoute })),
+);
+const CyberPathBonusRoute = lazy(() =>
+  import("./routes/CyberPathBonusRoute").then((module) => ({ default: module.CyberPathBonusRoute })),
+);
+const CyberPathResultsRoute = lazy(() =>
+  import("./routes/CyberPathResultsRoute").then((module) => ({ default: module.CyberPathResultsRoute })),
+);
+const CyberPathLiveRoute = lazy(() =>
+  import("./routes/CyberPathLiveRoute").then((module) => ({ default: module.CyberPathLiveRoute })),
+);
 
 export const App = () => {
   const { booting } = useAppContext();
@@ -98,6 +113,11 @@ export const App = () => {
         <Route path="/profile" element={<ProfileRoute />} />
         <Route path="/profile/:userId" element={<ProfileRoute />} />
         <Route path="/mavisbk" element={<AdminRoute />} />
+        <Route path="/cyberpath" element={<CyberPathJoinRoute />} />
+        <Route path="/cyberpath/play" element={<CyberPathGameRoute />} />
+        <Route path="/cyberpath/bonus" element={<CyberPathBonusRoute />} />
+        <Route path="/cyberpath/results" element={<CyberPathResultsRoute />} />
+        <Route path="/cyberpath/live" element={<CyberPathLiveRoute />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Suspense>

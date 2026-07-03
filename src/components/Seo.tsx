@@ -66,6 +66,31 @@ const routeMeta: Record<string, { title: string; description: string; robots?: s
     description: "MindGrid admin panel.",
     robots: "noindex, nofollow",
   },
+  "/cyberpath": {
+    title: "MindGrid CyberPath Edition - Cybersecurity Career Memory Game",
+    description:
+      "Play MindGrid CyberPath Edition, a special event memory game for learning cybersecurity career paths, GitHub terms, and safe security scenarios.",
+  },
+  "/cyberpath/play": {
+    title: "CyberPath Rounds - MindGrid",
+    description: "Play the CyberPath Edition memory rounds.",
+    robots: "noindex, nofollow",
+  },
+  "/cyberpath/bonus": {
+    title: "CyberPath Bonus - MindGrid",
+    description: "Complete safe CyberPath bonus challenges.",
+    robots: "noindex, nofollow",
+  },
+  "/cyberpath/results": {
+    title: "CyberPath Results - MindGrid",
+    description: "View CyberPath Edition results.",
+    robots: "noindex, nofollow",
+  },
+  "/cyberpath/live": {
+    title: "CyberPath Live Leaderboard - MindGrid",
+    description: "View the CyberPath Edition live seminar leaderboard.",
+    robots: "noindex, nofollow",
+  },
 };
 
 const dynamicMeta = (pathname: string) => {

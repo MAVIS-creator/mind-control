@@ -11,5 +11,9 @@ Disallow: /hall-of-fame
 Disallow: /results/
 Disallow: /profile
 Disallow: /mavisbk
+Disallow: /cyberpath/play
+Disallow: /cyberpath/bonus
+Disallow: /cyberpath/results
+Disallow: /cyberpath/live
 
 Sitemap: https://neuralclash.dev/sitemap.xml
