@@ -53,7 +53,7 @@ export const ContactRoute = () => (
           </div>
         </div>
 
-        <div className="glass-panel rounded-[2.2rem] p-5 shadow-[0_18px_40px_rgba(53,37,205,0.08)] sm:p-7 dark:border-slate-800 dark:bg-slate-900/90">
+        <div className="glass-panel rounded-[2.2rem] p-5 shadow-[0_18px_40px_rgba(53,37,205,0.08)] sm:p-7 dark:border dark:border-slate-800 dark:bg-slate-900/90">
           <div className="mb-5 flex items-center gap-3">
             <div className="flex h-14 w-14 items-center justify-center rounded-[1.3rem] bg-[#f1efff] text-[#3525cd] dark:bg-slate-800 dark:text-white">
               <SparklesIcon className="h-7 w-7" />
@@ -73,7 +73,7 @@ export const ContactRoute = () => (
 
       <section className="mt-9 grid gap-4 md:grid-cols-3">
         {contactCards.map((card) => (
-          <article key={card.title} className="glass-panel rounded-[1.8rem] p-6 shadow-[0_14px_32px_rgba(53,37,205,0.06)] dark:border-slate-800 dark:bg-slate-900/90">
+          <article key={card.title} className="glass-panel rounded-[1.8rem] p-6 shadow-[0_14px_32px_rgba(53,37,205,0.06)] dark:border dark:border-slate-800 dark:bg-slate-900/90">
             <h2 className="text-xl font-bold tracking-[-0.03em] text-[#111c2d] dark:text-white">{card.title}</h2>
             <p className="mt-3 min-h-[5.5rem] text-sm leading-7 text-[#586074] dark:text-slate-300">{card.text}</p>
             <a href={card.href} className="mt-5 inline-flex w-full justify-center rounded-full bg-white/80 px-5 py-3 text-sm font-semibold text-[#3525cd] dark:bg-slate-800 dark:text-white shadow-sm">

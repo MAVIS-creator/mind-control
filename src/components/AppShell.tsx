@@ -43,7 +43,7 @@ export const AppShell = ({ session, active, children }: AppShellProps) => {
 
   return (
     <div className="flex min-h-[100dvh] flex-col pb-24 md:pb-0">
-      <header className="sticky top-0 z-40 border-b border-[#cfe0ff] bg-[linear-gradient(180deg,rgba(245,249,255,0.96),rgba(236,243,255,0.92))] backdrop-blur-xl dark:border-slate-800 dark:bg-slate-950/90">
+      <header className="sticky top-0 z-40 border-b border-[#cfe0ff] bg-[linear-gradient(180deg,rgba(245,249,255,0.96),rgba(236,243,255,0.92))] backdrop-blur-xl dark:border-slate-800 dark:bg-none dark:bg-slate-950/90">
         <div className="mx-auto grid w-full max-w-[1440px] grid-cols-[minmax(0,1fr)_auto] items-center gap-x-2 gap-y-3 px-3 py-3 sm:gap-4 sm:px-6 md:grid-cols-[minmax(0,auto)_1fr_auto] lg:px-8 xl:px-10">
           <Link to="/play" className="flex min-w-0 items-center gap-2 overflow-hidden sm:gap-3">
             <BrandMarkIcon className="h-9 w-9 shrink-0 object-contain sm:h-11 sm:w-11" />
@@ -133,7 +133,7 @@ export const AppShell = ({ session, active, children }: AppShellProps) => {
                       setMenuOpen(false);
                       void logout();
                     }}
-                    className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-medium text-[#464555] transition hover:bg-[#f5f4ff] hover:text-[#3525cd]"
+                    className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-medium text-[#464555] transition hover:bg-[#f5f4ff] hover:text-[#3525cd] dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:text-white"
                   >
                     <UserIcon className="h-4 w-4" />
                     Logout
@@ -152,7 +152,7 @@ export const AppShell = ({ session, active, children }: AppShellProps) => {
       <main className="flex-1">{children}</main>
       <SiteFooter />
 
-      <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-[#cfe0ff] bg-[linear-gradient(180deg,rgba(245,249,255,0.98),rgba(236,243,255,0.94))] px-2 py-3 backdrop-blur-xl md:hidden">
+      <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-[#cfe0ff] bg-[linear-gradient(180deg,rgba(245,249,255,0.98),rgba(236,243,255,0.94))] px-2 py-3 backdrop-blur-xl md:hidden dark:bg-none dark:bg-slate-950 dark:border-slate-800">
         <div className="mx-auto flex max-w-3xl items-center justify-around">
           {navItems.map((item) => {
             const Icon = item.icon;
@@ -162,7 +162,7 @@ export const AppShell = ({ session, active, children }: AppShellProps) => {
                 key={item.id}
                 to={item.to}
                 className={`flex min-w-[78px] flex-col items-center rounded-2xl px-4 py-2 text-xs font-semibold transition ${
-                  isActive ? "bg-[#4f46e5] text-white shadow-[0_12px_24px_rgba(79,70,229,0.24)]" : "text-[#5e6d8f]"
+                  isActive ? "bg-[#4f46e5] text-white shadow-[0_12px_24px_rgba(79,70,229,0.24)]" : "text-[#5e6d8f] dark:text-slate-400"
                 }`}
               >
                 <Icon className="h-5 w-5" />

@@ -24,8 +24,8 @@ export const AddictionFencingModal = () => {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 p-4 backdrop-blur-xl animate-fade-in">
-      <div className="relative w-full max-w-lg overflow-hidden rounded-[2.5rem] border border-emerald-400/40 bg-gradient-to-b from-[#064e3b] via-[#022c22] to-[#0f172a] p-8 text-center shadow-[0_30px_70px_rgba(16,185,129,0.3)]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 p-4 backdrop-blur-xl animate-fade-in dark:bg-slate-950/80">
+      <div className="relative w-full max-w-lg overflow-hidden rounded-[2.5rem] border border-emerald-400/40 bg-gradient-to-b from-[#064e3b] via-[#022c22] to-[#0f172a] p-8 text-center shadow-[0_30px_70px_rgba(16,185,129,0.3)] dark:bg-none dark:bg-slate-900 dark:border-slate-800 dark:text-white">
         {/* Top Icon Badge */}
         <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-3xl bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 shadow-inner">
           <ClockIcon className="h-10 w-10 text-emerald-400 animate-pulse" />
@@ -35,11 +35,11 @@ export const AddictionFencingModal = () => {
           Healthy Gaming Environment Notice
         </span>
 
-        <h2 className="mt-5 font-display text-2xl font-black tracking-tight text-white sm:text-3xl">
+        <h2 className="mt-5 font-display text-2xl font-black tracking-tight text-white sm:text-3xl dark:text-white">
           Time for a Healthy Rest Break!
         </h2>
 
-        <p className="mt-4 text-xs leading-relaxed text-slate-300 sm:text-sm">
+        <p className="mt-4 text-xs leading-relaxed text-slate-300 sm:text-sm dark:text-slate-300">
           To contribute to a good gaming environment and ensure our players&apos; mental health, focus, and well-being stay at 100%, continuous play has been temporarily paused after reaching the maximum continuous session limit.
         </p>
 

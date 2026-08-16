@@ -54,8 +54,8 @@ export const MultiplayerGameRoute = () => {
 
   if (loading || !room) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#f9f9ff]">
-        <p className="font-display text-sm font-bold uppercase tracking-widest text-[#3525cd]">
+      <div className="flex min-h-screen items-center justify-center bg-[#f9f9ff] dark:bg-slate-950">
+        <p className="font-display text-sm font-bold uppercase tracking-widest text-[#3525cd] dark:text-indigo-400">
           Synchronizing Multiplayer Board...
         </p>
       </div>
@@ -167,7 +167,7 @@ const LiveMultiplayerCanvas = ({
   };
 
   return (
-    <div className="flex min-h-[100dvh] flex-col bg-[linear-gradient(180deg,#f6f8ff_0%,#eef4ff_100%)] dark:bg-slate-950 dark:bg-none dark:text-slate-100 lg:h-screen lg:max-h-screen lg:overflow-hidden">
+    <div className="flex min-h-[100dvh] flex-col bg-[linear-gradient(180deg,#f6f8ff_0%,#eef4ff_100%)] dark:bg-none dark:bg-slate-950 dark:text-slate-100 lg:h-screen lg:max-h-screen lg:overflow-hidden">
       <Seo title="Live Multiplayer Battle - MindGrid" description="Realtime multiplayer memory game." />
 
       {/* Floating Quick Messages Overlay */}
@@ -214,7 +214,7 @@ const LiveMultiplayerCanvas = ({
       )}
 
       {/* Top Header / HUD */}
-      <header className="shrink-0 border-b border-[#cfe0ff] bg-[linear-gradient(180deg,rgba(248,251,255,0.98),rgba(238,245,255,0.94))] backdrop-blur-xl dark:border-slate-800 dark:bg-slate-950/90">
+      <header className="shrink-0 border-b border-[#cfe0ff] bg-[linear-gradient(180deg,rgba(248,251,255,0.98),rgba(238,245,255,0.94))] backdrop-blur-xl dark:bg-none dark:bg-slate-950 dark:border-slate-800">
         <div className="mx-auto flex max-w-[1440px] flex-col gap-3 px-3 py-3 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8 xl:px-10">
           <div className="flex min-w-0 items-center justify-between gap-2 lg:flex-1 lg:justify-start">
             <Link to="/play" className="flex min-w-0 items-center gap-2 sm:gap-3">
@@ -238,14 +238,14 @@ const LiveMultiplayerCanvas = ({
             />
             <HudStat label="Moves" value={`${gameState.moves}`} />
             <HudStat label="Pairs" value={`${gameState.matches}/${totalPairs}`} />
-            <div className="flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-full border border-[#b9d2f4] bg-[#d7e7fb] text-[#0058a8] shadow-inner sm:h-16 sm:w-16">
+            <div className="flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-full border border-[#b9d2f4] bg-[#d7e7fb] text-[#0058a8] dark:border-slate-700 dark:bg-slate-800 dark:text-blue-400 shadow-inner sm:h-16 sm:w-16">
               <span className="text-[0.62rem] font-semibold uppercase">Combo</span>
               <span className="text-[1.25rem] font-bold sm:text-[1.45rem]">x{Math.max(gameState.combo, 1)}</span>
             </div>
           </div>
 
           <div className="flex items-center justify-center gap-2 lg:flex-1 lg:justify-end">
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white/80 px-3 py-1.5 text-xs font-bold text-slate-700 shadow-sm">
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white/80 px-3 py-1.5 text-xs font-bold text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 shadow-sm">
               <span
                 className={`h-2 w-2 rounded-full ${
                   pingMs < 120 ? "bg-emerald-500" : pingMs < 250 ? "bg-amber-500" : "bg-rose-500"
@@ -271,13 +271,13 @@ const LiveMultiplayerCanvas = ({
               <button
                 type="button"
                 onClick={() => setShowQuitModal(true)}
-                className="inline-flex items-center gap-2 rounded-full border border-[#dbdef0] bg-white/88 px-4 py-2.5 text-xs font-semibold text-[#495066] hover:bg-white"
+                className="inline-flex items-center gap-2 rounded-full border border-[#dbdef0] bg-white/88 px-4 py-2.5 text-xs font-semibold text-[#495066] hover:bg-white dark:border-slate-700 dark:bg-slate-900/90 dark:text-slate-200 dark:hover:bg-slate-800"
               >
                 <ArrowLeftIcon className="h-4 w-4" />
                 Back / Disband Match
               </button>
 
-              <span className="rounded-full bg-[#4f46e5]/10 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-[#3525cd] border border-[#4f46e5]/20">
+              <span className="rounded-full bg-[#4f46e5]/10 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-[#3525cd] dark:text-indigo-400 border border-[#4f46e5]/20 dark:border-indigo-500/30">
                 {room.gameMode === "speed_sprint"
                   ? `SPEED SPRINT RACE (${room.gridSize.toUpperCase()} MATRIX)`
                   : room.gameMode === "coop"
@@ -310,17 +310,17 @@ const LiveMultiplayerCanvas = ({
           <aside className="grid grid-cols-2 gap-3 lg:flex lg:flex-col lg:gap-3 xl:min-h-0">
             {/* Card 1: Live Progress & Opponent Ghost Updates */}
             <div className="glass-panel rounded-[1.4rem] p-4 sm:rounded-[1.6rem]">
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#3f4457]">
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#3f4457] dark:text-slate-400">
                 {room.gameMode === "speed_sprint" ? "Speed Race Progress" : "Match Progress"}
               </p>
 
               {/* Your Board Progress */}
               <div className="mt-4">
-                <div className="flex items-center justify-between text-xs font-bold text-[#1a2340]">
+                <div className="flex items-center justify-between text-xs font-bold text-[#1a2340] dark:text-slate-200">
                   <span>You ({gameState.matches}/{totalPairs} pairs)</span>
-                  <span className="text-[#3525cd]">{gameState.score} pts</span>
+                  <span className="text-[#3525cd] dark:text-indigo-400">{gameState.score} pts</span>
                 </div>
-                <div className="mt-2 h-3 overflow-hidden rounded-full bg-[#d9e5fb]">
+                <div className="mt-2 h-3 overflow-hidden rounded-full bg-[#d9e5fb] dark:bg-slate-800">
                   <div
                     className="h-full rounded-full bg-gradient-to-r from-[#64a8fe] via-[#4f46e5] to-[#3525cd] transition-all duration-300"
                     style={{ width: `${(gameState.matches / totalPairs) * 100}%` }}
@@ -330,7 +330,7 @@ const LiveMultiplayerCanvas = ({
 
               {/* Opponent Progress (Updated Live via WebSockets) */}
               <div className="mt-5">
-                <div className="flex items-center justify-between text-xs font-bold text-[#5a6174]">
+                <div className="flex items-center justify-between text-xs font-bold text-[#5a6174] dark:text-slate-400">
                   <span>
                     {opponentProfile?.username || "Opponent"} (
                     {room.gameMode === "speed_sprint"
@@ -340,7 +340,7 @@ const LiveMultiplayerCanvas = ({
                   </span>
                   <span>{room.gameMode === "speed_sprint" ? opponentGhost.score : playerScores[isHost ? room.guestId || "" : room.hostId] || 0} pts</span>
                 </div>
-                <div className="mt-2 h-3 overflow-hidden rounded-full bg-slate-200">
+                <div className="mt-2 h-3 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-800">
                   <div
                     className="h-full rounded-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all duration-300 opacity-80"
                     style={{
@@ -356,7 +356,7 @@ const LiveMultiplayerCanvas = ({
                 </div>
               </div>
 
-              <div className="mt-4 rounded-[1.15rem] border border-[#d7dcf5] bg-[#f3f4ff] px-3 py-2.5 text-xs leading-5 text-[#3525cd]">
+              <div className="mt-4 rounded-[1.15rem] border border-[#d7dcf5] bg-[#f3f4ff] px-3 py-2.5 text-xs leading-5 text-[#3525cd] dark:text-indigo-300 dark:bg-indigo-950/30 dark:border-indigo-500/20">
                 {room.gameMode === "speed_sprint"
                   ? "Sprint Race: Play on your own board as fast as possible. First to clear all pairs wins!"
                   : isMyTurn
@@ -367,7 +367,7 @@ const LiveMultiplayerCanvas = ({
 
             {/* Card 2: Battle Stats */}
             <div className="glass-panel rounded-[1.4rem] p-4 sm:rounded-[1.6rem]">
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#3f4457]">Battle Stats</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#3f4457] dark:text-slate-400">Battle Stats</p>
               <div className="mt-3 space-y-2">
                 <SideStat icon={<GridIcon className="h-4 w-4" />} label="Score" value={formatNumber(gameState.score)} />
                 <SideStat icon={<ClockIcon className="h-4 w-4" />} label="Mistakes" value={`${gameState.mismatches}`} />
@@ -384,17 +384,17 @@ const LiveMultiplayerCanvas = ({
 
 const HudStat = ({ label, value }: { label: string; value: string }) => (
   <div className="text-center">
-    <p className="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-[#788299]">{label}</p>
-    <p className="mt-0.5 text-[0.95rem] font-bold text-[#1a2340] sm:text-base">{value}</p>
+    <p className="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-[#788299] dark:text-slate-400">{label}</p>
+    <p className="mt-0.5 text-[0.95rem] font-bold text-[#1a2340] dark:text-white sm:text-base">{value}</p>
   </div>
 );
 
 const SideStat = ({ icon, label, value }: { icon: ReactNode; label: string; value: string }) => (
-  <div className="flex items-center justify-between text-xs text-[#2e3650]">
-    <div className="flex items-center gap-2 text-[#788299]">
+  <div className="flex items-center justify-between text-xs text-[#2e3650] dark:text-slate-200">
+    <div className="flex items-center gap-2 text-[#788299] dark:text-slate-400">
       {icon}
       <span>{label}</span>
     </div>
-    <span className="font-bold text-[#1b2441]">{value}</span>
+    <span className="font-bold text-[#1b2441] dark:text-white">{value}</span>
   </div>
 );

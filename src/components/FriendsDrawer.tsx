@@ -159,12 +159,12 @@ export const FriendsDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: (
   const totalOnlineCount = Object.keys(onlineUsersMap).length || 1;
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end bg-black/50 backdrop-blur-sm">
-      <div className="flex h-full w-full sm:max-w-md flex-col bg-white p-4 sm:p-6 shadow-2xl transition-all pb-24 sm:pb-6">
+    <div className="fixed inset-0 z-50 flex justify-end bg-black/50 backdrop-blur-sm dark:bg-slate-950/80">
+      <div className="flex h-full w-full sm:max-w-md flex-col bg-white p-4 sm:p-6 shadow-2xl transition-all pb-24 sm:pb-6 dark:bg-slate-900 dark:border-slate-800 dark:text-white">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+        <div className="flex items-center justify-between border-b border-slate-100 pb-4 dark:border-slate-700 dark:bg-slate-800/0">
           <div>
-            <h2 className="font-display text-lg font-bold text-[#1e1b4b]">Operative Network</h2>
+            <h2 className="font-display text-lg font-bold text-[#1e1b4b] dark:text-white">Operative Network</h2>
             <div className="mt-1 flex items-center gap-2 text-xs font-semibold text-emerald-600">
               <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
               <span>{totalOnlineCount} Players Online Now</span>
@@ -182,33 +182,33 @@ export const FriendsDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: (
         </div>
 
         {/* Tab Navigation */}
-        <div className="mt-4 flex border-b border-slate-200">
+        <div className="mt-4 flex border-b border-slate-200 dark:border-slate-700">
           <button
             onClick={() => setActiveTab("friends")}
-            className={`flex-1 py-2.5 text-xs font-bold uppercase tracking-wider transition-all ${
+            className={`flex-1 py-2.5 text-xs font-bold uppercase tracking-wider transition-all dark:text-white ${
               activeTab === "friends"
-                ? "border-b-2 border-[#3525cd] text-[#3525cd]"
-                : "text-[#64748b] hover:text-[#1e1b4b]"
+                ? "border-b-2 border-[#3525cd] text-[#3525cd] dark:border-white"
+                : "text-[#64748b] hover:text-[#1e1b4b] dark:text-slate-400 dark:hover:text-white"
             }`}
           >
             Friends ({friendsList.length})
           </button>
           <button
             onClick={() => setActiveTab("search")}
-            className={`flex-1 py-2.5 text-xs font-bold uppercase tracking-wider transition-all ${
+            className={`flex-1 py-2.5 text-xs font-bold uppercase tracking-wider transition-all dark:text-white ${
               activeTab === "search"
-                ? "border-b-2 border-[#3525cd] text-[#3525cd]"
-                : "text-[#64748b] hover:text-[#1e1b4b]"
+                ? "border-b-2 border-[#3525cd] text-[#3525cd] dark:border-white"
+                : "text-[#64748b] hover:text-[#1e1b4b] dark:text-slate-400 dark:hover:text-white"
             }`}
           >
             Add Friend
           </button>
           <button
             onClick={() => setActiveTab("pending")}
-            className={`flex-1 py-2.5 text-xs font-bold uppercase tracking-wider transition-all relative ${
+            className={`flex-1 py-2.5 text-xs font-bold uppercase tracking-wider transition-all relative dark:text-white ${
               activeTab === "pending"
-                ? "border-b-2 border-[#3525cd] text-[#3525cd]"
-                : "text-[#64748b] hover:text-[#1e1b4b]"
+                ? "border-b-2 border-[#3525cd] text-[#3525cd] dark:border-white"
+                : "text-[#64748b] hover:text-[#1e1b4b] dark:text-slate-400 dark:hover:text-white"
             }`}
           >
             Requests
@@ -226,7 +226,7 @@ export const FriendsDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: (
           {activeTab === "friends" && (
             <div className="space-y-3">
               {friendsList.length === 0 ? (
-                <p className="py-8 text-center text-xs text-[#64748b]">
+                <p className="py-8 text-center text-xs text-[#64748b] dark:text-slate-400">
                   No friends added yet. Use the "Add Friend" tab to discover and connect!
                 </p>
               ) : (
@@ -238,7 +238,7 @@ export const FriendsDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: (
                   return (
                     <div
                       key={f.id}
-                      className="flex items-center justify-between rounded-2xl bg-slate-50 p-3 border border-slate-100"
+                      className="flex items-center justify-between rounded-2xl bg-slate-50 p-3 border border-slate-100 dark:bg-slate-800/80 dark:border-slate-800 dark:text-white"
                     >
                       <div className="flex items-center gap-3">
                         <div className="relative">
@@ -254,8 +254,8 @@ export const FriendsDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: (
                           />
                         </div>
                         <div>
-                          <p className="text-xs font-bold text-[#1e1b4b]">{f.friendProfile?.username}</p>
-                          <p className="text-[10px] text-[#64748b]">
+                          <p className="text-xs font-bold text-[#1e1b4b] dark:text-white">{f.friendProfile?.username}</p>
+                          <p className="text-[10px] text-[#64748b] dark:text-slate-400">
                             {isOnline ? "Online Now" : formatLastSeen(lastSeenTime)}
                           </p>
                         </div>
@@ -276,13 +276,13 @@ export const FriendsDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: (
                   value={searchQuery}
                   onChange={handleSearchChange}
                   placeholder="Filter or search player username..."
-                  className="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-xs text-[#1e1b4b] focus:border-[#3525cd] focus:outline-none"
+                  className="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-xs text-[#1e1b4b] focus:border-[#3525cd] focus:outline-none dark:bg-slate-800 dark:border-slate-700 dark:text-white dark:placeholder-slate-400"
                 />
               </div>
 
               <div className="mt-4 space-y-3">
                 {suggestedPlayers.length === 0 && !isLoadingPlayers ? (
-                  <p className="py-6 text-center text-xs text-[#64748b]">No operatives found matching search.</p>
+                  <p className="py-6 text-center text-xs text-[#64748b] dark:text-slate-400">No operatives found matching search.</p>
                 ) : (
                   suggestedPlayers.map((user) => {
                     const isAlreadyFriend = friendsList.some((f) => f.friendProfile?.id === user.id);
@@ -293,11 +293,11 @@ export const FriendsDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: (
                     return (
                       <div
                         key={user.id}
-                        className="flex items-center justify-between rounded-2xl bg-slate-50 p-3 border border-slate-100"
+                        className="flex items-center justify-between rounded-2xl bg-slate-50 p-3 border border-slate-100 dark:bg-slate-800/80 dark:border-slate-800 dark:text-white"
                       >
                         <div>
-                          <p className="text-xs font-bold text-[#1e1b4b]">{user.username}</p>
-                          <p className="text-[10px] text-[#64748b]">{user.rank}</p>
+                          <p className="text-xs font-bold text-[#1e1b4b] dark:text-white">{user.username}</p>
+                          <p className="text-[10px] text-[#64748b] dark:text-slate-400">{user.rank}</p>
                         </div>
 
                         {isAlreadyFriend ? (
@@ -323,7 +323,7 @@ export const FriendsDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: (
                     <button
                       onClick={() => loadSuggestedPlayers(false)}
                       disabled={isLoadingPlayers}
-                      className="rounded-xl bg-slate-100 border border-slate-200 px-4 py-2 text-xs font-semibold text-[#1e1b4b] hover:bg-slate-200 transition-all"
+                      className="rounded-xl bg-slate-100 border border-slate-200 px-4 py-2 text-xs font-semibold text-[#1e1b4b] hover:bg-slate-200 transition-all dark:bg-slate-800 dark:border-slate-700 dark:text-white dark:hover:bg-slate-700"
                     >
                       {isLoadingPlayers ? "Loading more..." : "Load More Operatives"}
                     </button>
@@ -337,16 +337,16 @@ export const FriendsDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: (
           {activeTab === "pending" && (
             <div className="space-y-3">
               {pendingReceived.length === 0 ? (
-                <p className="py-8 text-center text-xs text-[#64748b]">No incoming friend requests.</p>
+                <p className="py-8 text-center text-xs text-[#64748b] dark:text-slate-400">No incoming friend requests.</p>
               ) : (
                 pendingReceived.map((req) => (
                   <div
                     key={req.id}
-                    className="flex items-center justify-between rounded-2xl bg-slate-50 p-3 border border-slate-100"
+                    className="flex items-center justify-between rounded-2xl bg-slate-50 p-3 border border-slate-100 dark:bg-slate-800/80 dark:border-slate-800 dark:text-white"
                   >
                     <div>
-                      <p className="text-xs font-bold text-[#1e1b4b]">{req.friendProfile?.username}</p>
-                      <p className="text-[10px] text-[#64748b]">Sent you a request</p>
+                      <p className="text-xs font-bold text-[#1e1b4b] dark:text-white">{req.friendProfile?.username}</p>
+                      <p className="text-[10px] text-[#64748b] dark:text-slate-400">Sent you a request</p>
                     </div>
                     <div className="flex gap-2">
                       <button

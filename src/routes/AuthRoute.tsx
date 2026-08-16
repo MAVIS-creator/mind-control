@@ -21,7 +21,7 @@ export const AuthRoute = ({ mode }: AuthRouteProps) => {
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top_left,_#e2dfff_0%,_#f9f9ff_45%,_#d4e3ff_100%)] dark:bg-slate-950 dark:bg-none dark:text-slate-100 px-4 py-8 sm:px-6 lg:px-10">
+    <div className="relative min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top_left,_#e2dfff_0%,_#f9f9ff_45%,_#d4e3ff_100%)] dark:bg-none dark:bg-slate-950 dark:text-slate-100 px-4 py-8 sm:px-6 lg:px-10">
       <div className="fixed inset-0 -z-10 overflow-hidden">
         <div className="absolute -left-10 top-20 h-[22rem] w-[22rem] rounded-full bg-[#9a7cff]/16 dark:bg-[#9a7cff]/10 blur-[90px]" />
         <div className="absolute right-0 top-0 h-[28rem] w-[28rem] rounded-full bg-[#64a8fe]/18 dark:bg-[#64a8fe]/10 blur-[110px]" />

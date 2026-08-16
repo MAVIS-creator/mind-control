@@ -34,7 +34,7 @@ export const EventBonusRoute = () => {
     };
   }, [answers, challenges]);
 
-  if (edition === undefined) return <EventEditionShell edition={edition}><main className="p-8 text-center font-bold text-[#3525cd]">Loading event...</main></EventEditionShell>;
+  if (edition === undefined) return <EventEditionShell edition={edition}><main className="p-8 text-center font-bold text-[#3525cd] dark:text-indigo-400">Loading event...</main></EventEditionShell>;
   if (!edition) return <Navigate to="/" replace />;
   if (!latestRun) return <Navigate to={`/${edition.slug}`} replace />;
   if (!latestRun.qualifiedForBonus) return <Navigate to={`/${edition.slug}/results`} state={{ run: latestRun }} replace />;
@@ -55,10 +55,10 @@ export const EventBonusRoute = () => {
     <EventEditionShell edition={edition}>
       <main className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
         <section className="mb-7 text-center">
-          <SparklesIcon className="mx-auto h-12 w-12 text-[#3525cd]" />
-          <p className="mt-4 text-xs font-bold uppercase tracking-[0.24em] text-[#3525cd]">Bonus Round Unlocked</p>
-          <h1 className="mt-2 text-4xl font-black tracking-[-0.06em] text-[#111c2d] sm:text-6xl">Safe CTF Challenges</h1>
-          <p className="mx-auto mt-4 max-w-2xl text-base leading-8 text-[#586074]">
+          <SparklesIcon className="mx-auto h-12 w-12 text-[#3525cd] dark:text-indigo-400" />
+          <p className="mt-4 text-xs font-bold uppercase tracking-[0.24em] text-[#3525cd] dark:text-indigo-400">Bonus Round Unlocked</p>
+          <h1 className="mt-2 text-4xl font-black tracking-[-0.06em] text-[#111c2d] dark:text-white sm:text-6xl">Safe CTF Challenges</h1>
+          <p className="mx-auto mt-4 max-w-2xl text-base leading-8 text-[#586074] dark:text-slate-400">
             Solve safe bonus puzzles. Correct answers add to your event score.
           </p>
         </section>
@@ -68,14 +68,14 @@ export const EventBonusRoute = () => {
             const isCorrect =
               submitted && answers[challenge.id]?.trim().toUpperCase() === challenge.expectedAnswer.toUpperCase();
             return (
-              <article key={challenge.id} className="glass-panel rounded-[1.8rem] p-5 sm:p-6">
+              <article key={challenge.id} className="glass-panel rounded-[1.8rem] p-5 sm:p-6 dark:bg-slate-900/90 dark:border-slate-800">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                   <div>
-                    <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#3525cd]">
+                    <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#3525cd] dark:text-indigo-400">
                       Challenge {index + 1} • {challenge.points} pts
                     </p>
-                    <h2 className="mt-2 text-2xl font-bold tracking-[-0.04em] text-[#111c2d]">{challenge.title}</h2>
-                    <p className="mt-2 text-sm leading-7 text-[#586074]">{challenge.prompt}</p>
+                    <h2 className="mt-2 text-2xl font-bold tracking-[-0.04em] text-[#111c2d] dark:text-white">{challenge.title}</h2>
+                    <p className="mt-2 text-sm leading-7 text-[#586074] dark:text-slate-400">{challenge.prompt}</p>
                   </div>
                   {submitted ? (
                     <span className={`rounded-full px-4 py-2 text-sm font-bold ${isCorrect ? "bg-emerald-50 text-emerald-700" : "bg-red-50 text-red-600"}`}>
@@ -83,12 +83,12 @@ export const EventBonusRoute = () => {
                     </span>
                   ) : null}
                 </div>
-                <pre className="mt-4 overflow-x-auto rounded-[1.2rem] bg-[#111c2d] p-4 text-sm leading-7 text-white">{challenge.body}</pre>
-                <p className="mt-3 text-xs font-semibold uppercase tracking-[0.18em] text-[#7d8395]">{challenge.hint}</p>
+                <pre className="mt-4 overflow-x-auto rounded-[1.2rem] bg-[#111c2d] dark:bg-slate-950 p-4 text-sm leading-7 text-white">{challenge.body}</pre>
+                <p className="mt-3 text-xs font-semibold uppercase tracking-[0.18em] text-[#7d8395] dark:text-slate-400">{challenge.hint}</p>
                 <input
                   value={answers[challenge.id] ?? ""}
                   onChange={(event) => setAnswers((current) => ({ ...current, [challenge.id]: event.target.value }))}
-                  className="mt-3 w-full rounded-[1.1rem] border border-[#dce5f6] bg-white/85 px-4 py-3 outline-none focus:border-[#4f46e5]"
+                  className="mt-3 w-full rounded-[1.1rem] border border-[#dce5f6] dark:border-slate-700 bg-white/85 dark:bg-slate-900 px-4 py-3 outline-none focus:border-[#4f46e5] dark:text-white"
                   placeholder="Enter answer"
                   disabled={submitted}
                 />
@@ -97,9 +97,9 @@ export const EventBonusRoute = () => {
           })}
         </section>
 
-        <div className="mt-6 glass-panel rounded-[1.8rem] p-5 text-center">
-          <p className="text-sm text-[#586074]">Current bonus score</p>
-          <p className="mt-1 text-4xl font-black text-[#3525cd]">{formatNumber(result.score)}</p>
+        <div className="mt-6 glass-panel rounded-[1.8rem] p-5 text-center dark:bg-slate-900/90 dark:border-slate-800">
+          <p className="text-sm text-[#586074] dark:text-slate-400">Current bonus score</p>
+          <p className="mt-1 text-4xl font-black text-[#3525cd] dark:text-indigo-400">{formatNumber(result.score)}</p>
           {!submitted ? (
             <button
               type="button"

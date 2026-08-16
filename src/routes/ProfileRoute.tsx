@@ -155,7 +155,7 @@ export const ProfileRoute = () => {
     <AppShell session={session} active={null}>
       <div className="mx-auto flex min-h-full w-full max-w-[1440px] flex-col px-4 py-5 sm:px-6 lg:px-8 xl:px-10">
         {loadingProfile ? (
-          <div className="glass-panel flex min-h-[20rem] items-center justify-center rounded-[2rem] px-6 py-10 text-center text-[#5a6174]">
+          <div className="glass-panel flex min-h-[20rem] items-center justify-center rounded-[2rem] px-6 py-10 text-center text-[#5a6174] dark:text-slate-300">
             Loading player profile...
           </div>
         ) : profileError ? (
@@ -364,29 +364,29 @@ export const ProfileRoute = () => {
                 </section>
               ) : (
                 <section className="glass-panel rounded-[1.8rem] p-6 shadow-[0_10px_26px_rgba(53,37,205,0.05)]">
-                  <h2 className="text-lg font-semibold text-slate-900">Recent Form</h2>
+                  <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Recent Form</h2>
                   <div className="mt-5 space-y-3">
                     {resolvedSnapshot.recentRuns.slice(0, 4).map((run) => (
-                      <div key={run.id} className="rounded-[1.3rem] border border-[#e0e6f4] bg-white/68 px-4 py-4">
+                      <div key={run.id} className="rounded-[1.3rem] border border-[#e0e6f4] bg-white/68 px-4 py-4 dark:border-slate-800 dark:bg-slate-900/80">
                         <div className="flex items-center justify-between gap-3">
-                          <span className="text-sm font-semibold text-slate-900">
+                          <span className="text-sm font-semibold text-slate-900 dark:text-white">
                             {run.gridSize} • {run.matchType === "numbers" ? "Numbers" : run.matchType === "icons" ? "Icons" : "Legacy"}
                           </span>
                           <span
                             className={`rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] ${
-                              run.won ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-700"
+                              run.won ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400" : "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400"
                             }`}
                           >
                             {run.won ? "Win" : "Loss"}
                           </span>
                         </div>
-                        <div className="mt-2 text-sm text-[#5a6174]">
+                        <div className="mt-2 text-sm text-[#5a6174] dark:text-slate-300">
                           Score {formatNumber(run.score)} • Accuracy {formatPercent(run.accuracy)} • Combo x{run.maxCombo}
                         </div>
                       </div>
                     ))}
                     {!resolvedSnapshot.recentRuns.length ? (
-                      <p className="text-sm text-[#5a6174]">No public runs recorded yet.</p>
+                      <p className="text-sm text-[#5a6174] dark:text-slate-400">No public runs recorded yet.</p>
                     ) : null}
                   </div>
                 </section>

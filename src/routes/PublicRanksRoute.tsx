@@ -66,7 +66,7 @@ export const PublicRanksRoute = () => {
             return (
               <article
                 key={`${entry.username}-${index}`}
-                className="glass-panel rounded-[2rem] p-6 text-center shadow-[0_20px_44px_rgba(53,37,205,0.07)] dark:border-slate-800 dark:bg-slate-900/90"
+                className="glass-panel rounded-[2rem] p-6 text-center shadow-[0_20px_44px_rgba(53,37,205,0.07)] dark:border dark:border-slate-800 dark:bg-slate-900/90 dark:text-white"
               >
                 <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-white text-lg font-bold text-slate-900 dark:bg-slate-800 dark:text-white shadow-sm">
                   {index + 1}
@@ -82,7 +82,7 @@ export const PublicRanksRoute = () => {
           })}
         </section>
 
-        <section className="glass-panel mt-9 overflow-hidden rounded-[2rem] shadow-[0_18px_40px_rgba(53,37,205,0.08)] dark:border-slate-800 dark:bg-slate-900/90">
+        <section className="glass-panel mt-9 overflow-hidden rounded-[2rem] shadow-[0_18px_40px_rgba(53,37,205,0.08)] dark:border dark:border-slate-800 dark:bg-slate-900/90">
           <div className="border-b border-slate-200/70 dark:border-slate-800 px-5 py-5 sm:px-7">
             <h2 className="text-2xl font-bold tracking-[-0.04em] text-slate-900 dark:text-white">Leaderboard</h2>
             <p className="mt-1 text-sm leading-6 text-slate-500 dark:text-slate-400">
@@ -119,7 +119,7 @@ export const PublicRanksRoute = () => {
                       <RankStat label="Accuracy" value={formatPercent(entry.accuracy)} />
                       <RankStat label="Time" value={formatDuration(entry.duration)} />
                     </div>
-                    <div className="rounded-full bg-white px-4 py-2 text-center text-sm font-semibold text-[#3525cd] shadow-sm">
+                    <div className="rounded-full bg-white px-4 py-2 text-center text-sm font-semibold text-[#3525cd] shadow-sm dark:bg-slate-800 dark:text-indigo-300">
                       x{entry.maxCombo}
                     </div>
                   </div>

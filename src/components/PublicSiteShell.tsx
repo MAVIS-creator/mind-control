@@ -17,7 +17,7 @@ const navItems = [
 ] as const;
 
 export const PublicSiteShell = ({ active, children }: PublicSiteShellProps) => (
-  <div className="min-h-screen overflow-x-hidden bg-[radial-gradient(circle_at_top_left,_#e2dfff_0%,_#f9f9ff_42%,_#d4e3ff_100%)] dark:bg-slate-950 dark:bg-none text-[#121a2c] dark:text-slate-100">
+  <div className="min-h-screen overflow-x-hidden bg-[radial-gradient(circle_at_top_left,_#e2dfff_0%,_#f9f9ff_42%,_#d4e3ff_100%)] dark:bg-none dark:bg-slate-950 text-[#121a2c] dark:text-slate-100">
     <div className="fixed inset-0 -z-10 overflow-hidden">
       <div className="absolute -left-16 top-14 h-[24rem] w-[24rem] rounded-full bg-[#8a70ff]/18 dark:bg-[#8a70ff]/10 blur-[95px]" />
       <div className="absolute right-0 top-0 h-[26rem] w-[26rem] rounded-full bg-[#64a8fe]/16 dark:bg-[#64a8fe]/10 blur-[95px]" />
@@ -70,12 +70,12 @@ export const PublicSiteShell = ({ active, children }: PublicSiteShellProps) => (
 
     {children}
 
-    <div className="fixed bottom-5 left-5 z-30 hidden rounded-full bg-white/82 p-2 shadow-[0_18px_40px_rgba(53,37,205,0.12)] backdrop-blur-xl md:flex md:flex-col md:gap-2">
+    <div className="fixed bottom-5 left-5 z-30 hidden rounded-full bg-white/82 p-2 shadow-[0_18px_40px_rgba(53,37,205,0.12)] backdrop-blur-xl md:flex md:flex-col md:gap-2 dark:border dark:border-slate-800 dark:bg-slate-900/90 dark:text-slate-200">
       <Link
         to="/"
         className={cn(
-          "flex h-12 w-12 items-center justify-center rounded-full text-[#3525cd]",
-          active === "home" && "bg-[#4f46e5] text-white",
+          "flex h-12 w-12 items-center justify-center rounded-full text-[#3525cd] dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white",
+          active === "home" && "bg-[#4f46e5] text-white dark:bg-indigo-600 dark:text-white",
         )}
         aria-label="Home"
       >
@@ -84,8 +84,8 @@ export const PublicSiteShell = ({ active, children }: PublicSiteShellProps) => (
       <Link
         to="/ranks"
         className={cn(
-          "flex h-12 w-12 items-center justify-center rounded-full text-[#3525cd]",
-          active === "ranks" && "bg-[#4f46e5] text-white",
+          "flex h-12 w-12 items-center justify-center rounded-full text-[#3525cd] dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white",
+          active === "ranks" && "bg-[#4f46e5] text-white dark:bg-indigo-600 dark:text-white",
         )}
         aria-label="Ranks"
       >
@@ -94,8 +94,8 @@ export const PublicSiteShell = ({ active, children }: PublicSiteShellProps) => (
       <Link
         to="/contact"
         className={cn(
-          "flex h-12 w-12 items-center justify-center rounded-full text-[#3525cd]",
-          active === "contact" && "bg-[#4f46e5] text-white",
+          "flex h-12 w-12 items-center justify-center rounded-full text-[#3525cd] dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white",
+          active === "contact" && "bg-[#4f46e5] text-white dark:bg-indigo-600 dark:text-white",
         )}
         aria-label="Contact"
       >

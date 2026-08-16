@@ -148,14 +148,14 @@ export const EventEditionAdminPanel = ({ session }: { session: AuthSession }) =>
   };
 
   return (
-    <section className="rounded-[1.6rem] border border-white/70 bg-white/84 shadow-[0_16px_36px_rgba(53,37,205,0.06)]">
-      <div className="border-b border-[#ececf6] px-5 py-4">
+    <section className="rounded-[1.6rem] border border-white/70 dark:border-slate-800 bg-white/84 dark:bg-slate-900/90 shadow-[0_16px_36px_rgba(53,37,205,0.06)]">
+      <div className="border-b border-[#ececf6] dark:border-slate-800 px-5 py-4">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
           <div>
-            <h2 className="text-lg font-semibold uppercase tracking-[0.16em] text-[#1a2340]">
+            <h2 className="text-lg font-semibold uppercase tracking-[0.16em] text-[#1a2340] dark:text-white">
               Event editions and tournaments
             </h2>
-            <p className="mt-1 text-sm leading-6 text-[#6c7489]">
+            <p className="mt-1 text-sm leading-6 text-[#6c7489] dark:text-slate-400">
               Create one-time public event pages. The route slug becomes the page URL automatically.
             </p>
           </div>
@@ -163,7 +163,7 @@ export const EventEditionAdminPanel = ({ session }: { session: AuthSession }) =>
             <button
               type="button"
               onClick={() => void refresh()}
-              className="inline-flex items-center gap-2 rounded-full border border-[#d9deee] bg-white px-4 py-2 text-xs font-bold uppercase tracking-[0.12em] text-[#3525cd]"
+              className="inline-flex items-center gap-2 rounded-full border border-[#d9deee] dark:border-slate-800 bg-white dark:bg-slate-950 px-4 py-2 text-xs font-bold uppercase tracking-[0.12em] text-[#3525cd] dark:text-indigo-400"
             >
               <RefreshIcon className="h-4 w-4" />
               Refresh
@@ -182,7 +182,7 @@ export const EventEditionAdminPanel = ({ session }: { session: AuthSession }) =>
 
       <div className="grid gap-5 p-5 xl:grid-cols-[0.42fr_1fr]">
         <div className="space-y-2">
-          {loading ? <p className="rounded-[1rem] bg-[#f8faff] p-4 text-sm text-[#6c7489]">Loading events...</p> : null}
+          {loading ? <p className="rounded-[1rem] bg-[#f8faff] dark:bg-slate-950 p-4 text-sm text-[#6c7489] dark:text-slate-400">Loading events...</p> : null}
           {editions.map((edition) => (
             <button
               key={edition.id}
@@ -190,16 +190,16 @@ export const EventEditionAdminPanel = ({ session }: { session: AuthSession }) =>
               onClick={() => setSelectedId(edition.id)}
               className={`w-full rounded-[1.2rem] border p-4 text-left transition ${
                 selectedEdition?.id === edition.id
-                  ? "border-[#4f46e5] bg-[#eef2ff]"
-                  : "border-[#e5e9f5] bg-white hover:border-[#c9d5f6]"
+                  ? "border-[#4f46e5] bg-[#eef2ff] dark:bg-indigo-900/30"
+                  : "border-[#e5e9f5] dark:border-slate-800 bg-white dark:bg-slate-950 hover:border-[#c9d5f6] dark:hover:border-slate-700"
               }`}
             >
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <p className="font-bold text-[#111c2d]">{edition.title}</p>
-                  <p className="mt-1 text-xs font-semibold text-[#6c7489]">/{edition.slug}</p>
+                  <p className="font-bold text-[#111c2d] dark:text-white">{edition.title}</p>
+                  <p className="mt-1 text-xs font-semibold text-[#6c7489] dark:text-slate-400">/{edition.slug}</p>
                 </div>
-                <span className="rounded-full bg-white px-3 py-1 text-[0.65rem] font-bold uppercase tracking-[0.12em] text-[#3525cd]">
+                <span className="rounded-full bg-white dark:bg-slate-800 px-3 py-1 text-[0.65rem] font-bold uppercase tracking-[0.12em] text-[#3525cd] dark:text-indigo-400">
                   {edition.status}
                 </span>
               </div>
@@ -209,13 +209,13 @@ export const EventEditionAdminPanel = ({ session }: { session: AuthSession }) =>
 
         {selectedEdition ? (
           <div className="space-y-4">
-            <div className="rounded-[1.4rem] border border-[#dfe4f2] bg-[#f8faff] p-4">
+            <div className="rounded-[1.4rem] border border-[#dfe4f2] dark:border-slate-800 bg-[#f8faff] dark:bg-slate-950 p-4">
               <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#3525cd]">
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#3525cd] dark:text-indigo-400">
                     AI tournament helper
                   </p>
-                  <p className="mt-2 text-sm leading-6 text-[#6c7489]">
+                  <p className="mt-2 text-sm leading-6 text-[#6c7489] dark:text-slate-400">
                     Describe the event you want. The AI can draft supported rounds, rules, categories, and bonus
                     challenges. New gameplay features still need code support first.
                   </p>
@@ -234,11 +234,11 @@ export const EventEditionAdminPanel = ({ session }: { session: AuthSession }) =>
                 value={aiPrompt}
                 onChange={(event) => setAiPrompt(event.target.value)}
                 rows={4}
-                className="mt-4 w-full rounded-[1.1rem] border border-[#dfe4f2] bg-white px-4 py-3 text-sm leading-6 text-[#1f2740] outline-none"
+                className="mt-4 w-full rounded-[1.1rem] border border-[#dfe4f2] dark:border-slate-800 bg-white dark:bg-slate-900 px-4 py-3 text-sm leading-6 text-[#1f2740] dark:text-white outline-none"
                 placeholder="Example: Create a Valentine's memory tournament with 3 rounds, a cute leaderboard title, and bonus questions."
               />
               {aiNotes.length ? (
-                <div className="mt-3 rounded-[1rem] border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm leading-6 text-emerald-800">
+                <div className="mt-3 rounded-[1rem] border border-emerald-200 dark:border-emerald-900/30 bg-emerald-50 dark:bg-emerald-900/20 px-4 py-3 text-sm leading-6 text-emerald-800 dark:text-emerald-400">
                   <p className="font-bold">AI notes</p>
                   {aiNotes.map((note) => (
                     <p key={note}>{note}</p>
@@ -246,7 +246,7 @@ export const EventEditionAdminPanel = ({ session }: { session: AuthSession }) =>
                 </div>
               ) : null}
               {unsupportedRequests.length ? (
-                <div className="mt-3 rounded-[1rem] border border-amber-200 bg-amber-50 px-4 py-3 text-sm leading-6 text-amber-800">
+                <div className="mt-3 rounded-[1rem] border border-amber-200 dark:border-amber-900/30 bg-amber-50 dark:bg-amber-900/20 px-4 py-3 text-sm leading-6 text-amber-800 dark:text-amber-400">
                   <p className="font-bold">Needs code support before it can work</p>
                   {unsupportedRequests.map((item) => (
                     <p key={item}>{item}</p>
@@ -268,13 +268,13 @@ export const EventEditionAdminPanel = ({ session }: { session: AuthSession }) =>
                 helper={`Public route: /${selectedEdition.slug || "event"}`}
               />
               <label className="block">
-                <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-[#7d8395]">
+                <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-[#7d8395] dark:text-slate-400">
                   Status
                 </span>
                 <select
                   value={selectedEdition.status}
                   onChange={(event) => updateSelected({ status: event.target.value as EventEditionStatus })}
-                  className="h-13 w-full rounded-[1.1rem] border border-[#dfe4f2] bg-white px-4 py-3 text-sm text-[#1f2740] outline-none"
+                  className="h-13 w-full rounded-[1.1rem] border border-[#dfe4f2] dark:border-slate-800 bg-white dark:bg-slate-950 px-4 py-3 text-sm text-[#1f2740] dark:text-white outline-none"
                 >
                   <option value="draft">Draft</option>
                   <option value="published">Published</option>
@@ -311,14 +311,14 @@ export const EventEditionAdminPanel = ({ session }: { session: AuthSession }) =>
             </div>
 
             <label className="block">
-              <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-[#7d8395]">
+              <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-[#7d8395] dark:text-slate-400">
                 Description
               </span>
               <textarea
                 value={selectedEdition.config.description}
                 onChange={(event) => updateConfig({ description: event.target.value })}
                 rows={3}
-                className="w-full rounded-[1.1rem] border border-[#dfe4f2] bg-white px-4 py-3 text-sm leading-6 text-[#1f2740] outline-none"
+                className="w-full rounded-[1.1rem] border border-[#dfe4f2] dark:border-slate-800 bg-white dark:bg-slate-950 px-4 py-3 text-sm leading-6 text-[#1f2740] dark:text-white outline-none"
               />
             </label>
 
@@ -329,8 +329,8 @@ export const EventEditionAdminPanel = ({ session }: { session: AuthSession }) =>
               <JsonEditor label="Categories JSON" value={jsonDrafts.categories} onChange={(value) => setJsonDrafts((current) => ({ ...current, categories: value }))} />
             </div>
 
-            {message ? <p className="rounded-[1rem] border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{message}</p> : null}
-            {error ? <p className="rounded-[1rem] border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">{error}</p> : null}
+            {message ? <p className="rounded-[1rem] border border-emerald-200 dark:border-emerald-900/30 bg-emerald-50 dark:bg-emerald-900/20 px-4 py-3 text-sm text-emerald-700 dark:text-emerald-400">{message}</p> : null}
+            {error ? <p className="rounded-[1rem] border border-rose-200 dark:border-rose-900/30 bg-rose-50 dark:bg-rose-900/20 px-4 py-3 text-sm text-rose-700 dark:text-rose-400">{error}</p> : null}
 
             <div className="flex flex-col gap-3 sm:flex-row">
               <button
@@ -352,7 +352,7 @@ export const EventEditionAdminPanel = ({ session }: { session: AuthSession }) =>
             </div>
           </div>
         ) : (
-          <p className="rounded-[1rem] bg-[#f8faff] p-4 text-sm text-[#6c7489]">Create an event to start editing.</p>
+          <p className="rounded-[1rem] bg-[#f8faff] dark:bg-slate-950 p-4 text-sm text-[#6c7489] dark:text-slate-400">Create an event to start editing.</p>
         )}
       </div>
     </section>
@@ -373,14 +373,14 @@ const EventInput = ({
   type?: "text" | "number";
 }) => (
   <label className="block">
-    <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-[#7d8395]">{label}</span>
+    <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-[#7d8395] dark:text-slate-400">{label}</span>
     <input
       type={type}
       value={value}
       onChange={(event) => onChange(event.target.value)}
-      className="h-13 w-full rounded-[1.1rem] border border-[#dfe4f2] bg-white px-4 py-3 text-sm text-[#1f2740] outline-none"
+      className="h-13 w-full rounded-[1.1rem] border border-[#dfe4f2] dark:border-slate-800 bg-white dark:bg-slate-950 px-4 py-3 text-sm text-[#1f2740] dark:text-white outline-none"
     />
-    {helper ? <span className="mt-1 block text-xs text-[#6c7489]">{helper}</span> : null}
+    {helper ? <span className="mt-1 block text-xs text-[#6c7489] dark:text-slate-400">{helper}</span> : null}
   </label>
 );
 
@@ -394,13 +394,13 @@ const JsonEditor = ({
   onChange: (value: string) => void;
 }) => (
   <label className="block">
-    <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-[#7d8395]">{label}</span>
+    <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-[#7d8395] dark:text-slate-400">{label}</span>
     <textarea
       value={value}
       onChange={(event) => onChange(event.target.value)}
       rows={8}
       spellCheck={false}
-      className="w-full rounded-[1.1rem] border border-[#dfe4f2] bg-[#111c2d] px-4 py-3 font-mono text-xs leading-5 text-white outline-none"
+      className="w-full rounded-[1.1rem] border border-[#dfe4f2] dark:border-slate-800 bg-[#111c2d] dark:bg-slate-950 px-4 py-3 font-mono text-xs leading-5 text-white outline-none"
     />
   </label>
 );

@@ -95,7 +95,7 @@ export const AuthPanel = ({ forcedMode }: AuthPanelProps) => {
               value={identifier}
               onChange={(event) => setIdentifier(event.target.value)}
               placeholder="you@example.com or player_one"
-              className="h-16 w-full rounded-[1.35rem] border border-[#e8eaf5] bg-[#eef2ff] px-6 text-[1.1rem] text-[#111c2d] outline-none transition focus:border-[#c3c0ff] focus:ring-4 focus:ring-[#e2dfff] dark:border-slate-800 dark:bg-slate-950 dark:text-white dark:focus:border-indigo-500"
+              className="h-16 w-full rounded-[1.35rem] border border-[#e8eaf5] bg-[#eef2ff] px-6 text-[1.1rem] text-[#111c2d] outline-none transition focus:border-[#c3c0ff] focus:ring-4 focus:ring-[#e2dfff] dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:placeholder-slate-500 dark:focus:border-indigo-500"
             />
           </label>
 
@@ -114,7 +114,7 @@ export const AuthPanel = ({ forcedMode }: AuthPanelProps) => {
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               placeholder="••••••••"
-              className="h-16 w-full rounded-[1.35rem] border border-[#e8eaf5] bg-[#eef2ff] px-6 text-[1.1rem] text-[#111c2d] outline-none transition focus:border-[#c3c0ff] focus:ring-4 focus:ring-[#e2dfff] dark:border-slate-800 dark:bg-slate-950 dark:text-white dark:focus:border-indigo-500"
+              className="h-16 w-full rounded-[1.35rem] border border-[#e8eaf5] bg-[#eef2ff] px-6 text-[1.1rem] text-[#111c2d] outline-none transition focus:border-[#c3c0ff] focus:ring-4 focus:ring-[#e2dfff] dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:placeholder-slate-500 dark:focus:border-indigo-500"
             />
           </label>
 
@@ -184,7 +184,7 @@ export const AuthPanel = ({ forcedMode }: AuthPanelProps) => {
                 value={username}
                 onChange={(event) => setUsername(event.target.value)}
                 placeholder="Enter your grid name"
-                className="h-16 w-full rounded-[1.35rem] border border-[#e8eaf5] bg-[#eef2ff] px-6 text-[1.05rem] text-[#111c2d] outline-none transition focus:border-[#c3c0ff] focus:ring-4 focus:ring-[#e2dfff] dark:border-slate-800 dark:bg-slate-950 dark:text-white dark:focus:border-indigo-500"
+                className="h-16 w-full rounded-[1.35rem] border border-[#e8eaf5] bg-[#eef2ff] px-6 text-[1.05rem] text-[#111c2d] outline-none transition focus:border-[#c3c0ff] focus:ring-4 focus:ring-[#e2dfff] dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:placeholder-slate-500 dark:focus:border-indigo-500"
               />
             </label>
 
@@ -199,7 +199,7 @@ export const AuthPanel = ({ forcedMode }: AuthPanelProps) => {
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
                 placeholder="you@example.com"
-                className="h-16 w-full rounded-[1.35rem] border border-[#e8eaf5] bg-[#eef2ff] px-6 text-[1.05rem] text-[#111c2d] outline-none transition focus:border-[#c3c0ff] focus:ring-4 focus:ring-[#e2dfff] dark:border-slate-800 dark:bg-slate-950 dark:text-white dark:focus:border-indigo-500"
+                className="h-16 w-full rounded-[1.35rem] border border-[#e8eaf5] bg-[#eef2ff] px-6 text-[1.05rem] text-[#111c2d] outline-none transition focus:border-[#c3c0ff] focus:ring-4 focus:ring-[#e2dfff] dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:placeholder-slate-500 dark:focus:border-indigo-500"
               />
             </label>
           </div>
@@ -217,13 +217,13 @@ export const AuthPanel = ({ forcedMode }: AuthPanelProps) => {
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
                 placeholder="••••••••"
-                className="h-16 w-full rounded-[1.35rem] border border-[#e8eaf5] bg-[#eef2ff] px-6 text-[1.05rem] text-[#111c2d] outline-none transition focus:border-[#c3c0ff] focus:ring-4 focus:ring-[#e2dfff] dark:border-slate-800 dark:bg-slate-950 dark:text-white dark:focus:border-indigo-500"
+                className="h-16 w-full rounded-[1.35rem] border border-[#e8eaf5] bg-[#eef2ff] px-6 text-[1.05rem] text-[#111c2d] outline-none transition focus:border-[#c3c0ff] focus:ring-4 focus:ring-[#e2dfff] dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:placeholder-slate-500 dark:focus:border-indigo-500"
               />
             </label>
           </div>
 
           <label className="flex items-center gap-3 text-[1.05rem] text-[#464555] dark:text-slate-300">
-            <input type="checkbox" className="h-5 w-5 rounded border-[#c7c4d8] text-[#3525cd]" />
+            <input type="checkbox" className="h-5 w-5 rounded border-[#c7c4d8] text-[#3525cd] dark:border-slate-700 dark:bg-slate-900" />
             <span>
               I agree to the <span className="font-semibold text-[#3525cd] dark:text-indigo-400">Terms of Service</span>
             </span>

@@ -203,7 +203,7 @@ export const MultiplayerRoomRoute = () => {
   }
 
   return (
-    <div className="relative min-h-screen bg-[radial-gradient(circle_at_top_left,_#e2dfff_0%,_#f9f9ff_42%,_#d4e3ff_100%)] dark:bg-slate-950 dark:bg-none dark:text-slate-100 px-4 py-8 sm:px-6 lg:px-8">
+    <div className="relative min-h-screen bg-[radial-gradient(circle_at_top_left,_#e2dfff_0%,_#f9f9ff_42%,_#d4e3ff_100%)] dark:bg-none dark:bg-slate-950 dark:text-slate-100 px-4 py-8 sm:px-6 lg:px-8">
       <Seo title={`Room ${room.roomCode} - MindGrid Multiplayer`} description="Pre-game multiplayer lobby room." />
 
       <div className="mx-auto max-w-4xl">
@@ -233,9 +233,9 @@ export const MultiplayerRoomRoute = () => {
 
         {/* Room Code Card */}
         <div className="glass-panel text-center rounded-3xl p-6 shadow-xl mb-8">
-          <p className="text-xs font-semibold uppercase tracking-widest text-[#64748b]">Room Access Code</p>
+          <p className="text-xs font-semibold uppercase tracking-widest text-[#64748b] dark:text-slate-400">Room Access Code</p>
           <div className="mt-2 flex items-center justify-center gap-3">
-            <span className="font-mono text-4xl font-black tracking-widest text-[#1e1b4b]">
+            <span className="font-mono text-4xl font-black tracking-widest text-[#1e1b4b] dark:text-white">
               {room.roomCode}
             </span>
             <button
@@ -245,20 +245,20 @@ export const MultiplayerRoomRoute = () => {
               {copied ? "Copied!" : "Copy Code"}
             </button>
           </div>
-          <p className="mt-2 text-xs text-[#64748b]">
+          <p className="mt-2 text-xs text-[#64748b] dark:text-slate-400">
             Share this 6-digit code with your friend to join your game.
           </p>
         </div>
 
         {/* Mode Details Pill */}
         <div className="mb-8 flex flex-wrap items-center justify-center gap-4 text-xs font-bold uppercase tracking-wider">
-          <span className="rounded-xl bg-white/80 px-4 py-2 text-[#3525cd] shadow-sm border border-white/60">
+          <span className="rounded-xl bg-white/80 px-4 py-2 text-[#3525cd] dark:text-indigo-400 shadow-sm border border-white/60 dark:bg-slate-900/90 dark:border-slate-800">
             Mode: {room.gameMode.replace("_", " ")}
           </span>
-          <span className="rounded-xl bg-white/80 px-4 py-2 text-[#3525cd] shadow-sm border border-white/60">
+          <span className="rounded-xl bg-white/80 px-4 py-2 text-[#3525cd] dark:text-indigo-400 shadow-sm border border-white/60 dark:bg-slate-900/90 dark:border-slate-800">
             Matrix: {room.gridSize}
           </span>
-          <span className="rounded-xl bg-white/80 px-4 py-2 text-[#3525cd] shadow-sm border border-white/60">
+          <span className="rounded-xl bg-white/80 px-4 py-2 text-[#3525cd] dark:text-indigo-400 shadow-sm border border-white/60 dark:bg-slate-900/90 dark:border-slate-800">
             Theme: {room.theme}
           </span>
         </div>
@@ -271,14 +271,14 @@ export const MultiplayerRoomRoute = () => {
               Room Host
             </span>
             <div className="mx-auto h-20 w-20 rounded-full bg-gradient-to-tr from-[#4f46e5] to-[#7c3aed] p-1 shadow-md">
-              <div className="h-full w-full rounded-full bg-white flex items-center justify-center text-2xl font-black text-[#1e1b4b]">
+              <div className="h-full w-full rounded-full bg-white dark:bg-slate-900 flex items-center justify-center text-2xl font-black text-[#1e1b4b] dark:text-white">
                 {room.hostProfile?.username?.charAt(0).toUpperCase() || "H"}
               </div>
             </div>
-            <h3 className="mt-3 font-display text-lg font-bold text-[#1e1b4b]">
+            <h3 className="mt-3 font-display text-lg font-bold text-[#1e1b4b] dark:text-white">
               {room.hostProfile?.username || "Host Operative"}
             </h3>
-            <p className="text-xs text-[#64748b]">{room.hostProfile?.rank || "Neural Rookie"}</p>
+            <p className="text-xs text-[#64748b] dark:text-slate-400">{room.hostProfile?.rank || "Neural Rookie"}</p>
 
             <div className="mt-4">
               <span
@@ -302,14 +302,14 @@ export const MultiplayerRoomRoute = () => {
             {room.guestId && room.guestProfile && (onlineUserIds.length === 0 || onlineUserIds.includes(room.guestId)) ? (
               <>
                 <div className="mx-auto h-20 w-20 rounded-full bg-gradient-to-tr from-[#0284c7] to-[#06b6d4] p-1 shadow-md">
-                  <div className="h-full w-full rounded-full bg-white flex items-center justify-center text-2xl font-black text-[#1e1b4b]">
+                  <div className="h-full w-full rounded-full bg-white dark:bg-slate-900 flex items-center justify-center text-2xl font-black text-[#1e1b4b] dark:text-white">
                     {room.guestProfile.username.charAt(0).toUpperCase()}
                   </div>
                 </div>
-                <h3 className="mt-3 font-display text-lg font-bold text-[#1e1b4b]">
+                <h3 className="mt-3 font-display text-lg font-bold text-[#1e1b4b] dark:text-white">
                   {room.guestProfile.username}
                 </h3>
-                <p className="text-xs text-[#64748b]">{room.guestProfile.rank || "Neural Rookie"}</p>
+                <p className="text-xs text-[#64748b] dark:text-slate-400">{room.guestProfile.rank || "Neural Rookie"}</p>
 
                 <div className="mt-4">
                   <span
@@ -325,13 +325,13 @@ export const MultiplayerRoomRoute = () => {
               </>
             ) : (
               <div className="py-6">
-                <div className="mx-auto flex h-20 w-20 animate-pulse items-center justify-center rounded-full bg-slate-200 text-2xl text-[#64748b]">
+                <div className="mx-auto flex h-20 w-20 animate-pulse items-center justify-center rounded-full bg-slate-200 dark:bg-slate-800 text-2xl text-[#64748b] dark:text-slate-400">
                   ◌
                 </div>
-                <p className="mt-4 text-xs font-bold uppercase tracking-wider text-[#64748b]">
+                <p className="mt-4 text-xs font-bold uppercase tracking-wider text-[#64748b] dark:text-slate-400">
                   Waiting for Opponent...
                 </p>
-                <p className="mt-1 text-[11px] text-[#94a3b8]">Share room code to invite a friend</p>
+                <p className="mt-1 text-[11px] text-[#94a3b8] dark:text-slate-500">Share room code to invite a friend</p>
               </div>
             )}
           </div>

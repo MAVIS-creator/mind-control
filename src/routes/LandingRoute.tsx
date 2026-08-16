@@ -146,7 +146,7 @@ export const LandingRoute = () => {
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.08 }}
-            className="glass-panel rounded-[2.1rem] p-5 shadow-[0_18px_40px_rgba(53,37,205,0.08)] sm:p-6 dark:border-slate-800 dark:bg-slate-900/90"
+            className="glass-panel rounded-[2.1rem] p-5 shadow-[0_18px_40px_rgba(53,37,205,0.08)] sm:p-6 dark:border dark:border-slate-800 dark:bg-slate-900/90"
           >
             <div className="mb-6 flex items-center justify-between">
               <div>
@@ -188,7 +188,7 @@ export const LandingRoute = () => {
             ["Top score", formatNumber(bestScore), "Best recorded run"],
             ["Players", formatNumber(totalPlayers), "Accounts on the board"],
           ].map(([label, value, note]) => (
-            <div key={label} className="glass-panel rounded-[1.6rem] px-5 py-5 text-center shadow-[0_12px_30px_rgba(53,37,205,0.05)] dark:border-slate-800 dark:bg-slate-900/90">
+            <div key={label} className="glass-panel rounded-[1.6rem] px-5 py-5 text-center shadow-[0_12px_30px_rgba(53,37,205,0.05)] dark:border dark:border-slate-800 dark:bg-slate-900/90">
               <p className="text-[0.68rem] font-semibold uppercase tracking-[0.22em] text-[#7d8395] dark:text-slate-400">{label}</p>
               <p className="mt-2 text-[2rem] font-bold tracking-[-0.05em] text-[#3525cd] dark:text-white">{value}</p>
               <p className="mt-1 text-sm text-[#5a6174] dark:text-slate-300">{note}</p>
@@ -207,7 +207,7 @@ export const LandingRoute = () => {
             {gameSteps.map((step) => {
               const Icon = step.icon;
               return (
-                <article key={step.title} className="glass-panel rounded-[1.7rem] p-6 shadow-[0_14px_32px_rgba(53,37,205,0.06)] dark:border-slate-800 dark:bg-slate-900/90">
+                <article key={step.title} className="glass-panel rounded-[1.7rem] p-6 shadow-[0_14px_32px_rgba(53,37,205,0.06)] dark:border dark:border-slate-800 dark:bg-slate-900/90">
                   <div className="flex h-14 w-14 items-center justify-center rounded-[1.3rem] bg-[#f1efff] text-[#3525cd] dark:bg-slate-800 dark:text-white shadow-[0_12px_24px_rgba(53,37,205,0.08)]">
                     <Icon className="h-7 w-7" />
                   </div>
@@ -220,14 +220,14 @@ export const LandingRoute = () => {
         </section>
 
         <section className="mt-10 grid gap-5 lg:grid-cols-2">
-          <div className="glass-panel rounded-[2rem] p-6 shadow-[0_14px_32px_rgba(53,37,205,0.06)] sm:p-8 dark:border-slate-800 dark:bg-slate-900/90">
+          <div className="glass-panel rounded-[2rem] p-6 shadow-[0_14px_32px_rgba(53,37,205,0.06)] sm:p-8 dark:border dark:border-slate-800 dark:bg-slate-900/90">
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#7d8395] dark:text-slate-400">MVP modes</p>
             <h2 className="mt-3 text-[2.2rem] font-bold tracking-[-0.05em] text-[#111c2d] dark:text-white">Classic Sync is the main arena.</h2>
             <p className="mt-4 text-base leading-8 text-[#586074] dark:text-slate-300">
               MindGrid currently focuses on one polished single-player mode: timed pair matching with move limits, combo feedback, score rating, and persistent leaderboard runs.
             </p>
           </div>
-          <div className="glass-panel rounded-[2rem] p-6 shadow-[0_14px_32px_rgba(53,37,205,0.06)] sm:p-8 dark:border-slate-800 dark:bg-slate-900/90">
+          <div className="glass-panel rounded-[2rem] p-6 shadow-[0_14px_32px_rgba(53,37,205,0.06)] sm:p-8 dark:border dark:border-slate-800 dark:bg-slate-900/90">
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#7d8395] dark:text-slate-400">Leaderboard logic</p>
             <h2 className="mt-3 text-[2.2rem] font-bold tracking-[-0.05em] text-[#6b00b7] dark:text-indigo-300">Best run ranks. Points stack.</h2>
             <p className="mt-4 text-base leading-8 text-[#586074] dark:text-slate-300">
@@ -236,7 +236,7 @@ export const LandingRoute = () => {
           </div>
         </section>
 
-        <section className="mt-10 glass-panel rounded-[2.2rem] p-6 text-center shadow-[0_18px_40px_rgba(53,37,205,0.08)] sm:p-10 dark:border-slate-800 dark:bg-slate-900/90">
+        <section className="mt-10 glass-panel rounded-[2.2rem] p-6 text-center shadow-[0_18px_40px_rgba(53,37,205,0.08)] sm:p-10 dark:border dark:border-slate-800 dark:bg-slate-900/90">
           <StarBadgeIcon className="mx-auto h-10 w-10 text-[#3525cd] dark:text-indigo-400" />
           <h2 className="mt-4 font-display text-4xl font-bold tracking-[-0.05em] text-[#111c2d] dark:text-white">Ready to enter the grid?</h2>
           <p className="mx-auto mt-3 max-w-2xl text-base leading-8 text-[#586074] dark:text-slate-300">

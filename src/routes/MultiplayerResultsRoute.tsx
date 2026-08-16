@@ -65,7 +65,7 @@ export const MultiplayerResultsRoute = () => {
   const progress = getLevelProgress(currentXp);
 
   return (
-    <div className="relative h-[100dvh] overflow-y-auto bg-[radial-gradient(circle_at_top_left,_#e2dfff_0%,_#f9f9ff_42%,_#d4e3ff_100%)] dark:bg-slate-950 dark:bg-none dark:text-slate-100">
+    <div className="relative h-[100dvh] overflow-y-auto bg-[radial-gradient(circle_at_top_left,_#e2dfff_0%,_#f9f9ff_42%,_#d4e3ff_100%)] dark:bg-none dark:bg-slate-950 dark:text-slate-100">
       <Seo title="Multiplayer Results - MindGrid" description="Post-match multiplayer score breakdown." />
 
       <div className="fixed inset-0 -z-10 overflow-hidden">
@@ -140,13 +140,13 @@ export const MultiplayerResultsRoute = () => {
             </div>
 
             {/* XP Progress Card */}
-            <div className="mt-5 rounded-[1.6rem] border border-white/70 bg-white/50 p-4 sm:p-5">
+            <div className="mt-5 rounded-[1.6rem] border border-white/70 bg-white/50 p-4 sm:p-5 dark:border-slate-800 dark:bg-slate-900/90">
               <div className="flex items-center gap-3">
                 <img src={avatar.image} alt="" className="h-12 w-12 rounded-full border-2 border-white bg-slate-100" />
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center justify-between text-xs font-semibold">
-                    <span className="text-[#111c2d]">{session?.profile.username}</span>
-                    <span className="text-[#3525cd]">Level {progress.level} • {calculateRank(currentXp)}</span>
+                    <span className="text-[#111c2d] dark:text-white">{session?.profile.username}</span>
+                    <span className="text-[#3525cd] dark:text-indigo-400">Level {progress.level} • {calculateRank(currentXp)}</span>
                   </div>
                   <div className="mt-2 h-2.5 overflow-hidden rounded-full bg-[#d8e3fb]">
                     <div
@@ -186,7 +186,7 @@ export const MultiplayerResultsRoute = () => {
               <button
                 type="button"
                 onClick={() => navigate("/multiplayer")}
-                className="inline-flex h-14 flex-1 items-center justify-center gap-2 rounded-full border border-[#dbdef0] bg-white/88 px-6 text-sm font-semibold uppercase tracking-[0.14em] text-[#495066] hover:bg-white"
+                className="inline-flex h-14 flex-1 items-center justify-center gap-2 rounded-full border border-[#dbdef0] bg-white/88 px-6 text-sm font-semibold uppercase tracking-[0.14em] text-[#495066] hover:bg-white dark:border-slate-700 dark:bg-slate-900/90 dark:text-slate-200 dark:hover:bg-slate-800"
               >
                 Multiplayer Lobby
               </button>
@@ -209,11 +209,11 @@ const ResultsTile = ({
   label: string;
   value: string;
 }) => (
-  <div className="rounded-[1.4rem] border border-white/70 bg-white/60 p-4 shadow-sm">
+  <div className="rounded-[1.4rem] border border-white/70 bg-white/60 p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900/90">
     <div className="flex items-center gap-2">
       <span className={accent}>{icon}</span>
-      <p className="text-[0.68rem] font-semibold uppercase tracking-[0.22em] text-[#7d8395]">{label}</p>
+      <p className="text-[0.68rem] font-semibold uppercase tracking-[0.22em] text-[#7d8395] dark:text-slate-400">{label}</p>
     </div>
-    <p className="mt-2 text-xl font-bold tracking-[-0.04em] text-[#111c2d] sm:text-2xl">{value}</p>
+    <p className="mt-2 text-xl font-bold tracking-[-0.04em] text-[#111c2d] dark:text-white sm:text-2xl">{value}</p>
   </div>
 );

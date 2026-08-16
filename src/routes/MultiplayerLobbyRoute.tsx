@@ -107,7 +107,7 @@ export const MultiplayerLobbyRoute = () => {
         description="Join online real-time multiplayer 1v1 duels, speed sprint races, and co-op memory grid battles."
       />
 
-      <div className="min-h-full bg-[radial-gradient(circle_at_top_left,_#e2dfff_0%,_#f9f9ff_42%,_#d4e3ff_100%)] px-3 py-5 pb-32 sm:px-6 sm:py-8 sm:pb-36 md:pb-10">
+      <div className="min-h-full bg-[radial-gradient(circle_at_top_left,_#e2dfff_0%,_#f9f9ff_42%,_#d4e3ff_100%)] dark:bg-none dark:bg-slate-950 px-3 py-5 pb-32 sm:px-6 sm:py-8 sm:pb-36 md:pb-10">
         <div className="mx-auto max-w-5xl">
           <div className="glass-panel rounded-[2rem] px-4 py-6 shadow-[0_18px_40px_rgba(53,37,205,0.08)] sm:rounded-[2.5rem] sm:px-8 sm:py-8 md:px-12">
             
@@ -199,14 +199,14 @@ export const MultiplayerLobbyRoute = () => {
 
             <div className="grid gap-8 lg:grid-cols-12">
               {/* Create Room Box */}
-              <div className="rounded-3xl bg-white/70 p-6 shadow-md border border-white/80 lg:col-span-7">
-                <h2 className="font-display text-lg font-bold text-[#1e1b4b]">
+              <div className="rounded-3xl bg-white/70 dark:bg-slate-900/90 p-6 shadow-md border border-white/80 dark:border-slate-800 lg:col-span-7">
+                <h2 className="font-display text-lg font-bold text-[#1e1b4b] dark:text-white">
                   Create New Match Room
                 </h2>
 
                 {/* Grid Size Selection */}
                 <div className="mt-5">
-                  <label className="text-xs font-semibold uppercase tracking-wider text-[#475569]">Grid Matrix Size</label>
+                  <label className="text-xs font-semibold uppercase tracking-wider text-[#475569] dark:text-slate-400">Grid Matrix Size</label>
                   <div className="mt-2 grid grid-cols-3 gap-3">
                     {(["4x4", "5x6", "6x6"] as GridSize[]).map((size) => (
                       <button
@@ -216,7 +216,7 @@ export const MultiplayerLobbyRoute = () => {
                         className={`rounded-2xl py-3 text-xs font-bold transition-all ${
                           selectedGrid === size
                             ? "bg-[#3525cd] text-white shadow-md"
-                            : "bg-white hover:bg-slate-50 text-[#334155] border border-slate-200"
+                            : "bg-white hover:bg-slate-50 text-[#334155] border border-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:border-slate-700"
                         }`}
                       >
                         {size} Matrix
@@ -227,7 +227,7 @@ export const MultiplayerLobbyRoute = () => {
 
                 {/* Theme Selection */}
                 <div className="mt-5">
-                  <label className="text-xs font-semibold uppercase tracking-wider text-[#475569]">Visual Theme</label>
+                  <label className="text-xs font-semibold uppercase tracking-wider text-[#475569] dark:text-slate-400">Visual Theme</label>
                   <div className="mt-2 grid grid-cols-2 gap-3">
                     <button
                       type="button"
@@ -235,7 +235,7 @@ export const MultiplayerLobbyRoute = () => {
                       className={`rounded-2xl py-3 text-xs font-bold transition-all flex items-center justify-center gap-2 ${
                         selectedTheme === "icons"
                           ? "bg-[#3525cd] text-white shadow-md"
-                          : "bg-white hover:bg-slate-50 text-[#334155] border border-slate-200"
+                          : "bg-white hover:bg-slate-50 text-[#334155] border border-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:border-slate-700"
                       }`}
                     >
                       Icons
@@ -246,7 +246,7 @@ export const MultiplayerLobbyRoute = () => {
                       className={`rounded-2xl py-3 text-xs font-bold transition-all flex items-center justify-center gap-2 ${
                         selectedTheme === "numbers"
                           ? "bg-[#3525cd] text-white shadow-md"
-                          : "bg-white hover:bg-slate-50 text-[#334155] border border-slate-200"
+                          : "bg-white hover:bg-slate-50 text-[#334155] border border-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:border-slate-700"
                       }`}
                     >
                       Numbers
@@ -266,8 +266,8 @@ export const MultiplayerLobbyRoute = () => {
               {/* Join Code Box & Public Rooms */}
               <div className="space-y-6 lg:col-span-5">
                 {/* Enter Code */}
-                <div className="rounded-3xl bg-white/70 p-6 shadow-md border border-white/80">
-                  <h2 className="font-display text-lg font-bold text-[#1e1b4b]">
+                <div className="rounded-3xl bg-white/70 dark:bg-slate-900/90 p-6 shadow-md border border-white/80 dark:border-slate-800">
+                  <h2 className="font-display text-lg font-bold text-[#1e1b4b] dark:text-white">
                     Enter 6-Digit Room Code
                   </h2>
                   <form onSubmit={handleJoinByCode} className="mt-4 flex gap-3">
@@ -277,7 +277,7 @@ export const MultiplayerLobbyRoute = () => {
                       value={roomCodeInput}
                       onChange={(e) => setRoomCodeInput(e.target.value.toUpperCase())}
                       placeholder="e.g. CLASH9"
-                      className="w-full rounded-2xl border border-indigo-100 bg-white px-4 py-3 text-center font-mono text-base font-bold uppercase tracking-widest text-[#1e1b4b] placeholder-[#94a3b8] focus:border-[#4f46e5] focus:outline-none focus:ring-2 focus:ring-[#4f46e5]/30"
+                      className="w-full rounded-2xl border border-indigo-100 bg-white px-4 py-3 text-center font-mono text-base font-bold uppercase tracking-widest text-[#1e1b4b] placeholder-[#94a3b8] focus:border-[#4f46e5] focus:outline-none focus:ring-2 focus:ring-[#4f46e5]/30 dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:placeholder-slate-500"
                     />
                     <button
                       type="submit"
@@ -290,8 +290,8 @@ export const MultiplayerLobbyRoute = () => {
                 </div>
 
                 {/* Public Rooms Feed */}
-                <div className="rounded-3xl bg-white/70 p-6 shadow-md border border-white/80">
-                  <h3 className="font-display text-sm font-bold uppercase tracking-wider text-[#334155] flex items-center justify-between">
+                <div className="rounded-3xl bg-white/70 dark:bg-slate-900/90 p-6 shadow-md border border-white/80 dark:border-slate-800">
+                  <h3 className="font-display text-sm font-bold uppercase tracking-wider text-[#334155] dark:text-slate-300 flex items-center justify-between">
                     <span>Open Lobbies ({openRooms.length})</span>
                     <span className="h-2 w-2 rounded-full bg-emerald-500 animate-ping" />
                   </h3>

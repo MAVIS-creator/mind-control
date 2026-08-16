@@ -13,19 +13,19 @@ export const LeaderboardTable = ({
   entries: LeaderboardEntry[];
   title?: string;
 }) => (
-  <div className="glass-panel overflow-hidden rounded-[2rem]">
-    <div className="flex items-center justify-between border-b border-slate-200/70 px-5 py-4">
-      <h2 className="flex items-center gap-3 text-lg font-semibold text-slate-900">
+  <div className="glass-panel overflow-hidden rounded-[2rem] dark:bg-slate-950 dark:border-slate-800">
+    <div className="flex items-center justify-between border-b border-slate-200/70 px-5 py-4 dark:border-slate-800">
+      <h2 className="flex items-center gap-3 text-lg font-semibold text-slate-900 dark:text-white">
         <span className="rounded-2xl bg-indigo-100 p-2 text-indigo-700">
           <TrophyIcon className="h-4 w-4" />
         </span>
         {title}
       </h2>
-      <p className="text-xs uppercase tracking-[0.22em] text-slate-500">Classic mode</p>
+      <p className="text-xs uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">Classic mode</p>
     </div>
     <div className="overflow-x-auto">
       <table className="min-w-full text-left">
-        <thead className="bg-slate-50 text-xs uppercase tracking-[0.22em] text-slate-500">
+        <thead className="bg-slate-50 text-xs uppercase tracking-[0.22em] text-slate-500 dark:bg-slate-900 dark:text-slate-400">
           <tr>
             <th className="px-5 py-4">Player</th>
             <th className="px-5 py-4">Score</th>
@@ -39,28 +39,28 @@ export const LeaderboardTable = ({
             entries.map((entry, index) => {
               const avatar = avatarMap.get(entry.avatarId) ?? avatarOptions[0];
               return (
-                <tr key={entry.id} className="border-t border-slate-100 text-sm text-slate-700">
+                <tr key={entry.id} className="border-t border-slate-100 text-sm text-slate-700 dark:border-slate-800 dark:text-slate-300">
                   <td className="px-5 py-4">
                     <div className="flex items-center gap-3">
-                      <span className="font-display text-slate-400">
+                      <span className="font-display text-slate-400 dark:text-slate-500">
                         {String(index + 1).padStart(2, "0")}
                       </span>
                       <img
                         src={avatar.image}
                         alt={avatar.name}
-                        className="h-11 w-11 rounded-2xl border border-white bg-slate-100"
+                        className="h-11 w-11 rounded-2xl border border-white bg-slate-100 dark:border-slate-800 dark:bg-slate-900"
                       />
                       <div>
-                        <Link to={`/profile/${entry.userId}`} className="font-medium text-slate-900 hover:text-indigo-700">
+                        <Link to={`/profile/${entry.userId}`} className="font-medium text-slate-900 hover:text-indigo-700 dark:text-white dark:hover:text-indigo-400">
                           {entry.username}
                         </Link>
-                        <div className="text-xs uppercase tracking-[0.24em] text-slate-400">
+                        <div className="text-xs uppercase tracking-[0.24em] text-slate-400 dark:text-slate-500">
                           {new Date(entry.playedAt).toLocaleDateString("en-GB")}
                         </div>
                       </div>
                     </div>
                   </td>
-                  <td className="px-5 py-4 font-display tracking-[0.1em] text-indigo-700">
+                  <td className="px-5 py-4 font-display tracking-[0.1em] text-indigo-700 dark:text-indigo-400">
                     {formatNumber(entry.score)}
                   </td>
                   <td className="px-5 py-4">{formatPercent(entry.accuracy)}</td>
@@ -71,7 +71,7 @@ export const LeaderboardTable = ({
             })
           ) : (
             <tr>
-              <td className="px-5 py-8 text-sm text-slate-500" colSpan={5}>
+              <td className="px-5 py-8 text-sm text-slate-500 dark:text-slate-400" colSpan={5}>
                 No completed runs yet. Start a match and set the first high score.
               </td>
             </tr>

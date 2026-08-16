@@ -137,23 +137,23 @@ export const PerksAdminPanel = () => {
   return (
     <div className="space-y-6">
       {statusMsg && (
-        <div className="rounded-2xl bg-emerald-500/10 border border-emerald-500/20 p-4 text-xs font-bold text-emerald-700">
+        <div className="rounded-2xl bg-emerald-500/10 border border-emerald-500/20 p-4 text-xs font-bold text-emerald-700 dark:text-emerald-400">
           {statusMsg}
         </div>
       )}
       {errorMsg && (
-        <div className="rounded-2xl bg-rose-500/10 border border-rose-500/20 p-4 text-xs font-bold text-rose-700">
+        <div className="rounded-2xl bg-rose-500/10 border border-rose-500/20 p-4 text-xs font-bold text-rose-700 dark:text-rose-400">
           {errorMsg}
         </div>
       )}
 
       <div className="grid gap-6 xl:grid-cols-[1fr_0.8fr]">
         {/* User Emails & Testers Table */}
-        <section className="rounded-[1.6rem] border border-white/70 bg-white/84 p-5 shadow-[0_16px_36px_rgba(53,37,205,0.06)]">
-          <div className="flex items-center justify-between border-b border-[#ececf6] pb-4 mb-4">
+        <section className="rounded-[1.6rem] border border-white/70 dark:border-slate-800 bg-white/84 dark:bg-slate-900/90 p-5 shadow-[0_16px_36px_rgba(53,37,205,0.06)]">
+          <div className="flex items-center justify-between border-b border-[#ececf6] dark:border-slate-800 pb-4 mb-4">
             <div>
-              <h2 className="text-lg font-bold text-[#1a2340]">Registered Accounts & Emails</h2>
-              <p className="text-xs text-[#6c7489]">Inspect registered player emails and manage Neural Tester badges.</p>
+              <h2 className="text-lg font-bold text-[#1a2340] dark:text-white">Registered Accounts & Emails</h2>
+              <p className="text-xs text-[#6c7489] dark:text-slate-400">Inspect registered player emails and manage Neural Tester badges.</p>
             </div>
             <div className="flex gap-2">
               <button
@@ -175,7 +175,7 @@ export const PerksAdminPanel = () => {
 
           <div className="max-h-[34rem] overflow-y-auto space-y-2.5 pr-1">
             {loading ? (
-              <p className="py-8 text-center text-xs font-bold text-slate-500">Loading account directory...</p>
+              <p className="py-8 text-center text-xs font-bold text-slate-500 dark:text-slate-400">Loading account directory...</p>
             ) : profiles.length ? (
               profiles.map((p) => {
                 const avatar = avatarOptions.find((a) => a.id === p.avatar_id) ?? avatarOptions[0];
@@ -186,7 +186,7 @@ export const PerksAdminPanel = () => {
                   <div
                     key={p.id}
                     className={`flex items-center justify-between gap-3 rounded-2xl border p-3.5 transition ${
-                      isSelected ? "border-[#4f46e5] bg-[#eef2ff]" : "border-slate-200/80 bg-white"
+                      isSelected ? "border-[#4f46e5] bg-[#eef2ff] dark:bg-indigo-900/30" : "border-slate-200/80 bg-white dark:border-slate-800 dark:bg-slate-950"
                     }`}
                   >
                     <div className="flex items-center gap-3 min-w-0">
@@ -196,18 +196,18 @@ export const PerksAdminPanel = () => {
                         onChange={() => toggleSelectUser(p.id)}
                         className="h-4 w-4 rounded border-slate-300 text-[#4f46e5]"
                       />
-                      <img src={avatar.image} alt="" className="h-10 w-10 rounded-full border border-slate-200" />
+                      <img src={avatar.image} alt="" className="h-10 w-10 rounded-full border border-slate-200 dark:border-slate-700" />
                       <div className="min-w-0">
                         <div className="flex items-center gap-2">
-                          <span className="font-bold text-slate-900 truncate">{p.username || "Agent"}</span>
+                          <span className="font-bold text-slate-900 dark:text-white truncate">{p.username || "Agent"}</span>
                           {isTester && (
-                            <span className="rounded-full bg-amber-400/20 px-2 py-0.5 text-[10px] font-black text-amber-800 border border-amber-300">
+                            <span className="rounded-full bg-amber-400/20 px-2 py-0.5 text-[10px] font-black text-amber-800 dark:text-amber-400 border border-amber-300 dark:border-amber-500/30">
                               Neural Tester
                             </span>
                           )}
                         </div>
-                        <div className="text-xs font-medium text-slate-600 truncate">{p.email || "No email address"}</div>
-                        <div className="text-[11px] text-slate-400">
+                        <div className="text-xs font-medium text-slate-600 dark:text-slate-400 truncate">{p.email || "No email address"}</div>
+                        <div className="text-[11px] text-slate-400 dark:text-slate-500">
                           XP: {formatNumber(p.xp || 0)} • Joined: {new Date(p.created_at || Date.now()).toLocaleDateString()}
                         </div>
                       </div>
@@ -218,8 +218,8 @@ export const PerksAdminPanel = () => {
                       onClick={() => toggleNeuralTesterStatus(p.id, isTester)}
                       className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-bold uppercase tracking-wider transition ${
                         isTester
-                          ? "bg-rose-100 text-rose-700 hover:bg-rose-200"
-                          : "bg-amber-100 text-amber-800 hover:bg-amber-200 border border-amber-300"
+                          ? "bg-rose-100 text-rose-700 hover:bg-rose-200 dark:bg-rose-900/30 dark:text-rose-400 dark:hover:bg-rose-900/50"
+                          : "bg-amber-100 text-amber-800 hover:bg-amber-200 border border-amber-300 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-500/30 dark:hover:bg-amber-900/50"
                       }`}
                     >
                       {isTester ? "Revoke Tester" : "Grant Tester"}
@@ -234,15 +234,15 @@ export const PerksAdminPanel = () => {
         </section>
 
         {/* Gift Perks Control Panel */}
-        <section className="rounded-[1.6rem] border border-white/70 bg-white/84 p-5 shadow-[0_16px_36px_rgba(53,37,205,0.06)]">
-          <div className="border-b border-[#ececf6] pb-4 mb-4">
-            <h2 className="text-lg font-bold text-[#1a2340]">Gift Perks & Founder Rewards</h2>
-            <p className="text-xs text-[#6c7489]">Distribute active Perks with live APIs to selected players.</p>
+        <section className="rounded-[1.6rem] border border-white/70 dark:border-slate-800 bg-white/84 dark:bg-slate-900/90 p-5 shadow-[0_16px_36px_rgba(53,37,205,0.06)]">
+          <div className="border-b border-[#ececf6] dark:border-slate-800 pb-4 mb-4">
+            <h2 className="text-lg font-bold text-[#1a2340] dark:text-white">Gift Perks & Founder Rewards</h2>
+            <p className="text-xs text-[#6c7489] dark:text-slate-400">Distribute active Perks with live APIs to selected players.</p>
           </div>
 
           <div className="space-y-4">
             <div>
-              <label className="text-xs font-bold uppercase tracking-wider text-slate-600 block mb-2">
+              <label className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 block mb-2">
                 Select Perks to Gift (Multi-Select Allowed):
               </label>
               <div className="space-y-2">
@@ -250,8 +250,8 @@ export const PerksAdminPanel = () => {
                   onClick={() => togglePerk("xp_1000")}
                   className={`flex items-center gap-3 rounded-xl border p-3 cursor-pointer transition ${
                     selectedPerks.includes("xp_1000")
-                      ? "border-[#4f46e5] bg-[#eef2ff]"
-                      : "border-slate-200 bg-white hover:border-indigo-400"
+                      ? "border-[#4f46e5] bg-[#eef2ff] dark:bg-indigo-900/30"
+                      : "border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 hover:border-indigo-400 dark:hover:border-indigo-500/50"
                   }`}
                 >
                   <input
@@ -261,8 +261,8 @@ export const PerksAdminPanel = () => {
                     className="h-4 w-4 rounded border-slate-300 text-[#4f46e5]"
                   />
                   <div>
-                    <p className="text-xs font-bold text-slate-900">+1,000 Founder XP Boost</p>
-                    <p className="text-[11px] text-slate-500">Adds +1,000 XP directly to user account balance.</p>
+                    <p className="text-xs font-bold text-slate-900 dark:text-white">+1,000 Founder XP Boost</p>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400">Adds +1,000 XP directly to user account balance.</p>
                   </div>
                 </label>
 
@@ -270,8 +270,8 @@ export const PerksAdminPanel = () => {
                   onClick={() => togglePerk("tester_badge")}
                   className={`flex items-center gap-3 rounded-xl border p-3 cursor-pointer transition ${
                     selectedPerks.includes("tester_badge")
-                      ? "border-[#4f46e5] bg-[#eef2ff]"
-                      : "border-slate-200 bg-white hover:border-indigo-400"
+                      ? "border-[#4f46e5] bg-[#eef2ff] dark:bg-indigo-900/30"
+                      : "border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 hover:border-indigo-400 dark:hover:border-indigo-500/50"
                   }`}
                 >
                   <input
@@ -281,8 +281,8 @@ export const PerksAdminPanel = () => {
                     className="h-4 w-4 rounded border-slate-300 text-[#4f46e5]"
                   />
                   <div>
-                    <p className="text-xs font-bold text-slate-900">Neural Tester Title & Gold Avatar Ring</p>
-                    <p className="text-[11px] text-slate-500">Grants Neural Tester badge & gold glowing avatar frame.</p>
+                    <p className="text-xs font-bold text-slate-900 dark:text-white">Neural Tester Title & Gold Avatar Ring</p>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400">Grants Neural Tester badge & gold glowing avatar frame.</p>
                   </div>
                 </label>
 
@@ -290,8 +290,8 @@ export const PerksAdminPanel = () => {
                   onClick={() => togglePerk("crystals_500")}
                   className={`flex items-center gap-3 rounded-xl border p-3 cursor-pointer transition ${
                     selectedPerks.includes("crystals_500")
-                      ? "border-[#4f46e5] bg-[#eef2ff]"
-                      : "border-slate-200 bg-white hover:border-indigo-400"
+                      ? "border-[#4f46e5] bg-[#eef2ff] dark:bg-indigo-900/30"
+                      : "border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 hover:border-indigo-400 dark:hover:border-indigo-500/50"
                   }`}
                 >
                   <input
@@ -301,14 +301,14 @@ export const PerksAdminPanel = () => {
                     className="h-4 w-4 rounded border-slate-300 text-[#4f46e5]"
                   />
                   <div>
-                    <p className="text-xs font-bold text-slate-900">+500 Neural Crystals Bonus</p>
-                    <p className="text-[11px] text-slate-500">Credits 500 bonus score points balance.</p>
+                    <p className="text-xs font-bold text-slate-900 dark:text-white">+500 Neural Crystals Bonus</p>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400">Credits 500 bonus score points balance.</p>
                   </div>
                 </label>
               </div>
             </div>
 
-            <div className="rounded-xl bg-indigo-50 p-4 border border-indigo-100 text-xs text-indigo-900">
+            <div className="rounded-xl bg-indigo-50 dark:bg-indigo-950/30 p-4 border border-indigo-100 dark:border-indigo-900/30 text-xs text-indigo-900 dark:text-indigo-200">
               <p><span className="font-bold">Selected Perks: </span>{selectedPerks.length} perk(s)</p>
               <p><span className="font-bold">Target Recipients: </span>{selectedUserIds.length} player(s)</p>
             </div>

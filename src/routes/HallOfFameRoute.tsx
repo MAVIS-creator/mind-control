@@ -8,9 +8,9 @@ import { useAppContext } from "../state/AppContext";
 import type { GridSize, LeaderboardEntry, MatchType } from "../types";
 
 const medalClasses = [
-  "border-[#ffd166] bg-[#fff7db]",
-  "border-[#c7d2fe] bg-[#eef2ff]",
-  "border-[#f4c7a1] bg-[#fff2e8]",
+  "border-[#ffd166] bg-[#fff7db] dark:border-amber-500/50 dark:bg-amber-900/20",
+  "border-[#c7d2fe] bg-[#eef2ff] dark:border-indigo-500/50 dark:bg-indigo-900/20",
+  "border-[#f4c7a1] bg-[#fff2e8] dark:border-orange-500/50 dark:bg-orange-900/20",
 ] as const;
 
 const PAGE_SIZE = 20;
@@ -215,11 +215,11 @@ export const HallOfFameRoute = () => {
               </div>
 
               <div className="flex items-center gap-2">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-[#64748b]">Sort:</span>
+                <span className="text-[11px] font-bold uppercase tracking-wider text-[#64748b] dark:text-slate-400">Sort:</span>
                 <select
                   value={sortKey}
                   onChange={(e) => setSortKey(e.target.value as any)}
-                  className="rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-[#1e1b4b] outline-none focus:border-[#3525cd]"
+                  className="rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-[#1e1b4b] outline-none focus:border-[#3525cd] dark:border-slate-700 dark:bg-slate-900 dark:text-white"
                 >
                   <option value="rating">Overall Rating</option>
                   <option value="points">Total Points</option>
@@ -230,11 +230,11 @@ export const HallOfFameRoute = () => {
               </div>
 
               <div className="flex items-center gap-2">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-[#64748b]">Theme:</span>
+                <span className="text-[11px] font-bold uppercase tracking-wider text-[#64748b] dark:text-slate-400">Theme:</span>
                 <select
                   value={matchTypeFilter}
                   onChange={(e) => setMatchTypeFilter(e.target.value as any)}
-                  className="rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-[#1e1b4b] outline-none focus:border-[#3525cd]"
+                  className="rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-[#1e1b4b] outline-none focus:border-[#3525cd] dark:border-slate-700 dark:bg-slate-900 dark:text-white"
                 >
                   <option value="all">All Themes</option>
                   <option value="numbers">Numbers</option>
@@ -260,36 +260,31 @@ export const HallOfFameRoute = () => {
                   <article
                     key={entry.userId}
                     className={`rounded-[2rem] border p-5 text-center shadow-[0_20px_44px_rgba(53,37,205,0.07)] backdrop-blur-xl sm:p-6 ${
-                      medalClasses[index] ?? "border-slate-200 bg-white/80"
+                      medalClasses[index] ?? "border-slate-200 bg-white/80 dark:border-slate-800 dark:bg-slate-900/80"
                     }`}
-                    style={{
-                      background: "rgba(255,255,255,0.74)",
-                      borderColor:
-                        index === 0 ? "#ffd166" : index === 1 ? "#d8e3fb" : index === 2 ? "#f4c7a1" : "#d8e3fb",
-                    }}
                   >
-                    <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-white text-lg font-bold text-slate-900 shadow-sm">
+                    <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-white text-lg font-bold text-slate-900 shadow-sm dark:bg-slate-900 dark:text-white">
                       {index + 1}
                     </div>
                     <img
                       src={avatar.image}
                       alt={avatar.name}
-                      className="mx-auto mt-4 h-24 w-24 rounded-full border-4 border-white bg-slate-100 shadow-md"
+                      className="mx-auto mt-4 h-24 w-24 rounded-full border-4 border-white bg-slate-100 shadow-md dark:border-slate-800 dark:bg-slate-900"
                     />
                     <Link
                       to={`/profile/${entry.userId}`}
-                      className="mt-4 inline-block text-xl font-semibold text-slate-900 hover:text-[#3525cd]"
+                      className="mt-4 inline-block text-xl font-semibold text-slate-900 hover:text-[#3525cd] dark:text-white dark:hover:text-indigo-400"
                     >
                       {entry.username}
                     </Link>
-                    <p className="mt-1 text-sm font-bold uppercase tracking-[0.18em] text-[#3525cd]">
+                    <p className="mt-1 text-sm font-bold uppercase tracking-[0.18em] text-[#3525cd] dark:text-indigo-400">
                       {entry.multiplayerWins} Multiplayer Win{entry.multiplayerWins === 1 ? "" : "s"}
                     </p>
-                    <p className="mt-2 text-sm text-slate-500">
+                    <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
                       Win Rate {entry.winRate.toFixed(0)}% • {entry.totalBattles} Total Battles
                     </p>
                     <div className="mt-3 flex items-center justify-center">
-                      <span className="rounded-full bg-white/80 px-3 py-1 text-xs font-semibold text-[#4f46e5]">
+                      <span className="rounded-full bg-white/80 px-3 py-1 text-xs font-semibold text-[#4f46e5] dark:bg-slate-800 dark:text-slate-200">
                         {entry.rank}
                       </span>
                     </div>
@@ -308,37 +303,32 @@ export const HallOfFameRoute = () => {
                 <article
                   key={entry.id}
                   className={`rounded-[2rem] border p-5 text-center shadow-[0_20px_44px_rgba(53,37,205,0.07)] backdrop-blur-xl sm:p-6 ${
-                    medalClasses[index] ?? "border-slate-200 bg-white/80"
+                    medalClasses[index] ?? "border-slate-200 bg-white/80 dark:border-slate-800 dark:bg-slate-900/80"
                   }`}
-                  style={{
-                    background: "rgba(255,255,255,0.74)",
-                    borderColor:
-                      index === 0 ? "#ffd166" : index === 1 ? "#d8e3fb" : index === 2 ? "#f4c7a1" : "#d8e3fb",
-                  }}
                 >
-                  <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-white text-lg font-bold text-slate-900 shadow-sm">
+                  <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-white text-lg font-bold text-slate-900 shadow-sm dark:bg-slate-900 dark:text-white">
                     {index + 1}
                   </div>
                   <img
                     src={avatar.image}
                     alt={avatar.name}
-                    className="mx-auto mt-4 h-24 w-24 rounded-full border-4 border-white bg-slate-100 shadow-md"
+                    className="mx-auto mt-4 h-24 w-24 rounded-full border-4 border-white bg-slate-100 shadow-md dark:border-slate-800 dark:bg-slate-900"
                   />
                   <Link
                     to={`/profile/${entry.userId}`}
-                    className="mt-4 inline-block text-xl font-semibold text-slate-900 hover:text-[#3525cd]"
+                    className="mt-4 inline-block text-xl font-semibold text-slate-900 hover:text-[#3525cd] dark:text-white dark:hover:text-indigo-400"
                   >
                     {entry.username}
                   </Link>
-                  <p className="mt-1 text-sm uppercase tracking-[0.18em] text-[#3525cd]">
+                  <p className="mt-1 text-sm uppercase tracking-[0.18em] text-[#3525cd] dark:text-indigo-400">
                     {formatNumber(entry.rating)} rating
                   </p>
-                  <p className="mt-2 text-sm text-slate-500">
+                  <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
                     Best {formatNumber(entry.score)} • Total {formatNumber(entry.totalPoints)}
                   </p>
                   <div className="mt-3 flex flex-wrap items-center justify-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#667085]">
-                    <span className="rounded-full bg-white/80 px-3 py-1">{entry.gridSize}</span>
-                    <span className="rounded-full bg-white/80 px-3 py-1">{matchTypeLabels[entry.matchType]}</span>
+                    <span className="rounded-full bg-white/80 px-3 py-1 dark:bg-slate-800 dark:text-slate-200">{entry.gridSize}</span>
+                    <span className="rounded-full bg-white/80 px-3 py-1 dark:bg-slate-800 dark:text-slate-200">{matchTypeLabels[entry.matchType]}</span>
                   </div>
                 </article>
               );
@@ -352,11 +342,11 @@ export const HallOfFameRoute = () => {
 
         {/* Main Table Section */}
         <section className="glass-panel overflow-hidden rounded-[2rem]">
-          <div className="border-b border-slate-200/70 px-6 py-5">
-            <h2 className="text-xl font-semibold text-slate-900">
+          <div className="border-b border-slate-200/70 px-6 py-5 dark:border-slate-800">
+            <h2 className="text-xl font-semibold text-slate-900 dark:text-white">
               {leaderboardTab === "multiplayer" ? "Multiplayer Clash Standings" : "Single Player Leaderboard"}
             </h2>
-            <p className="mt-1 text-sm text-slate-500">
+            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
               {leaderboardTab === "multiplayer"
                 ? "Ranked by multiplayer victories, win rates, and total competitive battle experience."
                 : usingAccountTotals
@@ -368,7 +358,7 @@ export const HallOfFameRoute = () => {
           <div className="overflow-x-auto">
             {leaderboardTab === "multiplayer" ? (
               <table className="w-full min-w-[800px] text-left">
-                <thead className="bg-slate-50 text-xs uppercase tracking-[0.22em] text-slate-500">
+                <thead className="bg-slate-50 text-xs uppercase tracking-[0.22em] text-slate-500 dark:bg-slate-950 dark:text-slate-400">
                   <tr>
                     <th className="px-6 py-4">Rank</th>
                     <th className="px-6 py-4">Operative</th>
@@ -385,31 +375,31 @@ export const HallOfFameRoute = () => {
                       const avatar = avatarOptions.find((item) => item.id === entry.avatarId) ?? avatarOptions[0];
                       const level = getLevelProgress(entry.xp);
                       return (
-                        <tr key={entry.userId} className="border-t border-slate-100 text-sm text-slate-700">
-                          <td className="px-6 py-4 font-semibold text-slate-500">{index + 1}</td>
+                        <tr key={entry.userId} className="border-t border-slate-100 text-sm text-slate-700 dark:border-slate-800 dark:text-slate-200">
+                          <td className="px-6 py-4 font-semibold text-slate-500 dark:text-slate-400">{index + 1}</td>
                           <td className="px-6 py-4">
                             <div className="flex items-center gap-3">
                               <img
                                 src={avatar.image}
                                 alt={avatar.name}
-                                className="h-11 w-11 rounded-full border-2 border-white bg-slate-100 object-cover"
+                                className="h-11 w-11 rounded-full border-2 border-white bg-slate-100 object-cover dark:border-slate-800 dark:bg-slate-900"
                               />
                               <div>
                                 <Link
                                   to={`/profile/${entry.userId}`}
-                                  className="font-semibold text-slate-900 hover:text-[#3525cd]"
+                                  className="font-semibold text-slate-900 hover:text-[#3525cd] dark:text-white dark:hover:text-indigo-400"
                                 >
                                   {entry.username}
                                 </Link>
-                                <div className="text-xs uppercase tracking-wider text-slate-400">{entry.rank}</div>
+                                <div className="text-xs uppercase tracking-wider text-slate-400 dark:text-slate-500">{entry.rank}</div>
                               </div>
                             </div>
                           </td>
-                          <td className="px-6 py-4 font-bold text-[#3525cd]">{entry.multiplayerWins}</td>
-                          <td className="px-6 py-4 text-slate-500">{entry.multiplayerLosses}</td>
-                          <td className="px-6 py-4 font-semibold text-emerald-600">{entry.winRate.toFixed(0)}%</td>
-                          <td className="px-6 py-4 text-indigo-600 font-semibold">{entry.coopClears}</td>
-                          <td className="px-6 py-4 font-semibold text-slate-600">
+                          <td className="px-6 py-4 font-bold text-[#3525cd] dark:text-indigo-400">{entry.multiplayerWins}</td>
+                          <td className="px-6 py-4 text-slate-500 dark:text-slate-400">{entry.multiplayerLosses}</td>
+                          <td className="px-6 py-4 font-semibold text-emerald-600 dark:text-emerald-400">{entry.winRate.toFixed(0)}%</td>
+                          <td className="px-6 py-4 text-indigo-600 font-semibold dark:text-indigo-400">{entry.coopClears}</td>
+                          <td className="px-6 py-4 font-semibold text-slate-600 dark:text-slate-300">
                             Lvl {level.level} ({formatNumber(entry.xp)} XP)
                           </td>
                         </tr>
@@ -426,7 +416,7 @@ export const HallOfFameRoute = () => {
               </table>
             ) : (
               <table className="w-full min-w-[980px] text-left">
-                <thead className="bg-slate-50 text-xs uppercase tracking-[0.22em] text-slate-500">
+                <thead className="bg-slate-50 text-xs uppercase tracking-[0.22em] text-slate-500 dark:bg-slate-950 dark:text-slate-400">
                   <tr>
                     <th className="px-6 py-4">Rank</th>
                     <th className="px-6 py-4">Player</th>
@@ -443,30 +433,30 @@ export const HallOfFameRoute = () => {
                     visibleEntries.map((entry, index) => {
                       const avatar = avatarOptions.find((item) => item.id === entry.avatarId) ?? avatarOptions[0];
                       return (
-                        <tr key={entry.id} className="border-t border-slate-100 text-sm text-slate-700">
-                          <td className="px-6 py-4 font-semibold text-slate-500">{index + 1}</td>
+                        <tr key={entry.id} className="border-t border-slate-100 text-sm text-slate-700 dark:border-slate-800 dark:text-slate-200">
+                          <td className="px-6 py-4 font-semibold text-slate-500 dark:text-slate-400">{index + 1}</td>
                           <td className="px-6 py-4">
                             <div className="flex items-center gap-3">
                               <img
                                 src={avatar.image}
                                 alt={avatar.name}
-                                className="h-11 w-11 rounded-full border-2 border-white bg-slate-100 object-cover"
+                                className="h-11 w-11 rounded-full border-2 border-white bg-slate-100 object-cover dark:border-slate-800 dark:bg-slate-900"
                               />
                               <div>
                                 <Link
                                   to={`/profile/${entry.userId}`}
-                                  className="font-medium text-slate-900 hover:text-[#3525cd]"
+                                  className="font-medium text-slate-900 hover:text-[#3525cd] dark:text-white dark:hover:text-indigo-400"
                                 >
                                   {entry.username}
                                 </Link>
-                                <div className="text-xs uppercase tracking-[0.22em] text-slate-400">
+                                <div className="text-xs uppercase tracking-[0.22em] text-slate-400 dark:text-slate-500">
                                   {matchTypeLabels[entry.matchType]} • {entry.gridSize}
                                 </div>
                               </div>
                             </div>
                           </td>
-                          <td className="px-6 py-4 font-semibold text-[#3525cd]">{formatNumber(entry.rating)}</td>
-                          <td className="px-6 py-4 font-semibold text-[#0060ac]">{formatNumber(entry.totalPoints)}</td>
+                          <td className="px-6 py-4 font-semibold text-[#3525cd] dark:text-indigo-400">{formatNumber(entry.rating)}</td>
+                          <td className="px-6 py-4 font-semibold text-[#0060ac] dark:text-sky-400">{formatNumber(entry.totalPoints)}</td>
                           <td className="px-6 py-4">{formatNumber(entry.score)}</td>
                           <td className="px-6 py-4">{formatPercent(entry.accuracy)}</td>
                           <td className="px-6 py-4">x{entry.maxCombo}</td>

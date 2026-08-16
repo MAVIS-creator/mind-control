@@ -134,31 +134,31 @@ export const GameRoute = () => {
   }
 
   return (
-    <div className="flex min-h-[100dvh] flex-col bg-[linear-gradient(180deg,#f6f8ff_0%,#eef4ff_100%)] lg:h-screen lg:max-h-screen lg:overflow-hidden">
-      <header className="shrink-0 border-b border-[#cfe0ff] bg-[linear-gradient(180deg,rgba(248,251,255,0.98),rgba(238,245,255,0.94))] backdrop-blur-xl">
+    <div className="flex min-h-[100dvh] flex-col bg-[linear-gradient(180deg,#f6f8ff_0%,#eef4ff_100%)] lg:h-screen lg:max-h-screen lg:overflow-hidden dark:bg-none dark:bg-slate-950">
+      <header className="shrink-0 border-b border-[#cfe0ff] bg-[linear-gradient(180deg,rgba(248,251,255,0.98),rgba(238,245,255,0.94))] backdrop-blur-xl dark:bg-none dark:bg-slate-950 dark:border-slate-800">
         <div className="mx-auto flex max-w-[1440px] flex-col gap-3 px-3 py-3 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8 xl:px-10">
           <div className="flex min-w-0 items-center justify-between gap-2 lg:flex-1 lg:justify-start">
             <Link to="/play" className="flex min-w-0 items-center gap-2 sm:gap-3">
               <BrandMarkIcon className="h-9 w-9 shrink-0 object-contain sm:h-11 sm:w-11" />
-              <span className="truncate font-display text-[1.45rem] font-extrabold text-[#3525cd] sm:text-[2rem]">
+              <span className="truncate font-display text-[1.45rem] font-extrabold text-[#3525cd] dark:text-indigo-400 sm:text-[2rem]">
                 MindGrid
               </span>
             </Link>
             <button
               type="button"
               onClick={togglePause}
-              className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-white/84 px-3 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[#3525cd] shadow-[0_10px_22px_rgba(53,37,205,0.08)] sm:gap-2 sm:px-4 sm:py-2.5 sm:text-sm"
+              className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-white/84 px-3 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[#3525cd] shadow-[0_10px_22px_rgba(53,37,205,0.08)] dark:bg-slate-900/90 dark:text-indigo-400 sm:gap-2 sm:px-4 sm:py-2.5 sm:text-sm"
             >
               {state.status === "paused" ? <PlayIcon className="h-4 w-4" /> : <PauseIcon className="h-4 w-4" />}
               {state.status === "paused" ? "Resume" : "Pause"}
             </button>
           </div>
 
-          <div className="mx-auto flex w-full max-w-[33rem] items-center justify-between gap-2 rounded-[1.5rem] border border-white/80 bg-white/62 px-3 py-2 shadow-[0_16px_36px_rgba(53,37,205,0.08)] sm:gap-4 sm:px-5 lg:w-auto lg:max-w-none lg:justify-center lg:rounded-full">
+          <div className="mx-auto flex w-full max-w-[33rem] items-center justify-between gap-2 rounded-[1.5rem] border border-white/80 bg-white/62 px-3 py-2 shadow-[0_16px_36px_rgba(53,37,205,0.08)] dark:border-slate-800 dark:bg-slate-900/80 sm:gap-4 sm:px-5 lg:w-auto lg:max-w-none lg:justify-center lg:rounded-full">
             <HudStat label="Time" value={formatDuration(state.timerRemaining)} />
             <HudStat label="Moves" value={`${state.moves}/${state.moveLimit}`} />
             <HudStat label="Level" value={`${playerLevel}`} />
-            <div className="flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-full border border-[#b9d2f4] bg-[#d7e7fb] text-[#0058a8] shadow-inner sm:h-16 sm:w-16">
+            <div className="flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-full border border-[#b9d2f4] bg-[#d7e7fb] text-[#0058a8] shadow-inner dark:border-sky-900 dark:bg-sky-950 dark:text-sky-300 sm:h-16 sm:w-16">
               <span className="text-[0.62rem] font-semibold uppercase">Combo</span>
               <span className="text-[1.25rem] font-bold sm:text-[1.45rem]">x{Math.max(state.combo, 1)}</span>
             </div>
@@ -169,7 +169,7 @@ export const GameRoute = () => {
               <SparklesIcon className="h-4 w-4" />
               <span className="truncate text-[0.74rem] font-semibold tracking-[0.03em] sm:text-sm">{session.profile.xp} XP</span>
             </div>
-            <Link to="/profile" className="shrink-0 rounded-full border-2 border-white bg-slate-100 shadow-sm">
+            <Link to="/profile" className="shrink-0 rounded-full border-2 border-white bg-slate-100 shadow-sm dark:border-slate-800 dark:bg-slate-900">
               <img src={avatar.image} alt={avatar.name} className="h-10 w-10 rounded-full sm:h-12 sm:w-12" />
             </Link>
           </div>
@@ -183,7 +183,7 @@ export const GameRoute = () => {
               <button
                 type="button"
                 onClick={handleBackClick}
-                className="inline-flex items-center gap-2 rounded-full border border-[#dbdef0] bg-white/88 px-4 py-2.5 text-sm font-semibold text-[#495066]"
+                className="inline-flex items-center gap-2 rounded-full border border-[#dbdef0] bg-white/88 px-4 py-2.5 text-sm font-semibold text-[#495066] dark:border-slate-800 dark:bg-slate-900/90 dark:text-slate-200"
               >
                 <ArrowLeftIcon className="h-4 w-4" />
                 Back
@@ -191,7 +191,7 @@ export const GameRoute = () => {
               <button
                 type="button"
                 onClick={reset}
-                className="inline-flex items-center gap-2 rounded-full border border-[#dbdef0] bg-white/88 px-4 py-2.5 text-sm font-semibold text-[#495066]"
+                className="inline-flex items-center gap-2 rounded-full border border-[#dbdef0] bg-white/88 px-4 py-2.5 text-sm font-semibold text-[#495066] dark:border-slate-800 dark:bg-slate-900/90 dark:text-slate-200"
               >
                 <RefreshIcon className="h-4 w-4" />
                 Restart
@@ -205,8 +205,8 @@ export const GameRoute = () => {
             <div className="grid grid-cols-3 gap-2 sm:gap-3">
               {boardSummary.map((item) => (
                 <div key={item.label} className="glass-panel rounded-[1.15rem] px-3 py-2.5 sm:rounded-[1.35rem] sm:px-4 sm:py-3">
-                  <p className="text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-[#778099]">{item.label}</p>
-                  <p className="mt-1.5 break-words text-[0.98rem] font-bold tracking-[-0.04em] text-[#1b2441] sm:text-[1.25rem]">{item.value}</p>
+                  <p className="text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-[#778099] dark:text-slate-400">{item.label}</p>
+                  <p className="mt-1.5 break-words text-[0.98rem] font-bold tracking-[-0.04em] text-[#1b2441] dark:text-white sm:text-[1.25rem]">{item.value}</p>
                 </div>
               ))}
             </div>
@@ -214,20 +214,20 @@ export const GameRoute = () => {
 
           <aside className="grid grid-cols-2 gap-3 lg:flex lg:flex-col lg:gap-3 xl:min-h-0">
             <div className="glass-panel rounded-[1.4rem] p-4 sm:rounded-[1.6rem] sm:p-[1.125rem]">
-              <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#3f4457]">Match Progress</p>
+              <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#3f4457] dark:text-slate-300">Match Progress</p>
               <div className="mt-4 flex items-center justify-between text-[1rem] text-[#2a3148]">
                 <span>Matches</span>
                 <span className="font-bold text-[#3525cd]">
                   {state.matches}/{totalPairs}
                 </span>
               </div>
-              <div className="mt-3 h-3 overflow-hidden rounded-full bg-[#d9e5fb]">
+              <div className="mt-3 h-3 overflow-hidden rounded-full bg-[#d9e5fb] dark:bg-slate-800">
                 <div
                   className="h-full rounded-full bg-gradient-to-r from-[#64a8fe] via-[#4f46e5] to-[#3525cd]"
                   style={{ width: `${matchPercent}%` }}
                 />
               </div>
-              <div className="mt-4 rounded-[1.15rem] border border-[#d7dcf5] bg-[#f3f4ff] px-3 py-3 text-sm leading-6 text-[#3525cd] sm:rounded-[1.3rem] sm:px-4 sm:py-3.5">
+              <div className="mt-4 rounded-[1.15rem] border border-[#d7dcf5] bg-[#f3f4ff] px-3 py-3 text-sm leading-6 text-[#3525cd] dark:border-slate-700 dark:bg-slate-900 dark:text-indigo-300 sm:rounded-[1.3rem] sm:px-4 sm:py-3.5">
                 {state.matches === totalPairs
                   ? "Board cleared. Saving your result now."
                   : `Match ${Math.max(totalPairs - state.matches, 0)} more pair${totalPairs - state.matches === 1 ? "" : "s"} to finish this run.`}
@@ -235,7 +235,7 @@ export const GameRoute = () => {
             </div>
 
             <div className="glass-panel rounded-[1.4rem] p-4 sm:rounded-[1.6rem] sm:p-[1.125rem]">
-              <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#3f4457]">Run Score</p>
+              <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#3f4457] dark:text-slate-300">Run Score</p>
               <div className="mt-3 space-y-2.5">
                 <SideStat icon={<GridIcon className="h-4 w-4" />} label="Score" value={formatNumber(results.breakdown.finalScore)} />
                 <SideStat icon={<ClockIcon className="h-4 w-4" />} label="Mistakes" value={`${state.mismatches}`} />
@@ -257,15 +257,15 @@ export const GameRoute = () => {
       </main>
 
       {state.status === "paused" ? (
-        <div className="fixed inset-0 z-50 overflow-y-auto bg-[#eef2ff]/76 px-4 py-4 backdrop-blur-xl sm:py-8">
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-[#eef2ff]/76 px-4 py-4 backdrop-blur-xl dark:bg-slate-950/80 sm:py-8">
           <div className="mx-auto flex min-h-full w-full max-w-[34rem] items-center">
-          <div className="relative w-full overflow-hidden rounded-[2rem] border border-white/70 bg-white/88 p-5 shadow-[0_28px_64px_rgba(53,37,205,0.16)] sm:rounded-[2.6rem] sm:p-8">
-            <div className="pointer-events-none absolute inset-y-8 left-5 hidden w-14 rounded-full bg-[#eef2ff] opacity-80 sm:block" />
-            <div className="pointer-events-none absolute inset-y-8 right-5 hidden w-14 rounded-full bg-[#eef2ff] opacity-80 sm:block" />
+          <div className="relative w-full overflow-hidden rounded-[2rem] border border-white/70 bg-white/88 p-5 shadow-[0_28px_64px_rgba(53,37,205,0.16)] dark:border-slate-800 dark:bg-slate-900/95 sm:rounded-[2.6rem] sm:p-8">
+            <div className="pointer-events-none absolute inset-y-8 left-5 hidden w-14 rounded-full bg-[#eef2ff] opacity-80 dark:bg-slate-800 sm:block" />
+            <div className="pointer-events-none absolute inset-y-8 right-5 hidden w-14 rounded-full bg-[#eef2ff] opacity-80 dark:bg-slate-800 sm:block" />
 
             <div className="relative z-10">
               <div className="text-center">
-                <h2 className="font-display text-[2.35rem] font-extrabold tracking-[-0.04em] text-[#3525cd] sm:text-[3.8rem]">
+                <h2 className="font-display text-[2.35rem] font-extrabold tracking-[-0.04em] text-[#3525cd] dark:text-indigo-400 sm:text-[3.8rem]">
                   Paused
                 </h2>
                 <p className="mt-1 text-xs font-semibold uppercase tracking-[0.22em] text-[#7d8395] sm:mt-2 sm:text-sm sm:tracking-[0.32em]">
@@ -283,18 +283,18 @@ export const GameRoute = () => {
               </button>
 
               <div className="mt-5 sm:mt-8">
-                <p className="text-xl font-semibold tracking-[-0.02em] text-[#1b2441] sm:text-2xl">Settings</p>
-                <div className="mt-3 h-px bg-[#d8dcef]" />
+                <p className="text-xl font-semibold tracking-[-0.02em] text-[#1b2441] dark:text-white sm:text-2xl">Settings</p>
+                <div className="mt-3 h-px bg-[#d8dcef] dark:bg-slate-800" />
               </div>
 
               <div className="mt-4 space-y-4 sm:mt-6 sm:space-y-6">
                 <div>
                   <div className="flex items-center justify-between gap-4">
-                    <div className="flex items-center gap-3 text-[#1f2740]">
-                      <VolumeIcon className="h-6 w-6 text-[#353964] sm:h-7 sm:w-7" />
+                    <div className="flex items-center gap-3 text-[#1f2740] dark:text-slate-200">
+                      <VolumeIcon className="h-6 w-6 text-[#353964] dark:text-slate-400 sm:h-7 sm:w-7" />
                       <span className="text-[0.98rem] font-medium sm:text-[1.1rem]">Master Volume</span>
                     </div>
-                    <span className="text-[0.98rem] font-semibold text-[#3525cd] sm:text-[1.1rem]">{preferences.masterVolume}%</span>
+                    <span className="text-[0.98rem] font-semibold text-[#3525cd] dark:text-indigo-400 sm:text-[1.1rem]">{preferences.masterVolume}%</span>
                   </div>
                   <input
                     type="range"
@@ -303,24 +303,24 @@ export const GameRoute = () => {
                     step={1}
                     value={preferences.masterVolume}
                     onChange={(event) => updatePreferences({ masterVolume: Number(event.target.value) })}
-                    className="mt-4 h-2 w-full cursor-pointer appearance-none rounded-full bg-[#d8e3fb] accent-[#4f46e5]"
+                    className="mt-4 h-2 w-full cursor-pointer appearance-none rounded-full bg-[#d8e3fb] accent-[#4f46e5] dark:bg-slate-700"
                   />
                 </div>
 
                 <PauseToggleRow
-                  icon={<SparklesIcon className="h-7 w-7 text-[#353964]" />}
+                  icon={<SparklesIcon className="h-7 w-7 text-[#353964] dark:text-slate-400" />}
                   label="Sound Effects"
                   checked={preferences.soundEffects}
                   onToggle={() => togglePreference("soundEffects")}
                 />
                 <PauseToggleRow
-                  icon={<MusicIcon className="h-7 w-7 text-[#353964]" />}
+                  icon={<MusicIcon className="h-7 w-7 text-[#353964] dark:text-slate-400" />}
                   label="Music"
                   checked={preferences.music}
                   onToggle={() => togglePreference("music")}
                 />
                 <PauseToggleRow
-                  icon={<HapticsIcon className="h-7 w-7 text-[#353964]" />}
+                  icon={<HapticsIcon className="h-7 w-7 text-[#353964] dark:text-slate-400" />}
                   label="Haptic Feedback"
                   checked={preferences.haptics}
                   onToggle={() => togglePreference("haptics")}
@@ -331,7 +331,7 @@ export const GameRoute = () => {
                 <button
                   type="button"
                   onClick={reset}
-                  className="inline-flex h-12 w-full items-center justify-center gap-3 rounded-full border border-[#cdd6ef] bg-[#f5f7ff] text-[1rem] font-semibold text-[#3525cd] transition hover:bg-white sm:h-16 sm:text-[1.15rem]"
+                  className="inline-flex h-12 w-full items-center justify-center gap-3 rounded-full border border-[#cdd6ef] bg-[#f5f7ff] text-[1rem] font-semibold text-[#3525cd] transition hover:bg-white dark:border-slate-700 dark:bg-slate-800 dark:text-indigo-300 dark:hover:bg-slate-700 sm:h-16 sm:text-[1.15rem]"
                 >
                   <RefreshIcon className="h-5 w-5" />
                   Restart Level
@@ -339,7 +339,7 @@ export const GameRoute = () => {
                 <button
                   type="button"
                   onClick={() => navigate("/play")}
-                  className="inline-flex h-12 w-full items-center justify-center gap-3 rounded-full border border-[#f2c8c8] bg-[#fff5f5] text-[1rem] font-semibold text-[#c11c1c] transition hover:bg-white sm:h-16 sm:text-[1.15rem]"
+                  className="inline-flex h-12 w-full items-center justify-center gap-3 rounded-full border border-[#f2c8c8] bg-[#fff5f5] text-[1rem] font-semibold text-[#c11c1c] transition hover:bg-white dark:border-red-900 dark:bg-red-950/40 dark:text-red-400 dark:hover:bg-red-950/60 sm:h-16 sm:text-[1.15rem]"
                 >
                   <ExitIcon className="h-5 w-5" />
                   Quit to Lobby
@@ -356,13 +356,13 @@ export const GameRoute = () => {
       ) : null}
 
       {showQuitConfirm ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#eef2ff]/78 px-4 py-8 backdrop-blur-xl">
-          <div className="w-full max-w-[34rem] rounded-[2.6rem] border border-white/70 bg-white/92 p-6 shadow-[0_28px_64px_rgba(53,37,205,0.16)] sm:p-8">
-            <p className="text-xs font-semibold uppercase tracking-[0.32em] text-[#7d8395]">Quit match</p>
-            <h2 className="mt-3 font-display text-[2.4rem] font-extrabold tracking-[-0.06em] text-[#111c2d] sm:text-[2.9rem]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#eef2ff]/78 px-4 py-8 backdrop-blur-xl dark:bg-slate-950/80">
+          <div className="w-full max-w-[34rem] rounded-[2.6rem] border border-white/70 bg-white/92 p-6 shadow-[0_28px_64px_rgba(53,37,205,0.16)] dark:border-slate-800 dark:bg-slate-900/95 sm:p-8">
+            <p className="text-xs font-semibold uppercase tracking-[0.32em] text-[#7d8395] dark:text-slate-400">Quit match</p>
+            <h2 className="mt-3 font-display text-[2.4rem] font-extrabold tracking-[-0.06em] text-[#111c2d] dark:text-white sm:text-[2.9rem]">
               Leave this run?
             </h2>
-            <p className="mt-3 text-sm leading-7 text-[#5a6174] sm:text-[1rem]">
+            <p className="mt-3 text-sm leading-7 text-[#5a6174] dark:text-slate-300 sm:text-[1rem]">
               Your current match is still in progress. If you leave now, this run will be abandoned.
             </p>
 
@@ -370,7 +370,7 @@ export const GameRoute = () => {
               <button
                 type="button"
                 onClick={() => setShowQuitConfirm(false)}
-                className="inline-flex h-14 items-center justify-center rounded-full border border-[#d4ddf4] bg-[#f7f9ff] px-6 text-[1rem] font-semibold text-[#2f46d7] transition hover:bg-white"
+                className="inline-flex h-14 items-center justify-center rounded-full border border-[#d4ddf4] bg-[#f7f9ff] px-6 text-[1rem] font-semibold text-[#2f46d7] transition hover:bg-white dark:border-slate-700 dark:bg-slate-800 dark:text-indigo-300 dark:hover:bg-slate-700"
               >
                 Keep Playing
               </button>
@@ -426,7 +426,7 @@ const PauseToggleRow = ({
   onToggle: () => void;
 }) => (
   <div className="flex items-center justify-between gap-4">
-    <div className="flex items-center gap-3 text-[#1f2740]">
+    <div className="flex items-center gap-3 text-[#1f2740] dark:text-slate-200">
       {icon}
       <span className="text-[0.98rem] font-medium sm:text-[1.1rem]">{label}</span>
     </div>
@@ -437,7 +437,7 @@ const PauseToggleRow = ({
       className={`relative inline-flex h-10 w-[4.35rem] shrink-0 items-center rounded-full border transition sm:h-11 sm:w-20 ${
         checked
           ? "border-[#4f46e5] bg-[#3525cd]"
-          : "border-[#cad5f0] bg-[#dbe5ff]"
+          : "border-[#cad5f0] bg-[#dbe5ff] dark:border-slate-700 dark:bg-slate-800"
       }`}
     >
       <span

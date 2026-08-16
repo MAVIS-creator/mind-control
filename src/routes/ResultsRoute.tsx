@@ -33,7 +33,7 @@ export const ResultsRoute = () => {
   const avatar = avatarOptions.find((entry) => entry.id === state.entry.avatarId) ?? avatarOptions[0];
 
   return (
-    <div className="relative h-[100dvh] overflow-y-auto bg-[radial-gradient(circle_at_top_left,_#e2dfff_0%,_#f9f9ff_42%,_#d4e3ff_100%)] dark:bg-slate-950 dark:bg-none dark:text-slate-100">
+    <div className="relative h-[100dvh] overflow-y-auto bg-[radial-gradient(circle_at_top_left,_#e2dfff_0%,_#f9f9ff_42%,_#d4e3ff_100%)] dark:bg-none dark:bg-slate-950 dark:text-slate-100">
       <div className="fixed inset-0 -z-10 overflow-hidden">
         <div className="absolute left-0 top-0 h-[24rem] w-[24rem] rounded-full bg-[#4f46e5]/10 blur-[100px]" />
         <div className="absolute bottom-10 right-0 h-[24rem] w-[24rem] rounded-full bg-[#862dd4]/10 blur-[100px]" />
@@ -109,18 +109,18 @@ const SuccessSummaryCard = ({
         </div>
 
         <div className="text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#3525cd]">Session Complete</p>
-          <h1 className="mt-2 font-display text-[2.1rem] font-extrabold tracking-[-0.04em] text-[#111c2d] sm:mt-3 sm:text-[4rem]">
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#3525cd] dark:text-indigo-400">Session Complete</p>
+          <h1 className="mt-2 font-display text-[2.1rem] font-extrabold tracking-[-0.04em] text-[#111c2d] dark:text-white sm:mt-3 sm:text-[4rem]">
             Excellent Focus!
           </h1>
         </div>
 
-        <div className="mt-5 rounded-[1.5rem] border border-white/70 bg-white/45 px-4 py-5 text-center shadow-inner sm:mt-7 sm:rounded-[2rem] sm:px-6 sm:py-7">
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#7d8395]">Final Score</p>
-          <p className="my-2 text-[3.1rem] font-black leading-none tracking-[-0.04em] text-[#3525cd] sm:text-[5rem]">
+        <div className="mt-5 rounded-[1.5rem] border border-white/70 bg-white/45 px-4 py-5 text-center shadow-inner sm:mt-7 sm:rounded-[2rem] sm:px-6 sm:py-7 dark:border-slate-800 dark:bg-slate-950/60">
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#7d8395] dark:text-slate-400">Final Score</p>
+          <p className="my-2 text-[3.1rem] font-black leading-none tracking-[-0.04em] text-[#3525cd] dark:text-indigo-400 sm:text-[5rem]">
             {formatNumber(state.breakdown.finalScore)}
           </p>
-          <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-[#eef1ff] px-4 py-2 text-sm font-semibold text-[#3525cd]">
+          <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-[#eef1ff] px-4 py-2 text-sm font-semibold text-[#3525cd] dark:bg-slate-800 dark:text-indigo-300">
             <SparklesIcon className="h-4 w-4" />
             +{state.xpAwarded ?? 0} XP
           </div>
@@ -144,17 +144,17 @@ const SuccessSummaryCard = ({
         <div className="mt-5 space-y-3 sm:mt-7">
           <div className="flex items-end justify-between gap-4">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#7d8395]">Rank Progress</p>
-              <p className="mt-1 text-[1.35rem] font-bold tracking-[-0.03em] text-[#111c2d] sm:text-[2rem]">{rankLabel}</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#7d8395] dark:text-slate-400">Rank Progress</p>
+              <p className="mt-1 text-[1.35rem] font-bold tracking-[-0.03em] text-[#111c2d] dark:text-white sm:text-[2rem]">{rankLabel}</p>
             </div>
             <img src={avatar} alt="Player avatar" className="h-12 w-12 rounded-full border-2 border-white bg-slate-100 shadow-sm sm:h-16 sm:w-16" />
           </div>
           <div className="flex items-end justify-between gap-4">
             <div>
-              <p className="text-lg font-bold text-[#111c2d]">{progress.level > 1 ? `Level ${progress.level}` : "Neural Rookie"}</p>
-              <p className="text-sm text-[#5a6174]">Keep pushing your best runs to climb higher.</p>
+              <p className="text-lg font-bold text-[#111c2d] dark:text-white">{progress.level > 1 ? `Level ${progress.level}` : "Neural Rookie"}</p>
+              <p className="text-sm text-[#5a6174] dark:text-slate-400">Keep pushing your best runs to climb higher.</p>
             </div>
-            <span className="text-sm font-semibold text-[#3525cd]">
+            <span className="text-sm font-semibold text-[#3525cd] dark:text-indigo-400">
               {currentXp} / {progress.nextLevelXp} XP
             </span>
           </div>
@@ -177,7 +177,7 @@ const SuccessSummaryCard = ({
         </Link>
         <Link
           to="/play"
-          className="inline-flex h-12 w-full items-center justify-center gap-3 rounded-[1.4rem] border border-[#bcd1f6] bg-white/65 text-sm font-bold text-[#0060ac] transition hover:bg-white sm:h-14 sm:text-base"
+          className="inline-flex h-12 w-full items-center justify-center gap-3 rounded-[1.4rem] border border-[#bcd1f6] bg-white/65 text-sm font-bold text-[#0060ac] transition hover:bg-white sm:h-14 sm:text-base dark:border-slate-700 dark:bg-slate-900/90 dark:text-blue-400 dark:hover:bg-slate-800"
         >
           <GridIcon className="h-5 w-5" />
           Back to Lobby
@@ -205,23 +205,23 @@ const GameOverSummary = ({
       </div>
 
       <div className="text-center">
-        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#3525cd]">Round Summary</p>
-        <h1 className="mt-2 font-display text-[2.1rem] font-extrabold tracking-[-0.04em] text-[#111c2d] sm:mt-3 sm:text-[3.6rem]">
+        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#3525cd] dark:text-indigo-400">Round Summary</p>
+        <h1 className="mt-2 font-display text-[2.1rem] font-extrabold tracking-[-0.04em] text-[#111c2d] dark:text-white sm:mt-3 sm:text-[3.6rem]">
           {ranOutOfMoves ? "Moves Over" : "Time Over"}
         </h1>
-        <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-[#5a6174] sm:mt-4 sm:text-[1rem] sm:leading-8">
+        <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-[#5a6174] dark:text-slate-300 sm:mt-4 sm:text-[1rem] sm:leading-8">
           {ranOutOfMoves
             ? "You ran out of moves before clearing the board. Review the breakdown, tighten the mistakes, and jump back in for a cleaner finish."
             : "The run still saved. Review the breakdown, tighten the mistakes, and jump back in for a cleaner finish."}
         </p>
       </div>
 
-      <div className="mt-5 rounded-[1.5rem] border border-white/70 bg-white/45 px-4 py-5 text-center shadow-inner sm:mt-8 sm:rounded-[1.9rem] sm:px-6 sm:py-7">
-        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#7d8395]">Final Score</p>
-        <p className="my-2 text-[3rem] font-black leading-none tracking-[-0.04em] text-[#3525cd] sm:text-[3.6rem]">
+      <div className="mt-5 rounded-[1.5rem] border border-white/70 bg-white/45 px-4 py-5 text-center shadow-inner sm:mt-8 sm:rounded-[1.9rem] sm:px-6 sm:py-7 dark:border-slate-800 dark:bg-slate-950/60">
+        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#7d8395] dark:text-slate-400">Final Score</p>
+        <p className="my-2 text-[3rem] font-black leading-none tracking-[-0.04em] text-[#3525cd] dark:text-indigo-400 sm:text-[3.6rem]">
           {formatNumber(state.breakdown.finalScore)}
         </p>
-        <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-[#eef1ff] px-4 py-2 text-sm font-semibold text-[#3525cd]">
+        <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-[#eef1ff] px-4 py-2 text-sm font-semibold text-[#3525cd] dark:bg-slate-800 dark:text-indigo-300">
           <SparklesIcon className="h-4 w-4" />
           Saved to Hall of Fame
         </div>
@@ -245,8 +245,8 @@ const GameOverSummary = ({
       <div className="mt-5 space-y-3 sm:mt-8">
         <div className="flex items-end justify-between gap-4">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#7d8395]">Run Breakdown</p>
-            <p className="mt-1 text-lg font-bold text-[#111c2d]">Accuracy and score details</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#7d8395] dark:text-slate-400">Run Breakdown</p>
+            <p className="mt-1 text-lg font-bold text-[#111c2d] dark:text-white">Accuracy and score details</p>
           </div>
           <img src={avatar} alt="Player avatar" className="h-14 w-14 rounded-full border-2 border-white bg-slate-100 shadow-sm" />
         </div>
@@ -269,7 +269,7 @@ const GameOverSummary = ({
         </Link>
         <Link
           to="/play"
-          className="inline-flex h-12 flex-1 items-center justify-center gap-3 rounded-[1.4rem] border border-[#bcd1f6] bg-white/65 text-sm font-bold text-[#0060ac] transition hover:bg-white sm:h-14 sm:text-base"
+          className="inline-flex h-12 flex-1 items-center justify-center gap-3 rounded-[1.4rem] border border-[#bcd1f6] bg-white/65 text-sm font-bold text-[#0060ac] transition hover:bg-white sm:h-14 sm:text-base dark:border-slate-700 dark:bg-slate-900/90 dark:text-blue-400 dark:hover:bg-slate-800"
         >
           <TrophyIcon className="h-5 w-5" />
           Back to Lobby
@@ -290,16 +290,16 @@ const GameOverTile = ({
   label: string;
   value: string;
 }) => (
-  <div className="flex flex-col rounded-[1.2rem] border border-white/40 bg-[#f0f3ff] p-3 sm:rounded-[1.5rem] sm:p-4">
+  <div className="flex flex-col rounded-[1.2rem] border border-white/40 bg-[#f0f3ff] p-3 sm:rounded-[1.5rem] sm:p-4 dark:border-slate-800 dark:bg-slate-900/90">
     <div className={`${accent} mb-2`}>{icon}</div>
-    <span className="text-sm text-[#5a6174]">{label}</span>
-    <span className="mt-1 text-xl font-bold text-[#111c2d] sm:text-2xl">{value}</span>
+    <span className="text-sm text-[#5a6174] dark:text-slate-400">{label}</span>
+    <span className="mt-1 text-xl font-bold text-[#111c2d] dark:text-white sm:text-2xl">{value}</span>
   </div>
 );
 
 const BreakdownRow = ({ label, value }: { label: string; value: string }) => (
-  <div className="rounded-[1.4rem] border border-[#e1e6f4] bg-white/72 px-4 py-3">
-    <div className="text-[0.68rem] font-semibold uppercase tracking-[0.22em] text-[#7d8395]">{label}</div>
-    <div className="mt-1 text-sm font-medium text-[#111c2d]">{value}</div>
+  <div className="rounded-[1.4rem] border border-[#e1e6f4] bg-white/72 px-4 py-3 dark:border-slate-800 dark:bg-slate-900/90">
+    <div className="text-[0.68rem] font-semibold uppercase tracking-[0.22em] text-[#7d8395] dark:text-slate-400">{label}</div>
+    <div className="mt-1 text-sm font-medium text-[#111c2d] dark:text-white">{value}</div>
   </div>
 );

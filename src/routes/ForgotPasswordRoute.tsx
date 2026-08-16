@@ -31,30 +31,30 @@ export const ForgotPasswordRoute = () => {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top_left,_#e2dfff_0%,_#f9f9ff_45%,_#d4e3ff_100%)] px-4 py-8 sm:px-6 lg:px-10">
+    <div className="relative min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top_left,_#e2dfff_0%,_#f9f9ff_45%,_#d4e3ff_100%)] dark:bg-none dark:bg-slate-950 px-4 py-8 sm:px-6 lg:px-10">
       <div className="fixed inset-0 -z-10 overflow-hidden">
-        <div className="absolute -left-10 top-20 h-[22rem] w-[22rem] rounded-full bg-[#9a7cff]/16 blur-[90px]" />
-        <div className="absolute right-0 top-0 h-[28rem] w-[28rem] rounded-full bg-[#64a8fe]/18 blur-[110px]" />
+        <div className="absolute -left-10 top-20 h-[22rem] w-[22rem] rounded-full bg-[#9a7cff]/16 dark:bg-[#9a7cff]/10 blur-[90px]" />
+        <div className="absolute right-0 top-0 h-[28rem] w-[28rem] rounded-full bg-[#64a8fe]/18 dark:bg-[#64a8fe]/10 blur-[110px]" />
       </div>
 
       <div className="mx-auto flex max-w-5xl items-center justify-center">
-        <section className="glass-panel w-full max-w-[32rem] rounded-[2.5rem] px-6 py-8 shadow-[0_26px_60px_rgba(53,37,205,0.08)] sm:px-8">
+        <section className="glass-panel w-full max-w-[32rem] rounded-[2.5rem] px-6 py-8 shadow-[0_26px_60px_rgba(53,37,205,0.08)] sm:px-8 dark:bg-slate-900/90 dark:border dark:border-slate-800">
           <BrandMotionMark className="mx-auto mb-6 w-[11rem] sm:w-[14rem]" />
-          <p className="text-center text-xs font-semibold uppercase tracking-[0.3em] text-[#667085]">Password Reset</p>
-          <h1 className="mt-3 text-center font-display text-[2.4rem] font-extrabold tracking-[-0.06em] text-[#111c2d]">
+          <p className="text-center text-xs font-semibold uppercase tracking-[0.3em] text-[#667085] dark:text-slate-400">Password Reset</p>
+          <h1 className="mt-3 text-center font-display text-[2.4rem] font-extrabold tracking-[-0.06em] text-[#111c2d] dark:text-white">
             Reset your password
           </h1>
-          <p className="mt-3 text-center text-[1rem] leading-7 text-[#5a6174]">
+          <p className="mt-3 text-center text-[1rem] leading-7 text-[#5a6174] dark:text-slate-300">
             Enter the email attached to your account and we&apos;ll send a reset link to your inbox.
           </p>
 
           <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
             <label className="block">
-              <span className="mb-2 block text-sm font-semibold uppercase tracking-[0.16em] text-[#464555]">
+              <span className="mb-2 block text-sm font-semibold uppercase tracking-[0.16em] text-[#464555] dark:text-slate-300">
                 Email
               </span>
               <div className="relative">
-                <MailIcon className="pointer-events-none absolute left-5 top-1/2 h-5 w-5 -translate-y-1/2 text-[#6f7590]" />
+                <MailIcon className="pointer-events-none absolute left-5 top-1/2 h-5 w-5 -translate-y-1/2 text-[#6f7590] dark:text-slate-500" />
                 <input
                   required
                   type="email"
@@ -62,19 +62,19 @@ export const ForgotPasswordRoute = () => {
                   value={email}
                   onChange={(event) => setEmail(event.target.value)}
                   placeholder="you@example.com"
-                  className="h-16 w-full rounded-[1.35rem] border border-[#e8eaf5] bg-[#eef2ff] pl-14 pr-6 text-[1.05rem] text-[#111c2d] outline-none transition focus:border-[#c3c0ff] focus:ring-4 focus:ring-[#e2dfff]"
+                  className="h-16 w-full rounded-[1.35rem] border border-[#e8eaf5] bg-[#eef2ff] pl-14 pr-6 text-[1.05rem] text-[#111c2d] outline-none transition focus:border-[#c3c0ff] focus:ring-4 focus:ring-[#e2dfff] dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:placeholder-slate-500 dark:focus:border-indigo-500"
                 />
               </div>
             </label>
 
             {sent ? (
-              <p className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+              <p className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
                 Reset email sent. Check your inbox and spam folder for the MindGrid reset link.
               </p>
             ) : null}
 
             {error ? (
-              <p className="rounded-2xl border border-rose-300 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+              <p className="rounded-2xl border border-rose-300 bg-rose-50 px-4 py-3 text-sm text-rose-700 dark:border-rose-800 dark:bg-rose-950/60 dark:text-rose-300">
                 {error}
               </p>
             ) : null}
@@ -88,8 +88,8 @@ export const ForgotPasswordRoute = () => {
             </button>
           </form>
 
-          <p className="mt-8 text-center text-[1rem] text-[#464555]">
-            <Link to="/login" className="font-semibold text-[#3525cd]">
+          <p className="mt-8 text-center text-[1rem] text-[#464555] dark:text-slate-400">
+            <Link to="/login" className="font-semibold text-[#3525cd] dark:text-indigo-400">
               Back to sign in
             </Link>
           </p>
