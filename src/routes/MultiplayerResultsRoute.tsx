@@ -9,6 +9,7 @@ import {
 } from "../components/AppIcons";
 import { Seo } from "../components/Seo";
 import { avatarOptions } from "../data/avatars";
+import { updateRoomConfig } from "../lib/multiplayer";
 import { calculateRank, formatDuration, formatNumber, formatPercent, getLevelProgress } from "../lib/utils";
 import { useAppContext } from "../state/AppContext";
 
@@ -141,7 +142,22 @@ export const MultiplayerResultsRoute = () => {
             <div className="mt-7 flex flex-col gap-3 sm:flex-row">
               <button
                 type="button"
-                onClick={() => navigate(roomId ? `/multiplayer/room/${roomId}` : "/multiplayer")}
+                onClick={async () => {
+                  const targetRoomId = room?.id || roomId;
+                  if (targetRoomId) {
+                    await updateRoomConfig(targetRoomId, {
+                      status: "waiting",
+                      hostReady: false,
+                      guestReady: false,
+                      winner_id: null,
+                      seed: Math.floor(Math.random() * 1000000),
+                      createdAt: new Date().toISOString(),
+                    });
+                    navigate(`/multiplayer/room/${targetRoomId}`);
+                  } else {
+                    navigate("/multiplayer");
+                  }
+                }}
                 className="inline-flex h-14 flex-1 items-center justify-center gap-2 rounded-full bg-gradient-to-b from-[#4f46e5] to-[#3525cd] px-6 text-sm font-semibold uppercase tracking-[0.14em] text-white shadow-[0_18px_36px_rgba(53,37,205,0.22)] transition hover:scale-[1.01]"
               >
                 <PlayIcon className="h-4 w-4" />

@@ -51,6 +51,8 @@ export const MultiplayerRoomRoute = () => {
   const isHost = room?.hostId === profile.id;
   const isGuest = room?.guestId === profile.id;
 
+  const [onlineUserIds, setOnlineUserIds] = useState<string[]>([]);
+
   useEffect(() => {
     if (!roomId) return;
     let mounted = true;
@@ -73,8 +75,9 @@ export const MultiplayerRoomRoute = () => {
 
     load();
 
-    // Setup Supabase Realtime DB listener for room changes
+    // Setup Supabase Realtime DB & Presence listener
     let channel: any = null;
+    let presenceChannel: any = null;
     if (supabase) {
       channel = supabase
         .channel(`room_meta_${roomId}`)
@@ -86,6 +89,31 @@ export const MultiplayerRoomRoute = () => {
           },
         )
         .subscribe();
+
+      presenceChannel = supabase.channel(`presence_room_${roomId}`, {
+        config: { presence: { key: profile.id } },
+      });
+
+      presenceChannel
+        .on("presence", { event: "sync" }, () => {
+          const state = presenceChannel.presenceState();
+          const ids = Object.keys(state);
+          setOnlineUserIds(ids);
+
+          // Auto clear guest if disconnected
+          if (room?.hostId === profile.id && room?.guestId && !ids.includes(room.guestId)) {
+            updateRoomConfig(roomId, { guestReady: false });
+          }
+        })
+        .subscribe((status: string) => {
+          if (status === "SUBSCRIBED") {
+            presenceChannel.track({
+              userId: profile.id,
+              username: profile.username,
+              onlineAt: new Date().toISOString(),
+            });
+          }
+        });
     }
 
     const interval = setInterval(load, 2500);
@@ -94,8 +122,9 @@ export const MultiplayerRoomRoute = () => {
       mounted = false;
       clearInterval(interval);
       if (channel && supabase) supabase.removeChannel(channel);
+      if (presenceChannel && supabase) supabase.removeChannel(presenceChannel);
     };
-  }, [roomId, navigate]);
+  }, [roomId, navigate, profile.id, profile.username, room?.hostId, room?.guestId]);
 
   const copyRoomCode = () => {
     if (room?.roomCode) {
@@ -270,7 +299,7 @@ export const MultiplayerRoomRoute = () => {
               Challenger
             </span>
 
-            {room.guestId && room.guestProfile ? (
+            {room.guestId && room.guestProfile && (onlineUserIds.length === 0 || onlineUserIds.includes(room.guestId)) ? (
               <>
                 <div className="mx-auto h-20 w-20 rounded-full bg-gradient-to-tr from-[#0284c7] to-[#06b6d4] p-1 shadow-md">
                   <div className="h-full w-full rounded-full bg-white flex items-center justify-center text-2xl font-black text-[#1e1b4b]">
