@@ -16,7 +16,7 @@ export const BetaFounderClaimModal = () => {
   const isBetaTester = Boolean(profile.isBetaTester);
   const hasClaimed = Boolean(profile.hasClaimedBetaReward);
 
-  // Show modal ONLY for verified Beta Testers who haven't claimed their reward yet!
+  // Show modal ONLY for verified Neural Testers who haven't claimed their reward yet!
   if (!isBetaTester || hasClaimed || claimed) return null;
 
   const handleClaim = async () => {
@@ -47,7 +47,7 @@ export const BetaFounderClaimModal = () => {
           })
           .eq("id", profile.id);
       } catch (err) {
-        console.warn("Error updating beta reward in Supabase:", err);
+        console.warn("Error updating tester reward in Supabase:", err);
       }
     }
 
@@ -64,15 +64,15 @@ export const BetaFounderClaimModal = () => {
         </div>
 
         <span className="inline-block rounded-full bg-amber-400/20 px-4 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.2em] text-amber-300 border border-amber-400/30">
-          Official Beta Founder Gift
+          Official Neural Tester Gift
         </span>
 
         <h2 className="mt-4 font-display text-2xl font-black tracking-tight text-white sm:text-3xl">
-          OG Beta Pioneer Pack!
+          Neural Tester Pack!
         </h2>
 
         <p className="mt-3 text-xs leading-relaxed text-slate-300 sm:text-sm">
-          Thank you for testing MindGrid: Neural Clash! As an official Beta Operative, you qualify for exclusive early-access perks.
+          Thank you for testing MindGrid: Neural Clash! As an official Neural Tester, you qualify for exclusive early-access perks.
         </p>
 
         {/* Perks Box */}
@@ -80,7 +80,7 @@ export const BetaFounderClaimModal = () => {
           <div className="flex items-center gap-3">
             <StarBadgeIcon className="h-5 w-5 shrink-0 text-amber-400" />
             <div>
-              <p className="text-xs font-bold text-white">Exclusive [OG BETA PIONEER] Title</p>
+              <p className="text-xs font-bold text-white">Exclusive [NEURAL TESTER] Title</p>
               <p className="text-[11px] text-slate-400">Displayed on your profile & global ranks.</p>
             </div>
           </div>
@@ -101,7 +101,7 @@ export const BetaFounderClaimModal = () => {
           disabled={claiming}
           className="mt-6 w-full rounded-2xl bg-gradient-to-r from-amber-400 via-orange-500 to-amber-500 py-4 text-sm font-black uppercase tracking-[0.16em] text-slate-950 shadow-[0_12px_28px_rgba(245,158,11,0.4)] transition hover:scale-[1.02] disabled:opacity-50"
         >
-          {claiming ? "Claiming Founder Pack..." : "Claim OG Founder Rewards"}
+          {claiming ? "Claiming Tester Pack..." : "Claim Neural Tester Rewards"}
         </button>
       </div>
     </div>

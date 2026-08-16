@@ -163,7 +163,7 @@ export const ProfileRoute = () => {
                       </h1>
                       {resolvedSnapshot.profile.isBetaTester && (
                         <span className="rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 px-3.5 py-1 text-xs font-black uppercase tracking-wider text-slate-950 shadow-md border border-amber-300">
-                          OG Beta Pioneer
+                          Neural Tester
                         </span>
                       )}
                       {!isOwnProfile ? (

@@ -10,6 +10,7 @@ import {
   UserIcon,
 } from "../components/AppIcons";
 import { EventEditionAdminPanel } from "../components/EventEditionAdminPanel";
+import { PerksAdminPanel } from "../components/PerksAdminPanel";
 import { avatarOptions } from "../data/avatars";
 import { formatDuration, formatNumber, formatPercent, isLegacyAccountEmail } from "../lib/utils";
 import { useAppContext } from "../state/AppContext";
@@ -221,6 +222,8 @@ export const AdminRoute = () => {
             </div>
           </>
         ) : null}
+
+        {section === "perks" ? <PerksAdminPanel /> : null}
 
         {section === "events" ? <EventEditionAdminPanel session={session} /> : null}
 
@@ -458,7 +461,7 @@ export const AdminRoute = () => {
   );
 };
 
-type AdminSection = "overview" | "events" | "messages" | "reviews";
+type AdminSection = "overview" | "perks" | "events" | "messages" | "reviews";
 
 const ADMIN_SECTIONS: Array<{ id: AdminSection; title: string; helper: string; path: string }> = [
   {
@@ -466,6 +469,12 @@ const ADMIN_SECTIONS: Array<{ id: AdminSection; title: string; helper: string; p
     title: "Admin overview",
     helper: "Jump into events, messages, or fair-play reviews without one long page.",
     path: "/mavisbk",
+  },
+  {
+    id: "perks",
+    title: "Perks & Neural Testers",
+    helper: "Manage Neural Tester statuses, inspect user emails, and distribute perks.",
+    path: "/mavisbk/perks",
   },
   {
     id: "events",
@@ -488,7 +497,7 @@ const ADMIN_SECTIONS: Array<{ id: AdminSection; title: string; helper: string; p
 ];
 
 const isAdminSection = (value: string | undefined): value is AdminSection =>
-  value === "overview" || value === "events" || value === "messages" || value === "reviews";
+  value === "overview" || value === "perks" || value === "events" || value === "messages" || value === "reviews";
 
 const AdminNav = () => (
   <nav className="flex gap-2 overflow-x-auto rounded-[1.4rem] border border-white/70 bg-white/84 p-2 shadow-[0_14px_30px_rgba(53,37,205,0.05)]">
