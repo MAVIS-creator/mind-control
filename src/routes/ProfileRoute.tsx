@@ -97,17 +97,33 @@ export const ProfileRoute = () => {
 
   const avatar = avatarOptions.find((entry) => entry.id === resolvedSnapshot.profile.avatarId) ?? avatarOptions[0];
   const level = getLevelProgress(resolvedSnapshot.profile.xp);
-  const recentHighlights = useMemo(
-    () => [
+  const [profileMode, setProfileMode] = useState<"single" | "multiplayer">("single");
+
+  const mpWins = resolvedSnapshot.stats.multiplayerWins ?? 0;
+  const mpLosses = resolvedSnapshot.stats.multiplayerLosses ?? 0;
+  const mpTotal = resolvedSnapshot.stats.multiplayerTotal ?? 0;
+  const mpWinRate = mpTotal ? (mpWins / mpTotal) * 100 : 0;
+
+  const currentHighlights = useMemo(() => {
+    if (profileMode === "multiplayer") {
+      return [
+        ["Multiplayer Wins", formatNumber(mpWins)],
+        ["Multiplayer Defeats", formatNumber(mpLosses)],
+        ["Multiplayer Win Rate", formatPercent(mpWinRate)],
+        ["Total Battles", formatNumber(mpTotal)],
+        ["Co-Op Sync Clears", formatNumber(resolvedSnapshot.stats.coopClears ?? 0)],
+        ["Best Single Combo", `x${resolvedSnapshot.stats.bestCombo}`],
+      ];
+    }
+    return [
       ["Win Rate", formatPercent(resolvedSnapshot.stats.winRate)],
       ["Games Played", formatNumber(resolvedSnapshot.stats.totalGames)],
       ["Best Score", formatNumber(resolvedSnapshot.stats.bestScore)],
       ["Average Score", formatNumber(resolvedSnapshot.stats.averageScore)],
       ["Best Accuracy", formatPercent(resolvedSnapshot.stats.bestAccuracy)],
       ["Best Combo", `x${resolvedSnapshot.stats.bestCombo}`],
-    ],
-    [resolvedSnapshot.stats],
-  );
+    ];
+  }, [mpLosses, mpTotal, mpWinRate, mpWins, profileMode, resolvedSnapshot.stats]);
 
   if (!session) {
     return <Navigate to="/login" replace />;
@@ -178,8 +194,36 @@ export const ProfileRoute = () => {
               </div>
             </section>
 
+            {/* Mode Selector Pill Switch */}
+            <div className="mt-6 flex justify-center">
+              <div className="inline-flex rounded-full bg-white/80 p-1.5 shadow-sm border border-slate-200">
+                <button
+                  type="button"
+                  onClick={() => setProfileMode("single")}
+                  className={`rounded-full px-6 py-2 text-xs font-bold uppercase tracking-wider transition-all ${
+                    profileMode === "single"
+                      ? "bg-[#3525cd] text-white shadow-md"
+                      : "text-[#64748b] hover:text-[#1e1b4b]"
+                  }`}
+                >
+                  Single Player Stats
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setProfileMode("multiplayer")}
+                  className={`rounded-full px-6 py-2 text-xs font-bold uppercase tracking-wider transition-all ${
+                    profileMode === "multiplayer"
+                      ? "bg-[#3525cd] text-white shadow-md"
+                      : "text-[#64748b] hover:text-[#1e1b4b]"
+                  }`}
+                >
+                  Multiplayer Clash Stats
+                </button>
+              </div>
+            </div>
+
             <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-              {recentHighlights.map(([title, value]) => (
+              {currentHighlights.map(([title, value]) => (
                 <div key={title} className="glass-panel rounded-[1.6rem] p-5 shadow-[0_10px_26px_rgba(53,37,205,0.05)]">
                   <div className="text-[0.65rem] uppercase tracking-[0.24em] text-slate-500">{title}</div>
                   <div className="mt-3 text-lg font-semibold text-slate-900">{value}</div>

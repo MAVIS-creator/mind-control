@@ -59,6 +59,7 @@ export const HallOfFameRoute = () => {
   const [gridFilter, setGridFilter] = useState<"all" | GridSize>("all");
   const [matchTypeFilter, setMatchTypeFilter] = useState<"all" | MatchType>("all");
   const [sortKey, setSortKey] = useState<SortKey>("rating");
+  const [leaderboardTab, setLeaderboardTab] = useState<"single" | "multiplayer">("single");
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
@@ -146,87 +147,88 @@ export const HallOfFameRoute = () => {
         <section className="mb-8 text-center">
           <h1 className="mt-3 font-display text-4xl tracking-[-0.05em] text-[#3525cd] sm:text-5xl">Hall of Fame</h1>
           <p className="mx-auto mt-3 max-w-3xl text-sm leading-7 text-[#464555] sm:text-base">
-            {usingAccountTotals
+            {leaderboardTab === "multiplayer"
+              ? "Global multiplayer rankings tracking battle victories, XP, and competitive standings."
+              : usingAccountTotals
               ? "One account row per player with cumulative points stacked across every saved run."
-              : "Best run per player inside the selected board and match type, while total points still keep stacking account-wide."}
+              : "Best run per player inside the selected board and match type."}
           </p>
 
-          <div className="mt-6 flex flex-col items-center gap-3">
-            <div className="flex flex-wrap items-center justify-center gap-2">
-              {[
-                { id: "all", label: "All Boards" },
-                { id: "4x4", label: "4x4" },
-                { id: "5x6", label: "5x6" },
-                { id: "6x6", label: "6x6" },
-              ].map((option) => {
-                const active = gridFilter === option.id;
-                return (
-                  <button
-                    key={option.id}
-                    type="button"
-                    onClick={() => setGridFilter(option.id as typeof gridFilter)}
-                    className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
-                      active
-                        ? "bg-[#3525cd] text-white shadow-[0_12px_24px_rgba(53,37,205,0.18)]"
-                        : "bg-white/80 text-[#495066] border border-[#dfe4f2]"
-                    }`}
-                  >
-                    {option.label}
-                  </button>
-                );
-              })}
+          {/* Mode Switch: Single Player vs Multiplayer */}
+          <div className="mt-5 flex justify-center">
+            <div className="inline-flex rounded-full bg-white/80 p-1.5 shadow-sm border border-slate-200">
+              <button
+                type="button"
+                onClick={() => setLeaderboardTab("single")}
+                className={`rounded-full px-6 py-2 text-xs font-bold uppercase tracking-wider transition-all ${
+                  leaderboardTab === "single"
+                    ? "bg-[#3525cd] text-white shadow-md"
+                    : "text-[#64748b] hover:text-[#1e1b4b]"
+                }`}
+              >
+                Single Player Leaderboard
+              </button>
+              <button
+                type="button"
+                onClick={() => setLeaderboardTab("multiplayer")}
+                className={`rounded-full px-6 py-2 text-xs font-bold uppercase tracking-wider transition-all ${
+                  leaderboardTab === "multiplayer"
+                    ? "bg-[#3525cd] text-white shadow-md"
+                    : "text-[#64748b] hover:text-[#1e1b4b]"
+                }`}
+              >
+                Multiplayer Clash Ranks
+              </button>
             </div>
+          </div>
 
-            <div className="flex flex-wrap items-center justify-center gap-2">
-              {([
-                ["rating", "Overall"],
-                ["points", "Points"],
-                ["fastest", "Fastest"],
-                ["accuracy", "Accurate"],
-                ["combo", "Combo"],
-              ] as const).map(([id, label]) => {
-                const active = sortKey === id;
-                return (
-                  <button
-                    key={id}
-                    type="button"
-                    onClick={() => setSortKey(id)}
-                    className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
-                      active
-                        ? "bg-[#3525cd] text-white shadow-[0_12px_24px_rgba(53,37,205,0.18)]"
-                        : "border border-[#dfe4f2] bg-white/80 text-[#495066]"
-                    }`}
-                  >
-                    {label}
-                  </button>
-                );
-              })}
-            </div>
+          {/* Compact Normalized Filter Toolbar */}
+          {leaderboardTab === "single" && (
+            <div className="mx-auto mt-5 flex max-w-2xl flex-wrap items-center justify-center gap-3 rounded-2xl border border-white/80 bg-white/70 p-3 shadow-sm backdrop-blur-md">
+              <div className="flex items-center gap-2">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-[#64748b]">Grid:</span>
+                <select
+                  value={gridFilter}
+                  onChange={(e) => setGridFilter(e.target.value as any)}
+                  className="rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-[#1e1b4b] outline-none focus:border-[#3525cd]"
+                >
+                  <option value="all">All Boards</option>
+                  <option value="4x4">4x4 Matrix</option>
+                  <option value="5x6">5x6 Matrix</option>
+                  <option value="6x6">6x6 Matrix</option>
+                </select>
+              </div>
 
-            <div className="flex flex-wrap items-center justify-center gap-2">
-              {([
-                { id: "all", label: "All Match Types" },
-                { id: "numbers", label: "Numbers" },
-                { id: "icons", label: "Icons" },
-                ...(hasLegacyRuns ? [{ id: "standard", label: "Legacy" }] : []),
-              ] as const).map((option) => {
-                const active = matchTypeFilter === option.id;
-                return (
-                  <button
-                    key={option.id}
-                    type="button"
-                    onClick={() => setMatchTypeFilter(option.id as typeof matchTypeFilter)}
-                    className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
-                      active
-                        ? "bg-[#4f46e5] text-white shadow-[0_12px_24px_rgba(79,70,229,0.18)]"
-                        : "bg-white/80 text-[#495066] border border-[#dfe4f2]"
-                    }`}
-                  >
-                    {option.label}
-                  </button>
-                );
-              })}
+              <div className="flex items-center gap-2">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-[#64748b]">Sort:</span>
+                <select
+                  value={sortKey}
+                  onChange={(e) => setSortKey(e.target.value as any)}
+                  className="rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-[#1e1b4b] outline-none focus:border-[#3525cd]"
+                >
+                  <option value="rating">Overall Rating</option>
+                  <option value="points">Total Points</option>
+                  <option value="fastest">Fastest Time</option>
+                  <option value="accuracy">Highest Accuracy</option>
+                  <option value="combo">Max Combo</option>
+                </select>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-[#64748b]">Theme:</span>
+                <select
+                  value={matchTypeFilter}
+                  onChange={(e) => setMatchTypeFilter(e.target.value as any)}
+                  className="rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-[#1e1b4b] outline-none focus:border-[#3525cd]"
+                >
+                  <option value="all">All Themes</option>
+                  <option value="numbers">Numbers</option>
+                  <option value="icons">Icons</option>
+                  {hasLegacyRuns && <option value="standard">Legacy</option>}
+                </select>
+              </div>
             </div>
+          )}
           </div>
         </section>
 

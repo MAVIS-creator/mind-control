@@ -53,6 +53,10 @@ export type PlayerStats = {
   bestAccuracy: number;
   bestCombo: number;
   totalPoints: number;
+  multiplayerWins?: number;
+  multiplayerLosses?: number;
+  multiplayerTotal?: number;
+  coopClears?: number;
 };
 
 export type PlayerSnapshot = {

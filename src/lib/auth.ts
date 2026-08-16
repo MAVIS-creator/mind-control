@@ -821,7 +821,7 @@ export const authApi = {
       };
     }
 
-    const [{ data: profileRow, error: profileError }, { data: runRows, error: runsError }] = await Promise.all([
+    const [{ data: profileRow, error: profileError }, { data: runRows, error: runsError }, { data: mpRows }] = await Promise.all([
       supabase
         .from("profiles")
         .select("id, username, email, avatar_id, xp, rank, created_at")
@@ -832,6 +832,11 @@ export const authApi = {
         .select("*")
         .eq("user_id", userId)
         .order("played_at", { ascending: false }),
+      supabase
+        .from("multiplayer_rooms")
+        .select("*")
+        .or(`host_id.eq.${userId},guest_id.eq.${userId}`)
+        .eq("status", "finished"),
     ]);
 
     if (profileError) throw profileError;
@@ -856,9 +861,32 @@ export const authApi = {
     );
     const recentRuns = (runRows ?? []).map(mapLeaderboardRow);
 
+    let mpWins = 0;
+    let mpLosses = 0;
+    let coopClears = 0;
+    const mpTotal = mpRows?.length || 0;
+
+    (mpRows || []).forEach((r) => {
+      if (r.game_mode === "coop") {
+        coopClears += 1;
+      } else if (r.winner_id === userId) {
+        mpWins += 1;
+      } else if (r.winner_id && r.winner_id !== userId) {
+        mpLosses += 1;
+      }
+    });
+
+    const baseStats = calculatePlayerStats(recentRuns);
+
     return {
       profile,
-      stats: calculatePlayerStats(recentRuns),
+      stats: {
+        ...baseStats,
+        multiplayerWins: mpWins,
+        multiplayerLosses: mpLosses,
+        multiplayerTotal: mpTotal,
+        coopClears,
+      },
       recentRuns: recentRuns.slice(0, 8),
     };
   },
