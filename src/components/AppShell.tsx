@@ -98,18 +98,20 @@ export const AppShell = ({ session, active, children }: AppShellProps) => {
               <button
                 type="button"
                 onClick={() => setMenuOpen((current) => !current)}
-                className={`shrink-0 rounded-full border-2 border-white bg-slate-100 shadow-[0_10px_20px_rgba(53,37,205,0.1)] transition ${
-                  session.profile.isAdmin && session.profile.isBetaTester
-                    ? "ring-2 ring-sky-400"
-                    : session.profile.isAdmin
-                    ? "ring-2 ring-sky-500"
-                    : session.profile.isBetaTester
-                    ? "ring-2 ring-amber-400"
-                    : ""
-                }`}
+                className="shrink-0 rounded-full focus:outline-none"
                 aria-label="Profile menu"
               >
-                <img src={avatar.image} alt={avatar.name} className="h-9 w-9 rounded-full object-cover sm:h-12 sm:w-12" />
+                <div
+                  className={`rounded-full p-[2.5px] transition-all duration-300 ${
+                    session.profile.isAdmin
+                      ? "bg-gradient-to-r from-sky-400 via-indigo-500 to-amber-400 shadow-[0_0_16px_rgba(14,165,233,0.45)]"
+                      : session.profile.isBetaTester
+                      ? "bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 shadow-[0_0_16px_rgba(245,158,11,0.4)]"
+                      : "bg-[#e2dfff]"
+                  }`}
+                >
+                  <img src={avatar.image} alt={avatar.name} className="h-9 w-9 rounded-full border-2 border-white bg-slate-100 object-cover sm:h-11 sm:w-11" />
+                </div>
               </button>
 
               {menuOpen ? (

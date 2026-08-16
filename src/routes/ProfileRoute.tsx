@@ -151,10 +151,8 @@ export const ProfileRoute = () => {
                 <div className="relative mx-auto w-full max-w-[220px]">
                   <div
                     className={`rounded-full p-[4px] transition-all duration-300 ${
-                      resolvedSnapshot.profile.isAdmin && resolvedSnapshot.profile.isBetaTester
+                      resolvedSnapshot.profile.isAdmin
                         ? "bg-gradient-to-r from-sky-400 via-indigo-500 to-amber-400 shadow-[0_0_35px_rgba(14,165,233,0.45)]"
-                        : resolvedSnapshot.profile.isAdmin
-                        ? "bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-600 shadow-[0_0_30px_rgba(14,165,233,0.4)]"
                         : resolvedSnapshot.profile.isBetaTester
                         ? "bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 shadow-[0_0_30px_rgba(245,158,11,0.4)]"
                         : "bg-[#e2dfff]"
