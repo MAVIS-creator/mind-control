@@ -87,10 +87,24 @@ export function useMultiplayerGame(
   // Presence state
   const [presenceMap, setPresenceMap] = useState<Record<string, PlayerPresenceState>>({});
 
-  // Rematch request status
-  const [rematchRequestedBy, setRematchRequestedBy] = useState<string | null>(null);
+  // Network ping measurement
+  const [pingMs, setPingMs] = useState<number>(24);
 
   const channelRef = useRef<any>(null);
+
+  useEffect(() => {
+    const pingInterval = setInterval(() => {
+      if (channelRef.current) {
+        channelRef.current.send({
+          type: "broadcast",
+          event: "PING",
+          payload: { timestamp: Date.now(), senderId: currentUserId },
+        });
+      }
+    }, 3000);
+
+    return () => clearInterval(pingInterval);
+  }, [currentUserId]);
 
   // Handle card click / reveal logic according to mode
   const handleCardClick = useCallback(
@@ -314,6 +328,22 @@ export function useMultiplayerGame(
       .on("broadcast", { event: "QUICK_MESSAGE" }, ({ payload }) => {
         setActiveMessages((prev) => [...prev, payload]);
       })
+      .on("broadcast", { event: "PING" }, ({ payload }) => {
+        if (payload.senderId !== currentUserId && channelRef.current) {
+          channelRef.current.send({
+            type: "broadcast",
+            event: "PONG",
+            payload: { timestamp: payload.timestamp, senderId: payload.senderId },
+          });
+        }
+      })
+      .on("broadcast", { event: "PONG" }, ({ payload }) => {
+        if (payload.senderId === currentUserId) {
+          const elapsed = Date.now() - payload.timestamp;
+          const capped = Math.min(500, Math.max(12, elapsed));
+          setPingMs(capped);
+        }
+      })
       .on("broadcast", { event: "REMATCH_REQUEST" }, ({ payload }) => {
         if (payload.senderId !== currentUserId) {
           setRematchRequestedBy(payload.senderId);
@@ -362,5 +392,6 @@ export function useMultiplayerGame(
     rematchRequestedBy,
     sendRematchRequest,
     presenceMap,
+    pingMs,
   };
 }

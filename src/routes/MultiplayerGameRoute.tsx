@@ -87,13 +87,18 @@ const LiveMultiplayerCanvas = ({
     coopSharedScore,
     activeMessages,
     sendQuickMessage,
+    pingMs,
   } = useMultiplayerGame(room, userId, profile);
 
   const [gameFinished, setGameFinished] = useState(false);
   const [showQuitModal, setShowQuitModal] = useState(false);
 
   const totalPairs = gameState.board.cards.length / 2;
-  const isFinished = gameState.matches === totalPairs || gameState.status === "won" || gameState.status === "lost";
+  const isFinished =
+    gameState.matches === totalPairs ||
+    gameState.status === "won" ||
+    gameState.status === "lost" ||
+    opponentGhost.finished;
 
   const avatar = avatarOptions.find((entry) => entry.id === profile.avatarId) ?? avatarOptions[0];
 
@@ -219,7 +224,7 @@ const LiveMultiplayerCanvas = ({
           </div>
 
           <div className="mx-auto flex w-full max-w-[33rem] items-center justify-between gap-2 rounded-[1.5rem] border border-white/80 bg-white/62 px-3 py-2 shadow-[0_16px_36px_rgba(53,37,205,0.08)] sm:gap-4 sm:px-5 lg:w-auto lg:max-w-none lg:justify-center lg:rounded-full">
-            <HudStat label="Time" value={formatDuration(gameState.timerRemaining)} />
+            <HudStat label="Time" value={formatDurationMs(gameState.timerRemaining)} />
             <HudStat label="Moves" value={`${gameState.moves}`} />
             <HudStat label="Pairs" value={`${gameState.matches}/${totalPairs}`} />
             <div className="flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-full border border-[#b9d2f4] bg-[#d7e7fb] text-[#0058a8] shadow-inner sm:h-16 sm:w-16">
@@ -229,6 +234,14 @@ const LiveMultiplayerCanvas = ({
           </div>
 
           <div className="flex items-center justify-center gap-2 lg:flex-1 lg:justify-end">
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white/80 px-3 py-1.5 text-xs font-bold text-slate-700 shadow-sm">
+              <span
+                className={`h-2 w-2 rounded-full ${
+                  pingMs < 120 ? "bg-emerald-500" : pingMs < 250 ? "bg-amber-500" : "bg-rose-500"
+                } animate-pulse`}
+              />
+              <span>{pingMs}ms Ping</span>
+            </div>
             <div className="inline-flex min-w-0 items-center gap-1.5 rounded-full bg-gradient-to-b from-[#4f46e5] to-[#3525cd] px-3 py-2 text-white shadow-[0_14px_30px_rgba(53,37,205,0.18)] sm:gap-2 sm:px-4 sm:py-2.5">
               <SparklesIcon className="h-4 w-4" />
               <span className="truncate text-[0.74rem] font-semibold tracking-[0.03em] sm:text-sm">{profile.xp} XP</span>

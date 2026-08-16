@@ -80,6 +80,16 @@ export const formatDuration = (seconds: number) => {
   return `${mins}:${String(remainder).padStart(2, "0")}`;
 };
 
+export const formatDurationMs = (secondsOrMs: number) => {
+  const isMs = secondsOrMs > 1000;
+  const totalMs = isMs ? secondsOrMs : secondsOrMs * 1000;
+  const totalSecs = Math.floor(totalMs / 1000);
+  const mins = Math.floor(totalSecs / 60);
+  const secs = totalSecs % 60;
+  const ms = Math.floor((totalMs % 1000) / 10);
+  return `${mins}:${String(secs).padStart(2, "0")}.${String(ms).padStart(2, "0")}`;
+};
+
 export const uid = () =>
   typeof crypto !== "undefined" && "randomUUID" in crypto
     ? crypto.randomUUID()
