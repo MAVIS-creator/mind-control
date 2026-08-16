@@ -10,11 +10,12 @@ import {
 } from "../components/AppIcons";
 import { Seo } from "../components/Seo";
 import { avatarOptions } from "../data/avatars";
+import { MindGridCanvas } from "../game/phaser/MindGridCanvas";
 import { useMultiplayerGame, type QuickMessage } from "../game/useMultiplayerGame";
-import { fetchRoomDetails, updateRoomConfig } from "../lib/multiplayer";
+import { fetchRoomDetails, leaveMultiplayerRoom, updateRoomConfig } from "../lib/multiplayer";
 import { formatDuration, formatNumber } from "../lib/utils";
 import { useAppContext } from "../state/AppContext";
-import type { CardNode, MultiplayerRoom } from "../types";
+import type { MultiplayerRoom } from "../types";
 
 export const MultiplayerGameRoute = () => {
   const { roomId } = useParams<{ roomId: string }>();
@@ -84,12 +85,12 @@ const LiveMultiplayerCanvas = ({
     playerScores,
     opponentGhost,
     coopSharedScore,
-    coopCombinedCombo,
     activeMessages,
     sendQuickMessage,
   } = useMultiplayerGame(room, userId, profile);
 
   const [gameFinished, setGameFinished] = useState(false);
+  const [showQuitModal, setShowQuitModal] = useState(false);
 
   const totalPairs = gameState.board.cards.length / 2;
   const isFinished = gameState.matches === totalPairs || gameState.status === "won" || gameState.status === "lost";
@@ -144,13 +145,6 @@ const LiveMultiplayerCanvas = ({
     }
   }, [isFinished, gameFinished, room, playerScores, gameState, opponentGhost, isHost, userId, coopSharedScore, navigate]);
 
-  const gridColsClass =
-    gameState.board.columns === 6
-      ? "grid-cols-6"
-      : gameState.board.columns === 5
-      ? "grid-cols-5"
-      : "grid-cols-4";
-
   const quickMessagesList: QuickMessage[] = [
     "Nice move!",
     "Good game!",
@@ -159,6 +153,12 @@ const LiveMultiplayerCanvas = ({
     "Your turn!",
     "Well played!",
   ];
+
+  const handleConfirmQuit = async () => {
+    setShowQuitModal(false);
+    await leaveMultiplayerRoom(room.id, userId);
+    navigate("/multiplayer");
+  };
 
   return (
     <div className="flex min-h-[100dvh] flex-col bg-[linear-gradient(180deg,#f6f8ff_0%,#eef4ff_100%)] lg:h-screen lg:max-h-screen lg:overflow-hidden">
@@ -175,6 +175,37 @@ const LiveMultiplayerCanvas = ({
           </div>
         ))}
       </div>
+
+      {/* Quit Confirmation Modal */}
+      {showQuitModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md px-4">
+          <div className="w-full max-w-md rounded-3xl bg-white p-7 shadow-2xl border border-indigo-100 text-center">
+            <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-red-50 text-[#dc2626]">
+              <ArrowLeftIcon className="h-6 w-6" />
+            </div>
+            <h3 className="font-display text-xl font-extrabold text-[#1e1b4b]">Quit Multiplayer Match?</h3>
+            <p className="mt-2 text-xs leading-relaxed text-[#64748b]">
+              Are you sure you want to leave this battle? Forfeiting will end your active multiplayer session.
+            </p>
+            <div className="mt-6 flex gap-3">
+              <button
+                type="button"
+                onClick={() => setShowQuitModal(false)}
+                className="flex-1 rounded-xl border border-slate-200 bg-slate-50 py-3 text-xs font-bold text-[#334155] hover:bg-slate-100"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmQuit}
+                className="flex-1 rounded-xl bg-red-600 py-3 text-xs font-bold text-white hover:bg-red-700 shadow-md"
+              >
+                Yes, Quit Match
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Top Header / HUD (Identical to Single Player) */}
       <header className="shrink-0 border-b border-[#cfe0ff] bg-[linear-gradient(180deg,rgba(248,251,255,0.98),rgba(238,245,255,0.94))] backdrop-blur-xl">
@@ -216,49 +247,25 @@ const LiveMultiplayerCanvas = ({
             <div className="flex flex-wrap items-center justify-between gap-3">
               <button
                 type="button"
-                onClick={() => navigate("/multiplayer")}
+                onClick={() => setShowQuitModal(true)}
                 className="inline-flex items-center gap-2 rounded-full border border-[#dbdef0] bg-white/88 px-4 py-2.5 text-xs font-semibold text-[#495066] hover:bg-white"
               >
                 <ArrowLeftIcon className="h-4 w-4" />
-                Disband Match
+                Back / Disband Match
               </button>
 
               <span className="rounded-full bg-[#4f46e5]/10 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-[#3525cd] border border-[#4f46e5]/20">
                 {room.gameMode === "speed_sprint"
-                  ? "SPEED SPRINT RACE (4x4 Matrix)"
+                  ? `SPEED SPRINT RACE (${room.gridSize.toUpperCase()} MATRIX)`
                   : room.gameMode === "coop"
                   ? "CO-OP GRID SYNC"
                   : "TURN-BASED 1v1 DUEL"}
               </span>
             </div>
 
-            {/* Playable Grid Canvas */}
-            <div className="min-h-0 flex items-center justify-center p-2">
-              <div className={`grid gap-3 sm:gap-4 ${gridColsClass} w-full max-w-xl`}>
-                {gameState.board.cards.map((card: CardNode) => {
-                  const isSelected = gameState.selectedIds.includes(card.id);
-                  const isClickable = !card.matched && !card.revealed && (room.gameMode !== "turn_based" || isMyTurn);
-
-                  return (
-                    <button
-                      key={card.id}
-                      onClick={() => isClickable && handleCardClick(card.id)}
-                      disabled={!isClickable}
-                      className={`aspect-square rounded-2xl sm:rounded-3xl p-2 font-display text-2xl sm:text-3xl font-bold transition-all duration-300 shadow-md ${
-                        card.matched
-                          ? "bg-emerald-500/20 text-emerald-700 border-2 border-emerald-500/40 opacity-70"
-                          : card.revealed || isSelected
-                          ? "bg-white text-[#3525cd] ring-4 ring-[#4f46e5]/40 rotate-y-180 scale-105"
-                          : "bg-gradient-to-tr from-[#3525cd] via-[#4f46e5] to-[#7c3aed] text-white hover:scale-105 active:scale-95 border border-white/20"
-                      }`}
-                    >
-                      <div className="flex h-full w-full items-center justify-center">
-                        {card.revealed || card.matched ? card.symbol : "◌"}
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
+            {/* Playable Canvas Board (Phaser Engine Matching Single Player Image 2) */}
+            <div className="min-h-0 lg:flex lg:flex-1 lg:items-center lg:justify-center">
+              <MindGridCanvas state={gameState} onReveal={handleCardClick} />
             </div>
 
             {/* Quick Messages Bar */}
@@ -277,7 +284,7 @@ const LiveMultiplayerCanvas = ({
           </section>
 
           {/* Right Sidebar: Match & Live Opponent Progress (Same as Single Player Sidebar) */}
-          <aside className="grid grid-cols-2 gap-3 lg:grid-cols-1 lg:grid-rows-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-3 xl:min-h-0">
+          <aside className="grid grid-cols-2 gap-3 lg:flex lg:flex-col lg:gap-3 xl:min-h-0">
             {/* Card 1: Live Progress & Opponent Ghost Updates */}
             <div className="glass-panel rounded-[1.4rem] p-4 sm:rounded-[1.6rem]">
               <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#3f4457]">

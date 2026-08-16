@@ -212,7 +212,7 @@ export const GameRoute = () => {
             </div>
           </section>
 
-          <aside className="grid grid-cols-2 gap-3 lg:grid-cols-1 lg:grid-rows-[minmax(0,1fr)_minmax(0,1fr)_auto] lg:gap-3 xl:min-h-0">
+          <aside className="grid grid-cols-2 gap-3 lg:flex lg:flex-col lg:gap-3 xl:min-h-0">
             <div className="glass-panel rounded-[1.4rem] p-4 sm:rounded-[1.6rem] sm:p-[1.125rem]">
               <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#3f4457]">Match Progress</p>
               <div className="mt-4 flex items-center justify-between text-[1rem] text-[#2a3148]">

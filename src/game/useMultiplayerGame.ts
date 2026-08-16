@@ -48,13 +48,14 @@ export function useMultiplayerGame(
   const opponentProfile = isHost ? room.guestProfile : room.hostProfile;
 
   // Initialize board state with shared seed
-  const [gameState, setGameState] = useState<GameSessionState>(() =>
-    createInitialGameState({
+  const [gameState, setGameState] = useState<GameSessionState>(() => {
+    const initial = createInitialGameState({
       theme: room.theme,
       gridSize: room.gridSize,
       seed: room.seed,
-    }),
-  );
+    });
+    return { ...initial, status: "running" };
+  });
 
   // Scores state for turn-based and coop modes
   const [playerScores, setPlayerScores] = useState<{ [id: string]: number }>({
@@ -99,14 +100,16 @@ export function useMultiplayerGame(
       if (room.gameMode === "turn_based") {
         if (currentTurnId !== currentUserId) return; // Not your turn!
         if (gameState.selectedIds.length >= 2) return;
+      } else if (room.gameMode === "speed_sprint") {
+        if (gameState.selectedIds.length >= 2) return;
       }
 
       // Local reveal
       setGameState((prev) => {
         const next = revealCard(prev, cardId);
 
-        // Broadcast move to partner
-        if (channelRef.current) {
+        // Broadcast move to partner ONLY in turn_based or coop modes
+        if (channelRef.current && (room.gameMode === "turn_based" || room.gameMode === "coop")) {
           channelRef.current.send({
             type: "broadcast",
             event: "CARD_REVEAL",
@@ -264,7 +267,7 @@ export function useMultiplayerGame(
         setPresenceMap(mapped);
       })
       .on("broadcast", { event: "CARD_REVEAL" }, ({ payload }) => {
-        if (payload.senderId !== currentUserId) {
+        if (room.gameMode !== "speed_sprint" && payload.senderId !== currentUserId) {
           setGameState((prev) => revealCard(prev, payload.cardId));
         }
       })
