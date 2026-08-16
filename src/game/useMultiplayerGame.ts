@@ -160,7 +160,7 @@ export function useMultiplayerGame(
 
               return resolved;
             });
-          }, 800);
+          }, 350);
         }
 
         return next;
@@ -190,13 +190,28 @@ export function useMultiplayerGame(
     }
   }, [gameState.score, gameState.matches, gameState.combo, gameState.moves, gameState.status, room.gameMode, currentUserId]);
 
-  // Game timer tick loop
+  // Master synced game timer tick loop (Host ticks, Guest syncs)
   useEffect(() => {
     if (gameState.status !== "running") return;
 
-    const interval = setInterval(() => {
-      setGameState((prev) => tickGame(prev));
-    }, 1000);
+    if (isHost) {
+      const interval = setInterval(() => {
+        setGameState((prev) => {
+          const next = tickGame(prev);
+          if (channelRef.current) {
+            channelRef.current.send({
+              type: "broadcast",
+              event: "TIMER_SYNC",
+              payload: { timerRemaining: next.timerRemaining },
+            });
+          }
+          return next;
+        });
+      }, 1000);
+
+      return () => clearInterval(interval);
+    }
+  }, [gameState.status, isHost]);
 
     return () => clearInterval(interval);
   }, [gameState.status]);
@@ -269,6 +284,11 @@ export function useMultiplayerGame(
       .on("broadcast", { event: "CARD_REVEAL" }, ({ payload }) => {
         if (room.gameMode !== "speed_sprint" && payload.senderId !== currentUserId) {
           setGameState((prev) => revealCard(prev, payload.cardId));
+        }
+      })
+      .on("broadcast", { event: "TIMER_SYNC" }, ({ payload }) => {
+        if (!isHost && payload.timerRemaining !== undefined) {
+          setGameState((prev) => ({ ...prev, timerRemaining: payload.timerRemaining }));
         }
       })
       .on("broadcast", { event: "TURN_CHANGE" }, ({ payload }) => {

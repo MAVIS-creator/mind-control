@@ -233,14 +233,24 @@ export const ProfileRoute = () => {
 
             <div className="mt-6 grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
               <section className="glass-panel rounded-[1.8rem] p-6 shadow-[0_10px_26px_rgba(53,37,205,0.05)]">
-                <h2 className="text-lg font-semibold text-slate-900">Player Overview</h2>
+                <h2 className="text-lg font-semibold text-slate-900">
+                  {profileMode === "multiplayer" ? "Multiplayer Clash Overview" : "Single Player Overview"}
+                </h2>
                 <div className="mt-5 grid gap-4 sm:grid-cols-2">
-                  {[
-                    ["Wins", formatNumber(resolvedSnapshot.stats.wins)],
-                    ["Losses", formatNumber(resolvedSnapshot.stats.losses)],
-                    ["Total Points", formatNumber(resolvedSnapshot.stats.totalPoints)],
-                    ["Joined", new Date(resolvedSnapshot.profile.createdAt).toLocaleDateString("en-GB")],
-                  ].map(([title, value]) => (
+                  {(profileMode === "multiplayer"
+                    ? [
+                        ["Multiplayer Wins", formatNumber(mpWins)],
+                        ["Multiplayer Defeats", formatNumber(mpLosses)],
+                        ["Total Battles", formatNumber(mpTotal)],
+                        ["Co-Op Sync Clears", formatNumber(resolvedSnapshot.stats.coopClears ?? 0)],
+                      ]
+                    : [
+                        ["Wins", formatNumber(resolvedSnapshot.stats.wins)],
+                        ["Losses", formatNumber(resolvedSnapshot.stats.losses)],
+                        ["Total Points", formatNumber(resolvedSnapshot.stats.totalPoints)],
+                        ["Joined", new Date(resolvedSnapshot.profile.createdAt).toLocaleDateString("en-GB")],
+                      ]
+                  ).map(([title, value]) => (
                     <div key={title} className="rounded-[1.3rem] border border-[#e0e6f4] bg-white/68 px-4 py-4">
                       <div className="text-[0.68rem] uppercase tracking-[0.22em] text-slate-500">{title}</div>
                       <div className="mt-2 text-base font-semibold text-slate-900">{value}</div>
