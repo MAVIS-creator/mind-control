@@ -33,6 +33,7 @@ import {
   saveSession,
   saveUsers,
 } from "./storage";
+export { saveSession } from "./storage";
 import { hasSupabase, supabase } from "./supabase";
 
 const ensureValidUsername = (username: string) => {
