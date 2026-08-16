@@ -41,7 +41,7 @@ export const PublicSiteShell = ({ active, children }: PublicSiteShellProps) => (
               to={item.to}
               className={cn(
                 "inline-flex items-center rounded-full px-4 py-2 text-sm font-semibold text-[#667085] dark:text-slate-300 transition sm:text-base hover:text-indigo-600 dark:hover:text-white",
-                active === item.id && "bg-[#f0edff] text-[#3525cd] dark:bg-indigo-950/80 dark:text-indigo-300 shadow-[0_10px_22px_rgba(53,37,205,0.08)]",
+                active === item.id && "bg-[#f0edff] text-[#3525cd] dark:bg-indigo-900/90 dark:text-white shadow-[0_10px_22px_rgba(53,37,205,0.08)]",
               )}
             >
               {item.label}

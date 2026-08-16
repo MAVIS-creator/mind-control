@@ -106,15 +106,15 @@ export const LandingRoute = () => {
       <main className="mx-auto max-w-[1500px] px-4 py-8 sm:px-6 lg:px-8 lg:py-12">
         <section className="grid items-center gap-8 lg:grid-cols-[1.25fr_0.75fr]">
           <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} className="text-center lg:text-left">
-            <div className="inline-flex items-center gap-2 rounded-full border border-white/70 bg-white/70 px-4 py-2 text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-[#3525cd] shadow-[0_14px_30px_rgba(53,37,205,0.08)] backdrop-blur-xl sm:text-xs">
-              <SparklesIcon className="h-4 w-4" />
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/70 bg-white/70 px-4 py-2 text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-[#3525cd] shadow-[0_14px_30px_rgba(53,37,205,0.08)] backdrop-blur-xl dark:border-slate-800 dark:bg-slate-900/90 dark:text-white sm:text-xs">
+              <SparklesIcon className="h-4 w-4 text-[#4f46e5] dark:text-indigo-400" />
               Live Multiplayer Clash & PWA Web App
             </div>
             <BrandMotionMark className="mx-auto mt-8 w-[15rem] sm:w-[21rem] lg:mx-0 lg:w-[24rem]" />
-            <h1 className="mt-7 font-display text-[3.4rem] font-extrabold uppercase leading-[0.88] tracking-[-0.08em] text-[#3525cd] sm:text-[5.5rem] lg:text-[6.7rem]">
+            <h1 className="mt-7 font-display text-[3.4rem] font-extrabold uppercase leading-[0.88] tracking-[-0.08em] text-[#3525cd] dark:text-white sm:text-[5.5rem] lg:text-[6.7rem]">
               MindGrid
             </h1>
-            <p className="mx-auto mt-6 max-w-2xl text-[1rem] leading-8 text-[#4f5568] sm:text-[1.16rem] sm:leading-9 lg:mx-0">
+            <p className="mx-auto mt-6 max-w-2xl text-[1rem] leading-8 text-[#4f5568] dark:text-slate-200 sm:text-[1.16rem] sm:leading-9 lg:mx-0">
               Compete in real-time Multiplayer Duels, Speed Sprint Races, Co-Op Sync, and Solo Memory Boards with 1.5x score boosts, 3D glass boards, and global rankings.
             </p>
             <div className="mt-7 flex flex-wrap justify-center gap-3 sm:flex-row lg:justify-start">
@@ -128,14 +128,14 @@ export const LandingRoute = () => {
               <button
                 type="button"
                 onClick={handleInstallClick}
-                className="inline-flex items-center justify-center gap-2 rounded-full border border-[#d9d8eb] bg-white/90 px-7 py-4 text-[1rem] font-semibold text-[#3525cd] shadow-[0_12px_24px_rgba(53,37,205,0.06)] transition hover:border-[#c5c2e5] hover:bg-white"
+                className="inline-flex items-center justify-center gap-2 rounded-full border border-[#d9d8eb] bg-white/90 px-7 py-4 text-[1rem] font-semibold text-[#3525cd] shadow-[0_12px_24px_rgba(53,37,205,0.06)] transition hover:border-[#c5c2e5] hover:bg-white dark:border-slate-800 dark:bg-slate-900 dark:text-white dark:hover:bg-slate-800"
               >
-                <SparklesIcon className="h-4 w-4 text-[#4f46e5]" />
+                <SparklesIcon className="h-4 w-4 text-[#4f46e5] dark:text-indigo-400" />
                 {isStandalone ? "App Installed" : "Install Web App"}
               </button>
               <Link
                 to="/ranks"
-                className="inline-flex items-center justify-center gap-3 rounded-full border border-[#d9d8eb] bg-white/80 px-7 py-4 text-[1rem] font-semibold text-[#3525cd] shadow-[0_12px_24px_rgba(53,37,205,0.06)] transition hover:border-[#c5c2e5] hover:bg-white"
+                className="inline-flex items-center justify-center gap-3 rounded-full border border-[#d9d8eb] bg-white/80 px-7 py-4 text-[1rem] font-semibold text-[#3525cd] shadow-[0_12px_24px_rgba(53,37,205,0.06)] transition hover:border-[#c5c2e5] hover:bg-white dark:border-slate-800 dark:bg-slate-900 dark:text-white dark:hover:bg-slate-800"
               >
                 View Ranks
               </Link>
@@ -146,33 +146,33 @@ export const LandingRoute = () => {
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.08 }}
-            className="glass-panel rounded-[2.1rem] p-5 shadow-[0_18px_40px_rgba(53,37,205,0.08)] sm:p-6"
+            className="glass-panel rounded-[2.1rem] p-5 shadow-[0_18px_40px_rgba(53,37,205,0.08)] sm:p-6 dark:border-slate-800 dark:bg-slate-900/90"
           >
             <div className="mb-6 flex items-center justify-between">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#7d8395]">Live preview</p>
-                <h2 className="mt-2 text-[2rem] font-bold tracking-[-0.04em] text-[#111c2d]">Global Rank</h2>
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#7d8395] dark:text-slate-400">Live preview</p>
+                <h2 className="mt-2 text-[2rem] font-bold tracking-[-0.04em] text-[#111c2d] dark:text-white">Global Rank</h2>
               </div>
-              <TrophyIcon className="h-6 w-6 text-[#667085]" />
+              <TrophyIcon className="h-6 w-6 text-[#667085] dark:text-slate-400" />
             </div>
             <div className="space-y-4">
               {previewRanks.map((entry, index) => {
                 const avatar = avatarOptions.find((item) => item.id === entry.avatarId) ?? avatarOptions[0];
                 return (
-                  <div key={`${entry.name}-${index}`} className="flex items-center justify-between gap-3 rounded-[1.4rem] border border-white/70 bg-white/72 p-4 shadow-[0_10px_24px_rgba(53,37,205,0.05)]">
+                  <div key={`${entry.name}-${index}`} className="flex items-center justify-between gap-3 rounded-[1.4rem] border border-white/70 bg-white/72 p-4 shadow-[0_10px_24px_rgba(53,37,205,0.05)] dark:border-slate-800 dark:bg-slate-950/90 dark:text-white">
                     <div className="flex items-center gap-3">
                       <div className="relative shrink-0">
-                        <img src={avatar.image} alt={entry.name} className="h-12 w-12 rounded-full border-2 border-white object-cover shadow-sm" />
-                        <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#d8e3fb] text-[0.65rem] font-bold text-[#111c2d]">
+                        <img src={avatar.image} alt={entry.name} className="h-12 w-12 rounded-full border-2 border-white dark:border-slate-700 object-cover shadow-sm" />
+                        <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#d8e3fb] text-[0.65rem] font-bold text-[#111c2d] dark:bg-slate-800 dark:text-white">
                           {index + 1}
                         </span>
                       </div>
                       <div>
-                        <p className="text-sm font-bold uppercase tracking-[0.08em] text-[#111c2d]">{entry.name}</p>
-                        <p className="text-[0.7rem] font-bold uppercase tracking-[0.14em] text-[#3525cd]">{entry.rank}</p>
+                        <p className="text-sm font-bold uppercase tracking-[0.08em] text-[#111c2d] dark:text-white">{entry.name}</p>
+                        <p className="text-[0.7rem] font-bold uppercase tracking-[0.14em] text-[#3525cd] dark:text-indigo-300">{entry.rank}</p>
                       </div>
                     </div>
-                    <p className="text-[1.75rem] font-bold tracking-[-0.04em] text-[#3525cd]">
+                    <p className="text-[1.75rem] font-bold tracking-[-0.04em] text-[#3525cd] dark:text-white">
                       {entry.score >= 1000 ? `${(entry.score / 1000).toFixed(1)}k` : formatNumber(entry.score)}
                     </p>
                   </div>
@@ -188,18 +188,18 @@ export const LandingRoute = () => {
             ["Top score", formatNumber(bestScore), "Best recorded run"],
             ["Players", formatNumber(totalPlayers), "Accounts on the board"],
           ].map(([label, value, note]) => (
-            <div key={label} className="glass-panel rounded-[1.6rem] px-5 py-5 text-center shadow-[0_12px_30px_rgba(53,37,205,0.05)]">
-              <p className="text-[0.68rem] font-semibold uppercase tracking-[0.22em] text-[#7d8395]">{label}</p>
-              <p className="mt-2 text-[2rem] font-bold tracking-[-0.05em] text-[#3525cd]">{value}</p>
-              <p className="mt-1 text-sm text-[#5a6174]">{note}</p>
+            <div key={label} className="glass-panel rounded-[1.6rem] px-5 py-5 text-center shadow-[0_12px_30px_rgba(53,37,205,0.05)] dark:border-slate-800 dark:bg-slate-900/90">
+              <p className="text-[0.68rem] font-semibold uppercase tracking-[0.22em] text-[#7d8395] dark:text-slate-400">{label}</p>
+              <p className="mt-2 text-[2rem] font-bold tracking-[-0.05em] text-[#3525cd] dark:text-white">{value}</p>
+              <p className="mt-1 text-sm text-[#5a6174] dark:text-slate-300">{note}</p>
             </div>
           ))}
         </section>
 
         <section className="mt-10">
           <div className="mx-auto max-w-3xl text-center">
-            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#3525cd]">How it plays</p>
-            <h2 className="mt-3 font-display text-4xl font-bold tracking-[-0.05em] text-[#111c2d] sm:text-5xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#3525cd] dark:text-indigo-400">How it plays</p>
+            <h2 className="mt-3 font-display text-4xl font-bold tracking-[-0.05em] text-[#111c2d] dark:text-white sm:text-5xl">
               A simple memory game with real score pressure.
             </h2>
           </div>
@@ -207,12 +207,12 @@ export const LandingRoute = () => {
             {gameSteps.map((step) => {
               const Icon = step.icon;
               return (
-                <article key={step.title} className="glass-panel rounded-[1.7rem] p-6 shadow-[0_14px_32px_rgba(53,37,205,0.06)]">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-[1.3rem] bg-[#f1efff] text-[#3525cd] shadow-[0_12px_24px_rgba(53,37,205,0.08)]">
+                <article key={step.title} className="glass-panel rounded-[1.7rem] p-6 shadow-[0_14px_32px_rgba(53,37,205,0.06)] dark:border-slate-800 dark:bg-slate-900/90">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-[1.3rem] bg-[#f1efff] text-[#3525cd] dark:bg-slate-800 dark:text-white shadow-[0_12px_24px_rgba(53,37,205,0.08)]">
                     <Icon className="h-7 w-7" />
                   </div>
-                  <h3 className="mt-5 text-xl font-bold tracking-[-0.03em] text-[#111c2d]">{step.title}</h3>
-                  <p className="mt-3 text-sm leading-7 text-[#586074]">{step.text}</p>
+                  <h3 className="mt-5 text-xl font-bold tracking-[-0.03em] text-[#111c2d] dark:text-white">{step.title}</h3>
+                  <p className="mt-3 text-sm leading-7 text-[#586074] dark:text-slate-300">{step.text}</p>
                 </article>
               );
             })}
@@ -220,33 +220,33 @@ export const LandingRoute = () => {
         </section>
 
         <section className="mt-10 grid gap-5 lg:grid-cols-2">
-          <div className="glass-panel rounded-[2rem] p-6 shadow-[0_14px_32px_rgba(53,37,205,0.06)] sm:p-8">
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#7d8395]">MVP modes</p>
-            <h2 className="mt-3 text-[2.2rem] font-bold tracking-[-0.05em] text-[#111c2d]">Classic Sync is the main arena.</h2>
-            <p className="mt-4 text-base leading-8 text-[#586074]">
+          <div className="glass-panel rounded-[2rem] p-6 shadow-[0_14px_32px_rgba(53,37,205,0.06)] sm:p-8 dark:border-slate-800 dark:bg-slate-900/90">
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#7d8395] dark:text-slate-400">MVP modes</p>
+            <h2 className="mt-3 text-[2.2rem] font-bold tracking-[-0.05em] text-[#111c2d] dark:text-white">Classic Sync is the main arena.</h2>
+            <p className="mt-4 text-base leading-8 text-[#586074] dark:text-slate-300">
               MindGrid currently focuses on one polished single-player mode: timed pair matching with move limits, combo feedback, score rating, and persistent leaderboard runs.
             </p>
           </div>
-          <div className="glass-panel rounded-[2rem] p-6 shadow-[0_14px_32px_rgba(53,37,205,0.06)] sm:p-8">
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#7d8395]">Leaderboard logic</p>
-            <h2 className="mt-3 text-[2.2rem] font-bold tracking-[-0.05em] text-[#6b00b7]">Best run ranks. Points stack.</h2>
-            <p className="mt-4 text-base leading-8 text-[#586074]">
+          <div className="glass-panel rounded-[2rem] p-6 shadow-[0_14px_32px_rgba(53,37,205,0.06)] sm:p-8 dark:border-slate-800 dark:bg-slate-900/90">
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#7d8395] dark:text-slate-400">Leaderboard logic</p>
+            <h2 className="mt-3 text-[2.2rem] font-bold tracking-[-0.05em] text-[#6b00b7] dark:text-indigo-300">Best run ranks. Points stack.</h2>
+            <p className="mt-4 text-base leading-8 text-[#586074] dark:text-slate-300">
               Your leaderboard position uses your strongest eligible run, while every saved run keeps adding account points for long-term progress.
             </p>
           </div>
         </section>
 
-        <section className="mt-10 glass-panel rounded-[2.2rem] p-6 text-center shadow-[0_18px_40px_rgba(53,37,205,0.08)] sm:p-10">
-          <StarBadgeIcon className="mx-auto h-10 w-10 text-[#3525cd]" />
-          <h2 className="mt-4 font-display text-4xl font-bold tracking-[-0.05em] text-[#111c2d]">Ready to enter the grid?</h2>
-          <p className="mx-auto mt-3 max-w-2xl text-base leading-8 text-[#586074]">
+        <section className="mt-10 glass-panel rounded-[2.2rem] p-6 text-center shadow-[0_18px_40px_rgba(53,37,205,0.08)] sm:p-10 dark:border-slate-800 dark:bg-slate-900/90">
+          <StarBadgeIcon className="mx-auto h-10 w-10 text-[#3525cd] dark:text-indigo-400" />
+          <h2 className="mt-4 font-display text-4xl font-bold tracking-[-0.05em] text-[#111c2d] dark:text-white">Ready to enter the grid?</h2>
+          <p className="mx-auto mt-3 max-w-2xl text-base leading-8 text-[#586074] dark:text-slate-300">
             Create an account, choose an avatar, and start chasing your first ranked memory run.
           </p>
           <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
             <Link to="/register" className="rounded-full bg-gradient-to-b from-[#4f46e5] to-[#3525cd] px-8 py-4 font-semibold text-white shadow-[0_18px_30px_rgba(53,37,205,0.22)]">
               Create Account
             </Link>
-            <Link to="/contact" className="rounded-full border border-[#d9d8eb] bg-white/80 px-8 py-4 font-semibold text-[#3525cd]">
+            <Link to="/contact" className="rounded-full border border-[#d9d8eb] bg-white/80 px-8 py-4 font-semibold text-[#3525cd] dark:border-slate-800 dark:bg-slate-900 dark:text-white dark:hover:bg-slate-800">
               Contact Us
             </Link>
           </div>

@@ -63,7 +63,7 @@ export const PlayRoute = () => {
                           onClick={() => updateSettings({ gridSize: key })}
                           className={`inline-flex items-center justify-center gap-3 rounded-full border px-4 py-4 text-base font-medium transition sm:px-5 sm:text-lg ${
                             active
-                              ? "border-[#d7d9ea] dark:border-indigo-600 bg-[#e7eeff] dark:bg-indigo-950/80 text-[#25354b] dark:text-indigo-200 shadow-[inset_0_1px_0_rgba(255,255,255,0.55),0_10px_18px_rgba(53,37,205,0.08)]"
+                              ? "border-[#d7d9ea] dark:border-indigo-500 bg-[#e7eeff] dark:bg-indigo-900/90 text-[#25354b] dark:text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.55),0_10px_18px_rgba(53,37,205,0.08)]"
                               : "border-[#eef1f7] dark:border-slate-800 bg-white dark:bg-slate-900 text-[#32445c] dark:text-slate-200"
                           }`}
                         >
@@ -87,7 +87,7 @@ export const PlayRoute = () => {
                           onClick={() => updateSettings({ theme: option.id })}
                           className={`inline-flex items-center justify-center gap-3 rounded-full border px-4 py-4 text-base font-medium transition sm:px-5 sm:text-lg ${
                             active
-                              ? "border-[#d7d9ea] dark:border-indigo-600 bg-[#e7eeff] dark:bg-indigo-950/80 text-[#25354b] dark:text-indigo-200 shadow-[inset_0_1px_0_rgba(255,255,255,0.55),0_10px_18px_rgba(53,37,205,0.08)]"
+                              ? "border-[#d7d9ea] dark:border-indigo-500 bg-[#e7eeff] dark:bg-indigo-900/90 text-[#25354b] dark:text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.55),0_10px_18px_rgba(53,37,205,0.08)]"
                               : "border-[#eef1f7] dark:border-slate-800 bg-white dark:bg-slate-900 text-[#32445c] dark:text-slate-200"
                           }`}
                         >
