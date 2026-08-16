@@ -512,13 +512,15 @@ export const authApi = {
     }
 
     const email = ensureValidEmail(payload.email);
+    const emailRedirect =
+      (import.meta.env.VITE_EMAIL_CONFIRM_REDIRECT_URL as string | undefined) ??
+      (import.meta.env.PROD ? "https://neuralclash.dev/login" : `${window.location.origin}/login`);
+
     const { data, error } = await supabase.auth.signUp({
       email,
       password: payload.password,
       options: {
-        emailRedirectTo:
-          (import.meta.env.VITE_EMAIL_CONFIRM_REDIRECT_URL as string | undefined) ??
-          `${window.location.origin}/login`,
+        emailRedirectTo: emailRedirect,
         data: {
           username: normalized,
           avatar_id: payload.avatarId,
@@ -727,7 +729,7 @@ export const authApi = {
 
     const redirectTo =
       (import.meta.env.VITE_PASSWORD_RESET_REDIRECT_URL as string | undefined) ??
-      `${window.location.origin}/reset-password`;
+      (import.meta.env.PROD ? "https://neuralclash.dev/reset-password" : `${window.location.origin}/reset-password`);
 
     const { error } = await supabase.auth.resetPasswordForEmail(normalizedEmail, {
       redirectTo,
