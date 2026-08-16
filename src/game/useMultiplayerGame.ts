@@ -90,6 +90,9 @@ export function useMultiplayerGame(
   // Network ping measurement
   const [pingMs, setPingMs] = useState<number>(24);
 
+  // Rematch request status
+  const [rematchRequestedBy, setRematchRequestedBy] = useState<string | null>(null);
+
   const channelRef = useRef<any>(null);
 
   useEffect(() => {
