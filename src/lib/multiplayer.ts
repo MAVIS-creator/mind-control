@@ -397,3 +397,78 @@ export const leaveMultiplayerRoom = async (roomId: string, userId: string): Prom
     }
   }
 };
+
+export type MultiplayerLeaderboardEntry = {
+  userId: string;
+  username: string;
+  avatarId: string;
+  rank: string;
+  xp: number;
+  multiplayerWins: number;
+  multiplayerLosses: number;
+  totalBattles: number;
+  winRate: number;
+  coopClears: number;
+};
+
+export const fetchMultiplayerLeaderboard = async (): Promise<MultiplayerLeaderboardEntry[]> => {
+  if (!supabase) return [];
+
+  try {
+    const [{ data: profiles }, { data: mpRooms }] = await Promise.all([
+      supabase.from("profiles").select("*"),
+      supabase.from("multiplayer_rooms").select("*").eq("status", "finished"),
+    ]);
+
+    if (!profiles) return [];
+
+    const statsMap: Record<string, { wins: number; losses: number; total: number; coop: number }> = {};
+    profiles.forEach((p) => {
+      statsMap[p.id] = { wins: 0, losses: 0, total: 0, coop: 0 };
+    });
+
+    (mpRooms || []).forEach((r) => {
+      const hostId = r.host_id;
+      const guestId = r.guest_id;
+      const winnerId = r.winner_id;
+
+      if (hostId && statsMap[hostId]) statsMap[hostId].total += 1;
+      if (guestId && statsMap[guestId]) statsMap[guestId].total += 1;
+
+      if (r.game_mode === "coop") {
+        if (hostId && statsMap[hostId]) statsMap[hostId].coop += 1;
+        if (guestId && statsMap[guestId]) statsMap[guestId].coop += 1;
+      } else if (winnerId) {
+        if (statsMap[winnerId]) statsMap[winnerId].wins += 1;
+        const loserId = winnerId === hostId ? guestId : hostId;
+        if (loserId && statsMap[loserId]) statsMap[loserId].losses += 1;
+      }
+    });
+
+    const entries: MultiplayerLeaderboardEntry[] = profiles.map((p) => {
+      const st = statsMap[p.id] || { wins: 0, losses: 0, total: 0, coop: 0 };
+      const winRate = st.total > 0 ? (st.wins / st.total) * 100 : 0;
+      return {
+        userId: p.id,
+        username: p.username || "Agent",
+        avatarId: p.avatar_id || "cyber_grid",
+        rank: p.rank || "Neural Rookie",
+        xp: p.xp || 0,
+        multiplayerWins: st.wins,
+        multiplayerLosses: st.losses,
+        totalBattles: st.total,
+        winRate,
+        coopClears: st.coop,
+      };
+    });
+
+    return entries.sort((a, b) => {
+      if (b.multiplayerWins !== a.multiplayerWins) return b.multiplayerWins - a.multiplayerWins;
+      if (b.winRate !== a.winRate) return b.winRate - a.winRate;
+      return b.xp - a.xp;
+    });
+  } catch (err) {
+    console.warn("Error fetching multiplayer leaderboard:", err);
+    return [];
+  }
+};

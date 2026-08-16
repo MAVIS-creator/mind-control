@@ -1,8 +1,9 @@
-import { Link, Navigate } from "react-router-dom";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { Link, Navigate } from "react-router-dom";
 import { AppShell } from "../components/AppShell";
 import { avatarOptions } from "../data/avatars";
-import { formatDuration, formatNumber, formatPercent, isLegacyAccountEmail } from "../lib/utils";
+import { fetchMultiplayerLeaderboard, type MultiplayerLeaderboardEntry } from "../lib/multiplayer";
+import { formatDuration, formatNumber, formatPercent, getLevelProgress, isLegacyAccountEmail } from "../lib/utils";
 import { useAppContext } from "../state/AppContext";
 import type { GridSize, LeaderboardEntry, MatchType } from "../types";
 
@@ -62,6 +63,19 @@ export const HallOfFameRoute = () => {
   const [leaderboardTab, setLeaderboardTab] = useState<"single" | "multiplayer">("single");
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
+
+  const [mpLeaderboard, setMpLeaderboard] = useState<MultiplayerLeaderboardEntry[]>([]);
+  const [loadingMp, setLoadingMp] = useState(false);
+
+  useEffect(() => {
+    if (leaderboardTab === "multiplayer") {
+      setLoadingMp(true);
+      fetchMultiplayerLeaderboard().then((data) => {
+        setMpLeaderboard(data);
+        setLoadingMp(false);
+      });
+    }
+  }, [leaderboardTab]);
 
   const hasLegacyRuns = leaderboard.some((entry) => entry.matchType === "standard");
 
@@ -139,7 +153,8 @@ export const HallOfFameRoute = () => {
     return <Navigate to="/complete-email" replace />;
   }
 
-  const podium = rankedEntries.slice(0, 3);
+  const podiumSingle = rankedEntries.slice(0, 3);
+  const podiumMp = mpLeaderboard.slice(0, 3);
 
   return (
     <AppShell session={session} active="ranks">
@@ -148,7 +163,7 @@ export const HallOfFameRoute = () => {
           <h1 className="mt-3 font-display text-4xl tracking-[-0.05em] text-[#3525cd] sm:text-5xl">Hall of Fame</h1>
           <p className="mx-auto mt-3 max-w-3xl text-sm leading-7 text-[#464555] sm:text-base">
             {leaderboardTab === "multiplayer"
-              ? "Global multiplayer rankings tracking battle victories, XP, and competitive standings."
+              ? "Global multiplayer rankings tracking battle victories, win rates, and co-op completions."
               : usingAccountTotals
               ? "One account row per player with cumulative points stacked across every saved run."
               : "Best run per player inside the selected board and match type."}
@@ -182,7 +197,7 @@ export const HallOfFameRoute = () => {
             </div>
           </div>
 
-          {/* Compact Normalized Filter Toolbar */}
+          {/* Compact Normalized Filter Toolbar for Single Player */}
           {leaderboardTab === "single" && (
             <div className="mx-auto mt-5 flex max-w-2xl flex-wrap items-center justify-center gap-3 rounded-2xl border border-white/80 bg-white/70 p-3 shadow-sm backdrop-blur-md">
               <div className="flex items-center gap-2">
@@ -231,14 +246,70 @@ export const HallOfFameRoute = () => {
           )}
         </section>
 
+        {/* Top 3 Podium Section */}
         <div className="mb-8 grid gap-4 md:grid-cols-3">
-          {podium.length ? (
-            podium.map((entry, index) => {
+          {leaderboardTab === "multiplayer" ? (
+            loadingMp ? (
+              <div className="glass-panel rounded-[2rem] p-8 text-center text-sm text-slate-500 md:col-span-3">
+                Loading multiplayer rankings...
+              </div>
+            ) : podiumMp.length ? (
+              podiumMp.map((entry, index) => {
+                const avatar = avatarOptions.find((item) => item.id === entry.avatarId) ?? avatarOptions[0];
+                return (
+                  <article
+                    key={entry.userId}
+                    className={`rounded-[2rem] border p-5 text-center shadow-[0_20px_44px_rgba(53,37,205,0.07)] backdrop-blur-xl sm:p-6 ${
+                      medalClasses[index] ?? "border-slate-200 bg-white/80"
+                    }`}
+                    style={{
+                      background: "rgba(255,255,255,0.74)",
+                      borderColor:
+                        index === 0 ? "#ffd166" : index === 1 ? "#d8e3fb" : index === 2 ? "#f4c7a1" : "#d8e3fb",
+                    }}
+                  >
+                    <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-white text-lg font-bold text-slate-900 shadow-sm">
+                      {index + 1}
+                    </div>
+                    <img
+                      src={avatar.image}
+                      alt={avatar.name}
+                      className="mx-auto mt-4 h-24 w-24 rounded-full border-4 border-white bg-slate-100 shadow-md"
+                    />
+                    <Link
+                      to={`/profile/${entry.userId}`}
+                      className="mt-4 inline-block text-xl font-semibold text-slate-900 hover:text-[#3525cd]"
+                    >
+                      {entry.username}
+                    </Link>
+                    <p className="mt-1 text-sm font-bold uppercase tracking-[0.18em] text-[#3525cd]">
+                      {entry.multiplayerWins} Multiplayer Win{entry.multiplayerWins === 1 ? "" : "s"}
+                    </p>
+                    <p className="mt-2 text-sm text-slate-500">
+                      Win Rate {entry.winRate.toFixed(0)}% • {entry.totalBattles} Total Battles
+                    </p>
+                    <div className="mt-3 flex items-center justify-center">
+                      <span className="rounded-full bg-white/80 px-3 py-1 text-xs font-semibold text-[#4f46e5]">
+                        {entry.rank}
+                      </span>
+                    </div>
+                  </article>
+                );
+              })
+            ) : (
+              <div className="glass-panel rounded-[2rem] p-8 text-center text-sm text-slate-500 md:col-span-3">
+                No multiplayer battles completed yet. Play a match to claim top rank!
+              </div>
+            )
+          ) : podiumSingle.length ? (
+            podiumSingle.map((entry, index) => {
               const avatar = avatarOptions.find((item) => item.id === entry.avatarId) ?? avatarOptions[0];
               return (
                 <article
                   key={entry.id}
-                  className={`rounded-[2rem] border p-5 text-center shadow-[0_20px_44px_rgba(53,37,205,0.07)] backdrop-blur-xl sm:p-6 ${medalClasses[index] ?? "border-slate-200 bg-white/80"}`}
+                  className={`rounded-[2rem] border p-5 text-center shadow-[0_20px_44px_rgba(53,37,205,0.07)] backdrop-blur-xl sm:p-6 ${
+                    medalClasses[index] ?? "border-slate-200 bg-white/80"
+                  }`}
                   style={{
                     background: "rgba(255,255,255,0.74)",
                     borderColor:
@@ -253,10 +324,15 @@ export const HallOfFameRoute = () => {
                     alt={avatar.name}
                     className="mx-auto mt-4 h-24 w-24 rounded-full border-4 border-white bg-slate-100 shadow-md"
                   />
-                  <Link to={`/profile/${entry.userId}`} className="mt-4 inline-block text-xl font-semibold text-slate-900 hover:text-[#3525cd]">
+                  <Link
+                    to={`/profile/${entry.userId}`}
+                    className="mt-4 inline-block text-xl font-semibold text-slate-900 hover:text-[#3525cd]"
+                  >
                     {entry.username}
                   </Link>
-                  <p className="mt-1 text-sm uppercase tracking-[0.18em] text-[#3525cd]">{formatNumber(entry.rating)} rating</p>
+                  <p className="mt-1 text-sm uppercase tracking-[0.18em] text-[#3525cd]">
+                    {formatNumber(entry.rating)} rating
+                  </p>
                   <p className="mt-2 text-sm text-slate-500">
                     Best {formatNumber(entry.score)} • Total {formatNumber(entry.totalPoints)}
                   </p>
@@ -274,84 +350,157 @@ export const HallOfFameRoute = () => {
           )}
         </div>
 
+        {/* Main Table Section */}
         <section className="glass-panel overflow-hidden rounded-[2rem]">
           <div className="border-b border-slate-200/70 px-6 py-5">
-            <h2 className="text-xl font-semibold text-slate-900">Leaderboard</h2>
+            <h2 className="text-xl font-semibold text-slate-900">
+              {leaderboardTab === "multiplayer" ? "Multiplayer Clash Standings" : "Single Player Leaderboard"}
+            </h2>
             <p className="mt-1 text-sm text-slate-500">
-              {usingAccountTotals
+              {leaderboardTab === "multiplayer"
+                ? "Ranked by multiplayer victories, win rates, and total competitive battle experience."
+                : usingAccountTotals
                 ? "One best row per player, with cumulative total points counting across all saved runs."
-                : "Best row per player inside this filter, with cumulative total points still counting across all saved runs."}
+                : "Best row per player inside this filter."}
             </p>
           </div>
+
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[980px] text-left">
-              <thead className="bg-slate-50 text-xs uppercase tracking-[0.22em] text-slate-500">
-                <tr>
-                  <th className="px-6 py-4">Rank</th>
-                  <th className="px-6 py-4">Player</th>
-                  <th className="px-6 py-4">Rating</th>
-                  <th className="px-6 py-4">Points</th>
-                  <th className="px-6 py-4">Best Score</th>
-                  <th className="px-6 py-4">Accuracy</th>
-                  <th className="px-6 py-4">Combo</th>
-                  <th className="px-6 py-4">Time</th>
-                </tr>
-              </thead>
-              <tbody>
-                {rankedEntries.length ? (
-                  visibleEntries.map((entry, index) => {
-                    const avatar = avatarOptions.find((item) => item.id === entry.avatarId) ?? avatarOptions[0];
-                    return (
-                      <tr key={entry.id} className="border-t border-slate-100 text-sm text-slate-700">
-                        <td className="px-6 py-4 font-semibold text-slate-500">{index + 1}</td>
-                        <td className="px-6 py-4">
-                          <div className="flex items-center gap-3">
-                            <img
-                              src={avatar.image}
-                              alt={avatar.name}
-                              className="h-11 w-11 rounded-full border-2 border-white bg-slate-100 object-cover"
-                            />
-                            <div>
-                              <Link to={`/profile/${entry.userId}`} className="font-medium text-slate-900 hover:text-[#3525cd]">
-                                {entry.username}
-                              </Link>
-                              <div className="text-xs uppercase tracking-[0.22em] text-slate-400">
-                                {matchTypeLabels[entry.matchType]} • {entry.gridSize}
+            {leaderboardTab === "multiplayer" ? (
+              <table className="w-full min-w-[800px] text-left">
+                <thead className="bg-slate-50 text-xs uppercase tracking-[0.22em] text-slate-500">
+                  <tr>
+                    <th className="px-6 py-4">Rank</th>
+                    <th className="px-6 py-4">Operative</th>
+                    <th className="px-6 py-4">MP Wins</th>
+                    <th className="px-6 py-4">Defeats</th>
+                    <th className="px-6 py-4">Win Rate</th>
+                    <th className="px-6 py-4">Co-Op Clears</th>
+                    <th className="px-6 py-4">Level & XP</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {mpLeaderboard.length ? (
+                    mpLeaderboard.map((entry, index) => {
+                      const avatar = avatarOptions.find((item) => item.id === entry.avatarId) ?? avatarOptions[0];
+                      const level = getLevelProgress(entry.xp);
+                      return (
+                        <tr key={entry.userId} className="border-t border-slate-100 text-sm text-slate-700">
+                          <td className="px-6 py-4 font-semibold text-slate-500">{index + 1}</td>
+                          <td className="px-6 py-4">
+                            <div className="flex items-center gap-3">
+                              <img
+                                src={avatar.image}
+                                alt={avatar.name}
+                                className="h-11 w-11 rounded-full border-2 border-white bg-slate-100 object-cover"
+                              />
+                              <div>
+                                <Link
+                                  to={`/profile/${entry.userId}`}
+                                  className="font-semibold text-slate-900 hover:text-[#3525cd]"
+                                >
+                                  {entry.username}
+                                </Link>
+                                <div className="text-xs uppercase tracking-wider text-slate-400">{entry.rank}</div>
                               </div>
                             </div>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 font-semibold text-[#3525cd]">{formatNumber(entry.rating)}</td>
-                        <td className="px-6 py-4 font-semibold text-[#0060ac]">{formatNumber(entry.totalPoints)}</td>
-                        <td className="px-6 py-4">{formatNumber(entry.score)}</td>
-                        <td className="px-6 py-4">{formatPercent(entry.accuracy)}</td>
-                        <td className="px-6 py-4">x{entry.maxCombo}</td>
-                        <td className="px-6 py-4">{formatDuration(entry.duration)}</td>
-                      </tr>
-                    );
-                  })
-                ) : (
+                          </td>
+                          <td className="px-6 py-4 font-bold text-[#3525cd]">{entry.multiplayerWins}</td>
+                          <td className="px-6 py-4 text-slate-500">{entry.multiplayerLosses}</td>
+                          <td className="px-6 py-4 font-semibold text-emerald-600">{entry.winRate.toFixed(0)}%</td>
+                          <td className="px-6 py-4 text-indigo-600 font-semibold">{entry.coopClears}</td>
+                          <td className="px-6 py-4 font-semibold text-slate-600">
+                            Lvl {level.level} ({formatNumber(entry.xp)} XP)
+                          </td>
+                        </tr>
+                      );
+                    })
+                  ) : (
+                    <tr>
+                      <td colSpan={7} className="px-6 py-8 text-sm text-slate-500 text-center">
+                        No multiplayer battle rankings available yet.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            ) : (
+              <table className="w-full min-w-[980px] text-left">
+                <thead className="bg-slate-50 text-xs uppercase tracking-[0.22em] text-slate-500">
                   <tr>
-                    <td colSpan={8} className="px-6 py-8 text-sm text-slate-500">
-                      No ranked runs yet. Play a round to place the first Hall of Fame score.
-                    </td>
+                    <th className="px-6 py-4">Rank</th>
+                    <th className="px-6 py-4">Player</th>
+                    <th className="px-6 py-4">Rating</th>
+                    <th className="px-6 py-4">Points</th>
+                    <th className="px-6 py-4">Best Score</th>
+                    <th className="px-6 py-4">Accuracy</th>
+                    <th className="px-6 py-4">Combo</th>
+                    <th className="px-6 py-4">Time</th>
                   </tr>
-                )}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {rankedEntries.length ? (
+                    visibleEntries.map((entry, index) => {
+                      const avatar = avatarOptions.find((item) => item.id === entry.avatarId) ?? avatarOptions[0];
+                      return (
+                        <tr key={entry.id} className="border-t border-slate-100 text-sm text-slate-700">
+                          <td className="px-6 py-4 font-semibold text-slate-500">{index + 1}</td>
+                          <td className="px-6 py-4">
+                            <div className="flex items-center gap-3">
+                              <img
+                                src={avatar.image}
+                                alt={avatar.name}
+                                className="h-11 w-11 rounded-full border-2 border-white bg-slate-100 object-cover"
+                              />
+                              <div>
+                                <Link
+                                  to={`/profile/${entry.userId}`}
+                                  className="font-medium text-slate-900 hover:text-[#3525cd]"
+                                >
+                                  {entry.username}
+                                </Link>
+                                <div className="text-xs uppercase tracking-[0.22em] text-slate-400">
+                                  {matchTypeLabels[entry.matchType]} • {entry.gridSize}
+                                </div>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 font-semibold text-[#3525cd]">{formatNumber(entry.rating)}</td>
+                          <td className="px-6 py-4 font-semibold text-[#0060ac]">{formatNumber(entry.totalPoints)}</td>
+                          <td className="px-6 py-4">{formatNumber(entry.score)}</td>
+                          <td className="px-6 py-4">{formatPercent(entry.accuracy)}</td>
+                          <td className="px-6 py-4">x{entry.maxCombo}</td>
+                          <td className="px-6 py-4">{formatDuration(entry.duration)}</td>
+                        </tr>
+                      );
+                    })
+                  ) : (
+                    <tr>
+                      <td colSpan={8} className="px-6 py-8 text-sm text-slate-500">
+                        No ranked runs yet. Play a round to place the first Hall of Fame score.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            )}
           </div>
-          <div ref={sentinelRef} className="h-2" />
-          {canLoadMore ? (
-            <div className="border-t border-slate-100 px-6 py-5 text-center">
-              <button
-                type="button"
-                onClick={() => setVisibleCount((current) => Math.min(current + PAGE_SIZE, rankedEntries.length))}
-                className="rounded-full border border-[#d9d8eb] bg-white/80 px-6 py-3 text-sm font-semibold text-[#3525cd] shadow-sm transition hover:bg-white"
-              >
-                Load More Players
-              </button>
-            </div>
-          ) : null}
+          {leaderboardTab === "single" && (
+            <>
+              <div ref={sentinelRef} className="h-2" />
+              {canLoadMore && (
+                <div className="border-t border-slate-100 px-6 py-5 text-center">
+                  <button
+                    type="button"
+                    onClick={() => setVisibleCount((current) => Math.min(current + PAGE_SIZE, rankedEntries.length))}
+                    className="rounded-full border border-[#d9d8eb] bg-white/80 px-6 py-3 text-sm font-semibold text-[#3525cd] shadow-sm transition hover:bg-white"
+                  >
+                    Load More Players
+                  </button>
+                </div>
+              )}
+            </>
+          )}
         </section>
       </div>
     </AppShell>
