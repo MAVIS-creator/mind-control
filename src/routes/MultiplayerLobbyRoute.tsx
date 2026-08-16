@@ -143,17 +143,17 @@ export const MultiplayerLobbyRoute = () => {
                 onClick={() => setSelectedMode("turn_based")}
                 className={`cursor-pointer rounded-3xl p-5 transition-all ${
                   selectedMode === "turn_based"
-                    ? "bg-white/90 shadow-[0_12px_32px_rgba(53,37,205,0.15)] ring-2 ring-[#4f46e5]"
-                    : "bg-white/60 hover:bg-white/80 border border-white/60"
+                    ? "bg-white/90 shadow-[0_12px_32px_rgba(53,37,205,0.15)] ring-2 ring-[#4f46e5] dark:bg-slate-900 dark:ring-indigo-500"
+                    : "bg-white/60 hover:bg-white/80 border border-white/60 dark:bg-slate-900/60 dark:border-slate-800 dark:hover:bg-slate-900"
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <span className="rounded-xl bg-[#4f46e5]/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-[#4f46e5]">
+                  <span className="rounded-xl bg-[#4f46e5]/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-[#4f46e5] dark:bg-indigo-950 dark:text-indigo-400">
                     1v1 Duel
                   </span>
                 </div>
-                <h3 className="mt-3 font-display text-base font-bold text-[#1e1b4b]">Turn-Based Neural Duel</h3>
-                <p className="mt-1 text-xs leading-relaxed text-[#525166]">
+                <h3 className="mt-3 font-display text-base font-bold text-[#1e1b4b] dark:text-white">Turn-Based Neural Duel</h3>
+                <p className="mt-1 text-xs leading-relaxed text-[#525166] dark:text-slate-300">
                   Take turns on a shared grid. Scoring pairs grants extra turns; missing hands control to opponent.
                 </p>
               </div>
@@ -162,17 +162,17 @@ export const MultiplayerLobbyRoute = () => {
                 onClick={() => setSelectedMode("speed_sprint")}
                 className={`cursor-pointer rounded-3xl p-5 transition-all ${
                   selectedMode === "speed_sprint"
-                    ? "bg-white/90 shadow-[0_12px_32px_rgba(53,37,205,0.15)] ring-2 ring-[#0284c7]"
-                    : "bg-white/60 hover:bg-white/80 border border-white/60"
+                    ? "bg-white/90 shadow-[0_12px_32px_rgba(53,37,205,0.15)] ring-2 ring-[#0284c7] dark:bg-slate-900 dark:ring-sky-500"
+                    : "bg-white/60 hover:bg-white/80 border border-white/60 dark:bg-slate-900/60 dark:border-slate-800 dark:hover:bg-slate-900"
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <span className="rounded-xl bg-[#0284c7]/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-[#0284c7]">
+                  <span className="rounded-xl bg-[#0284c7]/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-[#0284c7] dark:bg-sky-950 dark:text-sky-400">
                     Speed Race
                   </span>
                 </div>
-                <h3 className="mt-3 font-display text-base font-bold text-[#1e1b4b]">Speed Sprint Race</h3>
-                <p className="mt-1 text-xs leading-relaxed text-[#525166]">
+                <h3 className="mt-3 font-display text-base font-bold text-[#1e1b4b] dark:text-white">Speed Sprint Race</h3>
+                <p className="mt-1 text-xs leading-relaxed text-[#525166] dark:text-slate-300">
                   Simultaneous race on identical grid seeds. Monitor opponent ghost progress in real-time.
                 </p>
               </div>
@@ -181,17 +181,17 @@ export const MultiplayerLobbyRoute = () => {
                 onClick={() => setSelectedMode("coop")}
                 className={`cursor-pointer rounded-3xl p-5 transition-all ${
                   selectedMode === "coop"
-                    ? "bg-white/90 shadow-[0_12px_32px_rgba(53,37,205,0.15)] ring-2 ring-[#7c3aed]"
-                    : "bg-white/60 hover:bg-white/80 border border-white/60"
+                    ? "bg-white/90 shadow-[0_12px_32px_rgba(53,37,205,0.15)] ring-2 ring-[#7c3aed] dark:bg-slate-900 dark:ring-purple-500"
+                    : "bg-white/60 hover:bg-white/80 border border-white/60 dark:bg-slate-900/60 dark:border-slate-800 dark:hover:bg-slate-900"
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <span className="rounded-xl bg-[#7c3aed]/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-[#7c3aed]">
+                  <span className="rounded-xl bg-[#7c3aed]/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-[#7c3aed] dark:bg-purple-950 dark:text-purple-400">
                     Co-Op Sync
                   </span>
                 </div>
-                <h3 className="mt-3 font-display text-base font-bold text-[#1e1b4b]">Co-op Grid Sync</h3>
-                <p className="mt-1 text-xs leading-relaxed text-[#525166]">
+                <h3 className="mt-3 font-display text-base font-bold text-[#1e1b4b] dark:text-white">Co-op Grid Sync</h3>
+                <p className="mt-1 text-xs leading-relaxed text-[#525166] dark:text-slate-300">
                   Work together on a shared grid. Combine combo scores and manage a joint move pool.
                 </p>
               </div>

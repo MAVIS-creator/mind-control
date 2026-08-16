@@ -62,8 +62,8 @@ export const AppShell = ({ session, active, children }: AppShellProps) => {
                   to={item.to}
                   className={`inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-[0.98rem] font-semibold transition lg:px-5 lg:text-[1.02rem] ${
                     isActive
-                      ? "bg-white text-[#2f46d7] shadow-[0_12px_24px_rgba(53,37,205,0.12)] dark:bg-indigo-600 dark:text-white"
-                      : "text-[#5e6d8f] hover:bg-white/70 hover:text-[#2f46d7] dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white"
+                      ? "bg-[#f0edff] text-[#3525cd] shadow-[0_10px_22px_rgba(53,37,205,0.08)] dark:bg-indigo-900/90 dark:text-white"
+                      : "text-[#5e6d8f] hover:bg-white/70 hover:text-[#3525cd] dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white"
                   }`}
                 >
                   <Icon className="h-4 w-4" />
