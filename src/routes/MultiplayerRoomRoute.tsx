@@ -15,6 +15,27 @@ export const MultiplayerRoomRoute = () => {
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [timeLeftSec, setTimeLeftSec] = useState(600);
+
+  useEffect(() => {
+    if (!room || room.status !== "waiting") return;
+    const created = new Date(room.createdAt).getTime();
+
+    const updateTimer = () => {
+      const elapsedSec = Math.floor((Date.now() - created) / 1000);
+      const remaining = Math.max(0, 600 - elapsedSec);
+      setTimeLeftSec(remaining);
+
+      if (remaining <= 0) {
+        alert("Lobby session expired after 10 minutes of inactivity.");
+        navigate("/multiplayer");
+      }
+    };
+
+    updateTimer();
+    const timerInterval = setInterval(updateTimer, 1000);
+    return () => clearInterval(timerInterval);
+  }, [room, navigate]);
 
   const profile = session?.profile || {
     id: "guest-user",
@@ -165,9 +186,14 @@ export const MultiplayerRoomRoute = () => {
           >
             ← Disband / Leave Room
           </button>
-          <span className="rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-emerald-600 border border-emerald-500/20 flex items-center gap-1.5">
-            <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" /> Lobby Live
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="rounded-full bg-amber-500/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-amber-700 border border-amber-500/20">
+              Lobby Timeout: {Math.floor(timeLeftSec / 60).toString().padStart(2, "0")}:{(timeLeftSec % 60).toString().padStart(2, "0")}
+            </span>
+            <span className="rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-emerald-600 border border-emerald-500/20 flex items-center gap-1.5">
+              <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" /> Lobby Live
+            </span>
+          </div>
         </div>
 
         {errorMsg && (
@@ -233,7 +259,7 @@ export const MultiplayerRoomRoute = () => {
                     : "bg-amber-500/10 text-amber-600 border border-amber-500/20"
                 }`}
               >
-                {room.hostReady ? "Ready for Battle" : "Setting Up"}
+                {room.hostReady ? "Ready for Battle" : "Not Ready"}
               </span>
             </div>
           </div>
@@ -264,7 +290,7 @@ export const MultiplayerRoomRoute = () => {
                         : "bg-amber-500/10 text-amber-600 border border-amber-500/20"
                     }`}
                   >
-                    {room.guestReady ? "Ready for Battle" : "Preparing"}
+                    {room.guestReady ? "Ready for Battle" : "Not Ready"}
                   </span>
                 </div>
               </>

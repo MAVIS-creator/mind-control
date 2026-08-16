@@ -81,25 +81,43 @@ export const createMultiplayerRoom = async (
 
   if (supabase) {
     try {
+      const { data: authData } = await supabase.auth.getUser();
+      const hostUserId = authData?.user?.id || hostProfile.id;
+
+      // Upsert profile first so foreign key constraint never fails
+      await supabase.from("profiles").upsert(
+        {
+          id: hostUserId,
+          username: hostProfile.username || "Agent",
+          email: hostProfile.email || "",
+          avatar_id: hostProfile.avatarId || "cyber_grid",
+          xp: hostProfile.xp || 0,
+          rank: hostProfile.rank || "Neural Rookie",
+        },
+        { onConflict: "id" },
+      );
+
       const { data, error } = await supabase
         .from("multiplayer_rooms")
         .insert({
           room_code: roomCode,
-          host_id: hostProfile.id,
+          host_id: hostUserId,
           game_mode: options.gameMode,
           grid_size: options.gridSize,
           theme: options.theme,
           seed,
           status: "waiting",
-          host_ready: false,
+          host_ready: true,
           guest_ready: false,
           scores: { host: 0, guest: 0 },
         })
         .select("*")
         .maybeSingle();
 
-      if (!error && data) {
-        return mapRowToRoomWithProfiles(data, { [hostProfile.id]: hostProfile });
+      if (error) {
+        console.error("Supabase create room DB error:", error.message);
+      } else if (data) {
+        return mapRowToRoomWithProfiles(data, { [hostUserId]: { ...hostProfile, id: hostUserId } });
       }
     } catch (err) {
       console.warn("Supabase create room error, using fallback:", err);
@@ -118,7 +136,7 @@ export const createMultiplayerRoom = async (
     seed,
     status: "waiting",
     currentTurnId: hostProfile.id,
-    hostReady: false,
+    hostReady: true,
     guestReady: false,
     scores: { host: 0, guest: 0 },
     winnerId: null,
@@ -132,6 +150,13 @@ export const createMultiplayerRoom = async (
   return localRoom;
 };
 
+export const isRoomExpired = (room: { createdAt: string; status: string }): boolean => {
+  if (room.status !== "waiting") return false;
+  const createdTime = new Date(room.createdAt).getTime();
+  if (isNaN(createdTime)) return false;
+  return Date.now() - createdTime > 10 * 60 * 1000;
+};
+
 export const fetchRoomDetails = async (roomIdOrCode: string): Promise<MultiplayerRoom | null> => {
   if (supabase) {
     try {
@@ -143,6 +168,13 @@ export const fetchRoomDetails = async (roomIdOrCode: string): Promise<Multiplaye
         : await query.eq("room_code", roomIdOrCode.toUpperCase()).maybeSingle();
 
       if (!error && data) {
+        const createdTime = new Date(data.created_at).getTime();
+        // Check 10-minute inactivity timeout
+        if (data.status === "waiting" && Date.now() - createdTime > 10 * 60 * 1000) {
+          await supabase.from("multiplayer_rooms").delete().eq("id", data.id);
+          return null;
+        }
+
         const userIds = [data.host_id, data.guest_id].filter(Boolean);
         const profilesMap = await fetchProfilesForIds(userIds);
         return mapRowToRoomWithProfiles(data, profilesMap);
@@ -152,7 +184,13 @@ export const fetchRoomDetails = async (roomIdOrCode: string): Promise<Multiplaye
     }
   }
 
-  return localRoomsMemory.get(roomIdOrCode) || localRoomsMemory.get(roomIdOrCode.toUpperCase()) || null;
+  const local = localRoomsMemory.get(roomIdOrCode) || localRoomsMemory.get(roomIdOrCode.toUpperCase());
+  if (local && isRoomExpired(local)) {
+    localRoomsMemory.delete(local.id);
+    localRoomsMemory.delete(local.roomCode);
+    return null;
+  }
+  return local || null;
 };
 
 export const joinMultiplayerRoom = async (
@@ -173,6 +211,13 @@ export const joinMultiplayerRoom = async (
         throw new Error("Room not found. Check your 6-digit code.");
       }
 
+      // Check 10-minute timeout
+      const createdTime = new Date(existing.created_at).getTime();
+      if (existing.status === "waiting" && Date.now() - createdTime > 10 * 60 * 1000) {
+        await supabase.from("multiplayer_rooms").delete().eq("id", existing.id);
+        throw new Error("This 6-digit room code has expired after 10 minutes of inactivity.");
+      }
+
       if (existing.host_id === guestProfile.id) {
         // Host rejoining their own room
         const roomDetails = await fetchRoomDetails(existing.id);
@@ -183,10 +228,25 @@ export const joinMultiplayerRoom = async (
         throw new Error("Room is already full.");
       }
 
+      const { data: authData } = await supabase.auth.getUser();
+      const guestUserId = authData?.user?.id || guestProfile.id;
+
+      await supabase.from("profiles").upsert(
+        {
+          id: guestUserId,
+          username: guestProfile.username || "Agent",
+          email: guestProfile.email || "",
+          avatar_id: guestProfile.avatarId || "cyber_grid",
+          xp: guestProfile.xp || 0,
+          rank: guestProfile.rank || "Neural Rookie",
+        },
+        { onConflict: "id" },
+      );
+
       const { data, error } = await supabase
         .from("multiplayer_rooms")
         .update({
-          guest_id: guestProfile.id,
+          guest_id: guestUserId,
           updated_at: new Date().toISOString(),
         })
         .eq("id", existing.id)
@@ -202,7 +262,7 @@ export const joinMultiplayerRoom = async (
       profilesMap[guestProfile.id] = guestProfile;
       return mapRowToRoomWithProfiles(data, profilesMap);
     } catch (err: any) {
-      if (err.message && err.message.includes("Room")) {
+      if (err.message && (err.message.includes("Room") || err.message.includes("expired"))) {
         throw err;
       }
       console.warn("Supabase join room error, fallback to local:", err);
@@ -212,6 +272,12 @@ export const joinMultiplayerRoom = async (
   const room = localRoomsMemory.get(code);
   if (!room) {
     throw new Error("Room not found. Check your 6-digit code.");
+  }
+
+  if (isRoomExpired(room)) {
+    localRoomsMemory.delete(room.id);
+    localRoomsMemory.delete(code);
+    throw new Error("This 6-digit room code has expired after 10 minutes of inactivity.");
   }
 
   if (room.hostId === guestProfile.id) return room;
@@ -236,19 +302,25 @@ export const fetchOpenPublicRooms = async (): Promise<MultiplayerRoom[]> => {
         .select("*")
         .eq("status", "waiting")
         .order("created_at", { ascending: false })
-        .limit(10);
+        .limit(20);
 
       if (!error && data) {
-        const hostIds = data.map((r) => r.host_id).filter(Boolean);
+        const now = Date.now();
+        const validRows = data.filter((row) => {
+          const createdTime = new Date(row.created_at).getTime();
+          return now - createdTime <= 10 * 60 * 1000;
+        });
+
+        const hostIds = validRows.map((r) => r.host_id).filter(Boolean);
         const profilesMap = await fetchProfilesForIds(hostIds);
-        return data.map((row) => mapRowToRoomWithProfiles(row, profilesMap));
+        return validRows.map((row) => mapRowToRoomWithProfiles(row, profilesMap));
       }
     } catch (err) {
       console.warn("Supabase fetch public rooms error:", err);
     }
   }
 
-  return Array.from(localRoomsMemory.values()).filter((r) => r.status === "waiting");
+  return Array.from(localRoomsMemory.values()).filter((r) => !isRoomExpired(r));
 };
 
 export const updateRoomConfig = async (
