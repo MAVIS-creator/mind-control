@@ -33,14 +33,20 @@ export const PlayRoute = () => {
             <div className="mx-auto max-w-[540px]">
               <div className="mb-8 h-1 rounded-full bg-gradient-to-r from-indigo-700 to-violet-500" />
 
-              <div className="mb-8 flex justify-center">
+              <div className="mb-8 flex justify-center gap-3">
                 <div className="inline-flex rounded-full bg-[#eef2ff] p-1.5 shadow-inner">
                   <button
                     type="button"
-                    className="rounded-full bg-gradient-to-b from-[#4f46e5] to-[#3525cd] px-10 py-3 text-base font-semibold text-white shadow-[0_12px_24px_rgba(53,37,205,0.24)]"
+                    className="rounded-full bg-gradient-to-b from-[#4f46e5] to-[#3525cd] px-6 py-2.5 text-sm font-semibold text-white shadow-[0_12px_24px_rgba(53,37,205,0.24)]"
                   >
                     Single Player
                   </button>
+                  <Link
+                    to="/multiplayer"
+                    className="rounded-full px-6 py-2.5 text-sm font-semibold text-[#475569] hover:text-[#3525cd] transition-all flex items-center gap-1.5"
+                  >
+                    <span>⚡</span> Multiplayer Clash
+                  </Link>
                 </div>
               </div>
 

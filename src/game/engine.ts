@@ -14,12 +14,14 @@ const createEvent = (
   timestamp: Date.now(),
 });
 
-export const createInitialGameState = (settings: GameSetupSettings): GameSessionState => {
+export const createInitialGameState = (
+  settings: GameSetupSettings & { seed?: number },
+): GameSessionState => {
   const config = createClassicModeConfig(settings);
   const bonusTime = Math.min(6, Math.max(0, Math.floor(Math.max(0, (settings.level ?? 1) - 1) / 3) * 2));
 
   return {
-    board: createBoard(getCardSymbols(settings.theme), config.rows, config.columns),
+    board: createBoard(getCardSymbols(settings.theme), config.rows, config.columns, settings.seed),
     theme: settings.theme,
     gridSize: settings.gridSize,
     score: 0,

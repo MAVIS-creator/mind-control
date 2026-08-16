@@ -58,6 +58,18 @@ const EventResultsRoute = lazy(() =>
 const EventLiveRoute = lazy(() =>
   import("./routes/EventLiveRoute").then((module) => ({ default: module.EventLiveRoute })),
 );
+const MultiplayerLobbyRoute = lazy(() =>
+  import("./routes/MultiplayerLobbyRoute").then((module) => ({ default: module.MultiplayerLobbyRoute })),
+);
+const MultiplayerRoomRoute = lazy(() =>
+  import("./routes/MultiplayerRoomRoute").then((module) => ({ default: module.MultiplayerRoomRoute })),
+);
+const MultiplayerGameRoute = lazy(() =>
+  import("./routes/MultiplayerGameRoute").then((module) => ({ default: module.MultiplayerGameRoute })),
+);
+const MultiplayerResultsRoute = lazy(() =>
+  import("./routes/MultiplayerResultsRoute").then((module) => ({ default: module.MultiplayerResultsRoute })),
+);
 
 export const App = () => {
   const { booting } = useAppContext();
@@ -112,6 +124,10 @@ export const App = () => {
         <Route path="/hall-of-fame" element={<HallOfFameRoute />} />
         <Route path="/profile" element={<ProfileRoute />} />
         <Route path="/profile/:userId" element={<ProfileRoute />} />
+        <Route path="/multiplayer" element={<MultiplayerLobbyRoute />} />
+        <Route path="/multiplayer/room/:roomId" element={<MultiplayerRoomRoute />} />
+        <Route path="/multiplayer/play/:roomId" element={<MultiplayerGameRoute />} />
+        <Route path="/multiplayer/results/:roomId" element={<MultiplayerResultsRoute />} />
         <Route path="/mavisbk" element={<AdminRoute />} />
         <Route path="/mavisbk/:adminSection" element={<AdminRoute />} />
         <Route path="/:eventSlug" element={<EventJoinRoute />} />

@@ -131,3 +131,31 @@ export type AppSnapshot = {
   profile: PlayerProfile | null;
   leaderboard: LeaderboardEntry[];
 };
+
+export type MultiplayerGameMode = "turn_based" | "speed_sprint" | "coop";
+export type RoomStatus = "waiting" | "playing" | "finished";
+
+export type MultiplayerRoom = {
+  id: string;
+  roomCode: string;
+  hostId: string;
+  guestId: string | null;
+  gameMode: MultiplayerGameMode;
+  gridSize: GridSize;
+  theme: GameTheme;
+  seed: number;
+  status: RoomStatus;
+  currentTurnId: string | null;
+  hostReady: boolean;
+  guestReady: boolean;
+  scores: {
+    host: number;
+    guest: number;
+  };
+  winnerId: string | null;
+  createdAt: string;
+  updatedAt: string;
+  hostProfile?: PlayerProfile;
+  guestProfile?: PlayerProfile;
+};
+
