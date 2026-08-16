@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { BrandMarkIcon, MailIcon, TrophyIcon, UserIcon } from "./AppIcons";
-import { SiteFooter } from "./SiteFooter";
+import { ThemeToggle } from "./ThemeToggle";
 import { cn } from "../lib/utils";
 
 type PublicSiteShellProps = {
@@ -49,6 +49,7 @@ export const PublicSiteShell = ({ active, children }: PublicSiteShellProps) => (
         </nav>
 
         <div className="flex items-center gap-2">
+          <ThemeToggle />
           <Link
             to="/login"
             className="hidden rounded-full border border-[#d9def1] bg-white/75 px-4 py-2 text-sm font-semibold text-[#1a2340] shadow-[0_10px_22px_rgba(53,37,205,0.05)] transition hover:border-[#c7cbee] hover:bg-white sm:inline-flex"

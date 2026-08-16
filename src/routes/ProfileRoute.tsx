@@ -8,7 +8,7 @@ import { useAppContext } from "../state/AppContext";
 import type { PlayerSnapshot } from "../types";
 
 export const ProfileRoute = () => {
-  const { session, updateEmail } = useAppContext();
+  const { session, updateEmail, preferences, updatePreferences } = useAppContext();
   const { userId } = useParams();
   const safeProfile = session?.profile ?? {
     id: "",
@@ -311,6 +311,34 @@ export const ProfileRoute = () => {
 
                   {message ? <p className="mt-4 text-sm text-emerald-700">{message}</p> : null}
                   {error ? <p className="mt-4 text-sm text-rose-700">{error}</p> : null}
+
+                  <div className="mt-6 border-t border-slate-200/60 pt-5 dark:border-slate-800">
+                    <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100">Appearance & Theme</h3>
+                    <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                      Switch between Light, Dark, or System Default theme.
+                    </p>
+                    <div className="mt-3 grid grid-cols-3 gap-2.5">
+                      {[
+                        { id: "light", label: "Light", icon: "☀️" },
+                        { id: "dark", label: "Dark", icon: "🌙" },
+                        { id: "system", label: "System", icon: "💻" },
+                      ].map((item) => (
+                        <button
+                          key={item.id}
+                          type="button"
+                          onClick={() => updatePreferences({ colorTheme: item.id as any })}
+                          className={`flex items-center justify-center gap-2 rounded-2xl border py-3 text-xs font-bold transition ${
+                            (preferences.colorTheme || "system") === item.id
+                              ? "border-[#4f46e5] bg-[#4f46e5] text-white shadow-md"
+                              : "border-slate-200 bg-white/70 text-slate-700 hover:bg-white dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-200"
+                          }`}
+                        >
+                          <span>{item.icon}</span>
+                          <span>{item.label}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
                 </section>
               ) : (
                 <section className="glass-panel rounded-[1.8rem] p-6 shadow-[0_10px_26px_rgba(53,37,205,0.05)]">

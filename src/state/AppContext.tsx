@@ -93,6 +93,34 @@ export const AppProvider = ({ children }: PropsWithChildren) => {
     void load();
   }, []);
 
+  // Color Theme Application Effect (Light / Dark / System Default)
+  useEffect(() => {
+    const applyTheme = () => {
+      const mode = preferences.colorTheme || "system";
+      const isDark =
+        mode === "dark" ||
+        (mode === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+
+      if (isDark) {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+    };
+
+    applyTheme();
+
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    const handleChange = () => {
+      if ((preferences.colorTheme || "system") === "system") {
+        applyTheme();
+      }
+    };
+
+    mediaQuery.addEventListener("change", handleChange);
+    return () => mediaQuery.removeEventListener("change", handleChange);
+  }, [preferences.colorTheme]);
+
   // Healthy Gaming / Addiction Fencing State
   const [activePlaySeconds, setActivePlaySeconds] = useState<number>(0);
   const [cooldownUntil, setCooldownUntil] = useState<number | null>(() => {

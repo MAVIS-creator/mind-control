@@ -20,6 +20,7 @@ export type GamePreferences = {
   soundEffects: boolean;
   music: boolean;
   haptics: boolean;
+  colorTheme?: "light" | "dark" | "system";
 };
 
 export type RankTitle =
