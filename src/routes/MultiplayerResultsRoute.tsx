@@ -9,7 +9,7 @@ import {
 } from "../components/AppIcons";
 import { Seo } from "../components/Seo";
 import { avatarOptions } from "../data/avatars";
-import { formatDuration, formatNumber, formatPercent, getLevelProgress } from "../lib/utils";
+import { calculateRank, formatDuration, formatNumber, formatPercent, getLevelProgress } from "../lib/utils";
 import { useAppContext } from "../state/AppContext";
 
 type MultiplayerResultsState = {
@@ -125,12 +125,12 @@ export const MultiplayerResultsRoute = () => {
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center justify-between text-xs font-semibold">
                     <span className="text-[#111c2d]">{session?.profile.username}</span>
-                    <span className="text-[#3525cd]">{session?.profile.rank}</span>
+                    <span className="text-[#3525cd]">Level {progress.level} • {calculateRank(currentXp)}</span>
                   </div>
                   <div className="mt-2 h-2.5 overflow-hidden rounded-full bg-[#d8e3fb]">
                     <div
                       className="h-full rounded-full bg-gradient-to-r from-[#64a8fe] via-[#4f46e5] to-[#3525cd]"
-                      style={{ width: `${progress.progressPercent}%` }}
+                      style={{ width: `${progress.progress}%` }}
                     />
                   </div>
                 </div>

@@ -52,6 +52,7 @@ export const MindGridCanvas = ({ state, onReveal }: MindGridCanvasProps) => {
       transparent: true,
       backgroundColor: "transparent",
       scene,
+      audio: { noAudio: true },
       scale: {
         mode: Phaser.Scale.NONE,
         autoCenter: Phaser.Scale.NO_CENTER,

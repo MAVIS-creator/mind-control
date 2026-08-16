@@ -90,7 +90,7 @@ const mapRemoteProfile = (
   email: row?.email ?? fallbackEmail,
   avatarId: row?.avatarId ?? avatarOptions[0].id,
   xp: row?.xp ?? 0,
-  rank: row?.rank ?? "Neural Rookie",
+  rank: calculateRank(row?.xp ?? 0),
   createdAt: row?.createdAt ?? new Date().toISOString(),
   isAdmin,
 });
