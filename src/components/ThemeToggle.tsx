@@ -24,7 +24,7 @@ export const ThemeToggle = () => {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement | null>(null);
 
-  const currentTheme = preferences.colorTheme || "system";
+  const currentTheme = preferences.colorTheme || "light";
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {

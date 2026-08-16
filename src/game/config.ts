@@ -47,7 +47,7 @@ export const DEFAULT_GAME_PREFERENCES = {
   soundEffects: true,
   music: true,
   haptics: false,
-  colorTheme: "system",
+  colorTheme: "light",
 } as const;
 
 export const createClassicModeConfig = (settings: GameSetupSettings) => {

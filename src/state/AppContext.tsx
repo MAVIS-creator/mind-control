@@ -96,7 +96,7 @@ export const AppProvider = ({ children }: PropsWithChildren) => {
   // Color Theme Application Effect (Light / Dark / System Default)
   useEffect(() => {
     const applyTheme = () => {
-      const mode = preferences.colorTheme || "system";
+      const mode = preferences.colorTheme || "light";
       const isDark =
         mode === "dark" ||
         (mode === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
@@ -112,7 +112,7 @@ export const AppProvider = ({ children }: PropsWithChildren) => {
 
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
     const handleChange = () => {
-      if ((preferences.colorTheme || "system") === "system") {
+      if ((preferences.colorTheme || "light") === "system") {
         applyTheme();
       }
     };
