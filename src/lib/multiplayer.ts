@@ -13,7 +13,30 @@ const generateCode = (): string => {
   return code;
 };
 
-const mapRowToRoom = (row: any): MultiplayerRoom => ({
+const fetchProfilesForIds = async (userIds: string[]): Promise<Record<string, PlayerProfile>> => {
+  const uniqueIds = Array.from(new Set(userIds.filter(Boolean)));
+  if (!uniqueIds.length || !supabase) return {};
+
+  const { data, error } = await supabase.from("profiles").select("*").in("id", uniqueIds);
+  if (error || !data) return {};
+
+  const map: Record<string, PlayerProfile> = {};
+  data.forEach((p) => {
+    map[p.id] = {
+      id: p.id,
+      username: p.username || "Agent",
+      email: p.email || "",
+      avatarId: p.avatar_id || "cyber_grid",
+      xp: p.xp || 0,
+      rank: p.rank || "Neural Rookie",
+      createdAt: p.created_at || new Date().toISOString(),
+      isAdmin: Boolean(p.is_admin),
+    };
+  });
+  return map;
+};
+
+const mapRowToRoomWithProfiles = (row: any, profilesMap: Record<string, PlayerProfile>): MultiplayerRoom => ({
   id: row.id,
   roomCode: row.room_code,
   hostId: row.host_id,
@@ -30,8 +53,8 @@ const mapRowToRoom = (row: any): MultiplayerRoom => ({
   winnerId: row.winner_id,
   createdAt: row.created_at,
   updatedAt: row.updated_at,
-  hostProfile: row.host_profile ? mapProfile(row.host_profile) : undefined,
-  guestProfile: row.guest_profile ? mapProfile(row.guest_profile) : undefined,
+  hostProfile: profilesMap[row.host_id] || (row.host_profile ? mapProfile(row.host_profile) : undefined),
+  guestProfile: row.guest_id ? profilesMap[row.guest_id] || (row.guest_profile ? mapProfile(row.guest_profile) : undefined) : undefined,
 });
 
 const mapProfile = (row: any): PlayerProfile => ({
@@ -57,28 +80,29 @@ export const createMultiplayerRoom = async (
   const roomCode = generateCode();
 
   if (supabase) {
-    const { data, error } = await supabase
-      .from("multiplayer_rooms")
-      .insert({
-        room_code: roomCode,
-        host_id: hostProfile.id,
-        game_mode: options.gameMode,
-        grid_size: options.gridSize,
-        theme: options.theme,
-        seed,
-        status: "waiting",
-        host_ready: false,
-        guest_ready: false,
-        scores: { host: 0, guest: 0 },
-      })
-      .select(`
-        *,
-        host_profile:profiles!multiplayer_rooms_host_id_fkey(*)
-      `)
-      .single();
+    try {
+      const { data, error } = await supabase
+        .from("multiplayer_rooms")
+        .insert({
+          room_code: roomCode,
+          host_id: hostProfile.id,
+          game_mode: options.gameMode,
+          grid_size: options.gridSize,
+          theme: options.theme,
+          seed,
+          status: "waiting",
+          host_ready: false,
+          guest_ready: false,
+          scores: { host: 0, guest: 0 },
+        })
+        .select("*")
+        .maybeSingle();
 
-    if (!error && data) {
-      return mapRowToRoom(data);
+      if (!error && data) {
+        return mapRowToRoomWithProfiles(data, { [hostProfile.id]: hostProfile });
+      }
+    } catch (err) {
+      console.warn("Supabase create room error, using fallback:", err);
     }
   }
 
@@ -110,21 +134,21 @@ export const createMultiplayerRoom = async (
 
 export const fetchRoomDetails = async (roomIdOrCode: string): Promise<MultiplayerRoom | null> => {
   if (supabase) {
-    const isUuid = roomIdOrCode.includes("-") && roomIdOrCode.length > 10;
-    const query = supabase
-      .from("multiplayer_rooms")
-      .select(`
-        *,
-        host_profile:profiles!multiplayer_rooms_host_id_fkey(*),
-        guest_profile:profiles!multiplayer_rooms_guest_id_fkey(*)
-      `);
+    try {
+      const isUuid = roomIdOrCode.includes("-") && roomIdOrCode.length > 10;
+      const query = supabase.from("multiplayer_rooms").select("*");
 
-    const { data, error } = isUuid
-      ? await query.eq("id", roomIdOrCode).single()
-      : await query.eq("room_code", roomIdOrCode.toUpperCase()).single();
+      const { data, error } = isUuid
+        ? await query.eq("id", roomIdOrCode).maybeSingle()
+        : await query.eq("room_code", roomIdOrCode.toUpperCase()).maybeSingle();
 
-    if (!error && data) {
-      return mapRowToRoom(data);
+      if (!error && data) {
+        const userIds = [data.host_id, data.guest_id].filter(Boolean);
+        const profilesMap = await fetchProfilesForIds(userIds);
+        return mapRowToRoomWithProfiles(data, profilesMap);
+      }
+    } catch (err) {
+      console.warn("Supabase fetch room error, fallback:", err);
     }
   }
 
@@ -138,49 +162,56 @@ export const joinMultiplayerRoom = async (
   const code = roomCode.trim().toUpperCase();
 
   if (supabase) {
-    const { data: existing, error: fetchErr } = await supabase
-      .from("multiplayer_rooms")
-      .select("*")
-      .eq("room_code", code)
-      .single();
+    try {
+      const { data: existing, error: fetchErr } = await supabase
+        .from("multiplayer_rooms")
+        .select("*")
+        .eq("room_code", code)
+        .maybeSingle();
 
-    if (fetchErr || !existing) {
-      throw new Error("Room not found. Check your 6-digit code.");
+      if (fetchErr || !existing) {
+        throw new Error("Room not found. Check your 6-digit code.");
+      }
+
+      if (existing.host_id === guestProfile.id) {
+        // Host rejoining their own room
+        const roomDetails = await fetchRoomDetails(existing.id);
+        if (roomDetails) return roomDetails;
+      }
+
+      if (existing.guest_id && existing.guest_id !== guestProfile.id) {
+        throw new Error("Room is already full.");
+      }
+
+      const { data, error } = await supabase
+        .from("multiplayer_rooms")
+        .update({
+          guest_id: guestProfile.id,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", existing.id)
+        .select("*")
+        .maybeSingle();
+
+      if (error || !data) {
+        throw new Error(error?.message || "Failed to join room.");
+      }
+
+      const userIds = [data.host_id, data.guest_id].filter(Boolean);
+      const profilesMap = await fetchProfilesForIds(userIds);
+      profilesMap[guestProfile.id] = guestProfile;
+      return mapRowToRoomWithProfiles(data, profilesMap);
+    } catch (err: any) {
+      if (err.message && err.message.includes("Room")) {
+        throw err;
+      }
+      console.warn("Supabase join room error, fallback to local:", err);
     }
-
-    if (existing.host_id === guestProfile.id) {
-      // Host rejoining their own room
-      return fetchRoomDetails(existing.id) as Promise<MultiplayerRoom>;
-    }
-
-    if (existing.guest_id && existing.guest_id !== guestProfile.id) {
-      throw new Error("Room is already full.");
-    }
-
-    const { data, error } = await supabase
-      .from("multiplayer_rooms")
-      .update({
-        guest_id: guestProfile.id,
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", existing.id)
-      .select(`
-        *,
-        host_profile:profiles!multiplayer_rooms_host_id_fkey(*),
-        guest_profile:profiles!multiplayer_rooms_guest_id_fkey(*)
-      `)
-      .single();
-
-    if (error || !data) {
-      throw new Error(error?.message || "Failed to join room.");
-    }
-
-    return mapRowToRoom(data);
   }
 
   const room = localRoomsMemory.get(code);
   if (!room) {
-    throw new Error("Room not found.");
+    throw new Error("Room not found. Check your 6-digit code.");
   }
 
   if (room.hostId === guestProfile.id) return room;
@@ -199,19 +230,21 @@ export const joinMultiplayerRoom = async (
 
 export const fetchOpenPublicRooms = async (): Promise<MultiplayerRoom[]> => {
   if (supabase) {
-    const { data, error } = await supabase
-      .from("multiplayer_rooms")
-      .select(`
-        *,
-        host_profile:profiles!multiplayer_rooms_host_id_fkey(*),
-        guest_profile:profiles!multiplayer_rooms_guest_id_fkey(*)
-      `)
-      .eq("status", "waiting")
-      .order("created_at", { ascending: false })
-      .limit(10);
+    try {
+      const { data, error } = await supabase
+        .from("multiplayer_rooms")
+        .select("*")
+        .eq("status", "waiting")
+        .order("created_at", { ascending: false })
+        .limit(10);
 
-    if (!error && data) {
-      return data.map(mapRowToRoom);
+      if (!error && data) {
+        const hostIds = data.map((r) => r.host_id).filter(Boolean);
+        const profilesMap = await fetchProfilesForIds(hostIds);
+        return data.map((row) => mapRowToRoomWithProfiles(row, profilesMap));
+      }
+    } catch (err) {
+      console.warn("Supabase fetch public rooms error:", err);
     }
   }
 
@@ -241,7 +274,11 @@ export const updateRoomConfig = async (
   dbUpdates.updated_at = new Date().toISOString();
 
   if (supabase) {
-    await supabase.from("multiplayer_rooms").update(dbUpdates).eq("id", roomId);
+    try {
+      await supabase.from("multiplayer_rooms").update(dbUpdates).eq("id", roomId);
+    } catch (err) {
+      console.warn("Supabase update room error:", err);
+    }
   }
 
   const local = localRoomsMemory.get(roomId);
@@ -254,16 +291,20 @@ export const updateRoomConfig = async (
 
 export const leaveMultiplayerRoom = async (roomId: string, userId: string): Promise<void> => {
   if (supabase) {
-    const { data: room } = await supabase.from("multiplayer_rooms").select("*").eq("id", roomId).single();
-    if (room) {
-      if (room.host_id === userId) {
-        await supabase.from("multiplayer_rooms").delete().eq("id", roomId);
-      } else if (room.guest_id === userId) {
-        await supabase
-          .from("multiplayer_rooms")
-          .update({ guest_id: null, guest_ready: false, status: "waiting" })
-          .eq("id", roomId);
+    try {
+      const { data: room } = await supabase.from("multiplayer_rooms").select("*").eq("id", roomId).maybeSingle();
+      if (room) {
+        if (room.host_id === userId) {
+          await supabase.from("multiplayer_rooms").delete().eq("id", roomId);
+        } else if (room.guest_id === userId) {
+          await supabase
+            .from("multiplayer_rooms")
+            .update({ guest_id: null, guest_ready: false, status: "waiting" })
+            .eq("id", roomId);
+        }
       }
+    } catch (err) {
+      console.warn("Supabase leave room error:", err);
     }
   }
 
