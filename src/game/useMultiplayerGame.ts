@@ -87,8 +87,8 @@ export function useMultiplayerGame(
   // Presence state
   const [presenceMap, setPresenceMap] = useState<Record<string, PlayerPresenceState>>({});
 
-  // Network ping measurement
-  const [pingMs, setPingMs] = useState<number>(24);
+  // Real-time dynamic network ping measurement
+  const [pingMs, setPingMs] = useState<number>(0);
 
   // Rematch request status
   const [rematchRequestedBy, setRematchRequestedBy] = useState<string | null>(null);
@@ -104,7 +104,7 @@ export function useMultiplayerGame(
           payload: { timestamp: Date.now(), senderId: currentUserId },
         });
       }
-    }, 3000);
+    }, 2000);
 
     return () => clearInterval(pingInterval);
   }, [currentUserId]);
@@ -271,7 +271,10 @@ export function useMultiplayerGame(
     if (!supabase) return;
 
     const channel = supabase.channel(`room_${room.id}`, {
-      config: { presence: { key: currentUserId } },
+      config: {
+        presence: { key: currentUserId },
+        broadcast: { self: false, ack: false },
+      },
     });
 
     channelRef.current = channel;
@@ -343,8 +346,7 @@ export function useMultiplayerGame(
       .on("broadcast", { event: "PONG" }, ({ payload }) => {
         if (payload.senderId === currentUserId) {
           const elapsed = Date.now() - payload.timestamp;
-          const capped = Math.min(500, Math.max(12, elapsed));
-          setPingMs(capped);
+          setPingMs(Math.max(1, elapsed));
         }
       })
       .on("broadcast", { event: "REMATCH_REQUEST" }, ({ payload }) => {
