@@ -109,35 +109,16 @@ export function useMultiplayerGame(
     return () => clearInterval(pingInterval);
   }, [currentUserId]);
 
-  // Handle card click / reveal logic according to mode
-  const handleCardClick = useCallback(
+  // Helper to reveal a card and schedule resolution on BOTH local and remote actions
+  const applyCardReveal = useCallback(
     (cardId: string) => {
-      if (gameState.status === "won" || gameState.status === "lost") return;
-
-      if (room.gameMode === "turn_based") {
-        if (currentTurnId !== currentUserId) return; // Not your turn!
-        if (gameState.selectedIds.length >= 2) return;
-      } else if (room.gameMode === "speed_sprint") {
-        if (gameState.selectedIds.length >= 2) return;
-      }
-
-      // Local reveal
       setGameState((prev) => {
         const next = revealCard(prev, cardId);
 
-        // Broadcast move to partner ONLY in turn_based or coop modes
-        if (channelRef.current && (room.gameMode === "turn_based" || room.gameMode === "coop")) {
-          channelRef.current.send({
-            type: "broadcast",
-            event: "CARD_REVEAL",
-            payload: { cardId, senderId: currentUserId },
-          });
-        }
-
-        // Auto resolve selection if 2 cards revealed
         if (next.selectedIds.length === 2) {
           setTimeout(() => {
             setGameState((stateBeforeResolve) => {
+              if (stateBeforeResolve.selectedIds.length !== 2) return stateBeforeResolve;
               const resolved = resolveSelection(stateBeforeResolve);
               const card1 = stateBeforeResolve.board.cards.find(
                 (c) => c.id === stateBeforeResolve.selectedIds[0],
@@ -149,21 +130,24 @@ export function useMultiplayerGame(
 
               if (room.gameMode === "turn_based") {
                 if (isMatch) {
-                  // Keep turn & award 1.5x boosted score
+                  // Active turn player gets 1.5x score & keeps turn
+                  const activePlayerId = currentTurnId;
                   setPlayerScores((prevScores) => ({
                     ...prevScores,
-                    [currentUserId]: (prevScores[currentUserId] || 0) + 150 * (stateBeforeResolve.combo + 1),
+                    [activePlayerId]: (prevScores[activePlayerId] || 0) + 150 * (stateBeforeResolve.combo + 1),
                   }));
                 } else {
-                  // Switch turn to opponent
-                  const nextTurn = isHost ? room.guestId || room.hostId : room.hostId;
-                  setCurrentTurnId(nextTurn);
-                  if (channelRef.current) {
-                    channelRef.current.send({
-                      type: "broadcast",
-                      event: "TURN_CHANGE",
-                      payload: { nextTurnId: nextTurn },
-                    });
+                  // Mismatch: Host coordinates turn change
+                  if (isHost) {
+                    const nextTurn = currentTurnId === room.hostId ? room.guestId || room.hostId : room.hostId;
+                    setCurrentTurnId(nextTurn);
+                    if (channelRef.current) {
+                      channelRef.current.send({
+                        type: "broadcast",
+                        event: "TURN_CHANGE",
+                        payload: { nextTurnId: nextTurn },
+                      });
+                    }
                   }
                 }
               } else if (room.gameMode === "coop") {
@@ -177,13 +161,40 @@ export function useMultiplayerGame(
 
               return resolved;
             });
-          }, 350);
+          }, 400);
         }
 
         return next;
       });
     },
-    [gameState.status, gameState.selectedIds.length, room.gameMode, currentTurnId, currentUserId, isHost, room.guestId, room.hostId],
+    [room.gameMode, currentTurnId, isHost, room.hostId, room.guestId],
+  );
+
+  // Handle card click / reveal logic according to mode
+  const handleCardClick = useCallback(
+    (cardId: string) => {
+      if (gameState.status === "won" || gameState.status === "lost") return;
+
+      if (room.gameMode === "turn_based") {
+        if (currentTurnId !== currentUserId) return; // Not your turn!
+        if (gameState.selectedIds.length >= 2) return;
+      } else if (room.gameMode === "speed_sprint") {
+        if (gameState.selectedIds.length >= 2) return;
+      }
+
+      // Broadcast move to partner ONLY in turn_based or coop modes
+      if (channelRef.current && (room.gameMode === "turn_based" || room.gameMode === "coop")) {
+        channelRef.current.send({
+          type: "broadcast",
+          event: "CARD_REVEAL",
+          payload: { cardId, senderId: currentUserId },
+        });
+      }
+
+      // Apply card reveal locally
+      applyCardReveal(cardId);
+    },
+    [gameState.status, gameState.selectedIds.length, room.gameMode, currentTurnId, currentUserId, applyCardReveal],
   );
 
   // Send speed sprint progress broadcast
@@ -300,7 +311,7 @@ export function useMultiplayerGame(
       })
       .on("broadcast", { event: "CARD_REVEAL" }, ({ payload }) => {
         if (room.gameMode !== "speed_sprint" && payload.senderId !== currentUserId) {
-          setGameState((prev) => revealCard(prev, payload.cardId));
+          applyCardReveal(payload.cardId);
         }
       })
       .on("broadcast", { event: "TIMER_SYNC" }, ({ payload }) => {
@@ -368,7 +379,7 @@ export function useMultiplayerGame(
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [room.id, currentUserId, userProfile.username, userProfile.avatarId, room.hostId]);
+  }, [room.id, currentUserId, userProfile.username, userProfile.avatarId, room.hostId, applyCardReveal]);
 
   // Clean old messages after 4s
   useEffect(() => {
