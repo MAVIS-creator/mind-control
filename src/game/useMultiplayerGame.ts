@@ -283,6 +283,15 @@ export function useMultiplayerGame(
             accuracy: payload.accuracy,
             finished: payload.finished,
           });
+          if (payload.finished) {
+            setGameState((prev) => (prev.status === "won" ? prev : { ...prev, status: "lost" }));
+          }
+        }
+      })
+      .on("broadcast", { event: "MATCH_FINISHED" }, ({ payload }) => {
+        if (payload.senderId !== currentUserId) {
+          setGameState((prev) => (prev.status === "won" ? prev : { ...prev, status: "lost" }));
+          setOpponentGhost((prev) => ({ ...prev, finished: true, score: payload.finalScore || prev.score }));
         }
       })
       .on("broadcast", { event: "QUICK_MESSAGE" }, ({ payload }) => {

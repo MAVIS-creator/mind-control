@@ -333,6 +333,8 @@ export const updateRoomConfig = async (
     guestReady: boolean;
     status: MultiplayerRoom["status"];
     currentTurnId: string | null;
+    winner_id: string | null;
+    scores: any;
   }>,
 ): Promise<void> => {
   const dbUpdates: any = {};
@@ -343,6 +345,8 @@ export const updateRoomConfig = async (
   if (updates.guestReady !== undefined) dbUpdates.guest_ready = updates.guestReady;
   if (updates.status) dbUpdates.status = updates.status;
   if (updates.currentTurnId !== undefined) dbUpdates.current_turn_id = updates.currentTurnId;
+  if (updates.winner_id !== undefined) dbUpdates.winner_id = updates.winner_id;
+  if (updates.scores) dbUpdates.scores = updates.scores;
   dbUpdates.updated_at = new Date().toISOString();
 
   if (supabase) {
