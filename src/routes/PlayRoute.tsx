@@ -7,7 +7,7 @@ import { useAppContext } from "../state/AppContext";
 import type { GameTheme, GridSize } from "../types";
 
 export const PlayRoute = () => {
-  const { session, settings, updateSettings } = useAppContext();
+  const { session, settings, updateSettings, isGamingRestricted } = useAppContext();
 
   if (!session) {
     return <Navigate to="/login" replace />;
@@ -101,13 +101,23 @@ export const PlayRoute = () => {
                   </div>
                 </div>
 
-                <Link
-                  to="/play/classic"
-                  className="inline-flex w-full items-center justify-center gap-3 rounded-full bg-gradient-to-b from-[#4f46e5] to-[#3525cd] px-6 py-4 text-[1.15rem] font-semibold text-white shadow-[0_14px_28px_rgba(53,37,205,0.25)] sm:py-5 sm:text-[1.35rem]"
-                >
-                  <PlayIcon className="h-6 w-6" />
-                  Start Game
-                </Link>
+                {isGamingRestricted ? (
+                  <button
+                    type="button"
+                    disabled
+                    className="inline-flex w-full items-center justify-center gap-3 rounded-full bg-slate-300 px-6 py-4 text-[1.15rem] font-semibold text-slate-600 shadow-none cursor-not-allowed sm:py-5 sm:text-[1.35rem]"
+                  >
+                    Rest Break Active
+                  </button>
+                ) : (
+                  <Link
+                    to="/play/classic"
+                    className="inline-flex w-full items-center justify-center gap-3 rounded-full bg-gradient-to-b from-[#4f46e5] to-[#3525cd] px-6 py-4 text-[1.15rem] font-semibold text-white shadow-[0_14px_28px_rgba(53,37,205,0.25)] sm:py-5 sm:text-[1.35rem]"
+                  >
+                    <PlayIcon className="h-6 w-6" />
+                    Start Game
+                  </Link>
+                )}
               </div>
             </div>
           </div>

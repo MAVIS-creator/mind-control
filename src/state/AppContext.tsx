@@ -44,6 +44,9 @@ type AppContextValue = {
   updateRun: (entry: LeaderboardEntry) => Promise<void>;
   deleteRun: (runId: string) => Promise<void>;
   sendAdminEmail: (payload: AdminEmailPayload) => Promise<AdminEmailResult>;
+  isGamingRestricted: boolean;
+  cooldownRemainingSeconds: number;
+  triggerTestCooldown: () => void;
   submitRun: (
     entry: Omit<LeaderboardEntry, "id" | "playedAt" | "userId" | "username" | "email" | "avatarId" | "rating" | "totalPoints">,
   ) => Promise<LeaderboardEntry>;
@@ -90,6 +93,48 @@ export const AppProvider = ({ children }: PropsWithChildren) => {
     void load();
   }, []);
 
+  // Healthy Gaming / Addiction Fencing State
+  const [activePlaySeconds, setActivePlaySeconds] = useState<number>(0);
+  const [cooldownUntil, setCooldownUntil] = useState<number | null>(() => {
+    const raw = localStorage.getItem("healthy_cooldown_until");
+    if (!raw) return null;
+    const val = parseInt(raw, 10);
+    return val > Date.now() ? val : null;
+  });
+
+  // Track continuous session play duration (7h = 25,200s limit)
+  useEffect(() => {
+    if (!session || session.profile.isAdmin) return;
+
+    const interval = setInterval(() => {
+      setActivePlaySeconds((prev) => {
+        const next = prev + 1;
+        if (next >= 25200 && (!cooldownUntil || Date.now() >= cooldownUntil)) {
+          const newCooldown = Date.now() + 2 * 3600 * 1000;
+          setCooldownUntil(newCooldown);
+          localStorage.setItem("healthy_cooldown_until", newCooldown.toString());
+        }
+        return next;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [session, cooldownUntil]);
+
+  const isGamingRestricted = Boolean(
+    session && !session.profile.isAdmin && cooldownUntil && Date.now() < cooldownUntil,
+  );
+
+  const cooldownRemainingSeconds = cooldownUntil
+    ? Math.max(0, Math.ceil((cooldownUntil - Date.now()) / 1000))
+    : 0;
+
+  const triggerTestCooldown = () => {
+    const newCooldown = Date.now() + 2 * 3600 * 1000;
+    setCooldownUntil(newCooldown);
+    localStorage.setItem("healthy_cooldown_until", newCooldown.toString());
+  };
+
   const value = useMemo<AppContextValue>(
     () => ({
       booting,
@@ -101,6 +146,9 @@ export const AppProvider = ({ children }: PropsWithChildren) => {
       preferences,
       setSession,
       setAuthMode,
+      isGamingRestricted,
+      cooldownRemainingSeconds,
+      triggerTestCooldown,
       updateSettings: (patch) => {
         const next = { ...settings, ...patch };
         setSettings(next);

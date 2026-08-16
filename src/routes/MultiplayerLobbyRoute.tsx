@@ -9,7 +9,7 @@ import type { GameTheme, GridSize, MultiplayerGameMode, MultiplayerRoom } from "
 
 export const MultiplayerLobbyRoute = () => {
   const navigate = useNavigate();
-  const { session } = useAppContext();
+  const { session, isGamingRestricted } = useAppContext();
 
   const [roomCodeInput, setRoomCodeInput] = useState("");
   const [selectedMode, setSelectedMode] = useState<MultiplayerGameMode>("turn_based");
@@ -52,6 +52,10 @@ export const MultiplayerLobbyRoute = () => {
   }, []);
 
   const handleCreateRoom = async () => {
+    if (isGamingRestricted) {
+      setErrorMessage("Rest Break Active: Please wait for your 2-hour healthy gaming cooldown to finish.");
+      return;
+    }
     setIsCreating(true);
     setErrorMessage(null);
     try {

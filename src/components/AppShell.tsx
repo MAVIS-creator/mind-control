@@ -5,6 +5,7 @@ import { getLevelFromXp } from "../lib/utils";
 import { useAppContext } from "../state/AppContext";
 import type { AuthSession } from "../types";
 import { BrandMarkIcon, HomeIcon, TrophyIcon, UserIcon } from "./AppIcons";
+import { AddictionFencingModal } from "./AddictionFencingModal";
 import { BetaFounderClaimModal } from "./BetaFounderClaimModal";
 import { FriendsDrawer } from "./FriendsDrawer";
 import { SiteFooter } from "./SiteFooter";
@@ -139,6 +140,7 @@ export const AppShell = ({ session, active, children }: AppShellProps) => {
         </div>
       </header>
 
+      <AddictionFencingModal />
       <BetaFounderClaimModal />
       <FriendsDrawer isOpen={friendsOpen} onClose={() => setFriendsOpen(false)} />
 

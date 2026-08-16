@@ -6,7 +6,7 @@ import { formatNumber } from "../lib/utils";
 import { useAppContext } from "../state/AppContext";
 
 export const PerksAdminPanel = () => {
-  const { sendAdminEmail } = useAppContext();
+  const { sendAdminEmail, triggerTestCooldown } = useAppContext();
   const [profiles, setProfiles] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedUserIds, setSelectedUserIds] = useState<string[]>([]);
@@ -155,13 +155,22 @@ export const PerksAdminPanel = () => {
               <h2 className="text-lg font-bold text-[#1a2340]">Registered Accounts & Emails</h2>
               <p className="text-xs text-[#6c7489]">Inspect registered player emails and manage Neural Tester badges.</p>
             </div>
-            <button
-              type="button"
-              onClick={selectAllTesters}
-              className="rounded-full border border-amber-300 bg-amber-50 px-3.5 py-1.5 text-xs font-bold text-amber-800 hover:bg-amber-100"
-            >
-              Select All Neural Testers
-            </button>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={triggerTestCooldown}
+                className="rounded-full border border-emerald-300 bg-emerald-50 px-3.5 py-1.5 text-xs font-bold text-emerald-800 hover:bg-emerald-100"
+              >
+                Preview Rest Break Modal
+              </button>
+              <button
+                type="button"
+                onClick={selectAllTesters}
+                className="rounded-full border border-amber-300 bg-amber-50 px-3.5 py-1.5 text-xs font-bold text-amber-800 hover:bg-amber-100"
+              >
+                Select All Neural Testers
+              </button>
+            </div>
           </div>
 
           <div className="max-h-[34rem] overflow-y-auto space-y-2.5 pr-1">
