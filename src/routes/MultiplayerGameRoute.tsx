@@ -130,10 +130,10 @@ const LiveMultiplayerCanvas = ({
         navigate(`/multiplayer/results/${room.id}`, {
           state: {
             room,
-            myScore: gameState.score,
+            myScore: room.gameMode === "speed_sprint" ? Math.round(gameState.score * 1.5) : gameState.score,
             opponentScore:
               room.gameMode === "speed_sprint"
-                ? opponentGhost.score
+                ? Math.round(opponentGhost.score * 1.5)
                 : (isHost ? playerScores[room.guestId || ""] || 0 : playerScores[room.hostId] || 0),
             winnerId,
             accuracy: gameState.moves > 0 ? (gameState.matches / gameState.moves) * 100 : 0,

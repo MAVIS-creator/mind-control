@@ -132,10 +132,10 @@ export function useMultiplayerGame(
 
               if (room.gameMode === "turn_based") {
                 if (isMatch) {
-                  // Keep turn & award score
+                  // Keep turn & award 1.5x boosted score
                   setPlayerScores((prevScores) => ({
                     ...prevScores,
-                    [currentUserId]: (prevScores[currentUserId] || 0) + 100 * (stateBeforeResolve.combo + 1),
+                    [currentUserId]: (prevScores[currentUserId] || 0) + 150 * (stateBeforeResolve.combo + 1),
                   }));
                 } else {
                   // Switch turn to opponent
@@ -151,7 +151,7 @@ export function useMultiplayerGame(
                 }
               } else if (room.gameMode === "coop") {
                 if (isMatch) {
-                  setCoopSharedScore((prev) => prev + 150 * (stateBeforeResolve.combo + 1));
+                  setCoopSharedScore((prev) => prev + 225 * (stateBeforeResolve.combo + 1));
                   setCoopCombinedCombo((prev) => prev + 1);
                 } else {
                   setCoopCombinedCombo(0);
