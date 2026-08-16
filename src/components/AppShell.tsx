@@ -98,7 +98,9 @@ export const AppShell = ({ session, active, children }: AppShellProps) => {
                 type="button"
                 onClick={() => setMenuOpen((current) => !current)}
                 className={`shrink-0 rounded-full border-2 border-white bg-slate-100 shadow-[0_10px_20px_rgba(53,37,205,0.1)] transition ${
-                  session.profile.isAdmin
+                  session.profile.isAdmin && session.profile.isBetaTester
+                    ? "ring-2 ring-sky-400"
+                    : session.profile.isAdmin
                     ? "ring-2 ring-sky-500"
                     : session.profile.isBetaTester
                     ? "ring-2 ring-amber-400"

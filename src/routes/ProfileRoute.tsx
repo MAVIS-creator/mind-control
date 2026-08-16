@@ -149,19 +149,23 @@ export const ProfileRoute = () => {
             <section className="glass-panel rounded-[2rem] p-6 shadow-[0_14px_34px_rgba(53,37,205,0.08)] sm:p-8 lg:p-10">
               <div className="grid gap-8 lg:grid-cols-[220px_1fr] lg:items-center">
                 <div className="relative mx-auto w-full max-w-[220px]">
-                  <img
-                    src={avatar.image}
-                    alt={avatar.name}
-                    className={`w-full rounded-full border-4 border-white bg-slate-100 shadow-xl transition-all duration-300 ${
+                  <div
+                    className={`rounded-full p-[4px] transition-all duration-300 ${
                       resolvedSnapshot.profile.isAdmin && resolvedSnapshot.profile.isBetaTester
-                        ? "ring-4 ring-amber-400 shadow-[0_0_30px_rgba(245,158,11,0.5)]"
+                        ? "bg-gradient-to-r from-sky-400 via-indigo-500 to-amber-400 shadow-[0_0_35px_rgba(14,165,233,0.45)]"
                         : resolvedSnapshot.profile.isAdmin
-                        ? "ring-4 ring-sky-500 shadow-[0_0_30px_rgba(14,165,233,0.5)]"
+                        ? "bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-600 shadow-[0_0_30px_rgba(14,165,233,0.4)]"
                         : resolvedSnapshot.profile.isBetaTester
-                        ? "ring-4 ring-amber-400 shadow-[0_0_30px_rgba(245,158,11,0.5)]"
-                        : "ring-4 ring-[#e2dfff]"
+                        ? "bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 shadow-[0_0_30px_rgba(245,158,11,0.4)]"
+                        : "bg-[#e2dfff]"
                     }`}
-                  />
+                  >
+                    <img
+                      src={avatar.image}
+                      alt={avatar.name}
+                      className="w-full rounded-full border-4 border-white bg-slate-100 shadow-xl"
+                    />
+                  </div>
                 </div>
                 <div>
                   <div className="flex flex-wrap items-center gap-3">

@@ -14,13 +14,15 @@ export const BetaFounderClaimModal = () => {
 
   const profile = session.profile;
   const isBetaTester = Boolean(profile.isBetaTester);
-  const hasClaimed = Boolean(profile.hasClaimedBetaReward);
+  const hasClaimed = Boolean(profile.hasClaimedBetaReward) || Boolean(localStorage.getItem(`claimed_beta_${profile.id}`));
 
-  // Show modal ONLY for verified Neural Testers who haven't claimed their reward yet!
-  if (!isBetaTester || hasClaimed || claimed) return null;
+  // Main Admin / Creator NEVER sees the claim modal!
+  if (profile.isAdmin || !isBetaTester || hasClaimed || claimed) return null;
 
   const handleClaim = async () => {
     setClaiming(true);
+    localStorage.setItem(`claimed_beta_${profile.id}`, "true");
+
     const xpBonus = 1000;
     const newXp = (profile.xp || 0) + xpBonus;
     const newRank = calculateRank(newXp);
@@ -43,7 +45,6 @@ export const BetaFounderClaimModal = () => {
           .update({
             xp: newXp,
             rank: newRank,
-            has_claimed_beta_reward: true,
           })
           .eq("id", profile.id);
       } catch (err) {
