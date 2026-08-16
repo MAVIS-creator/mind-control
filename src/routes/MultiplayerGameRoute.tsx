@@ -1,8 +1,18 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState, type ReactNode } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import {
+  ArrowLeftIcon,
+  BrandMarkIcon,
+  ClockIcon,
+  GridIcon,
+  RefreshIcon,
+  SparklesIcon,
+} from "../components/AppIcons";
 import { Seo } from "../components/Seo";
+import { avatarOptions } from "../data/avatars";
 import { useMultiplayerGame, type QuickMessage } from "../game/useMultiplayerGame";
 import { fetchRoomDetails, updateRoomConfig } from "../lib/multiplayer";
+import { formatDuration, formatNumber } from "../lib/utils";
 import { useAppContext } from "../state/AppContext";
 import type { CardNode, MultiplayerRoom } from "../types";
 
@@ -84,6 +94,8 @@ const LiveMultiplayerCanvas = ({
   const totalPairs = gameState.board.cards.length / 2;
   const isFinished = gameState.matches === totalPairs || gameState.status === "won" || gameState.status === "lost";
 
+  const avatar = avatarOptions.find((entry) => entry.id === profile.avatarId) ?? avatarOptions[0];
+
   useEffect(() => {
     if (isFinished && !gameFinished) {
       setGameFinished(true);
@@ -119,7 +131,10 @@ const LiveMultiplayerCanvas = ({
           state: {
             room,
             myScore: gameState.score,
-            opponentScore: room.gameMode === "speed_sprint" ? opponentGhost.score : (isHost ? playerScores[room.guestId || ""] || 0 : playerScores[room.hostId] || 0),
+            opponentScore:
+              room.gameMode === "speed_sprint"
+                ? opponentGhost.score
+                : (isHost ? playerScores[room.guestId || ""] || 0 : playerScores[room.hostId] || 0),
             winnerId,
             accuracy: gameState.moves > 0 ? (gameState.matches / gameState.moves) * 100 : 0,
             coopScore: coopSharedScore,
@@ -146,7 +161,7 @@ const LiveMultiplayerCanvas = ({
   ];
 
   return (
-    <div className="relative min-h-screen bg-[radial-gradient(circle_at_top_left,_#e2dfff_0%,_#f9f9ff_42%,_#d4e3ff_100%)] px-4 py-6">
+    <div className="flex min-h-[100dvh] flex-col bg-[linear-gradient(180deg,#f6f8ff_0%,#eef4ff_100%)] lg:h-screen lg:max-h-screen lg:overflow-hidden">
       <Seo title="Live Multiplayer Battle - MindGrid" description="Realtime multiplayer memory game." />
 
       {/* Floating Quick Messages Overlay */}
@@ -161,146 +176,195 @@ const LiveMultiplayerCanvas = ({
         ))}
       </div>
 
-      <div className="mx-auto max-w-4xl">
-        {/* Top Header / HUD */}
-        <div className="glass-panel mb-6 rounded-3xl p-4 sm:p-6 shadow-xl">
-          {/* Mode 1: 1v1 Turn-Based Neural Duel HUD */}
-          {room.gameMode === "turn_based" && (
-            <div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className={`h-3 w-3 rounded-full ${isMyTurn ? "bg-emerald-500 animate-ping" : "bg-slate-400"}`} />
-                  <span className={`font-display text-sm font-black uppercase tracking-wider ${isMyTurn ? "text-emerald-600" : "text-[#64748b]"}`}>
-                    {isMyTurn ? "YOUR TURN TO MOVE" : `${(opponentProfile?.username || "OPPONENT").toUpperCase()}'S TURN`}
-                  </span>
-                </div>
-                <div className="text-xs font-bold uppercase tracking-wider text-[#475569]">
-                  Combo: <span className="font-mono text-base text-[#3525cd]">x{gameState.combo + 1}</span>
-                </div>
-              </div>
-
-              <div className="mt-4 grid grid-cols-2 gap-4 border-t border-slate-200/60 pt-4">
-                <div className={`rounded-2xl p-3 text-center transition-all ${isMyTurn ? "bg-emerald-500/10 border border-emerald-500/30 shadow-sm" : "bg-white/60"}`}>
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-[#64748b]">You ({profile.username})</p>
-                  <p className="font-mono text-xl font-black text-[#1e1b4b]">{playerScores[userId] || 0} pts</p>
-                </div>
-                <div className={`rounded-2xl p-3 text-center transition-all ${!isMyTurn ? "bg-indigo-500/10 border border-indigo-500/30 shadow-sm" : "bg-white/60"}`}>
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-[#64748b]">{opponentProfile?.username || "Opponent"}</p>
-                  <p className="font-mono text-xl font-black text-[#1e1b4b]">
-                    {playerScores[isHost ? room.guestId || "" : room.hostId] || 0} pts
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Mode 2: Speed Sprint HUD */}
-          {room.gameMode === "speed_sprint" && (
-            <div>
-              <div className="flex items-center justify-between mb-3">
-                <span className="font-display text-xs font-black uppercase tracking-wider text-[#0284c7]">
-                  SIMULTANEOUS SPEED RACE
-                </span>
-                <span className="font-mono text-xs font-bold text-[#64748b]">
-                  Timer: {gameState.timerRemaining}s
-                </span>
-              </div>
-
-              <div className="space-y-3">
-                <div>
-                  <div className="flex justify-between text-xs font-bold text-[#1e1b4b] mb-1">
-                    <span>You ({gameState.matches}/{totalPairs} pairs)</span>
-                    <span>Score: {gameState.score}</span>
-                  </div>
-                  <div className="h-3 w-full overflow-hidden rounded-full bg-slate-200">
-                    <div
-                      className="h-full rounded-full bg-gradient-to-r from-[#0284c7] to-[#06b6d4] transition-all duration-300"
-                      style={{ width: `${(gameState.matches / totalPairs) * 100}%` }}
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <div className="flex justify-between text-xs font-bold text-[#64748b] mb-1">
-                    <span>{opponentProfile?.username || "Opponent Ghost"} ({opponentGhost.matches}/{totalPairs} pairs)</span>
-                    <span>Score: {opponentGhost.score}</span>
-                  </div>
-                  <div className="h-3 w-full overflow-hidden rounded-full bg-slate-200">
-                    <div
-                      className="h-full rounded-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all duration-300 opacity-70"
-                      style={{ width: `${(opponentGhost.matches / totalPairs) * 100}%` }}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Mode 3: Co-op Grid Sync HUD */}
-          {room.gameMode === "coop" && (
-            <div className="text-center">
-              <span className="font-display text-xs font-black uppercase tracking-wider text-[#7c3aed]">
-                CO-OP NEURAL LINK
+      {/* Top Header / HUD (Identical to Single Player) */}
+      <header className="shrink-0 border-b border-[#cfe0ff] bg-[linear-gradient(180deg,rgba(248,251,255,0.98),rgba(238,245,255,0.94))] backdrop-blur-xl">
+        <div className="mx-auto flex max-w-[1440px] flex-col gap-3 px-3 py-3 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8 xl:px-10">
+          <div className="flex min-w-0 items-center justify-between gap-2 lg:flex-1 lg:justify-start">
+            <Link to="/play" className="flex min-w-0 items-center gap-2 sm:gap-3">
+              <BrandMarkIcon className="h-9 w-9 shrink-0 object-contain sm:h-11 sm:w-11" />
+              <span className="truncate font-display text-[1.45rem] font-extrabold text-[#3525cd] sm:text-[2rem]">
+                MindGrid
               </span>
-              <div className="mt-2 flex justify-center items-center gap-8">
-                <div>
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-[#64748b]">Combined Score</p>
-                  <p className="font-mono text-2xl font-black text-[#1e1b4b]">{coopSharedScore + gameState.score}</p>
-                </div>
-                <div>
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-[#64748b]">Combo Streak</p>
-                  <p className="font-mono text-2xl font-black text-[#7c3aed]">x{coopCombinedCombo + gameState.combo}</p>
-                </div>
-                <div>
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-[#64748b]">Pairs Cleared</p>
-                  <p className="font-mono text-2xl font-black text-emerald-600">{gameState.matches} / {totalPairs}</p>
-                </div>
+            </Link>
+          </div>
+
+          <div className="mx-auto flex w-full max-w-[33rem] items-center justify-between gap-2 rounded-[1.5rem] border border-white/80 bg-white/62 px-3 py-2 shadow-[0_16px_36px_rgba(53,37,205,0.08)] sm:gap-4 sm:px-5 lg:w-auto lg:max-w-none lg:justify-center lg:rounded-full">
+            <HudStat label="Time" value={formatDuration(gameState.timerRemaining)} />
+            <HudStat label="Moves" value={`${gameState.moves}`} />
+            <HudStat label="Pairs" value={`${gameState.matches}/${totalPairs}`} />
+            <div className="flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-full border border-[#b9d2f4] bg-[#d7e7fb] text-[#0058a8] shadow-inner sm:h-16 sm:w-16">
+              <span className="text-[0.62rem] font-semibold uppercase">Combo</span>
+              <span className="text-[1.25rem] font-bold sm:text-[1.45rem]">x{Math.max(gameState.combo, 1)}</span>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-center gap-2 lg:flex-1 lg:justify-end">
+            <div className="inline-flex min-w-0 items-center gap-1.5 rounded-full bg-gradient-to-b from-[#4f46e5] to-[#3525cd] px-3 py-2 text-white shadow-[0_14px_30px_rgba(53,37,205,0.18)] sm:gap-2 sm:px-4 sm:py-2.5">
+              <SparklesIcon className="h-4 w-4" />
+              <span className="truncate text-[0.74rem] font-semibold tracking-[0.03em] sm:text-sm">{profile.xp} XP</span>
+            </div>
+            <img src={avatar.image} alt="" className="h-10 w-10 rounded-full border-2 border-white shadow-sm" />
+          </div>
+        </div>
+      </header>
+
+      {/* Main Playground Content */}
+      <main className="mx-auto flex min-h-0 w-full max-w-[1440px] flex-1 overflow-visible px-3 py-2 sm:px-6 sm:py-3 lg:max-h-[calc(100vh-8.5rem)] lg:overflow-hidden lg:px-8 xl:px-10">
+        <div className="grid min-h-0 w-full gap-3 lg:grid-cols-[minmax(0,1fr)_18.5rem] xl:gap-4">
+          {/* Left Playground Column */}
+          <section className="flex min-h-0 min-w-0 flex-col gap-3 lg:grid lg:grid-rows-[auto_minmax(0,1fr)_auto]">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <button
+                type="button"
+                onClick={() => navigate("/multiplayer")}
+                className="inline-flex items-center gap-2 rounded-full border border-[#dbdef0] bg-white/88 px-4 py-2.5 text-xs font-semibold text-[#495066] hover:bg-white"
+              >
+                <ArrowLeftIcon className="h-4 w-4" />
+                Disband Match
+              </button>
+
+              <span className="rounded-full bg-[#4f46e5]/10 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-[#3525cd] border border-[#4f46e5]/20">
+                {room.gameMode === "speed_sprint"
+                  ? "SPEED SPRINT RACE (4x4 Matrix)"
+                  : room.gameMode === "coop"
+                  ? "CO-OP GRID SYNC"
+                  : "TURN-BASED 1v1 DUEL"}
+              </span>
+            </div>
+
+            {/* Playable Grid Canvas */}
+            <div className="min-h-0 flex items-center justify-center p-2">
+              <div className={`grid gap-3 sm:gap-4 ${gridColsClass} w-full max-w-xl`}>
+                {gameState.board.cards.map((card: CardNode) => {
+                  const isSelected = gameState.selectedIds.includes(card.id);
+                  const isClickable = !card.matched && !card.revealed && (room.gameMode !== "turn_based" || isMyTurn);
+
+                  return (
+                    <button
+                      key={card.id}
+                      onClick={() => isClickable && handleCardClick(card.id)}
+                      disabled={!isClickable}
+                      className={`aspect-square rounded-2xl sm:rounded-3xl p-2 font-display text-2xl sm:text-3xl font-bold transition-all duration-300 shadow-md ${
+                        card.matched
+                          ? "bg-emerald-500/20 text-emerald-700 border-2 border-emerald-500/40 opacity-70"
+                          : card.revealed || isSelected
+                          ? "bg-white text-[#3525cd] ring-4 ring-[#4f46e5]/40 rotate-y-180 scale-105"
+                          : "bg-gradient-to-tr from-[#3525cd] via-[#4f46e5] to-[#7c3aed] text-white hover:scale-105 active:scale-95 border border-white/20"
+                      }`}
+                    >
+                      <div className="flex h-full w-full items-center justify-center">
+                        {card.revealed || card.matched ? card.symbol : "◌"}
+                      </div>
+                    </button>
+                  );
+                })}
               </div>
             </div>
-          )}
-        </div>
 
-        {/* Card Grid */}
-        <div className={`grid gap-3 sm:gap-4 ${gridColsClass} mb-6`}>
-          {gameState.board.cards.map((card: CardNode) => {
-            const isSelected = gameState.selectedIds.includes(card.id);
-            const isClickable = !card.matched && !card.revealed && (room.gameMode !== "turn_based" || isMyTurn);
+            {/* Quick Messages Bar */}
+            <div className="glass-panel flex flex-wrap items-center justify-center gap-2 rounded-2xl p-2.5 shadow-sm">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[#64748b] mr-2">Quick Message:</span>
+              {quickMessagesList.map((msg) => (
+                <button
+                  key={msg}
+                  onClick={() => sendQuickMessage(msg)}
+                  className="rounded-xl bg-white/80 border border-slate-200 px-3 py-1.5 text-xs font-semibold text-[#1e1b4b] hover:bg-[#3525cd] hover:text-white transition-all shadow-sm active:scale-95"
+                >
+                  {msg}
+                </button>
+              ))}
+            </div>
+          </section>
 
-            return (
-              <button
-                key={card.id}
-                onClick={() => isClickable && handleCardClick(card.id)}
-                disabled={!isClickable}
-                className={`aspect-square rounded-2xl sm:rounded-3xl p-2 font-display text-xl sm:text-2xl font-bold transition-all duration-300 shadow-md ${
-                  card.matched
-                    ? "bg-emerald-500/20 text-emerald-700 border-2 border-emerald-500/40 opacity-70"
-                    : card.revealed || isSelected
-                    ? "bg-white text-[#3525cd] ring-4 ring-[#4f46e5]/40 rotate-y-180 scale-105"
-                    : "bg-gradient-to-tr from-[#3525cd] via-[#4f46e5] to-[#7c3aed] text-white hover:scale-105 active:scale-95 border border-white/20"
-                }`}
-              >
-                <div className="flex h-full w-full items-center justify-center">
-                  {card.revealed || card.matched ? card.symbol : "◌"}
+          {/* Right Sidebar: Match & Live Opponent Progress (Same as Single Player Sidebar) */}
+          <aside className="grid grid-cols-2 gap-3 lg:grid-cols-1 lg:grid-rows-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-3 xl:min-h-0">
+            {/* Card 1: Live Progress & Opponent Ghost Updates */}
+            <div className="glass-panel rounded-[1.4rem] p-4 sm:rounded-[1.6rem]">
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#3f4457]">
+                {room.gameMode === "speed_sprint" ? "Speed Race Progress" : "Match Progress"}
+              </p>
+
+              {/* Your Board Progress */}
+              <div className="mt-4">
+                <div className="flex items-center justify-between text-xs font-bold text-[#1a2340]">
+                  <span>You ({gameState.matches}/{totalPairs} pairs)</span>
+                  <span className="text-[#3525cd]">{gameState.score} pts</span>
                 </div>
-              </button>
-            );
-          })}
-        </div>
+                <div className="mt-2 h-3 overflow-hidden rounded-full bg-[#d9e5fb]">
+                  <div
+                    className="h-full rounded-full bg-gradient-to-r from-[#64a8fe] via-[#4f46e5] to-[#3525cd] transition-all duration-300"
+                    style={{ width: `${(gameState.matches / totalPairs) * 100}%` }}
+                  />
+                </div>
+              </div>
 
-        {/* Quick Messages Bar (No Emojis) */}
-        <div className="glass-panel flex flex-wrap items-center justify-center gap-2 rounded-2xl p-3 shadow-lg">
-          <span className="text-[10px] font-bold uppercase tracking-wider text-[#64748b] mr-2">Quick Message:</span>
-          {quickMessagesList.map((msg) => (
-            <button
-              key={msg}
-              onClick={() => sendQuickMessage(msg)}
-              className="rounded-xl bg-white/80 border border-slate-200 px-3 py-1.5 text-xs font-semibold text-[#1e1b4b] hover:bg-[#3525cd] hover:text-white transition-all shadow-sm active:scale-95"
-            >
-              {msg}
-            </button>
-          ))}
+              {/* Opponent Progress (Updated Live via WebSockets) */}
+              <div className="mt-5">
+                <div className="flex items-center justify-between text-xs font-bold text-[#5a6174]">
+                  <span>
+                    {opponentProfile?.username || "Opponent"} (
+                    {room.gameMode === "speed_sprint"
+                      ? `${opponentGhost.matches}/${totalPairs} pairs`
+                      : `${playerScores[isHost ? room.guestId || "" : room.hostId] || 0} pts`}
+                    )
+                  </span>
+                  <span>{room.gameMode === "speed_sprint" ? opponentGhost.score : playerScores[isHost ? room.guestId || "" : room.hostId] || 0} pts</span>
+                </div>
+                <div className="mt-2 h-3 overflow-hidden rounded-full bg-slate-200">
+                  <div
+                    className="h-full rounded-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all duration-300 opacity-80"
+                    style={{
+                      width: `${
+                        room.gameMode === "speed_sprint"
+                          ? (opponentGhost.matches / totalPairs) * 100
+                          : totalPairs > 0
+                          ? ((playerScores[isHost ? room.guestId || "" : room.hostId] || 0) / totalPairs) * 100
+                          : 0
+                      }%`,
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div className="mt-4 rounded-[1.15rem] border border-[#d7dcf5] bg-[#f3f4ff] px-3 py-2.5 text-xs leading-5 text-[#3525cd]">
+                {room.gameMode === "speed_sprint"
+                  ? "Sprint Race: Play on your own board as fast as possible. First to clear all pairs wins!"
+                  : isMyTurn
+                  ? "It's your turn to match pairs!"
+                  : `Waiting for ${opponentProfile?.username || "opponent"}'s move...`}
+              </div>
+            </div>
+
+            {/* Card 2: Battle Stats */}
+            <div className="glass-panel rounded-[1.4rem] p-4 sm:rounded-[1.6rem]">
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#3f4457]">Battle Stats</p>
+              <div className="mt-3 space-y-2">
+                <SideStat icon={<GridIcon className="h-4 w-4" />} label="Score" value={formatNumber(gameState.score)} />
+                <SideStat icon={<ClockIcon className="h-4 w-4" />} label="Mistakes" value={`${gameState.mismatches}`} />
+                <SideStat icon={<SparklesIcon className="h-4 w-4" />} label="Best combo" value={`x${gameState.maxCombo}`} />
+                <SideStat icon={<RefreshIcon className="h-4 w-4" />} label="Moves" value={`${gameState.moves}`} />
+              </div>
+            </div>
+          </aside>
         </div>
-      </div>
+      </main>
     </div>
   );
 };
+
+const HudStat = ({ label, value }: { label: string; value: string }) => (
+  <div className="text-center">
+    <p className="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-[#788299]">{label}</p>
+    <p className="mt-0.5 text-[0.95rem] font-bold text-[#1a2340] sm:text-base">{value}</p>
+  </div>
+);
+
+const SideStat = ({ icon, label, value }: { icon: ReactNode; label: string; value: string }) => (
+  <div className="flex items-center justify-between text-xs text-[#2e3650]">
+    <div className="flex items-center gap-2 text-[#788299]">
+      {icon}
+      <span>{label}</span>
+    </div>
+    <span className="font-bold text-[#1b2441]">{value}</span>
+  </div>
+);
