@@ -90,6 +90,10 @@ export function useMultiplayerGame(
   // Real-time dynamic network ping measurement
   const [pingMs, setPingMs] = useState<number>(0);
 
+  // Per-turn shot clock for turn_based mode & stopwatch for coop
+  const [turnShotClock, setTurnShotClock] = useState<number>(15);
+  const [coopElapsedTime, setCoopElapsedTime] = useState<number>(0);
+
   // Rematch request status
   const [rematchRequestedBy, setRematchRequestedBy] = useState<string | null>(null);
 
@@ -218,28 +222,63 @@ export function useMultiplayerGame(
     }
   }, [gameState.score, gameState.matches, gameState.combo, gameState.moves, gameState.status, room.gameMode, currentUserId]);
 
-  // Master synced game timer tick loop (Host ticks, Guest syncs)
+  // Reset shot clock on turn change in turn_based mode
+  useEffect(() => {
+    if (room.gameMode === "turn_based") {
+      setTurnShotClock(15);
+    }
+  }, [currentTurnId, room.gameMode]);
+
+  // Mode-specific game timer tick loop
   useEffect(() => {
     if (gameState.status !== "running") return;
 
-    if (isHost) {
+    if (room.gameMode === "turn_based") {
       const interval = setInterval(() => {
-        setGameState((prev) => {
-          const next = tickGame(prev);
-          if (channelRef.current) {
-            channelRef.current.send({
-              type: "broadcast",
-              event: "TIMER_SYNC",
-              payload: { timerRemaining: next.timerRemaining },
-            });
+        setTurnShotClock((prev) => {
+          if (prev <= 1) {
+            // Shot clock expired: Host auto switches turn to opponent
+            if (isHost) {
+              const nextTurn = currentTurnId === room.hostId ? room.guestId || room.hostId : room.hostId;
+              setCurrentTurnId(nextTurn);
+              if (channelRef.current) {
+                channelRef.current.send({
+                  type: "broadcast",
+                  event: "TURN_CHANGE",
+                  payload: { nextTurnId: nextTurn },
+                });
+              }
+            }
+            return 15;
           }
-          return next;
+          return prev - 1;
         });
       }, 1000);
-
       return () => clearInterval(interval);
+    } else if (room.gameMode === "coop") {
+      const interval = setInterval(() => {
+        setCoopElapsedTime((prev) => prev + 1);
+      }, 1000);
+      return () => clearInterval(interval);
+    } else if (room.gameMode === "speed_sprint") {
+      if (isHost) {
+        const interval = setInterval(() => {
+          setGameState((prev) => {
+            const next = tickGame(prev);
+            if (channelRef.current) {
+              channelRef.current.send({
+                type: "broadcast",
+                event: "TIMER_SYNC",
+                payload: { timerRemaining: next.timerRemaining },
+              });
+            }
+            return next;
+          });
+        }, 1000);
+        return () => clearInterval(interval);
+      }
     }
-  }, [gameState.status, isHost]);
+  }, [gameState.status, room.gameMode, isHost, currentTurnId, room.hostId, room.guestId]);
 
   // Send Quick Chat Message
   const sendQuickMessage = useCallback(
@@ -409,5 +448,7 @@ export function useMultiplayerGame(
     sendRematchRequest,
     presenceMap,
     pingMs,
+    turnShotClock,
+    coopElapsedTime,
   };
 }

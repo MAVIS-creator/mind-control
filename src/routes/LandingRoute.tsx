@@ -46,6 +46,37 @@ const gameSteps = [
 export const LandingRoute = () => {
   const { session, leaderboard, accountLeaderboard } = useAppContext();
 
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [isStandalone, setIsStandalone] = useState(false);
+
+  useEffect(() => {
+    if (window.matchMedia("(display-mode: standalone)").matches || (navigator as any).standalone) {
+      setIsStandalone(true);
+    }
+
+    const handleBeforeInstall = (e: Event) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+
+    window.addEventListener("beforeinstallprompt", handleBeforeInstall);
+    return () => window.removeEventListener("beforeinstallprompt", handleBeforeInstall);
+  }, []);
+
+  const handleInstallClick = async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === "accepted") {
+        setDeferredPrompt(null);
+      }
+    } else {
+      alert(
+        "To install MindGrid as a Web App on your device:\n\n• On iOS (Safari): Tap the Share button ➔ 'Add to Home Screen'\n• On Android / Chrome: Tap Menu (3 dots) ➔ 'Install App' or 'Add to Home Screen'",
+      );
+    }
+  };
+
   if (session) {
     if (!session.profile.email || isLegacyAccountEmail(session.profile.email)) {
       return <Navigate to="/complete-email" replace />;
@@ -76,16 +107,16 @@ export const LandingRoute = () => {
           <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} className="text-center lg:text-left">
             <div className="inline-flex items-center gap-2 rounded-full border border-white/70 bg-white/70 px-4 py-2 text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-[#3525cd] shadow-[0_14px_30px_rgba(53,37,205,0.08)] backdrop-blur-xl sm:text-xs">
               <SparklesIcon className="h-4 w-4" />
-              Premium memory battles
+              Live Multiplayer Clash & PWA Web App
             </div>
             <BrandMotionMark className="mx-auto mt-8 w-[15rem] sm:w-[21rem] lg:mx-0 lg:w-[24rem]" />
             <h1 className="mt-7 font-display text-[3.4rem] font-extrabold uppercase leading-[0.88] tracking-[-0.08em] text-[#3525cd] sm:text-[5.5rem] lg:text-[6.7rem]">
               MindGrid
             </h1>
             <p className="mx-auto mt-6 max-w-2xl text-[1rem] leading-8 text-[#4f5568] sm:text-[1.16rem] sm:leading-9 lg:mx-0">
-              Train your memory through fast classic boards, clean scoring, combos, move limits, and account-based ranks built for repeat runs.
+              Compete in real-time Multiplayer Duels, Speed Sprint Races, Co-Op Sync, and Solo Memory Boards with 1.5x score boosts, 3D glass boards, and global rankings.
             </p>
-            <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row lg:justify-start">
+            <div className="mt-7 flex flex-wrap justify-center gap-3 sm:flex-row lg:justify-start">
               <Link
                 to="/register"
                 className="inline-flex items-center justify-center gap-3 rounded-full bg-gradient-to-b from-[#4f46e5] to-[#3525cd] px-8 py-4 text-[1.05rem] font-semibold text-white shadow-[0_18px_30px_rgba(53,37,205,0.22)] transition hover:scale-[1.01]"
@@ -93,9 +124,17 @@ export const LandingRoute = () => {
                 <PlayIcon className="h-5 w-5" />
                 Start Playing
               </Link>
+              <button
+                type="button"
+                onClick={handleInstallClick}
+                className="inline-flex items-center justify-center gap-2 rounded-full border border-[#d9d8eb] bg-white/90 px-7 py-4 text-[1rem] font-semibold text-[#3525cd] shadow-[0_12px_24px_rgba(53,37,205,0.06)] transition hover:border-[#c5c2e5] hover:bg-white"
+              >
+                <SparklesIcon className="h-4 w-4 text-[#4f46e5]" />
+                {isStandalone ? "App Installed" : "Install Web App"}
+              </button>
               <Link
                 to="/ranks"
-                className="inline-flex items-center justify-center gap-3 rounded-full border border-[#d9d8eb] bg-white/80 px-8 py-4 text-[1rem] font-semibold text-[#3525cd] shadow-[0_12px_24px_rgba(53,37,205,0.06)] transition hover:border-[#c5c2e5] hover:bg-white"
+                className="inline-flex items-center justify-center gap-3 rounded-full border border-[#d9d8eb] bg-white/80 px-7 py-4 text-[1rem] font-semibold text-[#3525cd] shadow-[0_12px_24px_rgba(53,37,205,0.06)] transition hover:border-[#c5c2e5] hover:bg-white"
               >
                 View Ranks
               </Link>

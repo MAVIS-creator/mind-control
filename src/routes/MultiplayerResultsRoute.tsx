@@ -1,4 +1,4 @@
-import { type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   ClockIcon,
@@ -9,7 +9,9 @@ import {
 } from "../components/AppIcons";
 import { Seo } from "../components/Seo";
 import { avatarOptions } from "../data/avatars";
+import { saveSession } from "../lib/auth";
 import { updateRoomConfig } from "../lib/multiplayer";
+import { supabase } from "../lib/supabase";
 import { calculateRank, formatDuration, formatNumber, formatPercent, getLevelProgress } from "../lib/utils";
 import { useAppContext } from "../state/AppContext";
 
@@ -27,7 +29,7 @@ export const MultiplayerResultsRoute = () => {
   const { roomId } = useParams<{ roomId: string }>();
   const navigate = useNavigate();
   const location = useLocation();
-  const { session } = useAppContext();
+  const { session, setSession } = useAppContext();
 
   const state = (location.state || {}) as MultiplayerResultsState;
   const { room, myScore = 0, opponentScore = 0, winnerId, accuracy = 0, coopScore = 0, duration = 0 } = state;
@@ -36,6 +38,24 @@ export const MultiplayerResultsRoute = () => {
   const isWinner = winnerId === currentUserId;
   const isTie = !winnerId || (myScore === opponentScore && room?.gameMode !== "coop");
   const isCoop = room?.gameMode === "coop";
+
+  const xpBonus = isWinner ? 375 : isCoop ? 450 : 150;
+  const [xpSaved, setXpSaved] = useState(false);
+
+  useEffect(() => {
+    if (session && !xpSaved) {
+      setXpSaved(true);
+      const newXp = (session.profile.xp || 0) + xpBonus;
+      const newRank = calculateRank(newXp);
+      const updatedProfile = { ...session.profile, xp: newXp, rank: newRank };
+      const nextSession = { ...session, profile: updatedProfile };
+      setSession(nextSession);
+      saveSession(nextSession);
+      if (supabase) {
+        supabase.from("profiles").update({ xp: newXp, rank: newRank }).eq("id", session.profile.id);
+      }
+    }
+  }, [session, xpSaved, xpBonus, setSession]);
 
   const avatar = session
     ? avatarOptions.find((entry) => entry.id === session.profile.avatarId) ?? avatarOptions[0]
@@ -87,7 +107,7 @@ export const MultiplayerResultsRoute = () => {
               </p>
               <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-[#eef1ff] px-4 py-2 text-sm font-semibold text-[#3525cd]">
                 <SparklesIcon className="h-4 w-4" />
-                +{isWinner ? 250 : isCoop ? 300 : 100} XP Awarded
+                +{xpBonus} XP Awarded
               </div>
             </div>
 

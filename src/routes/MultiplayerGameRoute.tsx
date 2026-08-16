@@ -88,6 +88,8 @@ const LiveMultiplayerCanvas = ({
     activeMessages,
     sendQuickMessage,
     pingMs,
+    turnShotClock,
+    coopElapsedTime,
   } = useMultiplayerGame(room, userId, profile);
 
   const [gameFinished, setGameFinished] = useState(false);
@@ -224,7 +226,16 @@ const LiveMultiplayerCanvas = ({
           </div>
 
           <div className="mx-auto flex w-full max-w-[33rem] items-center justify-between gap-2 rounded-[1.5rem] border border-white/80 bg-white/62 px-3 py-2 shadow-[0_16px_36px_rgba(53,37,205,0.08)] sm:gap-4 sm:px-5 lg:w-auto lg:max-w-none lg:justify-center lg:rounded-full">
-            <HudStat label="Time" value={formatDurationMs(gameState.timerRemaining)} />
+            <HudStat
+              label={room.gameMode === "turn_based" ? "Shot Clock" : room.gameMode === "coop" ? "Elapsed" : "Time"}
+              value={
+                room.gameMode === "turn_based"
+                  ? `${turnShotClock}s`
+                  : room.gameMode === "coop"
+                  ? formatDuration(coopElapsedTime)
+                  : formatDurationMs(gameState.timerRemaining)
+              }
+            />
             <HudStat label="Moves" value={`${gameState.moves}`} />
             <HudStat label="Pairs" value={`${gameState.matches}/${totalPairs}`} />
             <div className="flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-full border border-[#b9d2f4] bg-[#d7e7fb] text-[#0058a8] shadow-inner sm:h-16 sm:w-16">
