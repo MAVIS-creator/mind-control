@@ -13,7 +13,7 @@ import { avatarOptions } from "../data/avatars";
 import { MindGridCanvas } from "../game/phaser/MindGridCanvas";
 import { useMultiplayerGame, type QuickMessage } from "../game/useMultiplayerGame";
 import { fetchRoomDetails, leaveMultiplayerRoom, updateRoomConfig } from "../lib/multiplayer";
-import { formatDuration, formatNumber } from "../lib/utils";
+import { formatDuration, formatDurationMs, formatNumber } from "../lib/utils";
 import { useAppContext } from "../state/AppContext";
 import type { MultiplayerRoom } from "../types";
 
