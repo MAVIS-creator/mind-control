@@ -71,6 +71,8 @@ const MultiplayerResultsRoute = lazy(() =>
   import("./routes/MultiplayerResultsRoute").then((module) => ({ default: module.MultiplayerResultsRoute })),
 );
 
+import { ForcePasswordResetModal } from "./components/ForcePasswordResetModal";
+
 export const App = () => {
   const { booting } = useAppContext();
 
@@ -108,6 +110,7 @@ export const App = () => {
         </div>
       }
     >
+      <ForcePasswordResetModal />
       <Seo />
       <Routes>
         <Route path="/" element={<LandingRoute />} />

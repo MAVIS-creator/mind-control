@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { fetchUserFriendships, searchPlayersByUsername, sendFriendRequest, updateFriendshipStatus, type Friendship } from "../lib/friends";
+import { useCallback, useEffect, useState } from "react";
+import { fetchSuggestedPlayers, fetchUserFriendships, sendFriendRequest, updateFriendshipStatus, type Friendship } from "../lib/friends";
 import { supabase } from "../lib/supabase";
 import { useAppContext } from "../state/AppContext";
 import type { PlayerProfile } from "../types";
@@ -31,8 +31,10 @@ export const FriendsDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: (
 
   const [activeTab, setActiveTab] = useState<"friends" | "search" | "pending">("friends");
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState<PlayerProfile[]>([]);
-  const [isSearching, setIsSearching] = useState(false);
+  const [suggestedPlayers, setSuggestedPlayers] = useState<PlayerProfile[]>([]);
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(false);
+  const [isLoadingPlayers, setIsLoadingPlayers] = useState(false);
 
   const [friendsList, setFriendsList] = useState<Friendship[]>([]);
   const [pendingReceived, setPendingReceived] = useState<Friendship[]>([]);
@@ -82,7 +84,7 @@ export const FriendsDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: (
   }, [profile]);
 
   // Load Friendships
-  const loadFriendships = async () => {
+  const loadFriendships = useCallback(async () => {
     if (!profile) return;
     try {
       const data = await fetchUserFriendships(profile.id);
@@ -92,26 +94,41 @@ export const FriendsDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: (
     } catch (err) {
       console.error("Failed to load friendships", err);
     }
-  };
+  }, [profile]);
+
+  // Pre-load Suggested Players (Lazy Loading)
+  const loadSuggestedPlayers = useCallback(
+    async (reset = false, query = searchQuery) => {
+      if (!profile) return;
+      setIsLoadingPlayers(true);
+      const targetPage = reset ? 0 : page;
+      try {
+        const result = await fetchSuggestedPlayers(profile.id, query, targetPage, 12);
+        setSuggestedPlayers((prev) => (reset ? result.players : [...prev, ...result.players]));
+        setHasMore(result.hasMore);
+        if (reset) setPage(1);
+        else setPage((p) => p + 1);
+      } catch (err) {
+        console.error("Failed to load suggested players", err);
+      } finally {
+        setIsLoadingPlayers(false);
+      }
+    },
+    [profile, page, searchQuery],
+  );
 
   useEffect(() => {
     if (isOpen && profile) {
       loadFriendships();
+      loadSuggestedPlayers(true, "");
     }
-  }, [isOpen, profile]);
+  }, [isOpen, profile, loadFriendships]);
 
-  const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!searchQuery.trim() || !profile) return;
-    setIsSearching(true);
-    try {
-      const results = await searchPlayersByUsername(searchQuery, profile.id);
-      setSearchResults(results);
-    } catch (err) {
-      console.error("Search error", err);
-    } finally {
-      setIsSearching(false);
-    }
+  // Search input debounced handler
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setSearchQuery(val);
+    loadSuggestedPlayers(true, val);
   };
 
   const handleSendRequest = async (targetProfile: PlayerProfile) => {
@@ -142,8 +159,8 @@ export const FriendsDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: (
   const totalOnlineCount = Object.keys(onlineUsersMap).length || 1;
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end bg-black/40 backdrop-blur-sm">
-      <div className="flex h-full w-full max-w-md flex-col bg-white p-6 shadow-2xl transition-all">
+    <div className="fixed inset-0 z-50 flex justify-end bg-black/50 backdrop-blur-sm">
+      <div className="flex h-full w-full sm:max-w-md flex-col bg-white p-4 sm:p-6 shadow-2xl transition-all pb-24 sm:pb-6">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-100 pb-4">
           <div>
@@ -156,8 +173,11 @@ export const FriendsDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: (
           <button
             onClick={onClose}
             className="rounded-full p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+            aria-label="Close drawer"
           >
-            ✕
+            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
           </button>
         </div>
 
@@ -207,7 +227,7 @@ export const FriendsDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: (
             <div className="space-y-3">
               {friendsList.length === 0 ? (
                 <p className="py-8 text-center text-xs text-[#64748b]">
-                  No friends added yet. Use the "Add Friend" tab to search and connect!
+                  No friends added yet. Use the "Add Friend" tab to discover and connect!
                 </p>
               ) : (
                 friendsList.map((f) => {
@@ -247,59 +267,68 @@ export const FriendsDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: (
             </div>
           )}
 
-          {/* Tab 2: Search Players */}
+          {/* Tab 2: Add Friend (Shows All Registered Players First + Lazy Loading Search) */}
           {activeTab === "search" && (
             <div>
-              <form onSubmit={handleSearch} className="flex gap-2">
+              <div className="relative">
                 <input
                   type="text"
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search player username..."
-                  className="w-full rounded-xl border border-slate-200 px-3 py-2 text-xs text-[#1e1b4b] focus:border-[#3525cd] focus:outline-none"
+                  onChange={handleSearchChange}
+                  placeholder="Filter or search player username..."
+                  className="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-xs text-[#1e1b4b] focus:border-[#3525cd] focus:outline-none"
                 />
-                <button
-                  type="submit"
-                  disabled={isSearching}
-                  className="rounded-xl bg-[#3525cd] px-4 py-2 text-xs font-bold text-white hover:bg-[#281ca8]"
-                >
-                  Search
-                </button>
-              </form>
+              </div>
 
               <div className="mt-4 space-y-3">
-                {searchResults.map((user) => {
-                  const isAlreadyFriend = friendsList.some((f) => f.friendProfile?.id === user.id);
-                  const isPending =
-                    pendingSent.some((f) => f.addresseeId === user.id) ||
-                    pendingReceived.some((f) => f.requesterId === user.id);
+                {suggestedPlayers.length === 0 && !isLoadingPlayers ? (
+                  <p className="py-6 text-center text-xs text-[#64748b]">No operatives found matching search.</p>
+                ) : (
+                  suggestedPlayers.map((user) => {
+                    const isAlreadyFriend = friendsList.some((f) => f.friendProfile?.id === user.id);
+                    const isPending =
+                      pendingSent.some((f) => f.addresseeId === user.id) ||
+                      pendingReceived.some((f) => f.requesterId === user.id);
 
-                  return (
-                    <div
-                      key={user.id}
-                      className="flex items-center justify-between rounded-2xl bg-slate-50 p-3 border border-slate-100"
-                    >
-                      <div>
-                        <p className="text-xs font-bold text-[#1e1b4b]">{user.username}</p>
-                        <p className="text-[10px] text-[#64748b]">{user.rank}</p>
+                    return (
+                      <div
+                        key={user.id}
+                        className="flex items-center justify-between rounded-2xl bg-slate-50 p-3 border border-slate-100"
+                      >
+                        <div>
+                          <p className="text-xs font-bold text-[#1e1b4b]">{user.username}</p>
+                          <p className="text-[10px] text-[#64748b]">{user.rank}</p>
+                        </div>
+
+                        {isAlreadyFriend ? (
+                          <span className="text-[11px] font-semibold text-emerald-600">Friend</span>
+                        ) : isPending ? (
+                          <span className="text-[11px] font-semibold text-amber-600">Pending</span>
+                        ) : (
+                          <button
+                            onClick={() => handleSendRequest(user)}
+                            disabled={sendingId === user.id}
+                            className="rounded-xl bg-[#4f46e5] px-3.5 py-1.5 text-xs font-bold text-white hover:bg-[#3730a3] transition-all"
+                          >
+                            {sendingId === user.id ? "Sending..." : "Add & Notify Email"}
+                          </button>
+                        )}
                       </div>
+                    );
+                  })
+                )}
 
-                      {isAlreadyFriend ? (
-                        <span className="text-[11px] font-semibold text-emerald-600">✓ Friend</span>
-                      ) : isPending ? (
-                        <span className="text-[11px] font-semibold text-amber-600">Pending</span>
-                      ) : (
-                        <button
-                          onClick={() => handleSendRequest(user)}
-                          disabled={sendingId === user.id}
-                          className="rounded-xl bg-[#4f46e5] px-3 py-1.5 text-xs font-bold text-white hover:bg-[#3730a3]"
-                        >
-                          {sendingId === user.id ? "Sending..." : "Add & Notify Email"}
-                        </button>
-                      )}
-                    </div>
-                  );
-                })}
+                {hasMore && (
+                  <div className="pt-2 text-center">
+                    <button
+                      onClick={() => loadSuggestedPlayers(false)}
+                      disabled={isLoadingPlayers}
+                      className="rounded-xl bg-slate-100 border border-slate-200 px-4 py-2 text-xs font-semibold text-[#1e1b4b] hover:bg-slate-200 transition-all"
+                    >
+                      {isLoadingPlayers ? "Loading more..." : "Load More Operatives"}
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           )}

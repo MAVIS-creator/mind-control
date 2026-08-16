@@ -13,23 +13,28 @@ export type Friendship = {
 // Local in-memory fallback for offline/dev testing
 const localFriendships = new Map<string, Friendship>();
 
-export const searchPlayersByUsername = async (
-  query: string,
+export const fetchSuggestedPlayers = async (
   currentUserId: string,
-): Promise<PlayerProfile[]> => {
-  const q = query.trim();
-  if (!q) return [];
-
+  query = "",
+  page = 0,
+  pageSize = 12,
+): Promise<{ players: PlayerProfile[]; hasMore: boolean }> => {
   if (supabase) {
-    const { data, error } = await supabase
+    let req = supabase
       .from("profiles")
-      .select("*")
-      .neq("id", currentUserId)
-      .ilike("username", `%${q}%`)
-      .limit(10);
+      .select("*", { count: "exact" })
+      .neq("id", currentUserId);
+
+    if (query.trim()) {
+      req = req.ilike("username", `%${query.trim()}%`);
+    }
+
+    const from = page * pageSize;
+    const to = from + pageSize - 1;
+    const { data, count, error } = await req.order("xp", { ascending: false }).range(from, to);
 
     if (!error && data) {
-      return data.map((p) => ({
+      const players: PlayerProfile[] = data.map((p) => ({
         id: p.id,
         username: p.username || "Agent",
         email: p.email || "",
@@ -39,10 +44,21 @@ export const searchPlayersByUsername = async (
         createdAt: p.created_at || new Date().toISOString(),
         isAdmin: Boolean(p.is_admin),
       }));
+
+      const hasMore = (count ?? 0) > from + players.length;
+      return { players, hasMore };
     }
   }
 
-  return [];
+  return { players: [], hasMore: false };
+};
+
+export const searchPlayersByUsername = async (
+  query: string,
+  currentUserId: string,
+): Promise<PlayerProfile[]> => {
+  const result = await fetchSuggestedPlayers(currentUserId, query, 0, 20);
+  return result.players;
 };
 
 export const sendFriendRequest = async (

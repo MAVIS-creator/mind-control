@@ -1,5 +1,9 @@
 User-agent: *
 Allow: /
+Allow: /ranks
+Allow: /contact
+Allow: /cyberpath
+
 Disallow: /login
 Disallow: /register
 Disallow: /forgot-password
@@ -10,6 +14,8 @@ Disallow: /play/classic
 Disallow: /hall-of-fame
 Disallow: /results/
 Disallow: /profile
+Disallow: /multiplayer
+Disallow: /multiplayer/
 Disallow: /mavisbk
 Disallow: /cyberpath/play
 Disallow: /cyberpath/bonus

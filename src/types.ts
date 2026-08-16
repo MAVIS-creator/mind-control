@@ -40,6 +40,7 @@ export type PlayerProfile = {
   createdAt: string;
   isAdmin: boolean;
   lastSeenAt?: string;
+  mustChangePassword?: boolean;
 };
 
 export type PlayerStats = {

@@ -256,6 +256,25 @@ export const AdminRoute = () => {
                             {formatNumber(player.totalPoints)} pts · best {formatNumber(player.bestScore)}
                           </div>
                         </div>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            const defaultTemp = `Temp-${Math.floor(1000 + Math.random() * 9000)}`;
+                            const input = prompt(
+                              `Set temporary password for ${player.username}:\n(Player will be forced to set a new password upon logging in)`,
+                              defaultTemp,
+                            );
+                            if (input) {
+                              authApi.adminResetUserPassword(player.userId, input).then(() => {
+                                alert(`Temporary password set to "${input}" for ${player.username}!\nThey must set a new password upon login.`);
+                              });
+                            }
+                          }}
+                          className="rounded-lg bg-amber-500/10 px-2.5 py-1 text-[11px] font-bold text-amber-700 hover:bg-amber-500/20 border border-amber-500/30"
+                        >
+                          Reset Pass
+                        </button>
                         <span
                           className={`h-5 w-5 rounded-full border ${
                             selected ? "border-[#3525cd] bg-[#3525cd]" : "border-[#cdd6ef] bg-white"

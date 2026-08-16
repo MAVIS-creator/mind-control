@@ -975,4 +975,40 @@ export const authApi = {
     }
     return data as AdminEmailResult;
   },
+
+  async adminResetUserPassword(userId: string, tempPassword: string): Promise<void> {
+    if (!hasSupabase || !supabase) {
+      const users = loadUsers();
+      const target = users.find((u) => u.profile.id === userId);
+      if (target) {
+        target.password = tempPassword;
+        target.profile.mustChangePassword = true;
+        saveUsers(users);
+      }
+      return;
+    }
+
+    await supabase.from("profiles").update({ must_change_password: true }).eq("id", userId);
+  },
+
+  async resetPassword(newPassword: string): Promise<void> {
+    if (!hasSupabase || !supabase) {
+      const session = loadSession();
+      if (session) {
+        session.profile.mustChangePassword = false;
+        saveSession(session);
+        const users = loadUsers();
+        const target = users.find((u) => u.profile.id === session.profile.id);
+        if (target) {
+          target.password = newPassword;
+          target.profile.mustChangePassword = false;
+          saveUsers(users);
+        }
+      }
+      return;
+    }
+
+    const { error } = await supabase.auth.updateUser({ password: newPassword });
+    if (error) throw error;
+  },
 };

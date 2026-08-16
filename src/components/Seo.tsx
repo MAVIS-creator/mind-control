@@ -110,6 +110,14 @@ const dynamicMeta = (pathname: string) => {
     };
   }
 
+  if (pathname.startsWith("/multiplayer")) {
+    return {
+      title: "Multiplayer Clash - MindGrid",
+      description: "Online multiplayer memory game room.",
+      robots: "noindex, nofollow",
+    };
+  }
+
   return routeMeta[pathname] ?? routeMeta["/"];
 };
 
