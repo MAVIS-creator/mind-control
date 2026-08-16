@@ -39,6 +39,8 @@ export type PlayerProfile = {
   rank: RankTitle;
   createdAt: string;
   isAdmin: boolean;
+  isBetaTester?: boolean;
+  hasClaimedBetaReward?: boolean;
   lastSeenAt?: string;
   mustChangePassword?: boolean;
 };

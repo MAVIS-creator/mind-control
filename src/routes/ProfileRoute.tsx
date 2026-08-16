@@ -157,18 +157,24 @@ export const ProfileRoute = () => {
                 </div>
                 <div>
                   <div className="flex flex-wrap items-center gap-3">
-                    <h1 className="font-display text-4xl tracking-[-0.05em] text-slate-900 sm:text-5xl">
-                      {resolvedSnapshot.profile.username}
-                    </h1>
-                    {!isOwnProfile ? (
-                      <Link
-                        to="/hall-of-fame"
-                        className="rounded-full border border-[#d7dcf5] bg-white/78 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#3525cd]"
-                      >
-                        Back to Ranks
-                      </Link>
-                    ) : null}
-                  </div>
+                    <div className="flex flex-wrap items-center gap-3">
+                      <h1 className="font-display text-4xl tracking-[-0.05em] text-slate-900 sm:text-5xl">
+                        {resolvedSnapshot.profile.username}
+                      </h1>
+                      {resolvedSnapshot.profile.isBetaTester && (
+                        <span className="rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 px-3.5 py-1 text-xs font-black uppercase tracking-wider text-slate-950 shadow-md border border-amber-300">
+                          OG Beta Pioneer
+                        </span>
+                      )}
+                      {!isOwnProfile ? (
+                        <Link
+                          to="/hall-of-fame"
+                          className="rounded-full border border-[#d7dcf5] bg-white/78 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#3525cd]"
+                        >
+                          Back to Ranks
+                        </Link>
+                      ) : null}
+                    </div>
                   <p className="mt-2 text-[1.45rem] text-[#464555]">{resolvedSnapshot.profile.rank}</p>
 
                   <div className="mt-6 space-y-3">
