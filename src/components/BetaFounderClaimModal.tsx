@@ -40,13 +40,10 @@ export const BetaFounderClaimModal = () => {
 
     if (supabase) {
       try {
-        await supabase
-          .from("profiles")
-          .update({
-            xp: newXp,
-            rank: newRank,
-          })
-          .eq("id", profile.id);
+        await Promise.all([
+          supabase.from("profiles").update({ xp: newXp, rank: newRank }).eq("id", profile.id),
+          supabase.auth.updateUser({ data: { has_claimed_beta_reward: true } }),
+        ]);
       } catch (err) {
         console.warn("Error updating tester reward in Supabase:", err);
       }

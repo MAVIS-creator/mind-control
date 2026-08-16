@@ -98,7 +98,9 @@ const mapRemoteProfile = (
     row?.isBetaTester ??
     row?.is_beta_tester ??
     (new Date(row?.createdAt || row?.created_at || Date.now()).getTime() <= new Date("2026-08-16T04:30:00.000Z").getTime()),
-  hasClaimedBetaReward: Boolean(row?.hasClaimedBetaReward ?? row?.has_claimed_beta_reward),
+  hasClaimedBetaReward:
+    Boolean(row?.hasClaimedBetaReward ?? row?.has_claimed_beta_reward) ||
+    Boolean(row?.user_metadata?.has_claimed_beta_reward),
 });
 
 const normalizeLeaderboardEntry = (entry: LeaderboardEntry): LeaderboardEntry => ({
