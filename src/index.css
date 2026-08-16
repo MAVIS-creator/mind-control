@@ -65,6 +65,11 @@ body::after {
   z-index: -1;
 }
 
+html.dark body::before,
+html.dark body::after {
+  display: none;
+}
+
 button,
 input {
   font: inherit;
