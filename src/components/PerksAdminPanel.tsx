@@ -10,7 +10,7 @@ export const PerksAdminPanel = () => {
   const [profiles, setProfiles] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedUserIds, setSelectedUserIds] = useState<string[]>([]);
-  const [selectedPerk, setSelectedPerk] = useState<string>("xp_1000");
+  const [selectedPerks, setSelectedPerks] = useState<string[]>(["xp_1000", "tester_badge"]);
   const [statusMsg, setStatusMsg] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [processing, setProcessing] = useState(false);
@@ -68,9 +68,20 @@ export const PerksAdminPanel = () => {
     setSelectedUserIds(testerIds);
   };
 
+  const togglePerk = (perkId: string) => {
+    setSelectedPerks((prev) =>
+      prev.includes(perkId) ? prev.filter((p) => p !== perkId) : [...prev, perkId],
+    );
+  };
+
   const handleDistributePerk = async () => {
     if (!selectedUserIds.length) {
-      setErrorMsg("Select at least one player to receive the perk.");
+      setErrorMsg("Select at least one player to receive perks.");
+      return;
+    }
+
+    if (!selectedPerks.length) {
+      setErrorMsg("Select at least one perk to gift.");
       return;
     }
 
@@ -79,18 +90,28 @@ export const PerksAdminPanel = () => {
     setErrorMsg(null);
 
     try {
+      const awardedTitles: string[] = [];
+      if (selectedPerks.includes("xp_1000")) awardedTitles.push("+1,000 Founder XP Boost");
+      if (selectedPerks.includes("tester_badge")) awardedTitles.push("Neural Tester Title & Gold Avatar Ring");
+      if (selectedPerks.includes("crystals_500")) awardedTitles.push("+500 Neural Crystals Bonus");
+
       for (const userId of selectedUserIds) {
         const target = profiles.find((p) => p.id === userId);
         if (!target) continue;
 
         let updates: any = {};
+        let currentXp = target.xp || 0;
 
-        if (selectedPerk === "xp_1000") {
-          updates.xp = (target.xp || 0) + 1000;
-        } else if (selectedPerk === "tester_badge") {
+        if (selectedPerks.includes("xp_1000")) {
+          currentXp += 1000;
+        }
+        if (selectedPerks.includes("crystals_500")) {
+          currentXp += 500;
+        }
+        updates.xp = currentXp;
+
+        if (selectedPerks.includes("tester_badge")) {
           updates.is_beta_tester = true;
-        } else if (selectedPerk === "crystals_500") {
-          updates.xp = (target.xp || 0) + 500;
         }
 
         if (supabase && Object.keys(updates).length) {
@@ -100,14 +121,14 @@ export const PerksAdminPanel = () => {
 
       await sendAdminEmail({
         recipientIds: selectedUserIds,
-        subject: "🎉 You Received an Official MindGrid Founder Perk!",
-        message: `Hello Operative,\n\nYou have been awarded a special Founder Perk from the MindGrid Admin Team!\n\nCheck your in-game profile to view your updated perks and level.\n\nThank you for being part of MindGrid: Neural Clash!`,
+        subject: "🎉 You Received Official MindGrid Founder Perks!",
+        message: `Hello Operative,\n\nYou have been awarded the following Founder Perks from the MindGrid Admin Team:\n\n• ${awardedTitles.join("\n• ")}\n\nLog in to your account at https://neuralclash.dev to view your updated perks, badge, and level!\n\nThank you for being part of MindGrid: Neural Clash!`,
       });
 
-      setStatusMsg(`Successfully distributed perk to ${selectedUserIds.length} player(s).`);
+      setStatusMsg(`Successfully distributed ${selectedPerks.length} perk(s) to ${selectedUserIds.length} player(s) and sent email DMs.`);
       fetchAllProfiles();
     } catch (err) {
-      setErrorMsg("Error distributing perk.");
+      setErrorMsg("Error distributing perks.");
     } finally {
       setProcessing(false);
     }
@@ -213,17 +234,22 @@ export const PerksAdminPanel = () => {
           <div className="space-y-4">
             <div>
               <label className="text-xs font-bold uppercase tracking-wider text-slate-600 block mb-2">
-                Select Perk to Gift:
+                Select Perks to Gift (Multi-Select Allowed):
               </label>
               <div className="space-y-2">
-                <label className="flex items-center gap-3 rounded-xl border border-slate-200 p-3 bg-white cursor-pointer hover:border-indigo-400">
+                <label
+                  onClick={() => togglePerk("xp_1000")}
+                  className={`flex items-center gap-3 rounded-xl border p-3 cursor-pointer transition ${
+                    selectedPerks.includes("xp_1000")
+                      ? "border-[#4f46e5] bg-[#eef2ff]"
+                      : "border-slate-200 bg-white hover:border-indigo-400"
+                  }`}
+                >
                   <input
-                    type="radio"
-                    name="perk"
-                    value="xp_1000"
-                    checked={selectedPerk === "xp_1000"}
-                    onChange={(e) => setSelectedPerk(e.target.value)}
-                    className="text-[#4f46e5]"
+                    type="checkbox"
+                    checked={selectedPerks.includes("xp_1000")}
+                    onChange={() => {}}
+                    className="h-4 w-4 rounded border-slate-300 text-[#4f46e5]"
                   />
                   <div>
                     <p className="text-xs font-bold text-slate-900">+1,000 Founder XP Boost</p>
@@ -231,29 +257,39 @@ export const PerksAdminPanel = () => {
                   </div>
                 </label>
 
-                <label className="flex items-center gap-3 rounded-xl border border-slate-200 p-3 bg-white cursor-pointer hover:border-indigo-400">
+                <label
+                  onClick={() => togglePerk("tester_badge")}
+                  className={`flex items-center gap-3 rounded-xl border p-3 cursor-pointer transition ${
+                    selectedPerks.includes("tester_badge")
+                      ? "border-[#4f46e5] bg-[#eef2ff]"
+                      : "border-slate-200 bg-white hover:border-indigo-400"
+                  }`}
+                >
                   <input
-                    type="radio"
-                    name="perk"
-                    value="tester_badge"
-                    checked={selectedPerk === "tester_badge"}
-                    onChange={(e) => setSelectedPerk(e.target.value)}
-                    className="text-[#4f46e5]"
+                    type="checkbox"
+                    checked={selectedPerks.includes("tester_badge")}
+                    onChange={() => {}}
+                    className="h-4 w-4 rounded border-slate-300 text-[#4f46e5]"
                   />
                   <div>
-                    <p className="text-xs font-bold text-slate-900">Neural Tester Title & Gold Badge</p>
-                    <p className="text-[11px] text-slate-500">Grants permanent Neural Tester status on profile & ranks.</p>
+                    <p className="text-xs font-bold text-slate-900">Neural Tester Title & Gold Avatar Ring</p>
+                    <p className="text-[11px] text-slate-500">Grants Neural Tester badge & gold glowing avatar frame.</p>
                   </div>
                 </label>
 
-                <label className="flex items-center gap-3 rounded-xl border border-slate-200 p-3 bg-white cursor-pointer hover:border-indigo-400">
+                <label
+                  onClick={() => togglePerk("crystals_500")}
+                  className={`flex items-center gap-3 rounded-xl border p-3 cursor-pointer transition ${
+                    selectedPerks.includes("crystals_500")
+                      ? "border-[#4f46e5] bg-[#eef2ff]"
+                      : "border-slate-200 bg-white hover:border-indigo-400"
+                  }`}
+                >
                   <input
-                    type="radio"
-                    name="perk"
-                    value="crystals_500"
-                    checked={selectedPerk === "crystals_500"}
-                    onChange={(e) => setSelectedPerk(e.target.value)}
-                    className="text-[#4f46e5]"
+                    type="checkbox"
+                    checked={selectedPerks.includes("crystals_500")}
+                    onChange={() => {}}
+                    className="h-4 w-4 rounded border-slate-300 text-[#4f46e5]"
                   />
                   <div>
                     <p className="text-xs font-bold text-slate-900">+500 Neural Crystals Bonus</p>
@@ -264,8 +300,8 @@ export const PerksAdminPanel = () => {
             </div>
 
             <div className="rounded-xl bg-indigo-50 p-4 border border-indigo-100 text-xs text-indigo-900">
-              <span className="font-bold">Recipients: </span>
-              {selectedUserIds.length} player(s) selected.
+              <p><span className="font-bold">Selected Perks: </span>{selectedPerks.length} perk(s)</p>
+              <p><span className="font-bold">Target Recipients: </span>{selectedUserIds.length} player(s)</p>
             </div>
 
             <button
