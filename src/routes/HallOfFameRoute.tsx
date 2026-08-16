@@ -160,8 +160,8 @@ export const HallOfFameRoute = () => {
     <AppShell session={session} active="ranks">
       <div className="mx-auto min-h-full w-full max-w-[1260px] px-3 py-5 pb-32 sm:px-6 sm:pb-36 lg:px-10 md:pb-10">
         <section className="mb-8 text-center">
-          <h1 className="mt-3 font-display text-4xl tracking-[-0.05em] text-[#3525cd] sm:text-5xl">Hall of Fame</h1>
-          <p className="mx-auto mt-3 max-w-3xl text-sm leading-7 text-[#464555] sm:text-base">
+          <h1 className="mt-3 font-display text-4xl tracking-[-0.05em] text-[#3525cd] dark:text-indigo-400 sm:text-5xl">Hall of Fame</h1>
+          <p className="mx-auto mt-3 max-w-3xl text-sm leading-7 text-[#464555] dark:text-slate-300 sm:text-base">
             {leaderboardTab === "multiplayer"
               ? "Global multiplayer rankings tracking battle victories, win rates, and co-op completions."
               : usingAccountTotals
@@ -171,14 +171,14 @@ export const HallOfFameRoute = () => {
 
           {/* Mode Switch: Single Player vs Multiplayer */}
           <div className="mt-5 flex justify-center">
-            <div className="inline-flex rounded-full bg-white/80 p-1.5 shadow-sm border border-slate-200">
+            <div className="inline-flex rounded-full bg-white/80 dark:bg-slate-900/90 p-1.5 shadow-sm border border-slate-200 dark:border-slate-800">
               <button
                 type="button"
                 onClick={() => setLeaderboardTab("single")}
                 className={`rounded-full px-6 py-2 text-xs font-bold uppercase tracking-wider transition-all ${
                   leaderboardTab === "single"
-                    ? "bg-[#3525cd] text-white shadow-md"
-                    : "text-[#64748b] hover:text-[#1e1b4b]"
+                    ? "bg-[#3525cd] text-white shadow-md dark:bg-indigo-600"
+                    : "text-[#64748b] hover:text-[#1e1b4b] dark:text-slate-400 dark:hover:text-white"
                 }`}
               >
                 Single Player Leaderboard
@@ -188,8 +188,8 @@ export const HallOfFameRoute = () => {
                 onClick={() => setLeaderboardTab("multiplayer")}
                 className={`rounded-full px-6 py-2 text-xs font-bold uppercase tracking-wider transition-all ${
                   leaderboardTab === "multiplayer"
-                    ? "bg-[#3525cd] text-white shadow-md"
-                    : "text-[#64748b] hover:text-[#1e1b4b]"
+                    ? "bg-[#3525cd] text-white shadow-md dark:bg-indigo-600"
+                    : "text-[#64748b] hover:text-[#1e1b4b] dark:text-slate-400 dark:hover:text-white"
                 }`}
               >
                 Multiplayer Clash Ranks
@@ -199,13 +199,13 @@ export const HallOfFameRoute = () => {
 
           {/* Compact Normalized Filter Toolbar for Single Player */}
           {leaderboardTab === "single" && (
-            <div className="mx-auto mt-5 flex max-w-2xl flex-wrap items-center justify-center gap-3 rounded-2xl border border-white/80 bg-white/70 p-3 shadow-sm backdrop-blur-md">
+            <div className="mx-auto mt-5 flex max-w-2xl flex-wrap items-center justify-center gap-3 rounded-2xl border border-white/80 bg-white/70 p-3 shadow-sm backdrop-blur-md dark:border-slate-800 dark:bg-slate-900/80">
               <div className="flex items-center gap-2">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-[#64748b]">Grid:</span>
+                <span className="text-[11px] font-bold uppercase tracking-wider text-[#64748b] dark:text-slate-400">Grid:</span>
                 <select
                   value={gridFilter}
                   onChange={(e) => setGridFilter(e.target.value as any)}
-                  className="rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-[#1e1b4b] outline-none focus:border-[#3525cd]"
+                  className="rounded-xl border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 dark:text-white px-3 py-1.5 text-xs font-semibold text-[#1e1b4b] outline-none focus:border-[#3525cd]"
                 >
                   <option value="all">All Boards</option>
                   <option value="4x4">4x4 Matrix</option>

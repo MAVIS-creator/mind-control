@@ -43,11 +43,11 @@ export const AppShell = ({ session, active, children }: AppShellProps) => {
 
   return (
     <div className="flex min-h-[100dvh] flex-col pb-24 md:pb-0">
-      <header className="sticky top-0 z-40 border-b border-[#cfe0ff] bg-[linear-gradient(180deg,rgba(245,249,255,0.96),rgba(236,243,255,0.92))] backdrop-blur-xl">
+      <header className="sticky top-0 z-40 border-b border-[#cfe0ff] bg-[linear-gradient(180deg,rgba(245,249,255,0.96),rgba(236,243,255,0.92))] backdrop-blur-xl dark:border-slate-800 dark:bg-slate-950/90">
         <div className="mx-auto grid w-full max-w-[1440px] grid-cols-[minmax(0,1fr)_auto] items-center gap-x-2 gap-y-3 px-3 py-3 sm:gap-4 sm:px-6 md:grid-cols-[minmax(0,auto)_1fr_auto] lg:px-8 xl:px-10">
           <Link to="/play" className="flex min-w-0 items-center gap-2 overflow-hidden sm:gap-3">
             <BrandMarkIcon className="h-9 w-9 shrink-0 object-contain sm:h-11 sm:w-11" />
-            <span className="truncate font-display text-[1.55rem] font-extrabold tracking-[-0.06em] text-[#15274a] sm:text-[2.2rem]">
+            <span className="truncate font-display text-[1.55rem] font-extrabold tracking-[-0.06em] text-[#15274a] dark:text-white sm:text-[2.2rem]">
               MindGrid
             </span>
           </Link>
@@ -62,8 +62,8 @@ export const AppShell = ({ session, active, children }: AppShellProps) => {
                   to={item.to}
                   className={`inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-[0.98rem] font-semibold transition lg:px-5 lg:text-[1.02rem] ${
                     isActive
-                      ? "bg-white text-[#2f46d7] shadow-[0_12px_24px_rgba(53,37,205,0.12)]"
-                      : "text-[#5e6d8f] hover:bg-white/70 hover:text-[#2f46d7]"
+                      ? "bg-white text-[#2f46d7] shadow-[0_12px_24px_rgba(53,37,205,0.12)] dark:bg-indigo-600 dark:text-white"
+                      : "text-[#5e6d8f] hover:bg-white/70 hover:text-[#2f46d7] dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white"
                   }`}
                 >
                   <Icon className="h-4 w-4" />
@@ -86,13 +86,13 @@ export const AppShell = ({ session, active, children }: AppShellProps) => {
             </button>
             </div>
 
-            <div className="inline-flex min-w-0 items-center gap-1 rounded-full border border-[#c9dcff] bg-white px-2 py-1.5 text-[#3525cd] shadow-[0_12px_24px_rgba(53,37,205,0.08)] sm:gap-2 sm:px-4 sm:py-2">
+            <div className="inline-flex min-w-0 items-center gap-1 rounded-full border border-[#c9dcff] bg-white px-2 py-1.5 text-[#3525cd] shadow-[0_12px_24px_rgba(53,37,205,0.08)] dark:border-slate-800 dark:bg-slate-900 dark:text-indigo-300 sm:gap-2 sm:px-4 sm:py-2">
               <span className="inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-current text-[0.58rem] font-bold sm:h-5 sm:w-5 sm:text-[0.72rem]">
                 ★
               </span>
               <span className="truncate text-[0.7rem] font-semibold tracking-[0.02em] sm:text-sm">{session.profile.xp}</span>
               <span className="text-[0.7rem] font-semibold tracking-[0.02em] sm:text-sm">XP</span>
-              <span className="rounded-full bg-[#f0f3ff] px-1.5 py-0.5 text-[0.56rem] font-bold uppercase tracking-[0.1em] text-[#4f46e5] sm:px-2 sm:text-[0.68rem]">
+              <span className="rounded-full bg-[#f0f3ff] px-1.5 py-0.5 text-[0.56rem] font-bold uppercase tracking-[0.1em] text-[#4f46e5] dark:bg-slate-800 dark:text-indigo-400 sm:px-2 sm:text-[0.68rem]">
                 L{level}
               </span>
             </div>
@@ -107,22 +107,22 @@ export const AppShell = ({ session, active, children }: AppShellProps) => {
                 <div
                   className={`rounded-full p-[2.5px] transition-all duration-300 ${
                     session.profile.isAdmin
-                      ? "bg-gradient-to-r from-sky-400 via-indigo-500 to-amber-400 shadow-[0_0_16px_rgba(14,165,233,0.45)]"
+                      ? "bg-gradient-to-r from-sky-400 via-indigo-500 to-amber-400 shadow-[0_0_16px_rgba(14,165,233,0.45)] dark:shadow-[0_0_24px_rgba(56,189,248,0.7)]"
                       : session.profile.isBetaTester
-                      ? "bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 shadow-[0_0_16px_rgba(245,158,11,0.4)]"
-                      : "bg-[#e2dfff]"
+                      ? "bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 shadow-[0_0_16px_rgba(245,158,11,0.4)] dark:shadow-[0_0_24px_rgba(245,158,11,0.65)]"
+                      : "bg-[#e2dfff] dark:bg-slate-700"
                   }`}
                 >
-                  <img src={avatar.image} alt={avatar.name} className="h-9 w-9 rounded-full border-2 border-white bg-slate-100 object-cover sm:h-11 sm:w-11" />
+                  <img src={avatar.image} alt={avatar.name} className="h-9 w-9 rounded-full border-2 border-white bg-slate-100 object-cover dark:border-slate-800 dark:bg-slate-900 sm:h-11 sm:w-11" />
                 </div>
               </button>
 
               {menuOpen ? (
-                <div className="absolute right-0 top-[calc(100%+10px)] w-44 rounded-2xl border border-[#ececf6] bg-white/95 p-2 shadow-[0_18px_40px_rgba(53,37,205,0.12)] backdrop-blur-xl">
+                <div className="absolute right-0 top-[calc(100%+10px)] w-44 rounded-2xl border border-[#ececf6] bg-white/95 p-2 shadow-[0_18px_40px_rgba(53,37,205,0.12)] backdrop-blur-xl dark:border-slate-800 dark:bg-slate-900/95">
                   <Link
                     to="/profile"
                     onClick={() => setMenuOpen(false)}
-                    className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-[#464555] transition hover:bg-[#f5f4ff] hover:text-[#3525cd]"
+                    className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-[#464555] transition hover:bg-[#f5f4ff] hover:text-[#3525cd] dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:text-indigo-400"
                   >
                     <UserIcon className="h-4 w-4" />
                     Profile

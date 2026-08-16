@@ -152,22 +152,22 @@ export const ProfileRoute = () => {
                   <div
                     className={`rounded-full p-[4px] transition-all duration-300 ${
                       resolvedSnapshot.profile.isAdmin
-                        ? "bg-gradient-to-r from-sky-400 via-indigo-500 to-amber-400 shadow-[0_0_35px_rgba(14,165,233,0.45)]"
+                        ? "bg-gradient-to-r from-sky-400 via-indigo-500 to-amber-400 shadow-[0_0_35px_rgba(14,165,233,0.45)] dark:shadow-[0_0_45px_rgba(56,189,248,0.7)]"
                         : resolvedSnapshot.profile.isBetaTester
-                        ? "bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 shadow-[0_0_30px_rgba(245,158,11,0.4)]"
-                        : "bg-[#e2dfff]"
+                        ? "bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 shadow-[0_0_30px_rgba(245,158,11,0.4)] dark:shadow-[0_0_40px_rgba(245,158,11,0.65)]"
+                        : "bg-[#e2dfff] dark:bg-slate-700"
                     }`}
                   >
                     <img
                       src={avatar.image}
                       alt={avatar.name}
-                      className="w-full rounded-full border-4 border-white bg-slate-100 shadow-xl"
+                      className="w-full rounded-full border-4 border-white bg-slate-100 shadow-xl dark:border-slate-800 dark:bg-slate-900"
                     />
                   </div>
                 </div>
                 <div>
                   <div className="flex flex-wrap items-center gap-3">
-                    <h1 className="font-display text-4xl tracking-[-0.05em] text-slate-900 sm:text-5xl">
+                    <h1 className="font-display text-4xl tracking-[-0.05em] text-slate-900 dark:text-white sm:text-5xl">
                       {resolvedSnapshot.profile.username}
                     </h1>
                     {resolvedSnapshot.profile.isAdmin && (
@@ -183,30 +183,30 @@ export const ProfileRoute = () => {
                     {!isOwnProfile ? (
                       <Link
                         to="/hall-of-fame"
-                        className="rounded-full border border-[#d7dcf5] bg-white/78 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#3525cd]"
+                        className="rounded-full border border-[#d7dcf5] bg-white/78 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#3525cd] dark:border-slate-700 dark:bg-slate-900 dark:text-indigo-400"
                       >
                         Back to Ranks
                       </Link>
                     ) : null}
                   </div>
-                  <p className="mt-2 text-[1.45rem] text-[#464555]">{resolvedSnapshot.profile.rank}</p>
+                  <p className="mt-2 text-[1.45rem] text-[#464555] dark:text-slate-300">{resolvedSnapshot.profile.rank}</p>
 
                   <div className="mt-6 space-y-3">
                     <div className="flex items-end justify-between gap-4">
-                      <span className="text-xs font-semibold uppercase tracking-[0.22em] text-[#3525cd]">
+                      <span className="text-xs font-semibold uppercase tracking-[0.22em] text-[#3525cd] dark:text-indigo-400">
                         XP Level
                       </span>
-                      <span className="text-xs uppercase tracking-[0.18em] text-slate-500">
+                      <span className="text-xs uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
                         Lvl {level.level} • {resolvedSnapshot.profile.xp} XP
                       </span>
                     </div>
-                    <div className="h-4 rounded-full bg-[#d8e3fb] p-0.5">
+                    <div className="h-4 rounded-full bg-[#d8e3fb] p-0.5 dark:bg-slate-800">
                       <div
                         className="h-full rounded-full bg-gradient-to-r from-[#3525cd] to-[#64a8fe]"
                         style={{ width: `${Math.max(8, level.progress)}%` }}
                       />
                     </div>
-                    <p className="text-base text-[#464555]">
+                    <p className="text-base text-[#464555] dark:text-slate-300">
                       Progress to Level {level.level + 1} ({level.nextLevelXp} XP).
                     </p>
                   </div>
@@ -216,14 +216,14 @@ export const ProfileRoute = () => {
 
             {/* Mode Selector Pill Switch */}
             <div className="mt-6 flex justify-center">
-              <div className="inline-flex rounded-full bg-white/80 p-1.5 shadow-sm border border-slate-200">
+              <div className="inline-flex rounded-full bg-white/80 p-1.5 shadow-sm border border-slate-200 dark:border-slate-800 dark:bg-slate-900/90">
                 <button
                   type="button"
                   onClick={() => setProfileMode("single")}
                   className={`rounded-full px-6 py-2 text-xs font-bold uppercase tracking-wider transition-all ${
                     profileMode === "single"
-                      ? "bg-[#3525cd] text-white shadow-md"
-                      : "text-[#64748b] hover:text-[#1e1b4b]"
+                      ? "bg-[#3525cd] text-white shadow-md dark:bg-indigo-600"
+                      : "text-[#64748b] hover:text-[#1e1b4b] dark:text-slate-400 dark:hover:text-white"
                   }`}
                 >
                   Single Player Stats
@@ -233,8 +233,8 @@ export const ProfileRoute = () => {
                   onClick={() => setProfileMode("multiplayer")}
                   className={`rounded-full px-6 py-2 text-xs font-bold uppercase tracking-wider transition-all ${
                     profileMode === "multiplayer"
-                      ? "bg-[#3525cd] text-white shadow-md"
-                      : "text-[#64748b] hover:text-[#1e1b4b]"
+                      ? "bg-[#3525cd] text-white shadow-md dark:bg-indigo-600"
+                      : "text-[#64748b] hover:text-[#1e1b4b] dark:text-slate-400 dark:hover:text-white"
                   }`}
                 >
                   Multiplayer Clash Stats
@@ -245,15 +245,15 @@ export const ProfileRoute = () => {
             <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
               {currentHighlights.map(([title, value]) => (
                 <div key={title} className="glass-panel rounded-[1.6rem] p-5 shadow-[0_10px_26px_rgba(53,37,205,0.05)]">
-                  <div className="text-[0.65rem] uppercase tracking-[0.24em] text-slate-500">{title}</div>
-                  <div className="mt-3 text-lg font-semibold text-slate-900">{value}</div>
+                  <div className="text-[0.65rem] uppercase tracking-[0.24em] text-slate-500 dark:text-slate-400">{title}</div>
+                  <div className="mt-3 text-lg font-semibold text-slate-900 dark:text-white">{value}</div>
                 </div>
               ))}
             </div>
 
             <div className="mt-6 grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
               <section className="glass-panel rounded-[1.8rem] p-6 shadow-[0_10px_26px_rgba(53,37,205,0.05)]">
-                <h2 className="text-lg font-semibold text-slate-900">
+                <h2 className="text-lg font-semibold text-slate-900 dark:text-white">
                   {profileMode === "multiplayer" ? "Multiplayer Clash Overview" : "Single Player Overview"}
                 </h2>
                 <div className="mt-5 grid gap-4 sm:grid-cols-2">
@@ -271,9 +271,9 @@ export const ProfileRoute = () => {
                         ["Joined", new Date(resolvedSnapshot.profile.createdAt).toLocaleDateString("en-GB")],
                       ]
                   ).map(([title, value]) => (
-                    <div key={title} className="rounded-[1.3rem] border border-[#e0e6f4] bg-white/68 px-4 py-4">
-                      <div className="text-[0.68rem] uppercase tracking-[0.22em] text-slate-500">{title}</div>
-                      <div className="mt-2 text-base font-semibold text-slate-900">{value}</div>
+                    <div key={title} className="rounded-[1.3rem] border border-[#e0e6f4] bg-white/68 p-4 dark:border-slate-800 dark:bg-slate-900/80">
+                      <div className="text-[0.68rem] uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">{title}</div>
+                      <div className="mt-2 text-base font-semibold text-slate-900 dark:text-white">{value}</div>
                     </div>
                   ))}
                 </div>
@@ -281,14 +281,14 @@ export const ProfileRoute = () => {
 
               {isOwnProfile ? (
                 <section className="glass-panel rounded-[1.8rem] p-6 shadow-[0_10px_26px_rgba(53,37,205,0.05)]">
-                  <h2 className="text-lg font-semibold text-slate-900">Account Email</h2>
-                  <p className="mt-2 text-sm leading-7 text-[#5a6174]">
+                  <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Account Email</h2>
+                  <p className="mt-2 text-sm leading-7 text-[#5a6174] dark:text-slate-300">
                     Change the email attached to your account anytime here.
                   </p>
 
                   <form className="mt-5 flex flex-col gap-4" onSubmit={handleEmailUpdate}>
                     <label className="block flex-1">
-                      <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-[#7d8395]">
+                      <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-[#7d8395] dark:text-slate-400">
                         Email
                       </span>
                       <input
@@ -297,7 +297,7 @@ export const ProfileRoute = () => {
                         autoComplete="email"
                         value={email}
                         onChange={(event) => setEmail(event.target.value)}
-                        className="h-14 w-full rounded-[1.2rem] border border-[#dfe4f2] bg-[#f8f9ff] px-4 text-sm text-[#1f2740] outline-none transition focus:border-[#c5c2ff] focus:ring-4 focus:ring-[#ebe9ff]"
+                        className="h-14 w-full rounded-[1.2rem] border border-[#dfe4f2] bg-[#f8f9ff] px-4 text-sm text-[#1f2740] outline-none transition focus:border-[#c5c2ff] focus:ring-4 focus:ring-[#ebe9ff] dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:focus:border-indigo-500"
                       />
                     </label>
                     <button

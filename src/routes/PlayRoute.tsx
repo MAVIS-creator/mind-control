@@ -34,7 +34,7 @@ export const PlayRoute = () => {
               <div className="mb-8 h-1 rounded-full bg-gradient-to-r from-indigo-700 to-violet-500" />
 
               <div className="mb-8 flex justify-center gap-3">
-                <div className="inline-flex rounded-full bg-[#eef2ff] p-1.5 shadow-inner">
+                <div className="inline-flex rounded-full bg-[#eef2ff] dark:bg-slate-900/90 p-1.5 shadow-inner">
                   <button
                     type="button"
                     className="rounded-full bg-gradient-to-b from-[#4f46e5] to-[#3525cd] px-6 py-2.5 text-sm font-semibold text-white shadow-[0_12px_24px_rgba(53,37,205,0.24)]"
@@ -43,7 +43,7 @@ export const PlayRoute = () => {
                   </button>
                   <Link
                     to="/multiplayer"
-                    className="rounded-full px-6 py-2.5 text-sm font-semibold text-[#475569] hover:text-[#3525cd] transition-all"
+                    className="rounded-full px-6 py-2.5 text-sm font-semibold text-[#475569] dark:text-slate-300 hover:text-[#3525cd] dark:hover:text-white transition-all"
                   >
                     Multiplayer Clash
                   </Link>
@@ -52,7 +52,7 @@ export const PlayRoute = () => {
 
               <div className="space-y-8">
                 <div>
-                  <h2 className="mb-4 text-[1.35rem] font-semibold text-[#111c2d] sm:text-[1.45rem]">Grid Size</h2>
+                  <h2 className="mb-4 text-[1.35rem] font-semibold text-[#111c2d] dark:text-white sm:text-[1.45rem]">Grid Size</h2>
                   <div className="grid gap-3 sm:grid-cols-3">
                     {gridOptions.map(([key, option]) => {
                       const active = settings.gridSize === key;
@@ -63,8 +63,8 @@ export const PlayRoute = () => {
                           onClick={() => updateSettings({ gridSize: key })}
                           className={`inline-flex items-center justify-center gap-3 rounded-full border px-4 py-4 text-base font-medium transition sm:px-5 sm:text-lg ${
                             active
-                              ? "border-[#d7d9ea] bg-[#e7eeff] text-[#25354b] shadow-[inset_0_1px_0_rgba(255,255,255,0.55),0_10px_18px_rgba(53,37,205,0.08)]"
-                              : "border-[#eef1f7] bg-white text-[#32445c]"
+                              ? "border-[#d7d9ea] dark:border-indigo-600 bg-[#e7eeff] dark:bg-indigo-950/80 text-[#25354b] dark:text-indigo-200 shadow-[inset_0_1px_0_rgba(255,255,255,0.55),0_10px_18px_rgba(53,37,205,0.08)]"
+                              : "border-[#eef1f7] dark:border-slate-800 bg-white dark:bg-slate-900 text-[#32445c] dark:text-slate-200"
                           }`}
                         >
                           <GridIcon className="h-5 w-5" />
@@ -76,7 +76,7 @@ export const PlayRoute = () => {
                 </div>
 
                 <div>
-                  <h2 className="mb-4 text-[1.35rem] font-semibold text-[#111c2d] sm:text-[1.45rem]">Match Type</h2>
+                  <h2 className="mb-4 text-[1.35rem] font-semibold text-[#111c2d] dark:text-white sm:text-[1.45rem]">Match Type</h2>
                   <div className="grid gap-3 sm:grid-cols-2">
                     {themeOptions.map((option) => {
                       const active = settings.theme === option.id;
@@ -87,8 +87,8 @@ export const PlayRoute = () => {
                           onClick={() => updateSettings({ theme: option.id })}
                           className={`inline-flex items-center justify-center gap-3 rounded-full border px-4 py-4 text-base font-medium transition sm:px-5 sm:text-lg ${
                             active
-                              ? "border-[#d7d9ea] bg-[#e7eeff] text-[#25354b] shadow-[inset_0_1px_0_rgba(255,255,255,0.55),0_10px_18px_rgba(53,37,205,0.08)]"
-                              : "border-[#eef1f7] bg-white text-[#32445c]"
+                              ? "border-[#d7d9ea] dark:border-indigo-600 bg-[#e7eeff] dark:bg-indigo-950/80 text-[#25354b] dark:text-indigo-200 shadow-[inset_0_1px_0_rgba(255,255,255,0.55),0_10px_18px_rgba(53,37,205,0.08)]"
+                              : "border-[#eef1f7] dark:border-slate-800 bg-white dark:bg-slate-900 text-[#32445c] dark:text-slate-200"
                           }`}
                         >
                           <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-current text-base font-semibold">
