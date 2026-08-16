@@ -44,17 +44,17 @@ export const PublicRanksRoute = () => {
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-[1.4rem] bg-gradient-to-b from-[#4f46e5] to-[#3525cd] text-white shadow-[0_18px_36px_rgba(53,37,205,0.22)]">
             <TrophyIcon className="h-8 w-8" />
           </div>
-          <h1 className="mt-5 font-display text-5xl font-extrabold tracking-[-0.06em] text-[#3525cd] sm:text-7xl">
+          <h1 className="mt-5 font-display text-5xl font-extrabold tracking-[-0.06em] text-[#3525cd] dark:text-white sm:text-7xl">
             MindGrid Ranks
           </h1>
-          <p className="mx-auto mt-4 max-w-3xl text-base leading-8 text-[#4f5568] sm:text-lg">
+          <p className="mx-auto mt-4 max-w-3xl text-base leading-8 text-[#4f5568] dark:text-slate-200 sm:text-lg">
             Track the strongest MindGrid runs across rating, total points, best scores, accuracy, combo strength, and clear time.
           </p>
           <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
             <Link to="/register" className="rounded-full bg-gradient-to-b from-[#4f46e5] to-[#3525cd] px-8 py-4 font-semibold text-white shadow-[0_18px_30px_rgba(53,37,205,0.22)]">
               Join the Leaderboard
             </Link>
-            <Link to="/login" className="rounded-full border border-[#d9d8eb] bg-white/80 px-8 py-4 font-semibold text-[#3525cd]">
+            <Link to="/login" className="rounded-full border border-[#d9d8eb] bg-white/80 px-8 py-4 font-semibold text-[#3525cd] dark:border-slate-800 dark:bg-slate-900 dark:text-white dark:hover:bg-slate-800">
               Sign In
             </Link>
           </div>
@@ -66,15 +66,15 @@ export const PublicRanksRoute = () => {
             return (
               <article
                 key={`${entry.username}-${index}`}
-                className="glass-panel rounded-[2rem] p-6 text-center shadow-[0_20px_44px_rgba(53,37,205,0.07)]"
+                className="glass-panel rounded-[2rem] p-6 text-center shadow-[0_20px_44px_rgba(53,37,205,0.07)] dark:border-slate-800 dark:bg-slate-900/90"
               >
-                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-white text-lg font-bold text-slate-900 shadow-sm">
+                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-white text-lg font-bold text-slate-900 dark:bg-slate-800 dark:text-white shadow-sm">
                   {index + 1}
                 </div>
-                <img src={avatar.image} alt={avatar.name} className="mx-auto mt-4 h-24 w-24 rounded-full border-4 border-white bg-slate-100 object-cover shadow-md" />
-                <h2 className="mt-4 text-xl font-semibold text-slate-900">{entry.username}</h2>
-                <p className="mt-1 text-sm uppercase tracking-[0.18em] text-[#3525cd]">{formatNumber(entry.rating)} rating</p>
-                <p className="mt-2 text-sm text-slate-500">
+                <img src={avatar.image} alt={avatar.name} className="mx-auto mt-4 h-24 w-24 rounded-full border-4 border-white bg-slate-100 dark:border-slate-700 dark:bg-slate-900 object-cover shadow-md" />
+                <h2 className="mt-4 text-xl font-semibold text-slate-900 dark:text-white">{entry.username}</h2>
+                <p className="mt-1 text-sm uppercase tracking-[0.18em] text-[#3525cd] dark:text-indigo-400">{formatNumber(entry.rating)} rating</p>
+                <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
                   Best {formatNumber(entry.score)} • Total {formatNumber(entry.totalPoints)}
                 </p>
               </article>
@@ -82,31 +82,31 @@ export const PublicRanksRoute = () => {
           })}
         </section>
 
-        <section className="glass-panel mt-9 overflow-hidden rounded-[2rem] shadow-[0_18px_40px_rgba(53,37,205,0.08)]">
-          <div className="border-b border-slate-200/70 px-5 py-5 sm:px-7">
-            <h2 className="text-2xl font-bold tracking-[-0.04em] text-slate-900">Leaderboard</h2>
-            <p className="mt-1 text-sm leading-6 text-slate-500">
+        <section className="glass-panel mt-9 overflow-hidden rounded-[2rem] shadow-[0_18px_40px_rgba(53,37,205,0.08)] dark:border-slate-800 dark:bg-slate-900/90">
+          <div className="border-b border-slate-200/70 dark:border-slate-800 px-5 py-5 sm:px-7">
+            <h2 className="text-2xl font-bold tracking-[-0.04em] text-slate-900 dark:text-white">Leaderboard</h2>
+            <p className="mt-1 text-sm leading-6 text-slate-500 dark:text-slate-400">
               A preview of the strongest players right now. Create an account to compete for the full Hall of Fame.
             </p>
           </div>
 
           {empty ? (
-            <div className="px-5 py-10 text-center text-sm text-slate-500">
+            <div className="px-5 py-10 text-center text-sm text-slate-500 dark:text-slate-400">
               The public board is warming up. Create an account, finish a run, and become one of the first ranked players.
             </div>
           ) : (
-            <div className="divide-y divide-slate-100">
+            <div className="divide-y divide-slate-100 dark:divide-slate-800">
               {visibleEntries.map((entry, index) => {
                 const avatar = avatarOptions.find((item) => item.id === entry.avatarId) ?? avatarOptions[0];
                 return (
                   <div key={entry.id} className="grid gap-4 px-5 py-5 sm:grid-cols-[auto_1fr_auto] sm:items-center sm:px-7">
                     <div className="flex items-center gap-4">
-                      <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#f0edff] text-sm font-bold text-[#3525cd]">
+                      <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#f0edff] text-sm font-bold text-[#3525cd] dark:bg-slate-800 dark:text-indigo-300">
                         {index + 1}
                       </span>
-                      <img src={avatar.image} alt={avatar.name} className="h-14 w-14 rounded-full border-2 border-white object-cover shadow-sm" />
+                      <img src={avatar.image} alt={avatar.name} className="h-14 w-14 rounded-full border-2 border-white dark:border-slate-700 object-cover shadow-sm" />
                       <div>
-                        <p className="font-semibold text-slate-900">{entry.username}</p>
+                        <p className="font-semibold text-slate-900 dark:text-white">{entry.username}</p>
                         <p className="text-xs uppercase tracking-[0.2em] text-slate-400">
                           {entry.gridSize} • {entry.matchType}
                         </p>
