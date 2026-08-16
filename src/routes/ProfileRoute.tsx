@@ -152,7 +152,15 @@ export const ProfileRoute = () => {
                   <img
                     src={avatar.image}
                     alt={avatar.name}
-                    className="w-full rounded-full border-4 border-white bg-slate-100 shadow-lg ring-4 ring-[#e2dfff]"
+                    className={`w-full rounded-full border-4 border-white bg-slate-100 shadow-xl transition-all duration-300 ${
+                      resolvedSnapshot.profile.isAdmin && resolvedSnapshot.profile.isBetaTester
+                        ? "ring-4 ring-amber-400 shadow-[0_0_30px_rgba(245,158,11,0.5)]"
+                        : resolvedSnapshot.profile.isAdmin
+                        ? "ring-4 ring-sky-500 shadow-[0_0_30px_rgba(14,165,233,0.5)]"
+                        : resolvedSnapshot.profile.isBetaTester
+                        ? "ring-4 ring-amber-400 shadow-[0_0_30px_rgba(245,158,11,0.5)]"
+                        : "ring-4 ring-[#e2dfff]"
+                    }`}
                   />
                 </div>
                 <div>
@@ -160,6 +168,11 @@ export const ProfileRoute = () => {
                     <h1 className="font-display text-4xl tracking-[-0.05em] text-slate-900 sm:text-5xl">
                       {resolvedSnapshot.profile.username}
                     </h1>
+                    {resolvedSnapshot.profile.isAdmin && (
+                      <span className="rounded-full bg-gradient-to-r from-sky-500 to-indigo-600 px-3.5 py-1 text-xs font-black uppercase tracking-wider text-white shadow-md border border-sky-300">
+                        Founder Architect
+                      </span>
+                    )}
                     {resolvedSnapshot.profile.isBetaTester && (
                       <span className="rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 px-3.5 py-1 text-xs font-black uppercase tracking-wider text-slate-950 shadow-md border border-amber-300">
                         Neural Tester

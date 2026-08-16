@@ -42,7 +42,18 @@ export const PerksAdminPanel = () => {
       setProfiles((prev) =>
         prev.map((p) => (p.id === userId ? { ...p, is_beta_tester: newStatus, isBetaTester: newStatus } : p)),
       );
-      setStatusMsg(`Updated Neural Tester status to ${newStatus ? "ACTIVE" : "INACTIVE"}.`);
+      if (newStatus) {
+        try {
+          await sendAdminEmail({
+            recipientIds: [userId],
+            subject: "🏆 Official Neural Tester Status Granted - MindGrid",
+            message: `Hello Operative,\n\nYou have officially been granted Neural Tester status on MindGrid: Neural Clash!\n\nLog in to your account at https://neuralclash.dev to claim your +1,000 Founder XP Boost, exclusive Neural Tester title badge, and glowing gold profile avatar ring.\n\nThank you for testing MindGrid!\n- MindGrid Founder Architect`,
+          });
+        } catch (emailErr) {
+          console.warn("Email notify error:", emailErr);
+        }
+      }
+      setStatusMsg(`Updated Neural Tester status to ${newStatus ? "ACTIVE" : "INACTIVE"} and sent email DM.`);
     } catch (err) {
       setErrorMsg("Failed to update tester status.");
     }

@@ -97,7 +97,13 @@ export const AppShell = ({ session, active, children }: AppShellProps) => {
               <button
                 type="button"
                 onClick={() => setMenuOpen((current) => !current)}
-                className="shrink-0 rounded-full border-2 border-white bg-slate-100 shadow-[0_10px_20px_rgba(53,37,205,0.1)]"
+                className={`shrink-0 rounded-full border-2 border-white bg-slate-100 shadow-[0_10px_20px_rgba(53,37,205,0.1)] transition ${
+                  session.profile.isAdmin
+                    ? "ring-2 ring-sky-500"
+                    : session.profile.isBetaTester
+                    ? "ring-2 ring-amber-400"
+                    : ""
+                }`}
                 aria-label="Profile menu"
               >
                 <img src={avatar.image} alt={avatar.name} className="h-9 w-9 rounded-full object-cover sm:h-12 sm:w-12" />
