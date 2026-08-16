@@ -213,9 +213,6 @@ export function useMultiplayerGame(
     }
   }, [gameState.status, isHost]);
 
-    return () => clearInterval(interval);
-  }, [gameState.status]);
-
   // Send Quick Chat Message
   const sendQuickMessage = useCallback(
     (message: QuickMessage) => {
