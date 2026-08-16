@@ -391,8 +391,8 @@ export const GameRoute = () => {
 
 const HudStat = ({ label, value }: { label: string; value: string }) => (
   <div className="min-w-[3.5rem] text-center sm:min-w-[4.5rem]">
-    <p className="text-[0.64rem] font-semibold uppercase tracking-[0.12em] text-[#7d8395] sm:text-xs">{label}</p>
-    <p className="mt-0.5 text-[1.35rem] font-bold text-[#3525cd] sm:text-[1.8rem]">{value}</p>
+    <p className="text-[0.64rem] font-semibold uppercase tracking-[0.12em] text-[#7d8395] dark:text-slate-400 sm:text-xs">{label}</p>
+    <p className="mt-0.5 text-[1.35rem] font-bold text-[#3525cd] dark:text-indigo-400 sm:text-[1.8rem]">{value}</p>
   </div>
 );
 
@@ -405,12 +405,12 @@ const SideStat = ({
   label: string;
   value: string;
 }) => (
-  <div className="flex items-center justify-between gap-3 rounded-[1.2rem] bg-white/74 px-3 py-3 sm:rounded-[1.35rem] sm:px-4 sm:py-4">
-    <div className="flex min-w-0 items-center gap-3 text-[#2a3148]">
-      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#eef2ff] text-[#3525cd] sm:h-10 sm:w-10">{icon}</span>
+  <div className="flex items-center justify-between gap-3 rounded-[1.2rem] bg-white/74 dark:bg-slate-900/90 dark:border dark:border-slate-800 px-3 py-3 sm:rounded-[1.35rem] sm:px-4 sm:py-4">
+    <div className="flex min-w-0 items-center gap-3 text-[#2a3148] dark:text-slate-200">
+      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#eef2ff] text-[#3525cd] dark:bg-slate-800 dark:text-indigo-300 sm:h-10 sm:w-10">{icon}</span>
       <span className="truncate text-sm font-medium">{label}</span>
     </div>
-    <span className="shrink-0 text-base font-bold text-[#3525cd] sm:text-lg">{value}</span>
+    <span className="shrink-0 text-base font-bold text-[#3525cd] dark:text-indigo-400 sm:text-lg">{value}</span>
   </div>
 );
 

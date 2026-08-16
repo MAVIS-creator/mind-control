@@ -167,7 +167,7 @@ const LiveMultiplayerCanvas = ({
   };
 
   return (
-    <div className="flex min-h-[100dvh] flex-col bg-[linear-gradient(180deg,#f6f8ff_0%,#eef4ff_100%)] lg:h-screen lg:max-h-screen lg:overflow-hidden">
+    <div className="flex min-h-[100dvh] flex-col bg-[linear-gradient(180deg,#f6f8ff_0%,#eef4ff_100%)] dark:bg-slate-950 dark:bg-none dark:text-slate-100 lg:h-screen lg:max-h-screen lg:overflow-hidden">
       <Seo title="Live Multiplayer Battle - MindGrid" description="Realtime multiplayer memory game." />
 
       {/* Floating Quick Messages Overlay */}
@@ -175,9 +175,9 @@ const LiveMultiplayerCanvas = ({
         {activeMessages.map((msg) => (
           <div
             key={msg.id}
-            className="animate-bounce rounded-2xl bg-white/95 border border-[#3525cd]/20 px-5 py-2.5 text-xs font-bold text-[#1e1b4b] shadow-xl backdrop-blur-md"
+            className="animate-bounce rounded-2xl bg-white/95 border border-[#3525cd]/20 px-5 py-2.5 text-xs font-bold text-[#1e1b4b] shadow-xl backdrop-blur-md dark:bg-slate-900/95 dark:border-slate-700 dark:text-white"
           >
-            <span className="text-[#3525cd] mr-1">{msg.senderName}:</span> "{msg.message}"
+            <span className="text-[#3525cd] dark:text-indigo-400 mr-1">{msg.senderName}:</span> "{msg.message}"
           </div>
         ))}
       </div>
@@ -185,19 +185,19 @@ const LiveMultiplayerCanvas = ({
       {/* Quit Confirmation Modal */}
       {showQuitModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md px-4">
-          <div className="w-full max-w-md rounded-3xl bg-white p-7 shadow-2xl border border-indigo-100 text-center">
-            <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-red-50 text-[#dc2626]">
+          <div className="w-full max-w-md rounded-3xl bg-white p-7 shadow-2xl border border-indigo-100 text-center dark:border-slate-800 dark:bg-slate-900">
+            <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-red-50 text-[#dc2626] dark:bg-rose-950/60 dark:text-rose-400">
               <ArrowLeftIcon className="h-6 w-6" />
             </div>
-            <h3 className="font-display text-xl font-extrabold text-[#1e1b4b]">Quit Multiplayer Match?</h3>
-            <p className="mt-2 text-xs leading-relaxed text-[#64748b]">
+            <h3 className="font-display text-xl font-extrabold text-[#1e1b4b] dark:text-white">Quit Multiplayer Match?</h3>
+            <p className="mt-2 text-xs leading-relaxed text-[#64748b] dark:text-slate-300">
               Are you sure you want to leave this battle? Forfeiting will end your active multiplayer session.
             </p>
             <div className="mt-6 flex gap-3">
               <button
                 type="button"
                 onClick={() => setShowQuitModal(false)}
-                className="flex-1 rounded-xl border border-slate-200 bg-slate-50 py-3 text-xs font-bold text-[#334155] hover:bg-slate-100"
+                className="flex-1 rounded-xl border border-slate-200 bg-slate-50 py-3 text-xs font-bold text-[#334155] hover:bg-slate-100 dark:border-slate-800 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
               >
                 Cancel
               </button>
@@ -213,19 +213,19 @@ const LiveMultiplayerCanvas = ({
         </div>
       )}
 
-      {/* Top Header / HUD (Identical to Single Player) */}
-      <header className="shrink-0 border-b border-[#cfe0ff] bg-[linear-gradient(180deg,rgba(248,251,255,0.98),rgba(238,245,255,0.94))] backdrop-blur-xl">
+      {/* Top Header / HUD */}
+      <header className="shrink-0 border-b border-[#cfe0ff] bg-[linear-gradient(180deg,rgba(248,251,255,0.98),rgba(238,245,255,0.94))] backdrop-blur-xl dark:border-slate-800 dark:bg-slate-950/90">
         <div className="mx-auto flex max-w-[1440px] flex-col gap-3 px-3 py-3 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8 xl:px-10">
           <div className="flex min-w-0 items-center justify-between gap-2 lg:flex-1 lg:justify-start">
             <Link to="/play" className="flex min-w-0 items-center gap-2 sm:gap-3">
               <BrandMarkIcon className="h-9 w-9 shrink-0 object-contain sm:h-11 sm:w-11" />
-              <span className="truncate font-display text-[1.45rem] font-extrabold text-[#3525cd] sm:text-[2rem]">
+              <span className="truncate font-display text-[1.45rem] font-extrabold text-[#3525cd] dark:text-white sm:text-[2rem]">
                 MindGrid
               </span>
             </Link>
           </div>
 
-          <div className="mx-auto flex w-full max-w-[33rem] items-center justify-between gap-2 rounded-[1.5rem] border border-white/80 bg-white/62 px-3 py-2 shadow-[0_16px_36px_rgba(53,37,205,0.08)] sm:gap-4 sm:px-5 lg:w-auto lg:max-w-none lg:justify-center lg:rounded-full">
+          <div className="mx-auto flex w-full max-w-[33rem] items-center justify-between gap-2 rounded-[1.5rem] border border-white/80 bg-white/62 px-3 py-2 shadow-[0_16px_36px_rgba(53,37,205,0.08)] dark:border-slate-800 dark:bg-slate-900/90 sm:gap-4 sm:px-5 lg:w-auto lg:max-w-none lg:justify-center lg:rounded-full">
             <HudStat
               label={room.gameMode === "turn_based" ? "Shot Clock" : room.gameMode === "coop" ? "Elapsed" : "Time"}
               value={

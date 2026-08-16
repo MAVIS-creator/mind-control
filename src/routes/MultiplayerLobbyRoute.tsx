@@ -115,10 +115,10 @@ export const MultiplayerLobbyRoute = () => {
             <div className="mb-8 h-1 rounded-full bg-gradient-to-r from-indigo-700 to-violet-500" />
 
             <div className="mb-8 flex justify-center">
-              <div className="inline-flex rounded-full bg-[#eef2ff] p-1.5 shadow-inner">
+              <div className="inline-flex rounded-full bg-[#eef2ff] dark:bg-slate-900/90 p-1.5 shadow-inner">
                 <Link
                   to="/play"
-                  className="rounded-full px-6 py-2.5 text-sm font-semibold text-[#475569] hover:text-[#3525cd] transition-all"
+                  className="rounded-full px-6 py-2.5 text-sm font-semibold text-[#475569] dark:text-slate-300 hover:text-[#3525cd] dark:hover:text-white transition-all"
                 >
                   Single Player
                 </Link>

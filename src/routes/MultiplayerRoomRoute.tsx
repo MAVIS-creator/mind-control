@@ -179,8 +179,8 @@ export const MultiplayerRoomRoute = () => {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#f9f9ff]">
-        <p className="font-display text-sm font-bold uppercase tracking-widest text-[#3525cd]">
+      <div className="flex min-h-screen items-center justify-center bg-[#f9f9ff] dark:bg-slate-950 dark:text-slate-100">
+        <p className="font-display text-sm font-bold uppercase tracking-widest text-[#3525cd] dark:text-indigo-400">
           Connecting to Room Frequency...
         </p>
       </div>
@@ -189,9 +189,9 @@ export const MultiplayerRoomRoute = () => {
 
   if (!room) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-[#f9f9ff] px-4 text-center">
-        <h2 className="font-display text-xl font-bold text-[#1e1b4b]">Room Not Found</h2>
-        <p className="mt-2 text-sm text-[#64748b]">This lobby may have expired or been disbanded.</p>
+      <div className="flex min-h-screen flex-col items-center justify-center bg-[#f9f9ff] dark:bg-slate-950 dark:text-slate-100 px-4 text-center">
+        <h2 className="font-display text-xl font-bold text-[#1e1b4b] dark:text-white">Room Not Found</h2>
+        <p className="mt-2 text-sm text-[#64748b] dark:text-slate-300">This lobby may have expired or been disbanded.</p>
         <button
           onClick={() => navigate("/multiplayer")}
           className="mt-4 rounded-xl bg-[#4f46e5] px-5 py-2.5 text-xs font-bold text-white"
@@ -203,7 +203,7 @@ export const MultiplayerRoomRoute = () => {
   }
 
   return (
-    <div className="relative min-h-screen bg-[radial-gradient(circle_at_top_left,_#e2dfff_0%,_#f9f9ff_42%,_#d4e3ff_100%)] px-4 py-8 sm:px-6 lg:px-8">
+    <div className="relative min-h-screen bg-[radial-gradient(circle_at_top_left,_#e2dfff_0%,_#f9f9ff_42%,_#d4e3ff_100%)] dark:bg-slate-950 dark:bg-none dark:text-slate-100 px-4 py-8 sm:px-6 lg:px-8">
       <Seo title={`Room ${room.roomCode} - MindGrid Multiplayer`} description="Pre-game multiplayer lobby room." />
 
       <div className="mx-auto max-w-4xl">
@@ -211,7 +211,7 @@ export const MultiplayerRoomRoute = () => {
         <div className="mb-6 flex items-center justify-between">
           <button
             onClick={handleLeave}
-            className="text-xs font-semibold uppercase tracking-wider text-[#3525cd] hover:underline"
+            className="text-xs font-semibold uppercase tracking-wider text-[#3525cd] dark:text-indigo-400 hover:underline"
           >
             ← Disband / Leave Room
           </button>

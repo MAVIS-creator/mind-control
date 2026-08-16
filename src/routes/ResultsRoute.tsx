@@ -33,7 +33,7 @@ export const ResultsRoute = () => {
   const avatar = avatarOptions.find((entry) => entry.id === state.entry.avatarId) ?? avatarOptions[0];
 
   return (
-    <div className="relative h-[100dvh] overflow-y-auto bg-[radial-gradient(circle_at_top_left,_#e2dfff_0%,_#f9f9ff_42%,_#d4e3ff_100%)]">
+    <div className="relative h-[100dvh] overflow-y-auto bg-[radial-gradient(circle_at_top_left,_#e2dfff_0%,_#f9f9ff_42%,_#d4e3ff_100%)] dark:bg-slate-950 dark:bg-none dark:text-slate-100">
       <div className="fixed inset-0 -z-10 overflow-hidden">
         <div className="absolute left-0 top-0 h-[24rem] w-[24rem] rounded-full bg-[#4f46e5]/10 blur-[100px]" />
         <div className="absolute bottom-10 right-0 h-[24rem] w-[24rem] rounded-full bg-[#862dd4]/10 blur-[100px]" />
