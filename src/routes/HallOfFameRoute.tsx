@@ -229,7 +229,6 @@ export const HallOfFameRoute = () => {
               </div>
             </div>
           )}
-          </div>
         </section>
 
         <div className="mb-8 grid gap-4 md:grid-cols-3">
