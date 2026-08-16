@@ -1,16 +1,22 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { supabase } from "../lib/supabase";
-import type { MultiplayerGameMode, MultiplayerRoom, PlayerProfile } from "../types";
+import type { MultiplayerRoom, PlayerProfile } from "../types";
 import { createInitialGameState, resolveSelection, revealCard, tickGame } from "./engine";
 import type { GameSessionState } from "./types";
 
-export type ReactionEmoji = "🧠" | "⚡" | "🔥" | "💀" | "👑" | "🎯";
+export type QuickMessage =
+  | "Nice move!"
+  | "Good game!"
+  | "Watch this!"
+  | "Close one!"
+  | "Your turn!"
+  | "Well played!";
 
 export type ActiveReaction = {
   id: string;
   senderId: string;
   senderName: string;
-  emoji: ReactionEmoji;
+  message: QuickMessage;
   timestamp: number;
 };
 
@@ -74,8 +80,8 @@ export function useMultiplayerGame(
   const [coopSharedScore, setCoopSharedScore] = useState<number>(0);
   const [coopCombinedCombo, setCoopCombinedCombo] = useState<number>(0);
 
-  // Reactions stream
-  const [reactions, setReactions] = useState<ActiveReaction[]>([]);
+  // Quick Chat Messages stream
+  const [activeMessages, setActiveMessages] = useState<ActiveReaction[]>([]);
 
   // Presence state
   const [presenceMap, setPresenceMap] = useState<Record<string, PlayerPresenceState>>({});
@@ -192,24 +198,24 @@ export function useMultiplayerGame(
     return () => clearInterval(interval);
   }, [gameState.status]);
 
-  // Send Emoji Reaction
-  const sendEmojiReaction = useCallback(
-    (emoji: ReactionEmoji) => {
-      const newReaction: ActiveReaction = {
-        id: `react-${Date.now()}-${Math.random()}`,
+  // Send Quick Chat Message
+  const sendQuickMessage = useCallback(
+    (message: QuickMessage) => {
+      const newChatMsg: ActiveReaction = {
+        id: `chat-${Date.now()}-${Math.random()}`,
         senderId: currentUserId,
         senderName: userProfile.username,
-        emoji,
+        message,
         timestamp: Date.now(),
       };
 
-      setReactions((prev) => [...prev, newReaction]);
+      setActiveMessages((prev) => [...prev, newChatMsg]);
 
       if (channelRef.current) {
         channelRef.current.send({
           type: "broadcast",
-          event: "EMOJI_REACTION",
-          payload: newReaction,
+          event: "QUICK_MESSAGE",
+          payload: newChatMsg,
         });
       }
     },
@@ -276,8 +282,8 @@ export function useMultiplayerGame(
           });
         }
       })
-      .on("broadcast", { event: "EMOJI_REACTION" }, ({ payload }) => {
-        setReactions((prev) => [...prev, payload]);
+      .on("broadcast", { event: "QUICK_MESSAGE" }, ({ payload }) => {
+        setActiveMessages((prev) => [...prev, payload]);
       })
       .on("broadcast", { event: "REMATCH_REQUEST" }, ({ payload }) => {
         if (payload.senderId !== currentUserId) {
@@ -300,15 +306,15 @@ export function useMultiplayerGame(
     };
   }, [room.id, currentUserId, userProfile.username, userProfile.avatarId, room.hostId]);
 
-  // Clean old reactions after 3.5s
+  // Clean old messages after 4s
   useEffect(() => {
-    if (reactions.length === 0) return;
+    if (activeMessages.length === 0) return;
     const timer = setTimeout(() => {
       const now = Date.now();
-      setReactions((prev) => prev.filter((r) => now - r.timestamp < 3500));
-    }, 3500);
+      setActiveMessages((prev) => prev.filter((r) => now - r.timestamp < 4000));
+    }, 4000);
     return () => clearTimeout(timer);
-  }, [reactions]);
+  }, [activeMessages]);
 
   return {
     gameState,
@@ -322,8 +328,8 @@ export function useMultiplayerGame(
     opponentGhost,
     coopSharedScore,
     coopCombinedCombo,
-    reactions,
-    sendEmojiReaction,
+    activeMessages,
+    sendQuickMessage,
     rematchRequestedBy,
     sendRematchRequest,
     presenceMap,

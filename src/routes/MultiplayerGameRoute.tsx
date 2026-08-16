@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Seo } from "../components/Seo";
-import { useMultiplayerGame, type ReactionEmoji } from "../game/useMultiplayerGame";
+import { useMultiplayerGame, type QuickMessage } from "../game/useMultiplayerGame";
 import { fetchRoomDetails, updateRoomConfig } from "../lib/multiplayer";
 import { useAppContext } from "../state/AppContext";
 import type { CardNode, MultiplayerRoom } from "../types";
@@ -70,14 +70,13 @@ const LiveMultiplayerCanvas = ({
     handleCardClick,
     isHost,
     opponentProfile,
-    currentTurnId,
     isMyTurn,
     playerScores,
     opponentGhost,
     coopSharedScore,
     coopCombinedCombo,
-    reactions,
-    sendEmojiReaction,
+    activeMessages,
+    sendQuickMessage,
   } = useMultiplayerGame(room, userId, profile);
 
   const [gameFinished, setGameFinished] = useState(false);
@@ -137,19 +136,27 @@ const LiveMultiplayerCanvas = ({
       ? "grid-cols-5"
       : "grid-cols-4";
 
+  const quickMessagesList: QuickMessage[] = [
+    "Nice move!",
+    "Good game!",
+    "Watch this!",
+    "Close one!",
+    "Your turn!",
+    "Well played!",
+  ];
+
   return (
     <div className="relative min-h-screen bg-[radial-gradient(circle_at_top_left,_#e2dfff_0%,_#f9f9ff_42%,_#d4e3ff_100%)] px-4 py-6">
       <Seo title="Live Multiplayer Battle - MindGrid" description="Realtime multiplayer memory game." />
 
-      {/* Floating Reactions Overlay */}
-      <div className="pointer-events-none fixed inset-x-0 top-20 z-50 flex justify-center gap-4">
-        {reactions.map((r) => (
+      {/* Floating Quick Messages Overlay */}
+      <div className="pointer-events-none fixed inset-x-0 top-16 z-50 flex flex-col items-center gap-2">
+        {activeMessages.map((msg) => (
           <div
-            key={r.id}
-            className="animate-bounce rounded-2xl bg-white/90 px-4 py-2 text-2xl shadow-xl backdrop-blur-md border border-white"
+            key={msg.id}
+            className="animate-bounce rounded-2xl bg-white/95 border border-[#3525cd]/20 px-5 py-2.5 text-xs font-bold text-[#1e1b4b] shadow-xl backdrop-blur-md"
           >
-            <span className="mr-2 text-xs font-bold text-[#1e1b4b]">{r.senderName}:</span>
-            {r.emoji}
+            <span className="text-[#3525cd] mr-1">{msg.senderName}:</span> "{msg.message}"
           </div>
         ))}
       </div>
@@ -164,7 +171,7 @@ const LiveMultiplayerCanvas = ({
                 <div className="flex items-center gap-3">
                   <div className={`h-3 w-3 rounded-full ${isMyTurn ? "bg-emerald-500 animate-ping" : "bg-slate-400"}`} />
                   <span className={`font-display text-sm font-black uppercase tracking-wider ${isMyTurn ? "text-emerald-600" : "text-[#64748b]"}`}>
-                    {isMyTurn ? "⚡ YOUR TURN TO MOVE" : `⏳ ${opponentProfile?.username || "OPPONENT"}'S TURN`}
+                    {isMyTurn ? "YOUR TURN TO MOVE" : `${(opponentProfile?.username || "OPPONENT").toUpperCase()}'S TURN`}
                   </span>
                 </div>
                 <div className="text-xs font-bold uppercase tracking-wider text-[#475569]">
@@ -192,7 +199,7 @@ const LiveMultiplayerCanvas = ({
             <div>
               <div className="flex items-center justify-between mb-3">
                 <span className="font-display text-xs font-black uppercase tracking-wider text-[#0284c7]">
-                  ⚡ SIMULTANEOUS SPEED RACE
+                  SIMULTANEOUS SPEED RACE
                 </span>
                 <span className="font-mono text-xs font-bold text-[#64748b]">
                   Timer: {gameState.timerRemaining}s
@@ -233,7 +240,7 @@ const LiveMultiplayerCanvas = ({
           {room.gameMode === "coop" && (
             <div className="text-center">
               <span className="font-display text-xs font-black uppercase tracking-wider text-[#7c3aed]">
-                🤝 CO-OP NEURAL LINK
+                CO-OP NEURAL LINK
               </span>
               <div className="mt-2 flex justify-center items-center gap-8">
                 <div>
@@ -273,23 +280,23 @@ const LiveMultiplayerCanvas = ({
                 }`}
               >
                 <div className="flex h-full w-full items-center justify-center">
-                  {card.revealed || card.matched ? card.symbol : "⚡"}
+                  {card.revealed || card.matched ? card.symbol : "◌"}
                 </div>
               </button>
             );
           })}
         </div>
 
-        {/* Quick Reaction Buttons Bar */}
-        <div className="glass-panel flex items-center justify-center gap-3 rounded-full p-3 shadow-lg">
-          <span className="text-[10px] font-bold uppercase tracking-wider text-[#64748b] mr-2">React:</span>
-          {(["🧠", "⚡", "🔥", "💀", "👑", "🎯"] as ReactionEmoji[]).map((emoji) => (
+        {/* Quick Messages Bar (No Emojis) */}
+        <div className="glass-panel flex flex-wrap items-center justify-center gap-2 rounded-2xl p-3 shadow-lg">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-[#64748b] mr-2">Quick Message:</span>
+          {quickMessagesList.map((msg) => (
             <button
-              key={emoji}
-              onClick={() => sendEmojiReaction(emoji)}
-              className="rounded-full p-2 text-xl hover:bg-white/80 hover:scale-125 transition-all active:scale-90"
+              key={msg}
+              onClick={() => sendQuickMessage(msg)}
+              className="rounded-xl bg-white/80 border border-slate-200 px-3 py-1.5 text-xs font-semibold text-[#1e1b4b] hover:bg-[#3525cd] hover:text-white transition-all shadow-sm active:scale-95"
             >
-              {emoji}
+              {msg}
             </button>
           ))}
         </div>

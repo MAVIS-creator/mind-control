@@ -172,7 +172,7 @@ export const MultiplayerRoomRoute = () => {
 
         {errorMsg && (
           <div className="mb-6 rounded-2xl bg-red-500/10 border border-red-500/20 p-4 text-center text-sm font-semibold text-red-600">
-            ⚠️ {errorMsg}
+            {errorMsg}
           </div>
         )}
 
@@ -187,7 +187,7 @@ export const MultiplayerRoomRoute = () => {
               onClick={copyRoomCode}
               className="rounded-xl bg-[#4f46e5]/10 px-3 py-2 text-xs font-bold text-[#4f46e5] hover:bg-[#4f46e5]/20 transition-all"
             >
-              {copied ? "✓ Copied!" : "📋 Copy Code"}
+              {copied ? "Copied!" : "Copy Code"}
             </button>
           </div>
           <p className="mt-2 text-xs text-[#64748b]">
@@ -233,7 +233,7 @@ export const MultiplayerRoomRoute = () => {
                     : "bg-amber-500/10 text-amber-600 border border-amber-500/20"
                 }`}
               >
-                {room.hostReady ? "✓ Ready for Battle" : "⏳ Setting Up"}
+                {room.hostReady ? "Ready for Battle" : "Setting Up"}
               </span>
             </div>
           </div>
@@ -264,14 +264,14 @@ export const MultiplayerRoomRoute = () => {
                         : "bg-amber-500/10 text-amber-600 border border-amber-500/20"
                     }`}
                   >
-                    {room.guestReady ? "✓ Ready for Battle" : "⏳ Preparing"}
+                    {room.guestReady ? "Ready for Battle" : "Preparing"}
                   </span>
                 </div>
               </>
             ) : (
               <div className="py-6">
-                <div className="mx-auto flex h-20 w-20 animate-pulse items-center justify-center rounded-full bg-slate-200 text-2xl">
-                  👤
+                <div className="mx-auto flex h-20 w-20 animate-pulse items-center justify-center rounded-full bg-slate-200 text-2xl text-[#64748b]">
+                  ◌
                 </div>
                 <p className="mt-4 text-xs font-bold uppercase tracking-wider text-[#64748b]">
                   Waiting for Opponent...
@@ -302,7 +302,7 @@ export const MultiplayerRoomRoute = () => {
               onClick={handleStartMatch}
               className="rounded-2xl bg-gradient-to-r from-[#4f46e5] via-[#6366f1] to-[#7c3aed] px-10 py-4 font-display text-sm font-bold uppercase tracking-wider text-white shadow-lg transition-all hover:scale-105"
             >
-              Start Multiplayer Match ⚡
+              Start Multiplayer Match
             </button>
           )}
         </div>

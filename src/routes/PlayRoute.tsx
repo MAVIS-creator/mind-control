@@ -43,9 +43,9 @@ export const PlayRoute = () => {
                   </button>
                   <Link
                     to="/multiplayer"
-                    className="rounded-full px-6 py-2.5 text-sm font-semibold text-[#475569] hover:text-[#3525cd] transition-all flex items-center gap-1.5"
+                    className="rounded-full px-6 py-2.5 text-sm font-semibold text-[#475569] hover:text-[#3525cd] transition-all"
                   >
-                    <span>⚡</span> Multiplayer Clash
+                    Multiplayer Clash
                   </Link>
                 </div>
               </div>

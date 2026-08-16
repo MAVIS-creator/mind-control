@@ -68,7 +68,17 @@ export const AppShell = ({ session, active, children }: AppShellProps) => {
             })}
           </nav>
 
-          <div className="flex min-w-0 shrink-0 items-center justify-self-end gap-2 sm:gap-4">
+          <div className="flex min-w-0 shrink-0 items-center justify-self-end gap-2 sm:gap-3">
+            {/* Friends & Online Players Pill */}
+            <button
+              type="button"
+              onClick={() => setFriendsOpen(true)}
+              className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50/80 px-3 py-1.5 text-xs font-semibold text-emerald-700 hover:bg-emerald-100 transition-all shadow-sm"
+            >
+              <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span>Friends & Online</span>
+            </button>
+
             <div className="inline-flex min-w-0 items-center gap-1 rounded-full border border-[#c9dcff] bg-white px-2 py-1.5 text-[#3525cd] shadow-[0_12px_24px_rgba(53,37,205,0.08)] sm:gap-2 sm:px-4 sm:py-2">
               <span className="inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-current text-[0.58rem] font-bold sm:h-5 sm:w-5 sm:text-[0.72rem]">
                 ★
@@ -117,6 +127,8 @@ export const AppShell = ({ session, active, children }: AppShellProps) => {
           </div>
         </div>
       </header>
+
+      <FriendsDrawer isOpen={friendsOpen} onClose={() => setFriendsOpen(false)} />
 
       <main className="flex-1">{children}</main>
       <SiteFooter />

@@ -39,6 +39,7 @@ export type PlayerProfile = {
   rank: RankTitle;
   createdAt: string;
   isAdmin: boolean;
+  lastSeenAt?: string;
 };
 
 export type PlayerStats = {

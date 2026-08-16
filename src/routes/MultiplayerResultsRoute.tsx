@@ -27,7 +27,9 @@ export const MultiplayerResultsRoute = () => {
         {/* Victory / Defeat Badge */}
         <div className="glass-panel rounded-3xl p-8 shadow-2xl">
           <div className="mb-4">
-            <span className="text-5xl">{isCoop ? "🤝" : isWinner ? "🏆" : isTie ? "🤝" : "💀"}</span>
+            <span className="inline-block rounded-full bg-[#4f46e5]/10 border border-[#4f46e5]/20 px-4 py-1 text-xs font-bold uppercase tracking-widest text-[#3525cd]">
+              {isCoop ? "CO-OP SYNC" : isWinner ? "MATCH WINNER" : isTie ? "STALEMATE" : "MATCH COMPLETED"}
+            </span>
           </div>
 
           <h1 className="font-display text-3xl font-black uppercase tracking-wider text-[#1e1b4b]">
