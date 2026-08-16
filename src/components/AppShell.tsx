@@ -5,6 +5,7 @@ import { getLevelFromXp } from "../lib/utils";
 import { useAppContext } from "../state/AppContext";
 import type { AuthSession } from "../types";
 import { BrandMarkIcon, HomeIcon, TrophyIcon, UserIcon } from "./AppIcons";
+import { FriendsDrawer } from "./FriendsDrawer";
 import { SiteFooter } from "./SiteFooter";
 
 type AppShellProps = {
@@ -21,6 +22,7 @@ const navItems = [
 export const AppShell = ({ session, active, children }: AppShellProps) => {
   const { logout } = useAppContext();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [friendsOpen, setFriendsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
   const avatar = avatarOptions.find((entry) => entry.id === session.profile.avatarId) ?? avatarOptions[0];
   const level = getLevelFromXp(session.profile.xp);
