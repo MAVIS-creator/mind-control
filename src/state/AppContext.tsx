@@ -30,6 +30,7 @@ type AppContextValue = {
   authMode: "login" | "register";
   settings: GameSetupSettings;
   preferences: GamePreferences;
+  setSession: (session: AuthSession | null) => void;
   setAuthMode: (mode: "login" | "register") => void;
   updateSettings: (patch: Partial<GameSetupSettings>) => void;
   updatePreferences: (patch: Partial<GamePreferences>) => void;
@@ -98,6 +99,7 @@ export const AppProvider = ({ children }: PropsWithChildren) => {
       authMode,
       settings,
       preferences,
+      setSession,
       setAuthMode,
       updateSettings: (patch) => {
         const next = { ...settings, ...patch };
