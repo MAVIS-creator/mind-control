@@ -77,3 +77,12 @@ DROP TRIGGER IF EXISTS ensure_multiplayer_room_code ON public.multiplayer_rooms;
 CREATE TRIGGER ensure_multiplayer_room_code
 BEFORE INSERT ON public.multiplayer_rooms
 FOR EACH ROW EXECUTE FUNCTION generate_multiplayer_room_code();
+
+-- Enable Supabase Realtime for multiplayer_rooms database changes
+DO $$ BEGIN
+    ALTER PUBLICATION supabase_realtime ADD TABLE public.multiplayer_rooms;
+EXCEPTION
+    WHEN duplicate_object THEN null;
+    WHEN undefined_object THEN null;
+END $$;
+
