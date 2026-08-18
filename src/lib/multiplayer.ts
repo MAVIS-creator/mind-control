@@ -483,6 +483,19 @@ const isUserAdmin = (username?: string, isAdminFlag?: boolean) => {
   return parseAdminUsernames().includes(username.toLowerCase());
 };
 
+const parseBetaTesterUsernames = () =>
+  ((import.meta.env.VITE_BETA_TESTER_USERNAMES as string | undefined) ?? "ladiechamp,quantacipher,tracy426,tester,beta")
+    .split(",")
+    .map((name: string) => name.trim().toLowerCase())
+    .filter(Boolean);
+
+const isBetaTesterUser = (username?: string, isBetaTesterFlag?: boolean, createdAt?: string) => {
+  if (isBetaTesterFlag) return true;
+  if (username && parseBetaTesterUsernames().includes(username.toLowerCase())) return true;
+  if (createdAt && new Date(createdAt).getTime() <= new Date("2026-08-25T00:00:00.000Z").getTime()) return true;
+  return false;
+};
+
 export const fetchMultiplayerLeaderboard = async (): Promise<MultiplayerLeaderboardEntry[]> => {
   try {
     let profiles: any[] = [];
@@ -646,9 +659,7 @@ export const fetchMultiplayerLeaderboard = async (): Promise<MultiplayerLeaderbo
       const winRate = compTotal > 0 ? (multiplayerWins / compTotal) * 100 : 0;
 
       const isAdmin = isUserAdmin(p.username, p.is_admin || p.isAdmin);
-      const isBetaTester =
-        Boolean(p.is_beta_tester || p.isBetaTester) ||
-        (new Date(p.created_at || p.createdAt || Date.now()).getTime() <= new Date("2026-08-16T04:30:00.000Z").getTime());
+      const isBetaTester = isBetaTesterUser(p.username, Boolean(p.is_beta_tester || p.isBetaTester), p.created_at || p.createdAt);
 
       return {
         userId: p.id,

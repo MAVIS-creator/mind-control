@@ -374,24 +374,12 @@ export const HallOfFameRoute = () => {
                         className="h-24 w-24 rounded-full border-4 border-white bg-slate-100 shadow-md dark:border-slate-800 dark:bg-slate-900 object-cover"
                       />
                     </div>
-                    <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
-                      <Link
-                        to={`/profile/${entry.userId}`}
-                        className="inline-block text-xl font-semibold text-slate-900 hover:text-[#3525cd] dark:text-white dark:hover:text-indigo-400"
-                      >
-                        {entry.username}
-                      </Link>
-                      {entry.isAdmin && (
-                        <span className="rounded-full bg-gradient-to-r from-sky-500 to-indigo-600 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-white shadow-md border border-sky-300">
-                          Founder Architect
-                        </span>
-                      )}
-                      {entry.isBetaTester && !entry.isAdmin && (
-                        <span className="rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-slate-950 shadow-md border border-amber-300">
-                          Neural Tester
-                        </span>
-                      )}
-                    </div>
+                    <Link
+                      to={`/profile/${entry.userId}`}
+                      className="mt-4 inline-block text-xl font-semibold text-slate-900 hover:text-[#3525cd] dark:text-white dark:hover:text-indigo-400"
+                    >
+                      {entry.username}
+                    </Link>
                     <p className="mt-1 text-sm font-bold uppercase tracking-[0.18em] text-[#3525cd] dark:text-indigo-400">
                       {formatNumber(pts)} MP Points
                     </p>
@@ -441,24 +429,12 @@ export const HallOfFameRoute = () => {
                       className="h-24 w-24 rounded-full border-4 border-white bg-slate-100 shadow-md dark:border-slate-800 dark:bg-slate-900 object-cover"
                     />
                   </div>
-                  <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
-                    <Link
-                      to={`/profile/${entry.userId}`}
-                      className="inline-block text-xl font-semibold text-slate-900 hover:text-[#3525cd] dark:text-white dark:hover:text-indigo-400"
-                    >
-                      {entry.username}
-                    </Link>
-                    {entry.isAdmin && (
-                      <span className="rounded-full bg-gradient-to-r from-sky-500 to-indigo-600 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-white shadow-md border border-sky-300">
-                        Founder Architect
-                      </span>
-                    )}
-                    {entry.isBetaTester && !entry.isAdmin && (
-                      <span className="rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-slate-950 shadow-md border border-amber-300">
-                        Neural Tester
-                      </span>
-                    )}
-                  </div>
+                  <Link
+                    to={`/profile/${entry.userId}`}
+                    className="mt-4 inline-block text-xl font-semibold text-slate-900 hover:text-[#3525cd] dark:text-white dark:hover:text-indigo-400"
+                  >
+                    {entry.username}
+                  </Link>
                   <p className="mt-1 text-sm uppercase tracking-[0.18em] text-[#3525cd] dark:text-indigo-400">
                     {formatNumber(entry.rating)} rating
                   </p>
@@ -552,24 +528,12 @@ export const HallOfFameRoute = () => {
                                 />
                               </div>
                               <div>
-                                <div className="flex flex-wrap items-center gap-2">
-                                  <Link
-                                    to={`/profile/${entry.userId}`}
-                                    className="font-semibold text-slate-900 hover:text-[#3525cd] dark:text-white dark:hover:text-indigo-400"
-                                  >
-                                    {entry.username}
-                                  </Link>
-                                  {entry.isAdmin && (
-                                    <span className="rounded-full bg-gradient-to-r from-sky-500 to-indigo-600 px-2 py-0.5 text-[9px] font-black uppercase tracking-wider text-white shadow-sm border border-sky-300">
-                                      Founder Architect
-                                    </span>
-                                  )}
-                                  {entry.isBetaTester && !entry.isAdmin && (
-                                    <span className="rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 px-2 py-0.5 text-[9px] font-black uppercase tracking-wider text-slate-950 shadow-sm border border-amber-300">
-                                      Neural Tester
-                                    </span>
-                                  )}
-                                </div>
+                                <Link
+                                  to={`/profile/${entry.userId}`}
+                                  className="font-semibold text-slate-900 hover:text-[#3525cd] dark:text-white dark:hover:text-indigo-400"
+                                >
+                                  {entry.username}
+                                </Link>
                                 <div className="text-xs uppercase tracking-wider text-slate-400 dark:text-slate-500">{entry.rank}</div>
                               </div>
                             </div>
@@ -635,24 +599,12 @@ export const HallOfFameRoute = () => {
                                 />
                               </div>
                               <div>
-                                <div className="flex flex-wrap items-center gap-2">
-                                  <Link
-                                    to={`/profile/${entry.userId}`}
-                                    className="font-medium text-slate-900 hover:text-[#3525cd] dark:text-white dark:hover:text-indigo-400"
-                                  >
-                                    {entry.username}
-                                  </Link>
-                                  {entry.isAdmin && (
-                                    <span className="rounded-full bg-gradient-to-r from-sky-500 to-indigo-600 px-2 py-0.5 text-[9px] font-black uppercase tracking-wider text-white shadow-sm border border-sky-300">
-                                      Founder Architect
-                                    </span>
-                                  )}
-                                  {entry.isBetaTester && !entry.isAdmin && (
-                                    <span className="rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 px-2 py-0.5 text-[9px] font-black uppercase tracking-wider text-slate-950 shadow-sm border border-amber-300">
-                                      Neural Tester
-                                    </span>
-                                  )}
-                                </div>
+                                <Link
+                                  to={`/profile/${entry.userId}`}
+                                  className="font-medium text-slate-900 hover:text-[#3525cd] dark:text-white dark:hover:text-indigo-400"
+                                >
+                                  {entry.username}
+                                </Link>
                                 <div className="text-xs uppercase tracking-[0.22em] text-slate-400 dark:text-slate-500">
                                   {matchTypeLabels[entry.matchType]} • {entry.gridSize}
                                 </div>

@@ -61,21 +61,9 @@ export const LeaderboardTable = ({
                         />
                       </div>
                       <div>
-                        <div className="flex flex-wrap items-center gap-2">
-                          <Link to={`/profile/${entry.userId}`} className="font-medium text-slate-900 hover:text-indigo-700 dark:text-white dark:hover:text-indigo-400">
-                            {entry.username}
-                          </Link>
-                          {entry.isAdmin && (
-                            <span className="rounded-full bg-gradient-to-r from-sky-500 to-indigo-600 px-2 py-0.5 text-[9px] font-black uppercase tracking-wider text-white shadow-sm border border-sky-300">
-                              Founder Architect
-                            </span>
-                          )}
-                          {entry.isBetaTester && !entry.isAdmin && (
-                            <span className="rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 px-2 py-0.5 text-[9px] font-black uppercase tracking-wider text-slate-950 shadow-sm border border-amber-300">
-                              Neural Tester
-                            </span>
-                          )}
-                        </div>
+                        <Link to={`/profile/${entry.userId}`} className="font-medium text-slate-900 hover:text-indigo-700 dark:text-white dark:hover:text-indigo-400">
+                          {entry.username}
+                        </Link>
                         <div className="text-xs uppercase tracking-[0.24em] text-slate-400 dark:text-slate-500">
                           {new Date(entry.playedAt).toLocaleDateString("en-GB")}
                         </div>

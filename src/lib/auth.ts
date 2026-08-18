@@ -98,10 +98,14 @@ const mapRemoteProfile = (
   isBetaTester:
     row?.isBetaTester ??
     row?.is_beta_tester ??
-    (new Date(row?.createdAt || row?.created_at || Date.now()).getTime() <= new Date("2026-08-16T04:30:00.000Z").getTime()),
+    isBetaTesterUser(
+      row?.username ?? fallbackUsername,
+      Boolean(row?.isBetaTester ?? row?.is_beta_tester),
+      row?.createdAt ?? (row as any)?.created_at,
+    ),
   hasClaimedBetaReward:
-    Boolean(row?.hasClaimedBetaReward ?? row?.has_claimed_beta_reward) ||
-    Boolean(row?.user_metadata?.has_claimed_beta_reward),
+    Boolean(row?.hasClaimedBetaReward ?? (row as any)?.has_claimed_beta_reward) ||
+    Boolean((row as any)?.user_metadata?.has_claimed_beta_reward),
 });
 
 const normalizeLeaderboardEntry = (entry: LeaderboardEntry): LeaderboardEntry => ({
@@ -170,8 +174,7 @@ const mapLeaderboardRow = (row: any, meta?: { isAdmin: boolean; isBetaTester: bo
   isAdmin: meta?.isAdmin ?? (canBeAdminFromEnv(row.username) || Boolean(row.is_admin || row.isAdmin)),
   isBetaTester:
     meta?.isBetaTester ??
-    (Boolean(row.is_beta_tester || row.isBetaTester) ||
-      (new Date(row.played_at || Date.now()).getTime() <= new Date("2026-08-16T04:30:00.000Z").getTime())),
+    isBetaTesterUser(row.username, Boolean(row.is_beta_tester || row.isBetaTester), row.played_at),
   audit: normalizeAudit({
     suspicionScore: row.suspicion_score,
     suspicionReasons: row.suspicion_reasons,
@@ -206,8 +209,7 @@ const mapAccountLeaderboardRow = (row: any, meta?: { isAdmin: boolean; isBetaTes
   isAdmin: meta?.isAdmin ?? (canBeAdminFromEnv(row.username) || Boolean(row.is_admin || row.isAdmin)),
   isBetaTester:
     meta?.isBetaTester ??
-    (Boolean(row.is_beta_tester || row.isBetaTester) ||
-      (new Date(row.best_played_at || Date.now()).getTime() <= new Date("2026-08-16T04:30:00.000Z").getTime())),
+    isBetaTesterUser(row.username, Boolean(row.is_beta_tester || row.isBetaTester), row.best_played_at),
   audit: createEmptyAudit(),
 });
 
@@ -234,6 +236,19 @@ const calculatePlayerStats = (runs: LeaderboardEntry[]): PlayerStats => {
 
 const canBeAdminFromEnv = (username: string) =>
   parseAdminUsernames().includes(normalizeUsername(username));
+
+const parseBetaTesterUsernames = () =>
+  ((import.meta.env.VITE_BETA_TESTER_USERNAMES as string | undefined) ?? "ladiechamp,quantacipher,tracy426,tester,beta")
+    .split(",")
+    .map((name: string) => name.trim().toLowerCase())
+    .filter(Boolean);
+
+const isBetaTesterUser = (username?: string, isBetaTesterFlag?: boolean, createdAt?: string) => {
+  if (isBetaTesterFlag) return true;
+  if (username && parseBetaTesterUsernames().includes(normalizeUsername(username))) return true;
+  if (createdAt && new Date(createdAt).getTime() <= new Date("2026-08-25T00:00:00.000Z").getTime()) return true;
+  return false;
+};
 
 const isBetterRun = (candidate: LeaderboardEntry, current: LeaderboardEntry) =>
   compareLeaderboardEntries(candidate, current) < 0;
@@ -359,9 +374,7 @@ const fetchRemoteLeaderboards = async () => {
     const profileMetaMap = new Map<string, { isAdmin: boolean; isBetaTester: boolean }>();
     (profileRows || []).forEach((p) => {
       const isAdmin = canBeAdminFromEnv(p.username) || Boolean(p.is_admin);
-      const isBetaTester =
-        Boolean(p.is_beta_tester) ||
-        (new Date(p.created_at || Date.now()).getTime() <= new Date("2026-08-16T04:30:00.000Z").getTime());
+      const isBetaTester = isBetaTesterUser(p.username, Boolean(p.is_beta_tester), p.created_at);
       profileMetaMap.set(p.id, { isAdmin, isBetaTester });
       if (p.username) profileMetaMap.set(p.username.toLowerCase(), { isAdmin, isBetaTester });
     });
@@ -391,9 +404,7 @@ const fetchRemoteLeaderboards = async () => {
     const profileMetaMap = new Map<string, { isAdmin: boolean; isBetaTester: boolean }>();
     (profileRows || []).forEach((p) => {
       const isAdmin = canBeAdminFromEnv(p.username) || Boolean(p.is_admin);
-      const isBetaTester =
-        Boolean(p.is_beta_tester) ||
-        (new Date(p.created_at || Date.now()).getTime() <= new Date("2026-08-16T04:30:00.000Z").getTime());
+      const isBetaTester = isBetaTesterUser(p.username, Boolean(p.is_beta_tester), p.created_at);
       profileMetaMap.set(p.id, { isAdmin, isBetaTester });
       if (p.username) profileMetaMap.set(p.username.toLowerCase(), { isAdmin, isBetaTester });
     });
