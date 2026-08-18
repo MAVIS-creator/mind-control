@@ -106,9 +106,20 @@ export const LandingRoute = () => {
       <main className="mx-auto max-w-[1500px] px-4 py-8 sm:px-6 lg:px-8 lg:py-12">
         <section className="grid items-center gap-8 lg:grid-cols-[1.25fr_0.75fr]">
           <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} className="text-center lg:text-left">
-            <div className="inline-flex items-center gap-2 rounded-full border border-white/70 bg-white/70 px-4 py-2 text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-[#3525cd] shadow-[0_14px_30px_rgba(53,37,205,0.08)] backdrop-blur-xl dark:border-slate-800 dark:bg-slate-900/90 dark:text-white sm:text-xs">
-              <SparklesIcon className="h-4 w-4 text-[#4f46e5] dark:text-indigo-400" />
-              Live Multiplayer Clash & PWA Web App
+            <div className="flex flex-wrap items-center justify-center gap-2 lg:justify-start">
+              <div className="inline-flex items-center gap-2 rounded-full border border-white/70 bg-white/70 px-4 py-2 text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-[#3525cd] shadow-[0_14px_30px_rgba(53,37,205,0.08)] backdrop-blur-xl dark:border-slate-800 dark:bg-slate-900/90 dark:text-white sm:text-xs">
+                <SparklesIcon className="h-4 w-4 text-[#4f46e5] dark:text-indigo-400" />
+                Live Multiplayer Clash & PWA Web App
+              </div>
+              <a
+                href="https://klyvex-studios.tech"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-full border border-indigo-200/80 bg-indigo-50/80 px-3.5 py-1.5 text-[0.68rem] font-bold uppercase tracking-[0.16em] text-indigo-700 shadow-sm backdrop-blur-xl transition hover:bg-indigo-100 hover:scale-[1.02] dark:border-indigo-900/50 dark:bg-indigo-950/60 dark:text-indigo-300 dark:hover:bg-indigo-900/80 sm:text-xs"
+              >
+                <img src="/klyvex_logo.png" alt="Klyvex Studios" className="h-4 w-4 rounded-full object-cover" />
+                By Klyvex Studios
+              </a>
             </div>
             <BrandMotionMark className="mx-auto mt-8 w-[15rem] sm:w-[21rem] lg:mx-0 lg:w-[24rem]" />
             <h1 className="mt-7 font-display text-[3.4rem] font-extrabold uppercase leading-[0.88] tracking-[-0.08em] text-[#3525cd] dark:text-white sm:text-[5.5rem] lg:text-[6.7rem]">
@@ -148,52 +159,54 @@ export const LandingRoute = () => {
             transition={{ delay: 0.08 }}
             className="glass-panel rounded-[2.1rem] p-5 shadow-[0_18px_40px_rgba(53,37,205,0.08)] sm:p-6 dark:border dark:border-slate-800 dark:bg-slate-900/90"
           >
-            <div className="mb-6 flex items-center justify-between">
+            <div className="flex items-center justify-between border-b border-[#ececf6] pb-4 dark:border-slate-800">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#7d8395] dark:text-slate-400">Live preview</p>
-                <h2 className="mt-2 text-[2rem] font-bold tracking-[-0.04em] text-[#111c2d] dark:text-white">Global Rank</h2>
+                <p className="text-xs uppercase tracking-[0.24em] text-[#7d8395] dark:text-slate-400">Current Hall of Fame</p>
+                <h2 className="text-2xl font-bold tracking-[-0.04em] text-[#111c2d] dark:text-white">Leaderboard Preview</h2>
               </div>
-              <TrophyIcon className="h-6 w-6 text-[#667085] dark:text-slate-400" />
+              <Link
+                to="/ranks"
+                className="rounded-full bg-[#f0edff] px-4 py-2 text-xs font-semibold text-[#3525cd] transition hover:bg-[#e4dfff] dark:bg-slate-800 dark:text-indigo-300 dark:hover:bg-slate-700"
+              >
+                Full Board
+              </Link>
             </div>
-            <div className="space-y-4">
-              {previewRanks.map((entry, index) => {
-                const avatar = avatarOptions.find((item) => item.id === entry.avatarId) ?? avatarOptions[0];
+
+            <div className="mt-4 space-y-3">
+              {previewRanks.map((rank, index) => {
+                const avatar = avatarOptions.find((item) => item.id === rank.avatarId) ?? avatarOptions[0];
                 return (
-                  <div key={`${entry.name}-${index}`} className="flex items-center justify-between gap-3 rounded-[1.4rem] border border-white/70 bg-white/72 p-4 shadow-[0_10px_24px_rgba(53,37,205,0.05)] dark:border-slate-800 dark:bg-slate-950/90 dark:text-white">
+                  <div
+                    key={rank.name}
+                    className="flex items-center justify-between rounded-2xl border border-white/80 bg-white/76 p-3 shadow-sm transition hover:border-[#c7cbee] dark:border-slate-800 dark:bg-slate-950"
+                  >
                     <div className="flex items-center gap-3">
-                      <div className="relative shrink-0">
-                        <img src={avatar.image} alt={entry.name} className="h-12 w-12 rounded-full border-2 border-white dark:border-slate-700 object-cover shadow-sm" />
-                        <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#d8e3fb] text-[0.65rem] font-bold text-[#111c2d] dark:bg-slate-800 dark:text-white">
-                          {index + 1}
-                        </span>
-                      </div>
+                      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#f0edff] text-xs font-bold text-[#3525cd] dark:bg-slate-800 dark:text-indigo-300">
+                        {index + 1}
+                      </span>
+                      <img src={avatar.image} alt="" className="h-10 w-10 rounded-full border border-white dark:border-slate-700 object-cover" />
                       <div>
-                        <p className="text-sm font-bold uppercase tracking-[0.08em] text-[#111c2d] dark:text-white">{entry.name}</p>
-                        <p className="text-[0.7rem] font-bold uppercase tracking-[0.14em] text-[#3525cd] dark:text-indigo-300">{entry.rank}</p>
+                        <p className="text-sm font-semibold text-[#111c2d] dark:text-white">{rank.name}</p>
+                        <p className="text-xs uppercase tracking-[0.16em] text-[#7d8395] dark:text-slate-400">{rank.rank}</p>
                       </div>
                     </div>
-                    <p className="text-[1.75rem] font-bold tracking-[-0.04em] text-[#3525cd] dark:text-white">
-                      {entry.score >= 1000 ? `${(entry.score / 1000).toFixed(1)}k` : formatNumber(entry.score)}
-                    </p>
+                    <span className="font-display text-sm font-bold text-[#3525cd] dark:text-indigo-400">{formatNumber(rank.score)}</span>
                   </div>
                 );
               })}
             </div>
-          </motion.aside>
-        </section>
 
-        <section className="mt-8 grid gap-4 sm:grid-cols-3">
-          {[
-            ["Boards", "3", "4 x 4, 5 x 6, and 6 x 6"],
-            ["Top score", formatNumber(bestScore), "Best recorded run"],
-            ["Players", formatNumber(totalPlayers), "Accounts on the board"],
-          ].map(([label, value, note]) => (
-            <div key={label} className="glass-panel rounded-[1.6rem] px-5 py-5 text-center shadow-[0_12px_30px_rgba(53,37,205,0.05)] dark:border dark:border-slate-800 dark:bg-slate-900/90">
-              <p className="text-[0.68rem] font-semibold uppercase tracking-[0.22em] text-[#7d8395] dark:text-slate-400">{label}</p>
-              <p className="mt-2 text-[2rem] font-bold tracking-[-0.05em] text-[#3525cd] dark:text-white">{value}</p>
-              <p className="mt-1 text-sm text-[#5a6174] dark:text-slate-300">{note}</p>
+            <div className="mt-5 grid grid-cols-2 gap-3 border-t border-[#ececf6] pt-4 dark:border-slate-800">
+              <div className="rounded-2xl bg-[#f8f9ff] p-3 text-center dark:bg-slate-950">
+                <p className="text-xs uppercase tracking-[0.2em] text-[#7d8395] dark:text-slate-400">Peak Rating</p>
+                <p className="mt-1 font-display text-xl font-bold text-[#3525cd] dark:text-indigo-400">{formatNumber(bestScore)}</p>
+              </div>
+              <div className="rounded-2xl bg-[#f8f9ff] p-3 text-center dark:bg-slate-950">
+                <p className="text-xs uppercase tracking-[0.2em] text-[#7d8395] dark:text-slate-400">Operatives</p>
+                <p className="mt-1 font-display text-xl font-bold text-[#111c2d] dark:text-white">{formatNumber(totalPlayers)}</p>
+              </div>
             </div>
-          ))}
+          </motion.aside>
         </section>
 
         <section className="mt-10">
@@ -233,6 +246,39 @@ export const LandingRoute = () => {
             <p className="mt-4 text-base leading-8 text-[#586074] dark:text-slate-300">
               Your leaderboard position uses your strongest eligible run, while every saved run keeps adding account points for long-term progress.
             </p>
+          </div>
+        </section>
+
+        {/* Klyvex Studios Studio Spotlight */}
+        <section className="mt-10 glass-panel overflow-hidden rounded-[2.2rem] p-6 sm:p-8 shadow-[0_18px_40px_rgba(53,37,205,0.08)] dark:border dark:border-slate-800 dark:bg-slate-900/90">
+          <div className="flex flex-col items-center justify-between gap-6 md:flex-row text-center md:text-left">
+            <div className="flex flex-col items-center gap-5 md:flex-row">
+              <img
+                src="/klyvex_logo.png"
+                alt="Klyvex Studios"
+                className="h-16 w-16 rounded-2xl object-cover shadow-lg ring-2 ring-indigo-300 dark:ring-indigo-700 sm:h-20 sm:w-20"
+              />
+              <div>
+                <div className="inline-flex items-center gap-2 rounded-full bg-indigo-500/10 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-indigo-600 dark:bg-indigo-900/40 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">
+                  Official Developer Studio
+                </div>
+                <h3 className="mt-2 text-2xl font-bold text-slate-900 dark:text-white sm:text-3xl">
+                  Klyvex Studios
+                </h3>
+                <p className="mt-1 text-sm text-slate-600 dark:text-slate-300 max-w-xl">
+                  Pioneering high-speed web games, cognitive brain training architectures, and interactive digital experiences.
+                </p>
+              </div>
+            </div>
+            <a
+              href="https://klyvex-studios.tech"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-6 py-3.5 text-sm font-bold text-white shadow-md transition hover:bg-slate-800 hover:scale-[1.02] dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100 shrink-0"
+            >
+              Visit Studio Portfolio
+              <span aria-hidden="true">&rarr;</span>
+            </a>
           </div>
         </section>
 

@@ -1,18 +1,30 @@
 {
-  "name": "MindGrid: Neural Clash",
+  "name": "MindGrid: Neural Clash - Memory Game by Klyvex Studios",
   "short_name": "MindGrid",
-  "description": "A fast online memory game with classic boards, score chasing, combos, ranks, and leaderboards.",
+  "description": "A high-performance online memory game with multiplayer battles, speed sprint races, combo scoring, and global leaderboards. Developed by Klyvex Studios.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#f6f8ff",
+  "orientation": "any",
+  "background_color": "#0b0f19",
   "theme_color": "#4f46e5",
+  "categories": ["games", "puzzle", "brain training", "multiplayer", "education"],
+  "developer": {
+    "name": "Klyvex Studios",
+    "url": "https://klyvex-studios.tech"
+  },
   "icons": [
     {
       "src": "/favico.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
+    },
+    {
+      "src": "/klyvex_logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
     }
   ]
 }

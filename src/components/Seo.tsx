@@ -5,25 +5,25 @@ const SITE_URL = "https://neuralclash.dev";
 
 const routeMeta: Record<string, { title: string; description: string; robots?: string }> = {
   "/": {
-    title: "MindGrid: Neural Clash - Online Memory Game",
+    title: "MindGrid: Neural Clash - Play Free Online Memory Game by Klyvex Studios",
     description:
-      "Play MindGrid: Neural Clash, a fast online memory game with classic boards, score chasing, combos, ranks, and a Hall of Fame leaderboard.",
+      "Play MindGrid: Neural Clash, the ultimate competitive online memory game by Klyvex Studios. Real-time multiplayer duels, speed sprint races, solo boards, combo streaks, and global Hall of Fame leaderboards.",
   },
   "/play": {
-    title: "Play MindGrid - Choose Your Memory Board",
+    title: "Play MindGrid - Choose Your Memory Board | Klyvex Studios",
     description:
       "Choose a MindGrid board size and match type, then start a focused single-player memory challenge.",
     robots: "noindex, nofollow",
   },
   "/ranks": {
-    title: "MindGrid Ranks - Public Memory Game Leaderboard",
+    title: "Global Leaderboards & Hall of Fame - MindGrid: Neural Clash",
     description:
-      "View public MindGrid ranks, top memory game players, ratings, total points, best scores, accuracy, combo, and time.",
+      "View live MindGrid global ranks, top memory game operatives, ratings, total points, best scores, accuracy, max combo, and multiplayer win stats.",
   },
   "/contact": {
-    title: "Contact MindGrid - Feedback and Support",
+    title: "Contact & Player Support - MindGrid: Neural Clash | Klyvex Studios",
     description:
-      "Contact MindGrid for player feedback, bug reports, account support, and game improvement ideas.",
+      "Contact Klyvex Studios and the MindGrid team for player support, feature suggestions, bug reports, and partnership inquiries.",
   },
   "/hall-of-fame": {
     title: "MindGrid Hall of Fame - Memory Game Leaderboard",
@@ -32,13 +32,13 @@ const routeMeta: Record<string, { title: string; description: string; robots?: s
     robots: "noindex, nofollow",
   },
   "/login": {
-    title: "Login - MindGrid",
-    description: "Log in to your MindGrid account.",
+    title: "Login - MindGrid: Neural Clash",
+    description: "Log in to your MindGrid account to sync your memory ratings, multiplayer stats, and founder perks.",
     robots: "noindex, nofollow",
   },
   "/register": {
-    title: "Create Account - MindGrid",
-    description: "Create a MindGrid account to save progress and leaderboard runs.",
+    title: "Create Account - MindGrid: Neural Clash",
+    description: "Create a free MindGrid account to unlock multiplayer battles, profile badges, and global rankings.",
     robots: "noindex, nofollow",
   },
   "/forgot-password": {
@@ -67,33 +67,41 @@ const routeMeta: Record<string, { title: string; description: string; robots?: s
     robots: "noindex, nofollow",
   },
   "/cyberpath": {
-    title: "MindGrid CyberPath Edition - Cybersecurity Career Memory Game",
-    description:
-      "Play MindGrid CyberPath Edition, a special event memory game for learning cybersecurity career paths, GitHub terms, and safe security scenarios.",
+    title: "CyberPath - MindGrid",
+    description: "Archived event page.",
+    robots: "noindex, nofollow",
   },
   "/cyberpath/play": {
     title: "CyberPath Rounds - MindGrid",
-    description: "Play the CyberPath Edition memory rounds.",
+    description: "Archived event page.",
     robots: "noindex, nofollow",
   },
   "/cyberpath/bonus": {
     title: "CyberPath Bonus - MindGrid",
-    description: "Complete safe CyberPath bonus challenges.",
+    description: "Archived event page.",
     robots: "noindex, nofollow",
   },
   "/cyberpath/results": {
     title: "CyberPath Results - MindGrid",
-    description: "View CyberPath Edition results.",
+    description: "Archived event page.",
     robots: "noindex, nofollow",
   },
   "/cyberpath/live": {
-    title: "CyberPath Live Leaderboard - MindGrid",
-    description: "View the CyberPath Edition live seminar leaderboard.",
+    title: "CyberPath Live - MindGrid",
+    description: "Archived event page.",
     robots: "noindex, nofollow",
   },
 };
 
 const dynamicMeta = (pathname: string) => {
+  if (pathname.startsWith("/cyberpath")) {
+    return {
+      title: "CyberPath - MindGrid",
+      description: "Archived event page.",
+      robots: "noindex, nofollow",
+    };
+  }
+
   if (pathname.startsWith("/results/")) {
     return {
       title: "Run Results - MindGrid",
@@ -104,7 +112,7 @@ const dynamicMeta = (pathname: string) => {
 
   if (pathname.startsWith("/profile")) {
     return {
-      title: "Player Profile - MindGrid",
+      title: "Player Profile - MindGrid: Neural Clash",
       description: "View MindGrid player progress and recent runs.",
       robots: "noindex, nofollow",
     };
@@ -112,7 +120,7 @@ const dynamicMeta = (pathname: string) => {
 
   if (pathname.startsWith("/multiplayer")) {
     return {
-      title: "Multiplayer Clash - MindGrid",
+      title: "Multiplayer Clash Arena - MindGrid",
       description: "Online multiplayer memory game room.",
       robots: "noindex, nofollow",
     };
@@ -158,16 +166,34 @@ export const Seo = () => {
     const meta = dynamicMeta(pathname);
     const canonicalPath = meta.robots?.startsWith("noindex") ? "/" : pathname;
     const canonical = `${SITE_URL}${canonicalPath === "/" ? "/" : canonicalPath}`;
+    const ogImage = `${SITE_URL}/og-image.png`;
 
     document.title = meta.title;
     setMetaByName("description", meta.description);
     setMetaByName("robots", meta.robots ?? "index, follow");
     setCanonical(canonical);
+
+    // OpenGraph Tags
+    setMetaByProperty("og:type", "website");
+    setMetaByProperty("og:site_name", "MindGrid: Neural Clash | Klyvex Studios");
     setMetaByProperty("og:title", meta.title);
     setMetaByProperty("og:description", meta.description);
     setMetaByProperty("og:url", canonical);
+    setMetaByProperty("og:image", ogImage);
+    setMetaByProperty("og:image:secure_url", ogImage);
+    setMetaByProperty("og:image:type", "image/png");
+    setMetaByProperty("og:image:width", "1200");
+    setMetaByProperty("og:image:height", "630");
+    setMetaByProperty("og:image:alt", "MindGrid: Neural Clash by Klyvex Studios");
+
+    // Twitter Card Tags
+    setMetaByName("twitter:card", "summary_large_image");
+    setMetaByName("twitter:site", "@klyvex_studios");
+    setMetaByName("twitter:creator", "@klyvex_studios");
     setMetaByName("twitter:title", meta.title);
     setMetaByName("twitter:description", meta.description);
+    setMetaByName("twitter:image", ogImage);
+    setMetaByName("twitter:image:alt", "MindGrid: Neural Clash by Klyvex Studios");
   }, [pathname]);
 
   return null;

@@ -1,22 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://neuralclash.dev/</loc>
-    <changefreq>weekly</changefreq>
+    <lastmod>2026-08-18</lastmod>
+    <changefreq>daily</changefreq>
     <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://neuralclash.dev/banner.png</image:loc>
+      <image:title>MindGrid: Neural Clash - Competitive Online Memory Game</image:title>
+      <image:caption>MindGrid: Neural Clash - Free multiplayer and solo memory puzzle game by Klyvex Studios</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://neuralclash.dev/klyvex_logo.png</image:loc>
+      <image:title>Klyvex Studios Official Logo</image:title>
+      <image:caption>Klyvex Studios - Interactive Tech &amp; Game Studio</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://neuralclash.dev/ranks</loc>
-    <changefreq>daily</changefreq>
+    <lastmod>2026-08-18</lastmod>
+    <changefreq>hourly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://neuralclash.dev/contact</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://neuralclash.dev/cyberpath</loc>
+    <lastmod>2026-08-18</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
