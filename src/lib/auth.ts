@@ -95,14 +95,11 @@ const mapRemoteProfile = (
   rank: calculateRank(row?.xp ?? 0),
   createdAt: row?.createdAt ?? new Date().toISOString(),
   isAdmin,
-  isBetaTester:
-    row?.isBetaTester ??
-    row?.is_beta_tester ??
-    isBetaTesterUser(
-      row?.username ?? fallbackUsername,
-      Boolean(row?.isBetaTester ?? row?.is_beta_tester),
-      row?.createdAt ?? (row as any)?.created_at,
-    ),
+  isBetaTester: isBetaTesterUser(
+    row?.username ?? fallbackUsername,
+    (row as any)?.is_beta_tester ?? row?.isBetaTester,
+    row?.createdAt ?? (row as any)?.created_at,
+  ),
   hasClaimedBetaReward:
     Boolean(row?.hasClaimedBetaReward ?? (row as any)?.has_claimed_beta_reward) ||
     Boolean((row as any)?.user_metadata?.has_claimed_beta_reward),
@@ -174,7 +171,7 @@ const mapLeaderboardRow = (row: any, meta?: { isAdmin: boolean; isBetaTester: bo
   isAdmin: meta?.isAdmin ?? (canBeAdminFromEnv(row.username) || Boolean(row.is_admin || row.isAdmin)),
   isBetaTester:
     meta?.isBetaTester ??
-    isBetaTesterUser(row.username, Boolean(row.is_beta_tester || row.isBetaTester), row.played_at),
+    isBetaTesterUser(row.username, row.is_beta_tester ?? row.isBetaTester, row.played_at),
   audit: normalizeAudit({
     suspicionScore: row.suspicion_score,
     suspicionReasons: row.suspicion_reasons,
@@ -209,7 +206,7 @@ const mapAccountLeaderboardRow = (row: any, meta?: { isAdmin: boolean; isBetaTes
   isAdmin: meta?.isAdmin ?? (canBeAdminFromEnv(row.username) || Boolean(row.is_admin || row.isAdmin)),
   isBetaTester:
     meta?.isBetaTester ??
-    isBetaTesterUser(row.username, Boolean(row.is_beta_tester || row.isBetaTester), row.best_played_at),
+    isBetaTesterUser(row.username, row.is_beta_tester ?? row.isBetaTester, row.best_played_at),
   audit: createEmptyAudit(),
 });
 
@@ -253,8 +250,18 @@ const parseBetaTesterUsernames = (): string[] => {
     .filter(Boolean);
 };
 
-const isBetaTesterUser = (username?: string, isBetaTesterFlag?: boolean, createdAt?: string): boolean => {
+export const isBetaTesterUser = (
+  username?: string,
+  isBetaTesterFlag?: boolean | null,
+  createdAt?: string,
+): boolean => {
+  // If explicitly revoked or disabled in database/profile (is_beta_tester is false), NEVER grant beta status!
+  if (isBetaTesterFlag === false) return false;
+
+  // If explicitly granted in database/profile (is_beta_tester is true)
   if (isBetaTesterFlag === true) return true;
+
+  // Otherwise (null or undefined), fallback to whitelist or pre-launch registration date:
   const cleanUsername = username ? normalizeUsername(username) : "";
   if (cleanUsername) {
     if (BETA_TESTER_WHITELIST.has(cleanUsername)) return true;

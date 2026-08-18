@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { SparklesIcon, StarBadgeIcon, UserIcon } from "./AppIcons";
 import { avatarOptions } from "../data/avatars";
+import { isBetaTesterUser } from "../lib/auth";
 import { supabase } from "../lib/supabase";
 import { formatNumber } from "../lib/utils";
 import { useAppContext } from "../state/AppContext";
@@ -35,25 +36,56 @@ export const PerksAdminPanel = () => {
   }, []);
 
   const toggleNeuralTesterStatus = async (userId: string, currentStatus: boolean) => {
-    if (!supabase) return;
     const newStatus = !currentStatus;
     try {
-      await supabase.from("profiles").update({ is_beta_tester: newStatus }).eq("id", userId);
+      if (supabase) {
+        const { error } = await supabase.from("profiles").update({ is_beta_tester: newStatus }).eq("id", userId);
+        if (error) throw error;
+      }
+
       setProfiles((prev) =>
         prev.map((p) => (p.id === userId ? { ...p, is_beta_tester: newStatus, isBetaTester: newStatus } : p)),
       );
+
+      // Also sync with localStorage if in offline/demo mode or local session
+      if (typeof window !== "undefined") {
+        try {
+          const rawUsers = window.localStorage.getItem("mindgrid.users");
+          if (rawUsers) {
+            const parsed = JSON.parse(rawUsers);
+            const updated = parsed.map((u: any) =>
+              u.profile?.id === userId
+                ? { ...u, profile: { ...u.profile, is_beta_tester: newStatus, isBetaTester: newStatus } }
+                : u,
+            );
+            window.localStorage.setItem("mindgrid.users", JSON.stringify(updated));
+          }
+          const rawSession = window.localStorage.getItem("mindgrid.player_session");
+          if (rawSession) {
+            const parsedSession = JSON.parse(rawSession);
+            if (parsedSession?.profile?.id === userId) {
+              parsedSession.profile.is_beta_tester = newStatus;
+              parsedSession.profile.isBetaTester = newStatus;
+              window.localStorage.setItem("mindgrid.player_session", JSON.stringify(parsedSession));
+            }
+          }
+        } catch {
+          // ignore storage error
+        }
+      }
+
       if (newStatus) {
         try {
           await sendAdminEmail({
             recipientIds: [userId],
-            subject: "🏆 Official Neural Tester Status Granted - MindGrid",
-            message: `Hello Operative,\n\nYou have officially been granted Neural Tester status on MindGrid: Neural Clash!\n\nLog in to your account at https://neuralclash.dev to claim your +1,000 Founder XP Boost, exclusive Neural Tester title badge, and glowing gold profile avatar ring.\n\nThank you for testing MindGrid!\n- MindGrid Founder Architect`,
+            subject: "Official Neural Tester Status Granted - MindGrid",
+            message: `Hello Operative,\n\nYou have officially been granted Neural Tester status on MindGrid: Neural Clash!\n\nLog in to your account at https://neuralclash.dev to claim your +1,000 Founder XP Boost, exclusive Neural Tester title, and glowing gold profile avatar ring.\n\nThank you for testing MindGrid!\n- MindGrid Founder Architect`,
           });
         } catch (emailErr) {
           console.warn("Email notify error:", emailErr);
         }
       }
-      setStatusMsg(`Updated Neural Tester status to ${newStatus ? "ACTIVE" : "INACTIVE"} and sent email DM.`);
+      setStatusMsg(`Updated Neural Tester status to ${newStatus ? "ACTIVE" : "REVOKED"} for this operative.`);
     } catch (err) {
       setErrorMsg("Failed to update tester status.");
     }
@@ -64,7 +96,9 @@ export const PerksAdminPanel = () => {
   };
 
   const selectAllTesters = () => {
-    const testerIds = profiles.filter((p) => p.is_beta_tester || p.isBetaTester).map((p) => p.id);
+    const testerIds = profiles
+      .filter((p) => isBetaTesterUser(p.username, p.is_beta_tester ?? p.isBetaTester, p.created_at))
+      .map((p) => p.id);
     setSelectedUserIds(testerIds);
   };
 
@@ -180,7 +214,7 @@ export const PerksAdminPanel = () => {
               profiles.map((p) => {
                 const avatar = avatarOptions.find((a) => a.id === p.avatar_id) ?? avatarOptions[0];
                 const isSelected = selectedUserIds.includes(p.id);
-                const isTester = Boolean(p.is_beta_tester || p.isBetaTester);
+                const isTester = isBetaTesterUser(p.username, p.is_beta_tester ?? p.isBetaTester, p.created_at);
 
                 return (
                   <div

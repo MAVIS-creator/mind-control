@@ -499,7 +499,12 @@ const parseBetaTesterUsernames = (): string[] => {
     .filter(Boolean);
 };
 
-const isBetaTesterUser = (username?: string, isBetaTesterFlag?: boolean, createdAt?: string): boolean => {
+const isBetaTesterUser = (
+  username?: string,
+  isBetaTesterFlag?: boolean | null,
+  createdAt?: string,
+): boolean => {
+  if (isBetaTesterFlag === false) return false;
   if (isBetaTesterFlag === true) return true;
   const cleanUsername = username?.trim().toLowerCase();
   if (cleanUsername) {
@@ -678,7 +683,7 @@ export const fetchMultiplayerLeaderboard = async (): Promise<MultiplayerLeaderbo
       const winRate = compTotal > 0 ? (multiplayerWins / compTotal) * 100 : 0;
 
       const isAdmin = isUserAdmin(p.username, p.is_admin || p.isAdmin);
-      const isBetaTester = isBetaTesterUser(p.username, Boolean(p.is_beta_tester || p.isBetaTester), p.created_at || p.createdAt);
+      const isBetaTester = isBetaTesterUser(p.username, p.is_beta_tester ?? p.isBetaTester, p.created_at || p.createdAt);
 
       return {
         userId: p.id,
