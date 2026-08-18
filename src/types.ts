@@ -105,6 +105,8 @@ export type LeaderboardEntry = {
   moveLimit: number;
   playedAt: string;
   audit: RunAudit;
+  isAdmin?: boolean;
+  isBetaTester?: boolean;
 };
 
 export type AuthSession = {

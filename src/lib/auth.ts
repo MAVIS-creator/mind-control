@@ -148,7 +148,7 @@ const toStoredMatchType = (matchType: string | null | undefined): MatchType =>
     ? matchType
     : "standard";
 
-const mapLeaderboardRow = (row: any): LeaderboardEntry => ({
+const mapLeaderboardRow = (row: any, meta?: { isAdmin: boolean; isBetaTester: boolean }): LeaderboardEntry => ({
   id: row.id,
   userId: row.user_id,
   username: row.username,
@@ -167,6 +167,11 @@ const mapLeaderboardRow = (row: any): LeaderboardEntry => ({
   movesUsed: row.moves_used ?? 0,
   moveLimit: row.move_limit ?? 0,
   playedAt: row.played_at,
+  isAdmin: meta?.isAdmin ?? (canBeAdminFromEnv(row.username) || Boolean(row.is_admin || row.isAdmin)),
+  isBetaTester:
+    meta?.isBetaTester ??
+    (Boolean(row.is_beta_tester || row.isBetaTester) ||
+      (new Date(row.played_at || Date.now()).getTime() <= new Date("2026-08-16T04:30:00.000Z").getTime())),
   audit: normalizeAudit({
     suspicionScore: row.suspicion_score,
     suspicionReasons: row.suspicion_reasons,
@@ -179,7 +184,7 @@ const mapLeaderboardRow = (row: any): LeaderboardEntry => ({
   }),
 });
 
-const mapAccountLeaderboardRow = (row: any): LeaderboardEntry => ({
+const mapAccountLeaderboardRow = (row: any, meta?: { isAdmin: boolean; isBetaTester: boolean }): LeaderboardEntry => ({
   id: `account-${row.user_id}`,
   userId: row.user_id,
   username: row.username,
@@ -198,6 +203,11 @@ const mapAccountLeaderboardRow = (row: any): LeaderboardEntry => ({
   movesUsed: row.best_moves_used ?? 0,
   moveLimit: row.best_move_limit ?? 0,
   playedAt: row.best_played_at,
+  isAdmin: meta?.isAdmin ?? (canBeAdminFromEnv(row.username) || Boolean(row.is_admin || row.isAdmin)),
+  isBetaTester:
+    meta?.isBetaTester ??
+    (Boolean(row.is_beta_tester || row.isBetaTester) ||
+      (new Date(row.best_played_at || Date.now()).getTime() <= new Date("2026-08-16T04:30:00.000Z").getTime())),
   audit: createEmptyAudit(),
 });
 
@@ -324,7 +334,7 @@ const fetchRemoteLeaderboards = async () => {
   }
 
   try {
-    const [{ data: categoryRows, error: categoryError }, { data: accountRows, error: accountError }] =
+    const [{ data: categoryRows, error: categoryError }, { data: accountRows, error: accountError }, { data: profileRows }] =
       await Promise.all([
         supabase
           .from("public_leaderboard_rankings")
@@ -340,27 +350,69 @@ const fetchRemoteLeaderboards = async () => {
           .order("total_points", { ascending: false })
           .order("best_duration", { ascending: true })
           .limit(200),
+        supabase.from("profiles").select("id, username, is_admin, is_beta_tester, created_at"),
       ]);
 
     if (categoryError) throw categoryError;
     if (accountError) throw accountError;
 
-    const leaderboard = (categoryRows ?? []).map(mapLeaderboardRow) satisfies LeaderboardEntry[];
-    const accountLeaderboard = (accountRows ?? []).map(mapAccountLeaderboardRow) satisfies LeaderboardEntry[];
+    const profileMetaMap = new Map<string, { isAdmin: boolean; isBetaTester: boolean }>();
+    (profileRows || []).forEach((p) => {
+      const isAdmin = canBeAdminFromEnv(p.username) || Boolean(p.is_admin);
+      const isBetaTester =
+        Boolean(p.is_beta_tester) ||
+        (new Date(p.created_at || Date.now()).getTime() <= new Date("2026-08-16T04:30:00.000Z").getTime());
+      profileMetaMap.set(p.id, { isAdmin, isBetaTester });
+      if (p.username) profileMetaMap.set(p.username.toLowerCase(), { isAdmin, isBetaTester });
+    });
+
+    const leaderboard = (categoryRows ?? []).map((r) =>
+      mapLeaderboardRow(r, profileMetaMap.get(r.user_id) || (r.username ? profileMetaMap.get(r.username.toLowerCase()) : undefined)),
+    ) satisfies LeaderboardEntry[];
+    const accountLeaderboard = (accountRows ?? []).map((r) =>
+      mapAccountLeaderboardRow(r, profileMetaMap.get(r.user_id) || (r.username ? profileMetaMap.get(r.username.toLowerCase()) : undefined)),
+    ) satisfies LeaderboardEntry[];
     saveLeaderboards(leaderboard, accountLeaderboard);
     return { leaderboard, accountLeaderboard };
   } catch {
-    const { data: runRows, error: runsError } = await supabase
-      .from("game_runs")
-      .select("*")
-      .order("rating", { ascending: false })
-      .order("score", { ascending: false })
-      .order("duration", { ascending: true })
-      .limit(500);
+    const [{ data: runRows, error: runsError }, { data: profileRows }] = await Promise.all([
+      supabase
+        .from("game_runs")
+        .select("*")
+        .order("rating", { ascending: false })
+        .order("score", { ascending: false })
+        .order("duration", { ascending: true })
+        .limit(500),
+      supabase.from("profiles").select("id, username, is_admin, is_beta_tester, created_at"),
+    ]);
 
     if (runsError) throw runsError;
 
+    const profileMetaMap = new Map<string, { isAdmin: boolean; isBetaTester: boolean }>();
+    (profileRows || []).forEach((p) => {
+      const isAdmin = canBeAdminFromEnv(p.username) || Boolean(p.is_admin);
+      const isBetaTester =
+        Boolean(p.is_beta_tester) ||
+        (new Date(p.created_at || Date.now()).getTime() <= new Date("2026-08-16T04:30:00.000Z").getTime());
+      profileMetaMap.set(p.id, { isAdmin, isBetaTester });
+      if (p.username) profileMetaMap.set(p.username.toLowerCase(), { isAdmin, isBetaTester });
+    });
+
     const next = buildPublicLeaderboardsFromRuns(runRows ?? []);
+    next.leaderboard.forEach((e) => {
+      const meta = profileMetaMap.get(e.userId) || (e.username ? profileMetaMap.get(e.username.toLowerCase()) : undefined);
+      if (meta) {
+        e.isAdmin = meta.isAdmin;
+        e.isBetaTester = meta.isBetaTester;
+      }
+    });
+    next.accountLeaderboard.forEach((e) => {
+      const meta = profileMetaMap.get(e.userId) || (e.username ? profileMetaMap.get(e.username.toLowerCase()) : undefined);
+      if (meta) {
+        e.isAdmin = meta.isAdmin;
+        e.isBetaTester = meta.isBetaTester;
+      }
+    });
     saveLeaderboards(next.leaderboard, next.accountLeaderboard);
     return next;
   }

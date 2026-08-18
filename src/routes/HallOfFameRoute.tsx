@@ -359,17 +359,39 @@ export const HallOfFameRoute = () => {
                     <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-white text-lg font-bold text-slate-900 shadow-sm dark:bg-slate-900 dark:text-white">
                       {index + 1}
                     </div>
-                    <img
-                      src={avatar.image}
-                      alt={avatar.name}
-                      className="mx-auto mt-4 h-24 w-24 rounded-full border-4 border-white bg-slate-100 shadow-md dark:border-slate-800 dark:bg-slate-900"
-                    />
-                    <Link
-                      to={`/profile/${entry.userId}`}
-                      className="mt-4 inline-block text-xl font-semibold text-slate-900 hover:text-[#3525cd] dark:text-white dark:hover:text-indigo-400"
+                    <div
+                      className={`mx-auto mt-4 w-fit rounded-full p-[3px] transition-all duration-300 ${
+                        entry.isAdmin
+                          ? "bg-gradient-to-r from-sky-400 via-indigo-500 to-amber-400 shadow-[0_0_24px_rgba(14,165,233,0.55)] dark:shadow-[0_0_28px_rgba(56,189,248,0.75)]"
+                          : entry.isBetaTester
+                          ? "bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 shadow-[0_0_20px_rgba(245,158,11,0.5)] dark:shadow-[0_0_24px_rgba(245,158,11,0.7)]"
+                          : ""
+                      }`}
                     >
-                      {entry.username}
-                    </Link>
+                      <img
+                        src={avatar.image}
+                        alt={avatar.name}
+                        className="h-24 w-24 rounded-full border-4 border-white bg-slate-100 shadow-md dark:border-slate-800 dark:bg-slate-900 object-cover"
+                      />
+                    </div>
+                    <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+                      <Link
+                        to={`/profile/${entry.userId}`}
+                        className="inline-block text-xl font-semibold text-slate-900 hover:text-[#3525cd] dark:text-white dark:hover:text-indigo-400"
+                      >
+                        {entry.username}
+                      </Link>
+                      {entry.isAdmin && (
+                        <span className="rounded-full bg-gradient-to-r from-sky-500 to-indigo-600 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-white shadow-md border border-sky-300">
+                          Founder Architect
+                        </span>
+                      )}
+                      {entry.isBetaTester && !entry.isAdmin && (
+                        <span className="rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-slate-950 shadow-md border border-amber-300">
+                          Neural Tester
+                        </span>
+                      )}
+                    </div>
                     <p className="mt-1 text-sm font-bold uppercase tracking-[0.18em] text-[#3525cd] dark:text-indigo-400">
                       {formatNumber(pts)} MP Points
                     </p>
@@ -404,17 +426,39 @@ export const HallOfFameRoute = () => {
                   <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-white text-lg font-bold text-slate-900 shadow-sm dark:bg-slate-900 dark:text-white">
                     {index + 1}
                   </div>
-                  <img
-                    src={avatar.image}
-                    alt={avatar.name}
-                    className="mx-auto mt-4 h-24 w-24 rounded-full border-4 border-white bg-slate-100 shadow-md dark:border-slate-800 dark:bg-slate-900"
-                  />
-                  <Link
-                    to={`/profile/${entry.userId}`}
-                    className="mt-4 inline-block text-xl font-semibold text-slate-900 hover:text-[#3525cd] dark:text-white dark:hover:text-indigo-400"
+                  <div
+                    className={`mx-auto mt-4 w-fit rounded-full p-[3px] transition-all duration-300 ${
+                      entry.isAdmin
+                        ? "bg-gradient-to-r from-sky-400 via-indigo-500 to-amber-400 shadow-[0_0_24px_rgba(14,165,233,0.55)] dark:shadow-[0_0_28px_rgba(56,189,248,0.75)]"
+                        : entry.isBetaTester
+                        ? "bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 shadow-[0_0_20px_rgba(245,158,11,0.5)] dark:shadow-[0_0_24px_rgba(245,158,11,0.7)]"
+                        : ""
+                    }`}
                   >
-                    {entry.username}
-                  </Link>
+                    <img
+                      src={avatar.image}
+                      alt={avatar.name}
+                      className="h-24 w-24 rounded-full border-4 border-white bg-slate-100 shadow-md dark:border-slate-800 dark:bg-slate-900 object-cover"
+                    />
+                  </div>
+                  <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+                    <Link
+                      to={`/profile/${entry.userId}`}
+                      className="inline-block text-xl font-semibold text-slate-900 hover:text-[#3525cd] dark:text-white dark:hover:text-indigo-400"
+                    >
+                      {entry.username}
+                    </Link>
+                    {entry.isAdmin && (
+                      <span className="rounded-full bg-gradient-to-r from-sky-500 to-indigo-600 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-white shadow-md border border-sky-300">
+                        Founder Architect
+                      </span>
+                    )}
+                    {entry.isBetaTester && !entry.isAdmin && (
+                      <span className="rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-slate-950 shadow-md border border-amber-300">
+                        Neural Tester
+                      </span>
+                    )}
+                  </div>
                   <p className="mt-1 text-sm uppercase tracking-[0.18em] text-[#3525cd] dark:text-indigo-400">
                     {formatNumber(entry.rating)} rating
                   </p>
@@ -492,18 +536,40 @@ export const HallOfFameRoute = () => {
                           <td className="px-6 py-4 font-semibold text-slate-500 dark:text-slate-400">{index + 1}</td>
                           <td className="px-6 py-4">
                             <div className="flex items-center gap-3">
-                              <img
-                                src={avatar.image}
-                                alt={avatar.name}
-                                className="h-11 w-11 rounded-full border-2 border-white bg-slate-100 object-cover dark:border-slate-800 dark:bg-slate-900"
-                              />
+                              <div
+                                className={`rounded-full p-[2px] transition-all duration-300 shrink-0 ${
+                                  entry.isAdmin
+                                    ? "bg-gradient-to-r from-sky-400 via-indigo-500 to-amber-400 shadow-[0_0_12px_rgba(14,165,233,0.55)] dark:shadow-[0_0_16px_rgba(56,189,248,0.7)]"
+                                    : entry.isBetaTester
+                                    ? "bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.5)] dark:shadow-[0_0_14px_rgba(245,158,11,0.65)]"
+                                    : ""
+                                }`}
+                              >
+                                <img
+                                  src={avatar.image}
+                                  alt={avatar.name}
+                                  className="h-11 w-11 rounded-full border-2 border-white bg-slate-100 object-cover dark:border-slate-800 dark:bg-slate-900"
+                                />
+                              </div>
                               <div>
-                                <Link
-                                  to={`/profile/${entry.userId}`}
-                                  className="font-semibold text-slate-900 hover:text-[#3525cd] dark:text-white dark:hover:text-indigo-400"
-                                >
-                                  {entry.username}
-                                </Link>
+                                <div className="flex flex-wrap items-center gap-2">
+                                  <Link
+                                    to={`/profile/${entry.userId}`}
+                                    className="font-semibold text-slate-900 hover:text-[#3525cd] dark:text-white dark:hover:text-indigo-400"
+                                  >
+                                    {entry.username}
+                                  </Link>
+                                  {entry.isAdmin && (
+                                    <span className="rounded-full bg-gradient-to-r from-sky-500 to-indigo-600 px-2 py-0.5 text-[9px] font-black uppercase tracking-wider text-white shadow-sm border border-sky-300">
+                                      Founder Architect
+                                    </span>
+                                  )}
+                                  {entry.isBetaTester && !entry.isAdmin && (
+                                    <span className="rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 px-2 py-0.5 text-[9px] font-black uppercase tracking-wider text-slate-950 shadow-sm border border-amber-300">
+                                      Neural Tester
+                                    </span>
+                                  )}
+                                </div>
                                 <div className="text-xs uppercase tracking-wider text-slate-400 dark:text-slate-500">{entry.rank}</div>
                               </div>
                             </div>
@@ -553,18 +619,40 @@ export const HallOfFameRoute = () => {
                           <td className="px-6 py-4 font-semibold text-slate-500 dark:text-slate-400">{index + 1}</td>
                           <td className="px-6 py-4">
                             <div className="flex items-center gap-3">
-                              <img
-                                src={avatar.image}
-                                alt={avatar.name}
-                                className="h-11 w-11 rounded-full border-2 border-white bg-slate-100 object-cover dark:border-slate-800 dark:bg-slate-900"
-                              />
+                              <div
+                                className={`rounded-full p-[2px] transition-all duration-300 shrink-0 ${
+                                  entry.isAdmin
+                                    ? "bg-gradient-to-r from-sky-400 via-indigo-500 to-amber-400 shadow-[0_0_12px_rgba(14,165,233,0.55)] dark:shadow-[0_0_16px_rgba(56,189,248,0.7)]"
+                                    : entry.isBetaTester
+                                    ? "bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.5)] dark:shadow-[0_0_14px_rgba(245,158,11,0.65)]"
+                                    : ""
+                                }`}
+                              >
+                                <img
+                                  src={avatar.image}
+                                  alt={avatar.name}
+                                  className="h-11 w-11 rounded-full border-2 border-white bg-slate-100 object-cover dark:border-slate-800 dark:bg-slate-900"
+                                />
+                              </div>
                               <div>
-                                <Link
-                                  to={`/profile/${entry.userId}`}
-                                  className="font-medium text-slate-900 hover:text-[#3525cd] dark:text-white dark:hover:text-indigo-400"
-                                >
-                                  {entry.username}
-                                </Link>
+                                <div className="flex flex-wrap items-center gap-2">
+                                  <Link
+                                    to={`/profile/${entry.userId}`}
+                                    className="font-medium text-slate-900 hover:text-[#3525cd] dark:text-white dark:hover:text-indigo-400"
+                                  >
+                                    {entry.username}
+                                  </Link>
+                                  {entry.isAdmin && (
+                                    <span className="rounded-full bg-gradient-to-r from-sky-500 to-indigo-600 px-2 py-0.5 text-[9px] font-black uppercase tracking-wider text-white shadow-sm border border-sky-300">
+                                      Founder Architect
+                                    </span>
+                                  )}
+                                  {entry.isBetaTester && !entry.isAdmin && (
+                                    <span className="rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 px-2 py-0.5 text-[9px] font-black uppercase tracking-wider text-slate-950 shadow-sm border border-amber-300">
+                                      Neural Tester
+                                    </span>
+                                  )}
+                                </div>
                                 <div className="text-xs uppercase tracking-[0.22em] text-slate-400 dark:text-slate-500">
                                   {matchTypeLabels[entry.matchType]} • {entry.gridSize}
                                 </div>

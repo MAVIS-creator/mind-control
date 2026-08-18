@@ -457,6 +457,8 @@ export type MultiplayerLeaderboardEntry = {
   avatarId: string;
   rank: string;
   xp: number;
+  isAdmin?: boolean;
+  isBetaTester?: boolean;
   multiplayerWins: number;
   multiplayerLosses: number;
   totalBattles: number;
@@ -467,6 +469,18 @@ export type MultiplayerLeaderboardEntry = {
   speedSprintPoints: number;
   coopPoints: number;
   modeStats: Record<MultiplayerGameMode, MultiplayerModeStats>;
+};
+
+const parseAdminUsernames = () =>
+  ((import.meta.env.VITE_ADMIN_USERNAMES as string | undefined) ?? "akint,admin,creator")
+    .split(",")
+    .map((name: string) => name.trim().toLowerCase())
+    .filter(Boolean);
+
+const isUserAdmin = (username?: string, isAdminFlag?: boolean) => {
+  if (isAdminFlag) return true;
+  if (!username) return false;
+  return parseAdminUsernames().includes(username.toLowerCase());
 };
 
 export const fetchMultiplayerLeaderboard = async (): Promise<MultiplayerLeaderboardEntry[]> => {
@@ -631,12 +645,19 @@ export const fetchMultiplayerLeaderboard = async (): Promise<MultiplayerLeaderbo
       const totalBattles = compTotal + st.coop.total;
       const winRate = compTotal > 0 ? (multiplayerWins / compTotal) * 100 : 0;
 
+      const isAdmin = isUserAdmin(p.username, p.is_admin || p.isAdmin);
+      const isBetaTester =
+        Boolean(p.is_beta_tester || p.isBetaTester) ||
+        (new Date(p.created_at || p.createdAt || Date.now()).getTime() <= new Date("2026-08-16T04:30:00.000Z").getTime());
+
       return {
         userId: p.id,
         username: p.username || "Agent",
-        avatarId: p.avatar_id || "cyber_grid",
+        avatarId: p.avatar_id || p.avatarId || "cyber_grid",
         rank: p.rank || "Neural Rookie",
         xp: p.xp || 0,
+        isAdmin,
+        isBetaTester,
         multiplayerWins,
         multiplayerLosses,
         totalBattles,
