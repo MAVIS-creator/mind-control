@@ -483,16 +483,35 @@ const isUserAdmin = (username?: string, isAdminFlag?: boolean) => {
   return parseAdminUsernames().includes(username.toLowerCase());
 };
 
-const parseBetaTesterUsernames = () =>
-  ((import.meta.env.VITE_BETA_TESTER_USERNAMES as string | undefined) ?? "ladiechamp,quantacipher,tracy426,tester,beta")
+const LAUNCH_DAY_CUTOFF = new Date("2026-08-16T04:30:00.000Z").getTime();
+
+const BETA_TESTER_WHITELIST = new Set([
+  "ladiechamp",
+  "quantacipher",
+  "tracy426",
+]);
+
+const parseBetaTesterUsernames = (): string[] => {
+  const envUsernames = (import.meta.env.VITE_BETA_TESTER_USERNAMES as string | undefined) ?? "";
+  return envUsernames
     .split(",")
     .map((name: string) => name.trim().toLowerCase())
     .filter(Boolean);
+};
 
-const isBetaTesterUser = (username?: string, isBetaTesterFlag?: boolean, createdAt?: string) => {
-  if (isBetaTesterFlag) return true;
-  if (username && parseBetaTesterUsernames().includes(username.toLowerCase())) return true;
-  if (createdAt && new Date(createdAt).getTime() <= new Date("2026-08-25T00:00:00.000Z").getTime()) return true;
+const isBetaTesterUser = (username?: string, isBetaTesterFlag?: boolean, createdAt?: string): boolean => {
+  if (isBetaTesterFlag === true) return true;
+  const cleanUsername = username?.trim().toLowerCase();
+  if (cleanUsername) {
+    if (BETA_TESTER_WHITELIST.has(cleanUsername)) return true;
+    if (parseBetaTesterUsernames().includes(cleanUsername)) return true;
+  }
+  if (createdAt) {
+    const timestamp = new Date(createdAt).getTime();
+    if (!Number.isNaN(timestamp) && timestamp <= LAUNCH_DAY_CUTOFF) {
+      return true;
+    }
+  }
   return false;
 };
 
