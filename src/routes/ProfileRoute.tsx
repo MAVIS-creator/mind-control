@@ -125,12 +125,12 @@ export const ProfileRoute = () => {
   const currentHighlights = useMemo(() => {
     if (profileMode === "multiplayer") {
       return [
+        ["Total MP Points", formatNumber(resolvedSnapshot.stats.multiplayerPoints ?? 0)],
+        ["Speed Race Points", formatNumber(resolvedSnapshot.stats.speedSprintPoints ?? 0)],
+        ["Turn Duel Points", formatNumber(resolvedSnapshot.stats.turnBasedPoints ?? 0)],
+        ["Co-Op Sync Points", formatNumber(resolvedSnapshot.stats.coopPoints ?? 0)],
         ["Multiplayer Wins", formatNumber(mpWins)],
-        ["Multiplayer Defeats", formatNumber(mpLosses)],
         ["Multiplayer Win Rate", formatPercent(mpWinRate)],
-        ["Total Battles", formatNumber(mpTotal)],
-        ["Co-Op Sync Clears", formatNumber(resolvedSnapshot.stats.coopClears ?? 0)],
-        ["Best Single Combo", `x${resolvedSnapshot.stats.bestCombo}`],
       ];
     }
     return [
@@ -141,7 +141,7 @@ export const ProfileRoute = () => {
       ["Best Accuracy", formatPercent(resolvedSnapshot.stats.bestAccuracy)],
       ["Best Combo", `x${resolvedSnapshot.stats.bestCombo}`],
     ];
-  }, [mpLosses, mpTotal, mpWinRate, mpWins, profileMode, resolvedSnapshot.stats]);
+  }, [mpTotal, mpWinRate, mpWins, profileMode, resolvedSnapshot.stats]);
 
   if (!session) {
     return <Navigate to="/login" replace />;
@@ -198,43 +198,27 @@ export const ProfileRoute = () => {
                         Neural Tester
                       </span>
                     )}
-                    {!isOwnProfile ? (
-                      <Link
-                        to="/hall-of-fame"
-                        className="rounded-full border border-[#d7dcf5] bg-white/78 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#3525cd] dark:border-slate-700 dark:bg-slate-900 dark:text-indigo-400"
-                      >
-                        Back to Ranks
-                      </Link>
-                    ) : null}
                   </div>
-                  <p className="mt-2 text-[1.45rem] text-[#464555] dark:text-slate-300">{resolvedSnapshot.profile.rank}</p>
-
-                  <div className="mt-6 space-y-3">
-                    <div className="flex items-end justify-between gap-4">
-                      <span className="text-xs font-semibold uppercase tracking-[0.22em] text-[#3525cd] dark:text-indigo-400">
-                        XP Level
-                      </span>
-                      <span className="text-xs uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
-                        Lvl {level.level} • {resolvedSnapshot.profile.xp} XP
-                      </span>
+                  <p className="mt-2 text-sm uppercase tracking-[0.24em] text-[#3525cd] dark:text-indigo-400">
+                    {resolvedSnapshot.profile.rank}
+                  </p>
+                  <p className="mt-4 max-w-2xl text-sm leading-7 text-[#5a6174] dark:text-slate-300 sm:text-base">
+                    Operative record tracking single player runs, multiplayer battles, ranking credentials, and neural achievements.
+                  </p>
+                  <div className="mt-6 flex flex-wrap gap-4">
+                    <div className="rounded-full border border-[#d8e3fb] bg-[#eef4ff] px-4 py-2 text-xs font-semibold text-[#0060ac] dark:border-slate-800 dark:bg-slate-900 dark:text-indigo-300">
+                      Level {level.level} ({formatNumber(resolvedSnapshot.profile.xp)} XP)
                     </div>
-                    <div className="h-4 rounded-full bg-[#d8e3fb] p-0.5 dark:bg-slate-800">
-                      <div
-                        className="h-full rounded-full bg-gradient-to-r from-[#3525cd] to-[#64a8fe]"
-                        style={{ width: `${Math.max(8, level.progress)}%` }}
-                      />
+                    <div className="rounded-full border border-[#dfe4f2] bg-white/80 px-4 py-2 text-xs font-semibold text-[#5a6174] dark:border-slate-800 dark:bg-slate-900 dark:text-slate-400">
+                      Joined {new Date(resolvedSnapshot.profile.createdAt).toLocaleDateString("en-GB")}
                     </div>
-                    <p className="text-base text-[#464555] dark:text-slate-300">
-                      Progress to Level {level.level + 1} ({level.nextLevelXp} XP).
-                    </p>
                   </div>
                 </div>
               </div>
             </section>
 
-            {/* Mode Selector Pill Switch */}
-            <div className="mt-6 flex justify-center">
-              <div className="inline-flex rounded-full bg-white/80 p-1.5 shadow-sm border border-slate-200 dark:border-slate-800 dark:bg-slate-900/90">
+            <div className="mt-8 flex justify-center">
+              <div className="inline-flex rounded-full bg-white/80 dark:bg-slate-900/90 p-1.5 shadow-sm border border-slate-200 dark:border-slate-800">
                 <button
                   type="button"
                   onClick={() => setProfileMode("single")}
@@ -277,10 +261,12 @@ export const ProfileRoute = () => {
                 <div className="mt-5 grid gap-4 sm:grid-cols-2">
                   {(profileMode === "multiplayer"
                     ? [
+                        ["Overall MP Points", formatNumber(resolvedSnapshot.stats.multiplayerPoints ?? 0)],
+                        ["Total Battles", formatNumber(mpTotal)],
                         ["Multiplayer Wins", formatNumber(mpWins)],
                         ["Multiplayer Defeats", formatNumber(mpLosses)],
-                        ["Total Battles", formatNumber(mpTotal)],
                         ["Co-Op Sync Clears", formatNumber(resolvedSnapshot.stats.coopClears ?? 0)],
+                        ["Win Rate", formatPercent(mpWinRate)],
                       ]
                     : [
                         ["Wins", formatNumber(resolvedSnapshot.stats.wins)],

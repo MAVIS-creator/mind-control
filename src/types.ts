@@ -60,6 +60,10 @@ export type PlayerStats = {
   multiplayerLosses?: number;
   multiplayerTotal?: number;
   coopClears?: number;
+  multiplayerPoints?: number;
+  turnBasedPoints?: number;
+  speedSprintPoints?: number;
+  coopPoints?: number;
 };
 
 export type PlayerSnapshot = {

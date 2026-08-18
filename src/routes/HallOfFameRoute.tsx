@@ -5,7 +5,7 @@ import { avatarOptions } from "../data/avatars";
 import { fetchMultiplayerLeaderboard, type MultiplayerLeaderboardEntry } from "../lib/multiplayer";
 import { formatDuration, formatNumber, formatPercent, getLevelProgress, isLegacyAccountEmail } from "../lib/utils";
 import { useAppContext } from "../state/AppContext";
-import type { GridSize, LeaderboardEntry, MatchType } from "../types";
+import type { GridSize, LeaderboardEntry, MatchType, MultiplayerGameMode } from "../types";
 
 const medalClasses = [
   "border-[#ffd166] bg-[#fff7db] dark:border-amber-500/50 dark:bg-amber-900/20",
@@ -31,6 +31,7 @@ const matchTypeLabels: Record<MatchType, string> = {
 };
 
 type SortKey = "rating" | "points" | "fastest" | "accuracy" | "combo";
+type MpSortKey = "points" | "wins" | "winRate" | "battles";
 
 const compareBySort = (sortKey: SortKey, a: LeaderboardEntry, b: LeaderboardEntry) => {
   switch (sortKey) {
@@ -64,6 +65,8 @@ export const HallOfFameRoute = () => {
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
+  const [mpModeFilter, setMpModeFilter] = useState<"all" | MultiplayerGameMode>("all");
+  const [mpSortKey, setMpSortKey] = useState<MpSortKey>("points");
   const [mpLeaderboard, setMpLeaderboard] = useState<MultiplayerLeaderboardEntry[]>([]);
   const [loadingMp, setLoadingMp] = useState(false);
 
@@ -120,6 +123,57 @@ export const HallOfFameRoute = () => {
       : globalSorted
     : filtered;
 
+  const filteredMpEntries = useMemo(() => {
+    return [...mpLeaderboard].sort((a, b) => {
+      if (mpModeFilter === "all") {
+        if (mpSortKey === "points") {
+          if (b.totalPoints !== a.totalPoints) return b.totalPoints - a.totalPoints;
+          if (b.multiplayerWins !== a.multiplayerWins) return b.multiplayerWins - a.multiplayerWins;
+          return b.xp - a.xp;
+        }
+        if (mpSortKey === "wins") {
+          if (b.multiplayerWins !== a.multiplayerWins) return b.multiplayerWins - a.multiplayerWins;
+          if (b.totalPoints !== a.totalPoints) return b.totalPoints - a.totalPoints;
+          return b.xp - a.xp;
+        }
+        if (mpSortKey === "winRate") {
+          if (b.winRate !== a.winRate) return b.winRate - a.winRate;
+          if (b.totalPoints !== a.totalPoints) return b.totalPoints - a.totalPoints;
+          return b.xp - a.xp;
+        }
+        if (mpSortKey === "battles") {
+          if (b.totalBattles !== a.totalBattles) return b.totalBattles - a.totalBattles;
+          if (b.totalPoints !== a.totalPoints) return b.totalPoints - a.totalPoints;
+          return b.xp - a.xp;
+        }
+      } else {
+        const aMode = a.modeStats?.[mpModeFilter] || { wins: 0, losses: 0, total: 0, points: 0, winRate: 0 };
+        const bMode = b.modeStats?.[mpModeFilter] || { wins: 0, losses: 0, total: 0, points: 0, winRate: 0 };
+        if (mpSortKey === "points") {
+          if (bMode.points !== aMode.points) return bMode.points - aMode.points;
+          if (bMode.wins !== aMode.wins) return bMode.wins - aMode.wins;
+          return b.xp - a.xp;
+        }
+        if (mpSortKey === "wins") {
+          if (bMode.wins !== aMode.wins) return bMode.wins - aMode.wins;
+          if (bMode.points !== aMode.points) return bMode.points - aMode.points;
+          return b.xp - a.xp;
+        }
+        if (mpSortKey === "winRate") {
+          if (bMode.winRate !== aMode.winRate) return bMode.winRate - aMode.winRate;
+          if (bMode.points !== aMode.points) return bMode.points - aMode.points;
+          return b.xp - a.xp;
+        }
+        if (mpSortKey === "battles") {
+          if (bMode.total !== aMode.total) return bMode.total - aMode.total;
+          if (bMode.points !== aMode.points) return bMode.points - aMode.points;
+          return b.xp - a.xp;
+        }
+      }
+      return b.totalPoints - a.totalPoints;
+    });
+  }, [mpLeaderboard, mpModeFilter, mpSortKey]);
+
   const visibleEntries = rankedEntries.slice(0, visibleCount);
   const canLoadMore = visibleCount < rankedEntries.length;
 
@@ -154,7 +208,7 @@ export const HallOfFameRoute = () => {
   }
 
   const podiumSingle = rankedEntries.slice(0, 3);
-  const podiumMp = mpLeaderboard.slice(0, 3);
+  const podiumMp = filteredMpEntries.slice(0, 3);
 
   return (
     <AppShell session={session} active="ranks">
@@ -163,7 +217,7 @@ export const HallOfFameRoute = () => {
           <h1 className="mt-3 font-display text-4xl tracking-[-0.05em] text-[#3525cd] dark:text-indigo-400 sm:text-5xl">Hall of Fame</h1>
           <p className="mx-auto mt-3 max-w-3xl text-sm leading-7 text-[#464555] dark:text-slate-300 sm:text-base">
             {leaderboardTab === "multiplayer"
-              ? "Global multiplayer rankings tracking battle victories, win rates, and co-op completions."
+              ? "Global multiplayer rankings tracking battle points, victories, win rates, and co-op completions."
               : usingAccountTotals
               ? "One account row per player with cumulative points stacked across every saved run."
               : "Best run per player inside the selected board and match type."}
@@ -244,6 +298,39 @@ export const HallOfFameRoute = () => {
               </div>
             </div>
           )}
+
+          {/* Multiplayer Filter Toolbar */}
+          {leaderboardTab === "multiplayer" && (
+            <div className="mx-auto mt-5 flex max-w-2xl flex-wrap items-center justify-center gap-3 rounded-2xl border border-white/80 bg-white/70 p-3 shadow-sm backdrop-blur-md dark:border-slate-800 dark:bg-slate-900/80">
+              <div className="flex items-center gap-2">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-[#64748b] dark:text-slate-400">Mode:</span>
+                <select
+                  value={mpModeFilter}
+                  onChange={(e) => setMpModeFilter(e.target.value as any)}
+                  className="rounded-xl border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 dark:text-white px-3 py-1.5 text-xs font-semibold text-[#1e1b4b] outline-none focus:border-[#3525cd]"
+                >
+                  <option value="all">All Multiplayer Modes</option>
+                  <option value="speed_sprint">Speed Sprint Race</option>
+                  <option value="turn_based">Turn-Based Duel</option>
+                  <option value="coop">Co-Op Grid Sync</option>
+                </select>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-[#64748b] dark:text-slate-400">Sort By:</span>
+                <select
+                  value={mpSortKey}
+                  onChange={(e) => setMpSortKey(e.target.value as any)}
+                  className="rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-[#1e1b4b] outline-none focus:border-[#3525cd] dark:border-slate-700 dark:bg-slate-900 dark:text-white"
+                >
+                  <option value="points">Multiplayer Points</option>
+                  <option value="wins">Most Wins</option>
+                  <option value="winRate">Highest Win Rate</option>
+                  <option value="battles">Total Battles</option>
+                </select>
+              </div>
+            </div>
+          )}
         </section>
 
         {/* Top 3 Podium Section */}
@@ -256,6 +343,12 @@ export const HallOfFameRoute = () => {
             ) : podiumMp.length ? (
               podiumMp.map((entry, index) => {
                 const avatar = avatarOptions.find((item) => item.id === entry.avatarId) ?? avatarOptions[0];
+                const modeStat = mpModeFilter === "all" ? null : entry.modeStats?.[mpModeFilter];
+                const pts = mpModeFilter === "all" ? entry.totalPoints : (modeStat?.points ?? 0);
+                const wins = mpModeFilter === "all" ? entry.multiplayerWins : (modeStat?.wins ?? 0);
+                const total = mpModeFilter === "all" ? entry.totalBattles : (modeStat?.total ?? 0);
+                const winRate = mpModeFilter === "all" ? entry.winRate : (modeStat?.winRate ?? 0);
+
                 return (
                   <article
                     key={entry.userId}
@@ -278,10 +371,12 @@ export const HallOfFameRoute = () => {
                       {entry.username}
                     </Link>
                     <p className="mt-1 text-sm font-bold uppercase tracking-[0.18em] text-[#3525cd] dark:text-indigo-400">
-                      {entry.multiplayerWins} Multiplayer Win{entry.multiplayerWins === 1 ? "" : "s"}
+                      {formatNumber(pts)} MP Points
                     </p>
                     <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
-                      Win Rate {entry.winRate.toFixed(0)}% • {entry.totalBattles} Total Battles
+                      {mpModeFilter === "coop"
+                        ? `${wins} Sync Clears • ${total} Battles`
+                        : `${wins} Win${wins === 1 ? "" : "s"} • Win Rate ${winRate.toFixed(0)}%`}
                     </p>
                     <div className="mt-3 flex items-center justify-center">
                       <span className="rounded-full bg-white/80 px-3 py-1 text-xs font-semibold text-[#4f46e5] dark:bg-slate-800 dark:text-slate-200">
@@ -348,7 +443,7 @@ export const HallOfFameRoute = () => {
             </h2>
             <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
               {leaderboardTab === "multiplayer"
-                ? "Ranked by multiplayer victories, win rates, and total competitive battle experience."
+                ? "Ranked by multiplayer points, battle victories, win rates, and co-op sync achievements."
                 : usingAccountTotals
                 ? "One best row per player, with cumulative total points counting across all saved runs."
                 : "Best row per player inside this filter."}
@@ -362,18 +457,36 @@ export const HallOfFameRoute = () => {
                   <tr>
                     <th className="px-6 py-4">Rank</th>
                     <th className="px-6 py-4">Operative</th>
-                    <th className="px-6 py-4">MP Wins</th>
-                    <th className="px-6 py-4">Defeats</th>
-                    <th className="px-6 py-4">Win Rate</th>
-                    <th className="px-6 py-4">Co-Op Clears</th>
+                    <th className="px-6 py-4">
+                      {mpModeFilter === "all"
+                        ? "MP Points"
+                        : mpModeFilter === "speed_sprint"
+                        ? "Sprint Points"
+                        : mpModeFilter === "turn_based"
+                        ? "Duel Points"
+                        : "Co-Op Points"}
+                    </th>
+                    <th className="px-6 py-4">
+                      {mpModeFilter === "coop" ? "Sync Clears" : "Wins"}
+                    </th>
+                    {mpModeFilter !== "coop" && <th className="px-6 py-4">Defeats</th>}
+                    {mpModeFilter !== "coop" && <th className="px-6 py-4">Win Rate</th>}
+                    <th className="px-6 py-4">Total Battles</th>
                     <th className="px-6 py-4">Level & XP</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {mpLeaderboard.length ? (
-                    mpLeaderboard.map((entry, index) => {
+                  {filteredMpEntries.length ? (
+                    filteredMpEntries.map((entry, index) => {
                       const avatar = avatarOptions.find((item) => item.id === entry.avatarId) ?? avatarOptions[0];
                       const level = getLevelProgress(entry.xp);
+                      const modeStat = mpModeFilter === "all" ? null : entry.modeStats?.[mpModeFilter];
+                      const pts = mpModeFilter === "all" ? entry.totalPoints : (modeStat?.points ?? 0);
+                      const wins = mpModeFilter === "all" ? entry.multiplayerWins : (modeStat?.wins ?? 0);
+                      const losses = mpModeFilter === "all" ? entry.multiplayerLosses : (modeStat?.losses ?? 0);
+                      const total = mpModeFilter === "all" ? entry.totalBattles : (modeStat?.total ?? 0);
+                      const winRate = mpModeFilter === "all" ? entry.winRate : (modeStat?.winRate ?? 0);
+
                       return (
                         <tr key={entry.userId} className="border-t border-slate-100 text-sm text-slate-700 dark:border-slate-800 dark:text-slate-200">
                           <td className="px-6 py-4 font-semibold text-slate-500 dark:text-slate-400">{index + 1}</td>
@@ -395,10 +508,13 @@ export const HallOfFameRoute = () => {
                               </div>
                             </div>
                           </td>
-                          <td className="px-6 py-4 font-bold text-[#3525cd] dark:text-indigo-400">{entry.multiplayerWins}</td>
-                          <td className="px-6 py-4 text-slate-500 dark:text-slate-400">{entry.multiplayerLosses}</td>
-                          <td className="px-6 py-4 font-semibold text-emerald-600 dark:text-emerald-400">{entry.winRate.toFixed(0)}%</td>
-                          <td className="px-6 py-4 text-indigo-600 font-semibold dark:text-indigo-400">{entry.coopClears}</td>
+                          <td className="px-6 py-4 font-bold text-[#0060ac] dark:text-sky-400">{formatNumber(pts)}</td>
+                          <td className="px-6 py-4 font-bold text-[#3525cd] dark:text-indigo-400">{wins}</td>
+                          {mpModeFilter !== "coop" && <td className="px-6 py-4 text-slate-500 dark:text-slate-400">{losses}</td>}
+                          {mpModeFilter !== "coop" && (
+                            <td className="px-6 py-4 font-semibold text-emerald-600 dark:text-emerald-400">{winRate.toFixed(0)}%</td>
+                          )}
+                          <td className="px-6 py-4 text-slate-600 font-semibold dark:text-slate-300">{total}</td>
                           <td className="px-6 py-4 font-semibold text-slate-600 dark:text-slate-300">
                             Lvl {level.level} ({formatNumber(entry.xp)} XP)
                           </td>
@@ -407,7 +523,7 @@ export const HallOfFameRoute = () => {
                     })
                   ) : (
                     <tr>
-                      <td colSpan={7} className="px-6 py-8 text-sm text-slate-500 text-center">
+                      <td colSpan={8} className="px-6 py-8 text-sm text-slate-500 text-center">
                         No multiplayer battle rankings available yet.
                       </td>
                     </tr>

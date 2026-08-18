@@ -323,6 +323,30 @@ export const fetchOpenPublicRooms = async (): Promise<MultiplayerRoom[]> => {
   return Array.from(localRoomsMemory.values()).filter((r) => !isRoomExpired(r));
 };
 
+const MP_STORAGE_KEY = "mindgrid.multiplayer_rooms";
+
+export const loadStoredFinishedRooms = (): any[] => {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = window.localStorage.getItem(MP_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+};
+
+export const saveFinishedRoomToStorage = (roomData: any) => {
+  if (typeof window === "undefined") return;
+  try {
+    const existing = loadStoredFinishedRooms();
+    const filtered = existing.filter((r) => r.id !== roomData.id);
+    filtered.push(roomData);
+    window.localStorage.setItem(MP_STORAGE_KEY, JSON.stringify(filtered.slice(-100)));
+  } catch {
+    // ignore
+  }
+};
+
 export const updateRoomConfig = async (
   roomId: string,
   updates: Partial<{
@@ -335,6 +359,8 @@ export const updateRoomConfig = async (
     currentTurnId: string | null;
     winner_id: string | null;
     scores: any;
+    seed?: number;
+    createdAt?: string;
   }>,
 ): Promise<void> => {
   const dbUpdates: any = {};
@@ -364,6 +390,23 @@ export const updateRoomConfig = async (
     const updated = { ...local, ...updates, updatedAt: new Date().toISOString() };
     localRoomsMemory.set(roomId, updated);
     localRoomsMemory.set(updated.roomCode, updated);
+
+    if (updated.status === "finished" && updated.hostId && updated.guestId && updated.hostId !== updated.guestId) {
+      saveFinishedRoomToStorage({
+        id: updated.id,
+        room_code: updated.roomCode,
+        host_id: updated.hostId,
+        guest_id: updated.guestId,
+        game_mode: updated.gameMode,
+        grid_size: updated.gridSize,
+        theme: updated.theme,
+        status: updated.status,
+        winner_id: updated.winnerId,
+        scores: updated.scores,
+        created_at: updated.createdAt,
+        updated_at: updated.updatedAt,
+      });
+    }
   }
 };
 
@@ -400,6 +443,14 @@ export const leaveMultiplayerRoom = async (roomId: string, userId: string): Prom
   }
 };
 
+export type MultiplayerModeStats = {
+  wins: number;
+  losses: number;
+  total: number;
+  points: number;
+  winRate: number;
+};
+
 export type MultiplayerLeaderboardEntry = {
   userId: string;
   username: string;
@@ -411,60 +462,196 @@ export type MultiplayerLeaderboardEntry = {
   totalBattles: number;
   winRate: number;
   coopClears: number;
+  totalPoints: number;
+  turnBasedPoints: number;
+  speedSprintPoints: number;
+  coopPoints: number;
+  modeStats: Record<MultiplayerGameMode, MultiplayerModeStats>;
 };
 
 export const fetchMultiplayerLeaderboard = async (): Promise<MultiplayerLeaderboardEntry[]> => {
-  if (!supabase) return [];
-
   try {
-    const [{ data: profiles }, { data: mpRooms }] = await Promise.all([
-      supabase.from("profiles").select("*"),
-      supabase.from("multiplayer_rooms").select("*").eq("status", "finished"),
-    ]);
+    let profiles: any[] = [];
+    let mpRooms: any[] = [];
 
-    if (!profiles) return [];
+    if (supabase) {
+      const [{ data: pData }, { data: rData }] = await Promise.all([
+        supabase.from("profiles").select("*"),
+        supabase.from("multiplayer_rooms").select("*").eq("status", "finished"),
+      ]);
+      if (pData) profiles = pData;
+      if (rData) mpRooms = rData;
+    }
 
-    const statsMap: Record<string, { wins: number; losses: number; total: number; coop: number }> = {};
-    profiles.forEach((p) => {
-      statsMap[p.id] = { wins: 0, losses: 0, total: 0, coop: 0 };
+    if (!profiles.length && typeof window !== "undefined") {
+      try {
+        const rawUsers = window.localStorage.getItem("mindgrid.users");
+        if (rawUsers) {
+          const parsed = JSON.parse(rawUsers);
+          profiles = parsed.map((u: any) => ({
+            id: u.profile.id,
+            username: u.profile.username,
+            avatar_id: u.profile.avatarId,
+            rank: u.profile.rank,
+            xp: u.profile.xp,
+          }));
+        }
+      } catch {
+        // ignore
+      }
+    }
+
+    const localRooms = loadStoredFinishedRooms();
+    const allRoomsMap = new Map<string, any>();
+    mpRooms.forEach((r) => allRoomsMap.set(r.id, r));
+    localRooms.forEach((r) => {
+      if (!allRoomsMap.has(r.id)) allRoomsMap.set(r.id, r);
     });
 
-    (mpRooms || []).forEach((r) => {
+    const validRooms = Array.from(allRoomsMap.values()).filter(
+      (r) => r.status === "finished" && r.host_id && r.guest_id && r.host_id !== r.guest_id,
+    );
+
+    const initialModeStats = (): MultiplayerModeStats => ({
+      wins: 0,
+      losses: 0,
+      total: 0,
+      points: 0,
+      winRate: 0,
+    });
+
+    const statsMap: Record<
+      string,
+      {
+        turn_based: MultiplayerModeStats;
+        speed_sprint: MultiplayerModeStats;
+        coop: MultiplayerModeStats;
+        coopClears: number;
+      }
+    > = {};
+
+    profiles.forEach((p) => {
+      statsMap[p.id] = {
+        turn_based: initialModeStats(),
+        speed_sprint: initialModeStats(),
+        coop: initialModeStats(),
+        coopClears: 0,
+      };
+    });
+
+    validRooms.forEach((r) => {
       const hostId = r.host_id;
       const guestId = r.guest_id;
+      const mode = (r.game_mode || "turn_based") as MultiplayerGameMode;
       const winnerId = r.winner_id;
+      const rawScores = typeof r.scores === "string" ? JSON.parse(r.scores) : r.scores || {};
 
-      if (hostId && statsMap[hostId]) statsMap[hostId].total += 1;
-      if (guestId && statsMap[guestId]) statsMap[guestId].total += 1;
+      if (!statsMap[hostId]) {
+        statsMap[hostId] = {
+          turn_based: initialModeStats(),
+          speed_sprint: initialModeStats(),
+          coop: initialModeStats(),
+          coopClears: 0,
+        };
+      }
+      if (!statsMap[guestId]) {
+        statsMap[guestId] = {
+          turn_based: initialModeStats(),
+          speed_sprint: initialModeStats(),
+          coop: initialModeStats(),
+          coopClears: 0,
+        };
+      }
 
-      if (r.game_mode === "coop") {
-        if (hostId && statsMap[hostId]) statsMap[hostId].coop += 1;
-        if (guestId && statsMap[guestId]) statsMap[guestId].coop += 1;
-      } else if (winnerId) {
-        if (statsMap[winnerId]) statsMap[winnerId].wins += 1;
-        const loserId = winnerId === hostId ? guestId : hostId;
-        if (loserId && statsMap[loserId]) statsMap[loserId].losses += 1;
+      const hostScore = Number(rawScores[hostId] ?? rawScores.host ?? 600) || 600;
+      const guestScore = Number(rawScores[guestId] ?? rawScores.guest ?? 600) || 600;
+
+      if (mode === "coop") {
+        statsMap[hostId].coop.total += 1;
+        statsMap[hostId].coop.wins += 1;
+        statsMap[hostId].coop.points += Math.max(0, hostScore) + 350;
+        statsMap[hostId].coopClears += 1;
+
+        statsMap[guestId].coop.total += 1;
+        statsMap[guestId].coop.wins += 1;
+        statsMap[guestId].coop.points += Math.max(0, guestScore) + 350;
+        statsMap[guestId].coopClears += 1;
+      } else {
+        const victoryBonus = mode === "speed_sprint" ? 300 : 250;
+        const targetMode = mode === "speed_sprint" ? "speed_sprint" : "turn_based";
+
+        statsMap[hostId][targetMode].total += 1;
+        statsMap[guestId][targetMode].total += 1;
+
+        if (winnerId === hostId) {
+          statsMap[hostId][targetMode].wins += 1;
+          statsMap[hostId][targetMode].points += Math.max(0, hostScore) + victoryBonus;
+
+          statsMap[guestId][targetMode].losses += 1;
+          statsMap[guestId][targetMode].points += Math.max(0, guestScore);
+        } else if (winnerId === guestId) {
+          statsMap[guestId][targetMode].wins += 1;
+          statsMap[guestId][targetMode].points += Math.max(0, guestScore) + victoryBonus;
+
+          statsMap[hostId][targetMode].losses += 1;
+          statsMap[hostId][targetMode].points += Math.max(0, hostScore);
+        } else {
+          statsMap[hostId][targetMode].points += Math.max(0, hostScore);
+          statsMap[guestId][targetMode].points += Math.max(0, guestScore);
+        }
       }
     });
 
     const entries: MultiplayerLeaderboardEntry[] = profiles.map((p) => {
-      const st = statsMap[p.id] || { wins: 0, losses: 0, total: 0, coop: 0 };
-      const winRate = st.total > 0 ? (st.wins / st.total) * 100 : 0;
+      const st = statsMap[p.id] || {
+        turn_based: initialModeStats(),
+        speed_sprint: initialModeStats(),
+        coop: initialModeStats(),
+        coopClears: 0,
+      };
+
+      const tbWinRate = st.turn_based.total > 0 ? (st.turn_based.wins / st.turn_based.total) * 100 : 0;
+      const spWinRate = st.speed_sprint.total > 0 ? (st.speed_sprint.wins / st.speed_sprint.total) * 100 : 0;
+      const coopWinRate = st.coop.total > 0 ? 100 : 0;
+
+      const modeStats: Record<MultiplayerGameMode, MultiplayerModeStats> = {
+        turn_based: { ...st.turn_based, winRate: tbWinRate },
+        speed_sprint: { ...st.speed_sprint, winRate: spWinRate },
+        coop: { ...st.coop, winRate: coopWinRate },
+      };
+
+      const turnBasedPoints = st.turn_based.points;
+      const speedSprintPoints = st.speed_sprint.points;
+      const coopPoints = st.coop.points;
+      const totalPoints = turnBasedPoints + speedSprintPoints + coopPoints;
+
+      const multiplayerWins = st.turn_based.wins + st.speed_sprint.wins;
+      const multiplayerLosses = st.turn_based.losses + st.speed_sprint.losses;
+      const compTotal = st.turn_based.total + st.speed_sprint.total;
+      const totalBattles = compTotal + st.coop.total;
+      const winRate = compTotal > 0 ? (multiplayerWins / compTotal) * 100 : 0;
+
       return {
         userId: p.id,
         username: p.username || "Agent",
         avatarId: p.avatar_id || "cyber_grid",
         rank: p.rank || "Neural Rookie",
         xp: p.xp || 0,
-        multiplayerWins: st.wins,
-        multiplayerLosses: st.losses,
-        totalBattles: st.total,
+        multiplayerWins,
+        multiplayerLosses,
+        totalBattles,
         winRate,
-        coopClears: st.coop,
+        coopClears: st.coopClears,
+        totalPoints,
+        turnBasedPoints,
+        speedSprintPoints,
+        coopPoints,
+        modeStats,
       };
     });
 
     return entries.sort((a, b) => {
+      if (b.totalPoints !== a.totalPoints) return b.totalPoints - a.totalPoints;
       if (b.multiplayerWins !== a.multiplayerWins) return b.multiplayerWins - a.multiplayerWins;
       if (b.winRate !== a.winRate) return b.winRate - a.winRate;
       return b.xp - a.xp;
@@ -473,4 +660,55 @@ export const fetchMultiplayerLeaderboard = async (): Promise<MultiplayerLeaderbo
     console.warn("Error fetching multiplayer leaderboard:", err);
     return [];
   }
+};
+
+export const cleanupCorruptMultiplayerRooms = async (): Promise<{ removed: number; sanitized: number }> => {
+  let removed = 0;
+  let sanitized = 0;
+
+  if (supabase) {
+    try {
+      const { data: allRooms } = await supabase.from("multiplayer_rooms").select("*");
+      if (allRooms) {
+        for (const r of allRooms) {
+          const isOrphan = !r.host_id || !r.guest_id || r.host_id === r.guest_id;
+          const isCorruptWinner = r.winner_id && r.winner_id !== r.host_id && r.winner_id !== r.guest_id;
+
+          if (isOrphan) {
+            await supabase.from("multiplayer_rooms").delete().eq("id", r.id);
+            removed += 1;
+          } else if (isCorruptWinner) {
+            await supabase.from("multiplayer_rooms").update({ winner_id: null }).eq("id", r.id);
+            sanitized += 1;
+          }
+        }
+      }
+    } catch (err) {
+      console.warn("Supabase cleanup error:", err);
+    }
+  }
+
+  if (typeof window !== "undefined") {
+    try {
+      const localRooms = loadStoredFinishedRooms();
+      const valid = localRooms.filter((r) => {
+        const isOrphan = !r.host_id || !r.guest_id || r.host_id === r.guest_id;
+        const isCorruptWinner = r.winner_id && r.winner_id !== r.host_id && r.winner_id !== r.guest_id;
+        if (isOrphan) {
+          removed += 1;
+          return false;
+        }
+        if (isCorruptWinner) {
+          r.winner_id = null;
+          sanitized += 1;
+        }
+        return true;
+      });
+      window.localStorage.setItem(MP_STORAGE_KEY, JSON.stringify(valid));
+    } catch {
+      // ignore
+    }
+  }
+
+  return { removed, sanitized };
 };

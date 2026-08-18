@@ -35,6 +35,7 @@ import {
 } from "./storage";
 export { saveSession } from "./storage";
 import { hasSupabase, supabase } from "./supabase";
+import { loadStoredFinishedRooms } from "./multiplayer";
 
 const ensureValidUsername = (username: string) => {
   const normalized = normalizeUsername(username);
@@ -822,9 +823,65 @@ export const authApi = {
         .filter((entry) => entry.userId === userId)
         .sort((a, b) => +new Date(b.playedAt) - +new Date(a.playedAt));
 
+      const localRooms = loadStoredFinishedRooms().filter(
+        (r) =>
+          r.status === "finished" &&
+          (r.host_id === userId || r.guest_id === userId) &&
+          r.host_id &&
+          r.guest_id &&
+          r.host_id !== r.guest_id,
+      );
+
+      let mpWins = 0;
+      let mpLosses = 0;
+      let coopClears = 0;
+      let turnBasedPoints = 0;
+      let speedSprintPoints = 0;
+      let coopPoints = 0;
+
+      localRooms.forEach((r) => {
+        const isHost = r.host_id === userId;
+        const rawScores = typeof r.scores === "string" ? JSON.parse(r.scores) : r.scores || {};
+        const myMatchScore = Number(rawScores[userId] ?? (isHost ? rawScores.host : rawScores.guest) ?? 600) || 600;
+
+        if (r.game_mode === "coop") {
+          coopClears += 1;
+          const pts = Math.max(0, myMatchScore) + 350;
+          coopPoints += pts;
+        } else if (r.winner_id === userId) {
+          mpWins += 1;
+          const victoryBonus = r.game_mode === "speed_sprint" ? 300 : 250;
+          const pts = Math.max(0, myMatchScore) + victoryBonus;
+          if (r.game_mode === "speed_sprint") speedSprintPoints += pts;
+          else turnBasedPoints += pts;
+        } else if (r.winner_id && (r.winner_id === r.host_id || r.winner_id === r.guest_id)) {
+          mpLosses += 1;
+          const pts = Math.max(0, myMatchScore);
+          if (r.game_mode === "speed_sprint") speedSprintPoints += pts;
+          else turnBasedPoints += pts;
+        } else {
+          const pts = Math.max(0, myMatchScore);
+          if (r.game_mode === "speed_sprint") speedSprintPoints += pts;
+          else turnBasedPoints += pts;
+        }
+      });
+
+      const multiplayerPoints = turnBasedPoints + speedSprintPoints + coopPoints;
+      const baseStats = calculatePlayerStats(leaderboard);
+
       return {
         profile: user.profile,
-        stats: calculatePlayerStats(leaderboard),
+        stats: {
+          ...baseStats,
+          multiplayerWins: mpWins,
+          multiplayerLosses: mpLosses,
+          multiplayerTotal: localRooms.length,
+          coopClears,
+          multiplayerPoints,
+          turnBasedPoints,
+          speedSprintPoints,
+          coopPoints,
+        },
         recentRuns: leaderboard.slice(0, 8),
       };
     }
@@ -869,21 +926,55 @@ export const authApi = {
     );
     const recentRuns = (runRows ?? []).map(mapLeaderboardRow);
 
-    let mpWins = 0;
-    let mpLosses = 0;
-    let coopClears = 0;
-    const mpTotal = mpRows?.length || 0;
-
-    (mpRows || []).forEach((r) => {
-      if (r.game_mode === "coop") {
-        coopClears += 1;
-      } else if (r.winner_id === userId) {
-        mpWins += 1;
-      } else if (r.winner_id && r.winner_id !== userId) {
-        mpLosses += 1;
+    const localRooms = loadStoredFinishedRooms();
+    const allMpRoomsMap = new Map<string, any>();
+    (mpRows || []).forEach((r) => allMpRoomsMap.set(r.id, r));
+    localRooms.forEach((r) => {
+      if (r.host_id === userId || r.guest_id === userId) {
+        if (!allMpRoomsMap.has(r.id)) allMpRoomsMap.set(r.id, r);
       }
     });
 
+    const validMpRooms = Array.from(allMpRoomsMap.values()).filter(
+      (r) => r.status === "finished" && r.host_id && r.guest_id && r.host_id !== r.guest_id,
+    );
+
+    let mpWins = 0;
+    let mpLosses = 0;
+    let coopClears = 0;
+    let turnBasedPoints = 0;
+    let speedSprintPoints = 0;
+    let coopPoints = 0;
+    const mpTotal = validMpRooms.length;
+
+    validMpRooms.forEach((r) => {
+      const isHost = r.host_id === userId;
+      const rawScores = typeof r.scores === "string" ? JSON.parse(r.scores) : r.scores || {};
+      const myMatchScore = Number(rawScores[userId] ?? (isHost ? rawScores.host : rawScores.guest) ?? 600) || 600;
+
+      if (r.game_mode === "coop") {
+        coopClears += 1;
+        const pts = Math.max(0, myMatchScore) + 350;
+        coopPoints += pts;
+      } else if (r.winner_id === userId) {
+        mpWins += 1;
+        const victoryBonus = r.game_mode === "speed_sprint" ? 300 : 250;
+        const pts = Math.max(0, myMatchScore) + victoryBonus;
+        if (r.game_mode === "speed_sprint") speedSprintPoints += pts;
+        else turnBasedPoints += pts;
+      } else if (r.winner_id && (r.winner_id === r.host_id || r.winner_id === r.guest_id)) {
+        mpLosses += 1;
+        const pts = Math.max(0, myMatchScore);
+        if (r.game_mode === "speed_sprint") speedSprintPoints += pts;
+        else turnBasedPoints += pts;
+      } else {
+        const pts = Math.max(0, myMatchScore);
+        if (r.game_mode === "speed_sprint") speedSprintPoints += pts;
+        else turnBasedPoints += pts;
+      }
+    });
+
+    const multiplayerPoints = turnBasedPoints + speedSprintPoints + coopPoints;
     const baseStats = calculatePlayerStats(recentRuns);
 
     return {
@@ -894,6 +985,10 @@ export const authApi = {
         multiplayerLosses: mpLosses,
         multiplayerTotal: mpTotal,
         coopClears,
+        multiplayerPoints,
+        turnBasedPoints,
+        speedSprintPoints,
+        coopPoints,
       },
       recentRuns: recentRuns.slice(0, 8),
     };

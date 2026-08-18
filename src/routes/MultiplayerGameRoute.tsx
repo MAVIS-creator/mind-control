@@ -131,14 +131,16 @@ const LiveMultiplayerCanvas = ({
         winnerId = room.hostId; // Co-op win
       }
 
-      updateRoomConfig(room.id, {
-        status: "finished",
-        winner_id: winnerId,
-        scores: {
-          [userId]: gameState.score,
-          [isHost ? room.guestId || "" : room.hostId]: opponentGhost.score,
-        },
-      });
+      if (room.hostId && room.guestId && room.hostId !== room.guestId) {
+        updateRoomConfig(room.id, {
+          status: "finished",
+          winner_id: winnerId,
+          scores: {
+            [userId]: gameState.score,
+            [isHost ? room.guestId : room.hostId]: opponentGhost.score,
+          },
+        });
+      }
 
       setTimeout(() => {
         navigate(`/multiplayer/results/${room.id}`, {
