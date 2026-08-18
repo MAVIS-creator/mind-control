@@ -23,6 +23,9 @@ type MultiplayerResultsState = {
   accuracy?: number;
   coopScore?: number;
   duration?: number;
+  myMatches?: number;
+  opponentMatches?: number;
+  totalPairs?: number;
 };
 
 export const MultiplayerResultsRoute = () => {
@@ -36,7 +39,8 @@ export const MultiplayerResultsRoute = () => {
 
   const currentUserId = session?.profile.id || "guest-user";
   const isWinner = winnerId === currentUserId;
-  const isTie = !winnerId || (myScore === opponentScore && room?.gameMode !== "coop");
+  const isSpeedRace = room?.gameMode === "speed_sprint";
+  const isTie = !isSpeedRace && (!winnerId || (myScore === opponentScore && room?.gameMode !== "coop"));
   const isCoop = room?.gameMode === "coop";
 
   const xpBonus = isWinner ? 375 : isCoop ? 450 : 150;
@@ -82,10 +86,16 @@ export const MultiplayerResultsRoute = () => {
             </div>
 
             <div className="text-center">
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#3525cd] dark:text-indigo-400">Multiplayer Clash</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#3525cd] dark:text-indigo-400">
+                {isSpeedRace ? "Speed Race Results" : "Multiplayer Clash"}
+              </p>
               <h1 className="mt-2 font-display text-[2.2rem] font-extrabold tracking-[-0.04em] text-[#111c2d] dark:text-white sm:mt-3 sm:text-[3.6rem]">
                 {isCoop
                   ? "Co-Op Linked!"
+                  : isSpeedRace
+                  ? isWinner
+                    ? "Speed Race Victory!"
+                    : "Speed Race Defeat"
                   : isWinner
                   ? "Victory Attained!"
                   : isTie
@@ -93,7 +103,11 @@ export const MultiplayerResultsRoute = () => {
                   : "Defeat in Grid"}
               </h1>
               <p className="mt-1 text-xs font-semibold uppercase tracking-widest text-[#64748b] dark:text-slate-400">
-                Mode: {room?.gameMode?.replace("_", " ") || "Neural Duel"}
+                {isSpeedRace
+                  ? isWinner
+                    ? "You opened all pairs first!"
+                    : "Opponent opened all pairs first!"
+                  : `Mode: ${room?.gameMode?.replace("_", " ") || "Neural Duel"}`}
               </p>
             </div>
 
@@ -113,30 +127,61 @@ export const MultiplayerResultsRoute = () => {
 
             {/* Metric Tiles */}
             <div className="mt-5 grid grid-cols-2 gap-3 sm:mt-6 sm:gap-4">
-              <ResultsTile
-                icon={<GridIcon className="h-5 w-5" />}
-                accent="text-[#0060ac]"
-                label={isCoop ? "Team Score" : "Your Score"}
-                value={formatNumber(isCoop ? coopScore : myScore)}
-              />
-              <ResultsTile
-                icon={<TrophyIcon className="h-5 w-5" />}
-                accent="text-[#6b00b7]"
-                label={isCoop ? "Accuracy" : "Opponent Score"}
-                value={isCoop ? `${accuracy.toFixed(0)}%` : formatNumber(opponentScore)}
-              />
-              <ResultsTile
-                icon={<ClockIcon className="h-5 w-5" />}
-                accent="text-[#0284c7]"
-                label="Accuracy"
-                value={`${accuracy.toFixed(0)}%`}
-              />
-              <ResultsTile
-                icon={<SparklesIcon className="h-5 w-5" />}
-                accent="text-emerald-600"
-                label="Match Outcome"
-                value={isCoop ? "Sync Clear" : isWinner ? "Winner" : isTie ? "Tie" : "2nd Place"}
-              />
+              {isSpeedRace ? (
+                <>
+                  <ResultsTile
+                    icon={<GridIcon className="h-5 w-5" />}
+                    accent="text-[#0060ac]"
+                    label="Your Pairs Cleared"
+                    value={`${state.myMatches ?? (isWinner ? (state.totalPairs || 8) : 0)}/${state.totalPairs || 8}`}
+                  />
+                  <ResultsTile
+                    icon={<TrophyIcon className="h-5 w-5" />}
+                    accent="text-[#6b00b7]"
+                    label="Opponent Pairs"
+                    value={`${state.opponentMatches ?? (isWinner ? 0 : (state.totalPairs || 8))}/${state.totalPairs || 8}`}
+                  />
+                  <ResultsTile
+                    icon={<ClockIcon className="h-5 w-5" />}
+                    accent="text-[#0284c7]"
+                    label="Accuracy"
+                    value={`${accuracy.toFixed(0)}%`}
+                  />
+                  <ResultsTile
+                    icon={<SparklesIcon className="h-5 w-5" />}
+                    accent="text-emerald-600"
+                    label="Race Outcome"
+                    value={isWinner ? "1st Place (Winner)" : "2nd Place"}
+                  />
+                </>
+              ) : (
+                <>
+                  <ResultsTile
+                    icon={<GridIcon className="h-5 w-5" />}
+                    accent="text-[#0060ac]"
+                    label={isCoop ? "Team Score" : "Your Score"}
+                    value={formatNumber(isCoop ? coopScore : myScore)}
+                  />
+                  <ResultsTile
+                    icon={<TrophyIcon className="h-5 w-5" />}
+                    accent="text-[#6b00b7]"
+                    label={isCoop ? "Accuracy" : "Opponent Score"}
+                    value={isCoop ? `${accuracy.toFixed(0)}%` : formatNumber(opponentScore)}
+                  />
+                  <ResultsTile
+                    icon={<ClockIcon className="h-5 w-5" />}
+                    accent="text-[#0284c7]"
+                    label="Accuracy"
+                    value={`${accuracy.toFixed(0)}%`}
+                  />
+                  <ResultsTile
+                    icon={<SparklesIcon className="h-5 w-5" />}
+                    accent="text-emerald-600"
+                    label="Match Outcome"
+                    value={isCoop ? "Sync Clear" : isWinner ? "Winner" : isTie ? "Tie" : "2nd Place"}
+                  />
+                </>
+              )}
             </div>
 
             {/* XP Progress Card */}

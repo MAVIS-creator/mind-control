@@ -54,8 +54,14 @@ export function useMultiplayerGame(
       gridSize: room.gridSize,
       seed: room.seed,
     });
-    return { ...initial, status: "running" };
+    return {
+      ...initial,
+      status: "running",
+      moveLimit: room.gameMode === "speed_sprint" ? 999999 : initial.moveLimit,
+    };
   });
+
+  const [speedRaceWinnerId, setSpeedRaceWinnerId] = useState<string | null>(null);
 
   // Scores state for turn-based and coop modes
   const [playerScores, setPlayerScores] = useState<{ [id: string]: number }>({
@@ -131,6 +137,8 @@ export function useMultiplayerGame(
                 (c) => c.id === stateBeforeResolve.selectedIds[1],
               );
               const isMatch = card1 && card2 && card1.symbol === card2.symbol;
+              const totalPairs = resolved.board.cards.length / 2;
+              const isSpeedWon = resolved.matches === totalPairs;
 
               if (room.gameMode === "turn_based") {
                 if (isMatch) {
@@ -161,6 +169,46 @@ export function useMultiplayerGame(
                 } else {
                   setCoopCombinedCombo(0);
                 }
+              } else if (room.gameMode === "speed_sprint") {
+                if (isSpeedWon) {
+                  setSpeedRaceWinnerId(currentUserId);
+                  if (channelRef.current) {
+                    channelRef.current.send({
+                      type: "broadcast",
+                      event: "SPEED_RACE_FINISHED",
+                      payload: {
+                        winnerId: currentUserId,
+                        senderId: currentUserId,
+                        score: resolved.score,
+                        matches: resolved.matches,
+                        timeRemaining: resolved.timerRemaining,
+                      },
+                    });
+                    channelRef.current.send({
+                      type: "broadcast",
+                      event: "GHOST_PROGRESS",
+                      payload: {
+                        senderId: currentUserId,
+                        score: resolved.score,
+                        matches: resolved.matches,
+                        combo: resolved.combo,
+                        accuracy: resolved.moves > 0 ? (resolved.matches / resolved.moves) * 100 : 0,
+                        finished: true,
+                        winnerId: currentUserId,
+                      },
+                    });
+                    channelRef.current.send({
+                      type: "broadcast",
+                      event: "MATCH_FINISHED",
+                      payload: {
+                        winnerId: currentUserId,
+                        senderId: currentUserId,
+                        finalScore: resolved.score,
+                        matches: resolved.matches,
+                      },
+                    });
+                  }
+                }
               }
 
               return resolved;
@@ -171,13 +219,14 @@ export function useMultiplayerGame(
         return next;
       });
     },
-    [room.gameMode, currentTurnId, isHost, room.hostId, room.guestId],
+    [room.gameMode, currentTurnId, isHost, room.hostId, room.guestId, currentUserId],
   );
 
   // Handle card click / reveal logic according to mode
   const handleCardClick = useCallback(
     (cardId: string) => {
       if (gameState.status === "won" || gameState.status === "lost") return;
+      if (room.gameMode === "speed_sprint" && (opponentGhost.finished || Boolean(speedRaceWinnerId))) return;
 
       if (room.gameMode === "turn_based") {
         if (currentTurnId !== currentUserId) return; // Not your turn!
@@ -198,13 +247,14 @@ export function useMultiplayerGame(
       // Apply card reveal locally
       applyCardReveal(cardId);
     },
-    [gameState.status, gameState.selectedIds.length, room.gameMode, currentTurnId, currentUserId, applyCardReveal],
+    [gameState.status, gameState.selectedIds.length, room.gameMode, currentTurnId, currentUserId, applyCardReveal, opponentGhost.finished, speedRaceWinnerId],
   );
 
   // Send speed sprint progress broadcast
   useEffect(() => {
-    if (room.gameMode === "speed_sprint" && gameState.status === "running") {
+    if (room.gameMode === "speed_sprint" && (gameState.status === "running" || gameState.status === "won")) {
       const accuracy = gameState.moves > 0 ? (gameState.matches / gameState.moves) * 100 : 0;
+      const isWon = gameState.status === "won" || gameState.matches === (gameState.board.cards.length / 2);
       if (channelRef.current) {
         channelRef.current.send({
           type: "broadcast",
@@ -215,12 +265,13 @@ export function useMultiplayerGame(
             matches: gameState.matches,
             combo: gameState.combo,
             accuracy,
-            finished: gameState.status === "won",
+            finished: isWon,
+            winnerId: isWon ? currentUserId : undefined,
           },
         });
       }
     }
-  }, [gameState.score, gameState.matches, gameState.combo, gameState.moves, gameState.status, room.gameMode, currentUserId]);
+  }, [gameState.score, gameState.matches, gameState.combo, gameState.moves, gameState.status, room.gameMode, currentUserId, gameState.board.cards.length]);
 
   // Reset shot clock on turn change in turn_based mode
   useEffect(() => {
@@ -361,6 +412,19 @@ export function useMultiplayerGame(
       .on("broadcast", { event: "TURN_CHANGE" }, ({ payload }) => {
         setCurrentTurnId(payload.nextTurnId);
       })
+      .on("broadcast", { event: "SPEED_RACE_FINISHED" }, ({ payload }) => {
+        if (payload.senderId !== currentUserId) {
+          const winner = payload.winnerId || payload.senderId;
+          setSpeedRaceWinnerId(winner);
+          setGameState((prev) => (prev.status === "won" ? prev : { ...prev, status: "lost" }));
+          setOpponentGhost((prev) => ({
+            ...prev,
+            finished: true,
+            matches: payload.matches || (gameState.board.cards.length / 2),
+            score: payload.score || prev.score,
+          }));
+        }
+      })
       .on("broadcast", { event: "GHOST_PROGRESS" }, ({ payload }) => {
         if (payload.senderId !== currentUserId) {
           setOpponentGhost({
@@ -368,17 +432,26 @@ export function useMultiplayerGame(
             matches: payload.matches,
             combo: payload.combo,
             accuracy: payload.accuracy,
-            finished: payload.finished,
+            finished: Boolean(payload.finished),
           });
           if (payload.finished) {
+            const winner = payload.winnerId || payload.senderId;
+            setSpeedRaceWinnerId(winner);
             setGameState((prev) => (prev.status === "won" ? prev : { ...prev, status: "lost" }));
           }
         }
       })
       .on("broadcast", { event: "MATCH_FINISHED" }, ({ payload }) => {
         if (payload.senderId !== currentUserId) {
+          const winner = payload.winnerId || payload.senderId;
+          setSpeedRaceWinnerId(winner);
           setGameState((prev) => (prev.status === "won" ? prev : { ...prev, status: "lost" }));
-          setOpponentGhost((prev) => ({ ...prev, finished: true, score: payload.finalScore || prev.score }));
+          setOpponentGhost((prev) => ({
+            ...prev,
+            finished: true,
+            score: payload.finalScore || prev.score,
+            matches: gameState.board.cards.length / 2,
+          }));
         }
       })
       .on("broadcast", { event: "QUICK_MESSAGE" }, ({ payload }) => {
@@ -418,7 +491,7 @@ export function useMultiplayerGame(
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [room.id, currentUserId, userProfile.username, userProfile.avatarId, room.hostId, applyCardReveal]);
+  }, [room.id, currentUserId, userProfile.username, userProfile.avatarId, room.hostId, applyCardReveal, gameState.board.cards.length]);
 
   // Clean old messages after 4s
   useEffect(() => {
@@ -450,5 +523,6 @@ export function useMultiplayerGame(
     pingMs,
     turnShotClock,
     coopElapsedTime,
+    speedRaceWinnerId,
   };
 }

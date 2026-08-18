@@ -90,6 +90,7 @@ const LiveMultiplayerCanvas = ({
     pingMs,
     turnShotClock,
     coopElapsedTime,
+    speedRaceWinnerId,
   } = useMultiplayerGame(room, userId, profile);
 
   const [gameFinished, setGameFinished] = useState(false);
@@ -100,7 +101,8 @@ const LiveMultiplayerCanvas = ({
     gameState.matches === totalPairs ||
     gameState.status === "won" ||
     gameState.status === "lost" ||
-    opponentGhost.finished;
+    opponentGhost.finished ||
+    Boolean(speedRaceWinnerId);
 
   const avatar = avatarOptions.find((entry) => entry.id === profile.avatarId) ?? avatarOptions[0];
 
@@ -116,12 +118,14 @@ const LiveMultiplayerCanvas = ({
         if (hostScore > guestScore) winnerId = room.hostId;
         else if (guestScore > hostScore) winnerId = room.guestId;
       } else if (room.gameMode === "speed_sprint") {
-        if (gameState.status === "won" && !opponentGhost.finished) {
+        if (speedRaceWinnerId) {
+          winnerId = speedRaceWinnerId;
+        } else if (gameState.matches === totalPairs) {
           winnerId = userId;
-        } else if (opponentGhost.finished && gameState.status !== "won") {
+        } else if (opponentGhost.finished || opponentGhost.matches >= totalPairs) {
           winnerId = isHost ? room.guestId : room.hostId;
         } else {
-          winnerId = gameState.score > opponentGhost.score ? userId : (isHost ? room.guestId : room.hostId);
+          winnerId = gameState.matches >= totalPairs ? userId : (isHost ? room.guestId : room.hostId);
         }
       } else {
         winnerId = room.hostId; // Co-op win
@@ -130,18 +134,24 @@ const LiveMultiplayerCanvas = ({
       updateRoomConfig(room.id, {
         status: "finished",
         winner_id: winnerId,
-        scores: playerScores,
+        scores: {
+          [userId]: gameState.score,
+          [isHost ? room.guestId || "" : room.hostId]: opponentGhost.score,
+        },
       });
 
       setTimeout(() => {
         navigate(`/multiplayer/results/${room.id}`, {
           state: {
             room,
-            myScore: room.gameMode === "speed_sprint" ? Math.round(gameState.score * 1.5) : gameState.score,
+            myScore: gameState.score,
             opponentScore:
               room.gameMode === "speed_sprint"
-                ? Math.round(opponentGhost.score * 1.5)
+                ? opponentGhost.score
                 : (isHost ? playerScores[room.guestId || ""] || 0 : playerScores[room.hostId] || 0),
+            myMatches: gameState.matches,
+            opponentMatches: opponentGhost.matches,
+            totalPairs,
             winnerId,
             accuracy: gameState.moves > 0 ? (gameState.matches / gameState.moves) * 100 : 0,
             coopScore: coopSharedScore,
@@ -149,7 +159,7 @@ const LiveMultiplayerCanvas = ({
         });
       }, 1500);
     }
-  }, [isFinished, gameFinished, room, playerScores, gameState, opponentGhost, isHost, userId, coopSharedScore, navigate]);
+  }, [isFinished, gameFinished, room, playerScores, gameState, opponentGhost, isHost, userId, coopSharedScore, navigate, speedRaceWinnerId, totalPairs]);
 
   const quickMessagesList: QuickMessage[] = [
     "Nice move!",
@@ -233,10 +243,12 @@ const LiveMultiplayerCanvas = ({
                   ? `${turnShotClock}s`
                   : room.gameMode === "coop"
                   ? formatDuration(coopElapsedTime)
-                  : formatDurationMs(gameState.timerRemaining)
+                  : formatDuration(gameState.timerRemaining)
               }
             />
-            <HudStat label="Moves" value={`${gameState.moves}`} />
+            {room.gameMode !== "speed_sprint" && (
+              <HudStat label="Moves" value={`${gameState.moves}`} />
+            )}
             <HudStat label="Pairs" value={`${gameState.matches}/${totalPairs}`} />
             <div className="flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-full border border-[#b9d2f4] bg-[#d7e7fb] text-[#0058a8] dark:border-slate-700 dark:bg-slate-800 dark:text-blue-400 shadow-inner sm:h-16 sm:w-16">
               <span className="text-[0.62rem] font-semibold uppercase">Combo</span>
@@ -358,7 +370,11 @@ const LiveMultiplayerCanvas = ({
 
               <div className="mt-4 rounded-[1.15rem] border border-[#d7dcf5] bg-[#f3f4ff] px-3 py-2.5 text-xs leading-5 text-[#3525cd] dark:text-indigo-300 dark:bg-indigo-950/30 dark:border-indigo-500/20">
                 {room.gameMode === "speed_sprint"
-                  ? "Sprint Race: Play on your own board as fast as possible. First to clear all pairs wins!"
+                  ? gameState.matches === totalPairs
+                    ? "You cleared all pairs first! Finalizing victory..."
+                    : opponentGhost.finished || opponentGhost.matches >= totalPairs
+                    ? "Opponent cleared all pairs first! Race completed."
+                    : `Speed Race: First to open all ${totalPairs} pairs wins! No move limits.`
                   : isMyTurn
                   ? "It's your turn to match pairs!"
                   : `Waiting for ${opponentProfile?.username || "opponent"}'s move...`}
@@ -367,12 +383,14 @@ const LiveMultiplayerCanvas = ({
 
             {/* Card 2: Battle Stats */}
             <div className="glass-panel rounded-[1.4rem] p-4 sm:rounded-[1.6rem]">
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#3f4457] dark:text-slate-400">Battle Stats</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#3f4457] dark:text-slate-400">
+                {room.gameMode === "speed_sprint" ? "Race Stats" : "Battle Stats"}
+              </p>
               <div className="mt-3 space-y-2">
-                <SideStat icon={<GridIcon className="h-4 w-4" />} label="Score" value={formatNumber(gameState.score)} />
+                <SideStat icon={<GridIcon className="h-4 w-4" />} label="Pairs" value={`${gameState.matches}/${totalPairs}`} />
                 <SideStat icon={<ClockIcon className="h-4 w-4" />} label="Mistakes" value={`${gameState.mismatches}`} />
                 <SideStat icon={<SparklesIcon className="h-4 w-4" />} label="Best combo" value={`x${gameState.maxCombo}`} />
-                <SideStat icon={<RefreshIcon className="h-4 w-4" />} label="Moves" value={`${gameState.moves}`} />
+                <SideStat icon={<RefreshIcon className="h-4 w-4" />} label="Score" value={formatNumber(gameState.score)} />
               </div>
             </div>
           </aside>

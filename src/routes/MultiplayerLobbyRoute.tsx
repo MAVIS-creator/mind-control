@@ -173,7 +173,7 @@ export const MultiplayerLobbyRoute = () => {
                 </div>
                 <h3 className="mt-3 font-display text-base font-bold text-[#1e1b4b] dark:text-white">Speed Sprint Race</h3>
                 <p className="mt-1 text-xs leading-relaxed text-[#525166] dark:text-slate-300">
-                  Simultaneous race on identical grid seeds. Monitor opponent ghost progress in real-time.
+                  Simultaneous race on identical grid seeds. First to open all pairs wins immediately with unlimited moves!
                 </p>
               </div>
 
