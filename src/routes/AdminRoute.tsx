@@ -83,9 +83,9 @@ export const AdminRoute = () => {
 
   if (!session.profile.isAdmin) {
     return (
-      <div className="min-h-screen bg-[linear-gradient(180deg,#f0f9ff_0%,#e0f2fe_100%)] dark:bg-none dark:bg-slate-950 px-4 py-10">
+      <div className="min-h-screen bg-[linear-gradient(180deg,#f0f9ff_0%,#eff1ff_100%)] dark:bg-none dark:bg-slate-950 px-4 py-10">
         <div className="mx-auto max-w-2xl">
-          <div className="rounded-[1.8rem] border border-white/70 dark:border-slate-800 bg-white/84 dark:bg-slate-900/90 p-8 text-center shadow-[0_22px_48px_rgba(37,99,235,0.08)]">
+          <div className="rounded-[1.8rem] border border-white/70 dark:border-slate-800 bg-white/84 dark:bg-slate-900/90 p-8 text-center shadow-[0_22px_48px_rgba(28,5,179,0.08)]">
             <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#7d8395] dark:text-slate-400">Admin access</p>
             <h1 className="mt-4 font-display text-[2.4rem] font-extrabold text-[#0f172a] dark:text-white">
               This account cannot open the admin panel.
@@ -95,7 +95,7 @@ export const AdminRoute = () => {
             </p>
             <Link
               to="/play"
-              className="mt-8 inline-flex items-center gap-2 rounded-full bg-gradient-to-b from-[#2563eb] to-[#1d4ed8] px-7 py-4 text-sm font-semibold uppercase tracking-[0.14em] text-white shadow-md"
+              className="mt-8 inline-flex items-center gap-2 rounded-full bg-gradient-to-b from-[#2406e2] to-[#1c05b3] px-7 py-4 text-sm font-semibold uppercase tracking-[0.14em] text-white shadow-md"
             >
               <ArrowLeftIcon className="h-4 w-4" />
               Back to Game Hub
@@ -160,7 +160,7 @@ export const AdminRoute = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[linear-gradient(180deg,#f0f9ff_0%,#e0f2fe_100%)] dark:bg-none dark:bg-slate-950 px-4 py-5 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[linear-gradient(180deg,#f0f9ff_0%,#eff1ff_100%)] dark:bg-none dark:bg-slate-950 px-4 py-5 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-[1500px] space-y-5">
         <header className="rounded-[1.6rem] border border-white/70 dark:border-slate-800 bg-white/84 dark:bg-slate-900/90 px-5 py-5 shadow-[0_18px_40px_rgba(37,99,235,0.07)] sm:px-6">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
@@ -183,7 +183,7 @@ export const AdminRoute = () => {
               </Link>
               <Link
                 to="/hall-of-fame"
-                className="inline-flex items-center gap-2 rounded-full bg-gradient-to-b from-[#2563eb] to-[#1d4ed8] px-5 py-3 text-sm font-semibold text-white shadow-md"
+                className="inline-flex items-center gap-2 rounded-full bg-gradient-to-b from-[#2406e2] to-[#1c05b3] px-5 py-3 text-sm font-semibold text-white shadow-md"
               >
                 <TrophyIcon className="h-4 w-4" />
                 Ranks
@@ -247,7 +247,7 @@ export const AdminRoute = () => {
                         onClick={() => togglePlayer(player)}
                         className={`flex w-full items-center gap-3 rounded-[1.2rem] border p-3 text-left transition ${
                           selected
-                            ? "border-[#2563eb] bg-[#eff6ff] dark:bg-blue-900/30"
+                            ? "border-[#1c05b3] bg-[#e0e4ff] dark:bg-blue-900/30"
                             : "border-[#e5e9f5] bg-white hover:border-[#bfdbfe] dark:border-slate-800 dark:bg-slate-950 dark:hover:border-slate-700"
                         }`}
                       >
@@ -255,7 +255,7 @@ export const AdminRoute = () => {
                         <div className="min-w-0 flex-1">
                           <div className="truncate font-semibold text-[#0f172a] dark:text-white">{player.username}</div>
                           <div className="truncate text-xs text-[#64748b] dark:text-slate-400">{player.email || "No email saved"}</div>
-                          <div className="mt-1 text-xs font-semibold text-[#2563eb] dark:text-sky-400">
+                          <div className="mt-1 text-xs font-semibold text-[#1c05b3] dark:text-sky-400">
                             {formatNumber(player.totalPoints)} pts · best {formatNumber(player.bestScore)}
                           </div>
                         </div>
@@ -280,7 +280,7 @@ export const AdminRoute = () => {
                         </button>
                         <span
                           className={`h-5 w-5 rounded-full border ${
-                            selected ? "border-[#2563eb] bg-[#2563eb]" : "border-[#cbd5e1] bg-white dark:border-slate-700 dark:bg-slate-800"
+                            selected ? "border-[#1c05b3] bg-[#1c05b3]" : "border-[#cbd5e1] bg-white dark:border-slate-700 dark:bg-slate-800"
                           }`}
                         />
                       </button>
@@ -307,7 +307,7 @@ export const AdminRoute = () => {
                     selectedPlayers.map((player) => (
                       <span
                         key={player.userId}
-                        className="rounded-full bg-white dark:bg-slate-800 px-3 py-1.5 text-xs font-semibold text-[#2563eb] dark:text-sky-400"
+                        className="rounded-full bg-white dark:bg-slate-800 px-3 py-1.5 text-xs font-semibold text-[#1c05b3] dark:text-sky-400"
                         title={player.email || "No saved email"}
                       >
                         {player.username}
@@ -325,7 +325,7 @@ export const AdminRoute = () => {
                 <input
                   value={emailSubject}
                   onChange={(event) => setEmailSubject(event.target.value)}
-                  className="h-13 w-full rounded-[1.1rem] border border-[#dfe4f2] dark:border-slate-800 bg-white dark:bg-slate-950 px-4 py-3 text-sm text-[#0f172a] dark:text-white outline-none transition focus:border-[#60a5fa] dark:focus:border-blue-500 focus:ring-4 focus:ring-[#bae6fd] dark:focus:ring-blue-500/20"
+                  className="h-13 w-full rounded-[1.1rem] border border-[#dfe4f2] dark:border-slate-800 bg-white dark:bg-slate-950 px-4 py-3 text-sm text-[#0f172a] dark:text-white outline-none transition focus:border-[#1c05b3] dark:focus:border-[#1c05b3] focus:ring-4 focus:ring-[#c7ceff] dark:focus:ring-blue-500/20"
                 />
               </label>
 
@@ -335,7 +335,7 @@ export const AdminRoute = () => {
                   value={emailBody}
                   onChange={(event) => setEmailBody(event.target.value)}
                   rows={8}
-                  className="w-full rounded-[1.1rem] border border-[#dfe4f2] dark:border-slate-800 bg-white dark:bg-slate-950 px-4 py-3 text-sm leading-6 text-[#0f172a] dark:text-white outline-none transition focus:border-[#60a5fa] dark:focus:border-blue-500 focus:ring-4 focus:ring-[#bae6fd] dark:focus:ring-blue-500/20"
+                  className="w-full rounded-[1.1rem] border border-[#dfe4f2] dark:border-slate-800 bg-white dark:bg-slate-950 px-4 py-3 text-sm leading-6 text-[#0f172a] dark:text-white outline-none transition focus:border-[#1c05b3] dark:focus:border-[#1c05b3] focus:ring-4 focus:ring-[#c7ceff] dark:focus:ring-blue-500/20"
                 />
               </label>
 
@@ -346,7 +346,7 @@ export const AdminRoute = () => {
                 type="button"
                 disabled={sending || !selectedUserIds.length}
                 onClick={() => void handleSendEmail()}
-                className="inline-flex h-14 w-full items-center justify-center gap-2 rounded-full bg-gradient-to-b from-[#2563eb] to-[#1d4ed8] text-sm font-bold uppercase tracking-[0.14em] text-white shadow-[0_14px_30px_rgba(37,99,235,0.18)] disabled:cursor-not-allowed disabled:opacity-50"
+                className="inline-flex h-14 w-full items-center justify-center gap-2 rounded-full bg-gradient-to-b from-[#2406e2] to-[#1c05b3] text-sm font-bold uppercase tracking-[0.14em] text-white shadow-[0_14px_30px_rgba(37,99,235,0.18)] disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <SparklesIcon className="h-4 w-4" />
                 {sending ? "Sending..." : "Send Email"}
@@ -377,7 +377,7 @@ export const AdminRoute = () => {
                         <div className="text-xs text-[#7d8395] dark:text-slate-400">{entry.email || "No email"}</div>
                       </td>
                       <td className="px-5 py-4">
-                        <div className="font-semibold text-[#2563eb] dark:text-sky-400">{formatNumber(entry.score)}</div>
+                        <div className="font-semibold text-[#1c05b3] dark:text-sky-400">{formatNumber(entry.score)}</div>
                         <div className="text-xs text-[#7d8395] dark:text-slate-400">
                           {entry.gridSize} · {entry.matchType} · {formatDuration(entry.duration)}
                         </div>
@@ -390,7 +390,7 @@ export const AdminRoute = () => {
                         <button
                           type="button"
                           onClick={() => selectRun(entry)}
-                          className="rounded-full border border-[#cbd5e1] dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#2563eb] dark:text-sky-400"
+                          className="rounded-full border border-[#cbd5e1] dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#1c05b3] dark:text-sky-400"
                         >
                           Open
                         </button>
@@ -434,7 +434,7 @@ export const AdminRoute = () => {
                     value={note}
                     onChange={(event) => setNote(event.target.value)}
                     rows={4}
-                    className="w-full rounded-[1.2rem] border border-[#dfe4f2] dark:border-slate-800 bg-[#f8f9ff] dark:bg-slate-950 px-4 py-3 text-sm text-[#0f172a] dark:text-white outline-none transition focus:border-[#60a5fa] dark:focus:border-blue-500 focus:ring-4 focus:ring-[#bae6fd] dark:focus:ring-blue-500/20"
+                    className="w-full rounded-[1.2rem] border border-[#dfe4f2] dark:border-slate-800 bg-[#f8f9ff] dark:bg-slate-950 px-4 py-3 text-sm text-[#0f172a] dark:text-white outline-none transition focus:border-[#1c05b3] dark:focus:border-[#1c05b3] focus:ring-4 focus:ring-[#c7ceff] dark:focus:ring-blue-500/20"
                   />
                 </label>
 
@@ -509,8 +509,8 @@ const AdminNav = () => (
         className={({ isActive }) =>
           `shrink-0 rounded-full px-5 py-3 text-sm font-bold transition ${
             isActive
-              ? "bg-gradient-to-b from-[#2563eb] to-[#1d4ed8] text-white shadow-[0_12px_24px_rgba(37,99,235,0.18)]"
-              : "text-[#5a6174] hover:bg-[#eff6ff] hover:text-[#2563eb] dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white"
+              ? "bg-gradient-to-b from-[#2406e2] to-[#1c05b3] text-white shadow-[0_12px_24px_rgba(37,99,235,0.18)]"
+              : "text-[#5a6174] hover:bg-[#e0e4ff] hover:text-[#1c05b3] dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white"
           }`
         }
       >
@@ -573,7 +573,7 @@ const PanelHeader = ({
         <h2 className="text-lg font-semibold uppercase tracking-[0.16em] text-[#0f172a] dark:text-white">{title}</h2>
         <p className="mt-1 text-sm text-[#64748b] dark:text-slate-400">{helper}</p>
       </div>
-      <span className="shrink-0 rounded-full bg-[#eff6ff] dark:bg-blue-900/30 px-3 py-1 text-xs font-semibold text-[#2563eb] dark:text-sky-400">
+      <span className="shrink-0 rounded-full bg-[#e0e4ff] dark:bg-blue-900/30 px-3 py-1 text-xs font-semibold text-[#1c05b3] dark:text-sky-400">
         {caption}
       </span>
     </div>
@@ -590,7 +590,7 @@ const AdminStatCard = ({
   icon: JSX.Element;
 }) => (
   <div className="rounded-[1.35rem] border border-white/70 dark:border-slate-800 bg-white/84 dark:bg-slate-900/90 p-5 shadow-[0_16px_32px_rgba(37,99,235,0.05)]">
-    <div className="inline-flex rounded-2xl bg-[#eff6ff] dark:bg-blue-900/30 p-2 text-[#2563eb] dark:text-sky-400">{icon}</div>
+    <div className="inline-flex rounded-2xl bg-[#e0e4ff] dark:bg-blue-900/30 p-2 text-[#1c05b3] dark:text-sky-400">{icon}</div>
     <p className="mt-4 text-xs font-semibold uppercase tracking-[0.18em] text-[#7d8395] dark:text-slate-400">{label}</p>
     <p className="mt-2 text-[1.8rem] font-bold text-[#0f172a] dark:text-white">{value}</p>
   </div>
@@ -635,7 +635,7 @@ const ReviewButton = ({
       ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400"
       : tone === "bad"
         ? "bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400"
-        : "bg-[#eff6ff] text-[#2563eb] dark:bg-blue-900/30 dark:text-sky-400";
+        : "bg-[#e0e4ff] text-[#1c05b3] dark:bg-blue-900/30 dark:text-sky-400";
 
   return (
     <button

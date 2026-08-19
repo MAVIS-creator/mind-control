@@ -72,7 +72,7 @@ export const PublicRanksRoute = () => {
     <PublicSiteShell active="ranks">
       <main className="mx-auto max-w-[1500px] px-4 py-8 sm:px-6 lg:px-8 lg:py-12">
         <section className="mx-auto max-w-4xl text-center">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-[1.4rem] bg-gradient-to-b from-[#2563eb] to-[#1d4ed8] text-white shadow-[0_18px_36px_rgba(37,99,235,0.22)]">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-[1.4rem] bg-gradient-to-b from-[#1c05b3] to-[#140494] text-white shadow-[0_18px_36px_rgba(28, 5, 179,0.22)]">
             <TrophyIcon className="h-8 w-8" />
           </div>
           <h1 className="mt-5 font-display text-5xl font-extrabold tracking-[-0.06em] text-[#0f172a] dark:text-white sm:text-7xl">
@@ -92,7 +92,7 @@ export const PublicRanksRoute = () => {
                 onClick={() => setActiveTab("single")}
                 className={`rounded-full px-6 py-2 text-xs font-bold uppercase tracking-wider transition-all ${
                   activeTab === "single"
-                    ? "bg-[#2563eb] text-white shadow-md dark:bg-blue-600"
+                    ? "bg-[#1c05b3] text-white shadow-md dark:bg-[#1c05b3]"
                     : "text-[#64748b] hover:text-[#0f172a] dark:text-slate-400 dark:hover:text-white"
                 }`}
               >
@@ -103,7 +103,7 @@ export const PublicRanksRoute = () => {
                 onClick={() => setActiveTab("multiplayer")}
                 className={`rounded-full px-6 py-2 text-xs font-bold uppercase tracking-wider transition-all ${
                   activeTab === "multiplayer"
-                    ? "bg-[#2563eb] text-white shadow-md dark:bg-blue-600"
+                    ? "bg-[#1c05b3] text-white shadow-md dark:bg-[#1c05b3]"
                     : "text-[#64748b] hover:text-[#0f172a] dark:text-slate-400 dark:hover:text-white"
                 }`}
               >
@@ -118,7 +118,7 @@ export const PublicRanksRoute = () => {
               <select
                 value={mpModeFilter}
                 onChange={(e) => setMpModeFilter(e.target.value as any)}
-                className="rounded-xl border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 dark:text-white px-3 py-1.5 text-xs font-semibold text-[#0f172a] outline-none focus:border-[#2563eb]"
+                className="rounded-xl border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 dark:text-white px-3 py-1.5 text-xs font-semibold text-[#0f172a] outline-none focus:border-[#1c05b3]"
               >
                 <option value="all">All Modes</option>
                 <option value="speed_sprint">Speed Sprint Race</option>
@@ -129,10 +129,10 @@ export const PublicRanksRoute = () => {
           )}
 
           <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
-            <Link to="/register" className="rounded-full bg-gradient-to-b from-[#2563eb] to-[#1d4ed8] px-8 py-4 font-semibold text-white shadow-[0_18px_30px_rgba(37,99,235,0.22)]">
+            <Link to="/register" className="rounded-full bg-gradient-to-b from-[#1c05b3] to-[#140494] px-8 py-4 font-semibold text-white shadow-[0_18px_30px_rgba(28, 5, 179,0.22)]">
               Join the Leaderboard
             </Link>
-            <Link to="/login" className="rounded-full border border-[#cbd5e1] bg-white/80 px-8 py-4 font-semibold text-[#2563eb] dark:border-slate-800 dark:bg-slate-900 dark:text-sky-400 dark:hover:bg-slate-800">
+            <Link to="/login" className="rounded-full border border-[#cbd5e1] bg-white/80 px-8 py-4 font-semibold text-[#1c05b3] dark:border-slate-800 dark:bg-slate-900 dark:text-[#2406e2] dark:hover:bg-slate-800">
               Sign In
             </Link>
           </div>
@@ -155,7 +155,7 @@ export const PublicRanksRoute = () => {
                 return (
                   <article
                     key={`${entry.userId}-${index}`}
-                    className="glass-panel rounded-[2rem] p-6 text-center shadow-[0_20px_44px_rgba(37,99,235,0.07)] dark:border dark:border-slate-800 dark:bg-slate-900/90 dark:text-white"
+                    className="glass-panel rounded-[2rem] p-6 text-center shadow-[0_20px_44px_rgba(28, 5, 179,0.07)] dark:border dark:border-slate-800 dark:bg-slate-900/90 dark:text-white"
                   >
                     <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-white text-lg font-bold text-slate-900 dark:bg-slate-800 dark:text-white shadow-sm">
                       {index + 1}
@@ -163,7 +163,7 @@ export const PublicRanksRoute = () => {
                     <div
                       className={`mx-auto mt-4 w-fit rounded-full p-[3px] transition-all duration-300 ${
                         entry.isAdmin
-                          ? "bg-gradient-to-r from-sky-400 via-blue-500 to-amber-400 shadow-[0_0_24px_rgba(14,165,233,0.55)] dark:shadow-[0_0_28px_rgba(56,189,248,0.75)]"
+                          ? "bg-gradient-to-r from-[#2406e2] via-[#2406e2] to-amber-400 shadow-[0_0_24px_rgba(28, 5, 179,0.55)] dark:shadow-[0_0_28px_rgba(28, 5, 179,0.75)]"
                           : entry.isBetaTester
                           ? "bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 shadow-[0_0_20px_rgba(245,158,11,0.5)] dark:shadow-[0_0_24px_rgba(245,158,11,0.7)]"
                           : ""
@@ -176,7 +176,7 @@ export const PublicRanksRoute = () => {
                       />
                     </div>
                     <h2 className="mt-4 text-xl font-semibold text-slate-900 dark:text-white">{entry.username}</h2>
-                    <p className="mt-1 text-sm font-bold uppercase tracking-[0.18em] text-[#2563eb] dark:text-sky-400">
+                    <p className="mt-1 text-sm font-bold uppercase tracking-[0.18em] text-[#1c05b3] dark:text-[#2406e2]">
                       {formatNumber(pts)} MP Points
                     </p>
                     <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
@@ -195,7 +195,7 @@ export const PublicRanksRoute = () => {
             return (
               <article
                 key={`${entry.username}-${index}`}
-                className="glass-panel rounded-[2rem] p-6 text-center shadow-[0_20px_44px_rgba(37,99,235,0.07)] dark:border dark:border-slate-800 dark:bg-slate-900/90 dark:text-white"
+                className="glass-panel rounded-[2rem] p-6 text-center shadow-[0_20px_44px_rgba(28, 5, 179,0.07)] dark:border dark:border-slate-800 dark:bg-slate-900/90 dark:text-white"
               >
                 <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-white text-lg font-bold text-slate-900 dark:bg-slate-800 dark:text-white shadow-sm">
                   {index + 1}
@@ -203,7 +203,7 @@ export const PublicRanksRoute = () => {
                 <div
                   className={`mx-auto mt-4 w-fit rounded-full p-[3px] transition-all duration-300 ${
                     entry.isAdmin
-                      ? "bg-gradient-to-r from-sky-400 via-blue-500 to-amber-400 shadow-[0_0_24px_rgba(14,165,233,0.55)] dark:shadow-[0_0_28px_rgba(56,189,248,0.75)]"
+                      ? "bg-gradient-to-r from-[#2406e2] via-[#2406e2] to-amber-400 shadow-[0_0_24px_rgba(28, 5, 179,0.55)] dark:shadow-[0_0_28px_rgba(28, 5, 179,0.75)]"
                       : entry.isBetaTester
                       ? "bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 shadow-[0_0_20px_rgba(245,158,11,0.5)] dark:shadow-[0_0_24px_rgba(245,158,11,0.7)]"
                       : ""
@@ -216,7 +216,7 @@ export const PublicRanksRoute = () => {
                   />
                 </div>
                 <h2 className="mt-4 text-xl font-semibold text-slate-900 dark:text-white">{entry.username}</h2>
-                <p className="mt-1 text-sm uppercase tracking-[0.18em] text-[#2563eb] dark:text-sky-400">{formatNumber(entry.rating)} rating</p>
+                <p className="mt-1 text-sm uppercase tracking-[0.18em] text-[#1c05b3] dark:text-[#2406e2]">{formatNumber(entry.rating)} rating</p>
                 <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
                   Best {formatNumber(entry.score)} • Total {formatNumber(entry.totalPoints)}
                 </p>
@@ -225,7 +225,7 @@ export const PublicRanksRoute = () => {
           })}
         </section>
 
-        <section className="glass-panel mt-9 overflow-hidden rounded-[2rem] shadow-[0_18px_40px_rgba(37,99,235,0.08)] dark:border dark:border-slate-800 dark:bg-slate-900/90">
+        <section className="glass-panel mt-9 overflow-hidden rounded-[2rem] shadow-[0_18px_40px_rgba(28, 5, 179,0.08)] dark:border dark:border-slate-800 dark:bg-slate-900/90">
           <div className="border-b border-slate-200/70 dark:border-slate-800 px-5 py-5 sm:px-7">
             <h2 className="text-2xl font-bold tracking-[-0.04em] text-slate-900 dark:text-white">
               {activeTab === "single" ? "Single Player Leaderboard" : "Multiplayer Standings"}
@@ -253,13 +253,13 @@ export const PublicRanksRoute = () => {
                 return (
                   <div key={entry.userId} className="grid gap-4 px-5 py-5 sm:grid-cols-[auto_1fr_auto] sm:items-center sm:px-7">
                     <div className="flex items-center gap-4">
-                      <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#e0f2fe] text-sm font-bold text-[#2563eb] dark:bg-slate-800 dark:text-sky-300">
+                      <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#e0e4ff] text-sm font-bold text-[#1c05b3] dark:bg-slate-800 dark:text-[#c7ceff]">
                         {index + 1}
                       </span>
                       <div
                         className={`rounded-full p-[2px] transition-all duration-300 shrink-0 ${
                           entry.isAdmin
-                            ? "bg-gradient-to-r from-sky-400 via-blue-500 to-amber-400 shadow-[0_0_12px_rgba(14,165,233,0.55)] dark:shadow-[0_0_16px_rgba(56,189,248,0.7)]"
+                            ? "bg-gradient-to-r from-[#2406e2] via-[#2406e2] to-amber-400 shadow-[0_0_12px_rgba(28, 5, 179,0.55)] dark:shadow-[0_0_16px_rgba(28, 5, 179,0.7)]"
                             : entry.isBetaTester
                             ? "bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.5)] dark:shadow-[0_0_14px_rgba(245,158,11,0.65)]"
                             : ""
@@ -294,13 +294,13 @@ export const PublicRanksRoute = () => {
                 return (
                   <div key={entry.id} className="grid gap-4 px-5 py-5 sm:grid-cols-[auto_1fr_auto] sm:items-center sm:px-7">
                     <div className="flex items-center gap-4">
-                      <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#e0f2fe] text-sm font-bold text-[#2563eb] dark:bg-slate-800 dark:text-sky-300">
+                      <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#e0e4ff] text-sm font-bold text-[#1c05b3] dark:bg-slate-800 dark:text-[#c7ceff]">
                         {index + 1}
                       </span>
                       <div
                         className={`rounded-full p-[2px] transition-all duration-300 shrink-0 ${
                           entry.isAdmin
-                            ? "bg-gradient-to-r from-sky-400 via-blue-500 to-amber-400 shadow-[0_0_12px_rgba(14,165,233,0.55)] dark:shadow-[0_0_16px_rgba(56,189,248,0.7)]"
+                            ? "bg-gradient-to-r from-[#2406e2] via-[#2406e2] to-amber-400 shadow-[0_0_12px_rgba(28, 5, 179,0.55)] dark:shadow-[0_0_16px_rgba(28, 5, 179,0.7)]"
                             : entry.isBetaTester
                             ? "bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.5)] dark:shadow-[0_0_14px_rgba(245,158,11,0.65)]"
                             : ""
@@ -326,7 +326,7 @@ export const PublicRanksRoute = () => {
                       <RankStat label="Accuracy" value={formatPercent(entry.accuracy)} />
                       <RankStat label="Time" value={formatDuration(entry.duration)} />
                     </div>
-                    <div className="rounded-full bg-white px-4 py-2 text-center text-sm font-semibold text-[#2563eb] shadow-sm dark:bg-slate-800 dark:text-sky-300">
+                    <div className="rounded-full bg-white px-4 py-2 text-center text-sm font-semibold text-[#1c05b3] shadow-sm dark:bg-slate-800 dark:text-[#c7ceff]">
                       x{entry.maxCombo}
                     </div>
                   </div>
@@ -340,13 +340,13 @@ export const PublicRanksRoute = () => {
               <div className="mt-2 flex flex-col justify-center gap-3 sm:flex-row">
                 <Link
                   to="/register"
-                  className="rounded-full bg-gradient-to-b from-[#2563eb] to-[#1d4ed8] px-6 py-3 text-sm font-semibold text-white shadow-[0_14px_26px_rgba(37,99,235,0.18)]"
+                  className="rounded-full bg-gradient-to-b from-[#1c05b3] to-[#140494] px-6 py-3 text-sm font-semibold text-white shadow-[0_14px_26px_rgba(28, 5, 179,0.18)]"
                 >
                   Join the Leaderboard
                 </Link>
                 <Link
                   to="/login"
-                  className="rounded-full border border-[#cbd5e1] bg-white/80 dark:border-slate-800 dark:bg-slate-900 dark:text-white px-6 py-3 text-sm font-semibold text-[#2563eb] shadow-sm"
+                  className="rounded-full border border-[#cbd5e1] bg-white/80 dark:border-slate-800 dark:bg-slate-900 dark:text-white px-6 py-3 text-sm font-semibold text-[#1c05b3] shadow-sm"
                 >
                   Sign In to View Full Ranks
                 </Link>
@@ -362,6 +362,6 @@ export const PublicRanksRoute = () => {
 const RankStat = ({ label, value, strong = false }: { label: string; value: string; strong?: boolean }) => (
   <div>
     <p className="text-[0.64rem] font-semibold uppercase tracking-[0.2em] text-slate-400">{label}</p>
-    <p className={`mt-1 font-semibold ${strong ? "text-[#2563eb] dark:text-sky-400" : "text-slate-800 dark:text-slate-200"}`}>{value}</p>
+    <p className={`mt-1 font-semibold ${strong ? "text-[#1c05b3] dark:text-[#2406e2]" : "text-slate-800 dark:text-slate-200"}`}>{value}</p>
   </div>
 );

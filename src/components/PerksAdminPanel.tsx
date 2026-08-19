@@ -220,7 +220,7 @@ export const PerksAdminPanel = () => {
                   <div
                     key={p.id}
                     className={`flex items-center justify-between gap-3 rounded-2xl border p-3.5 transition ${
-                      isSelected ? "border-[#2563eb] bg-[#eff6ff] dark:bg-blue-900/30" : "border-slate-200/80 bg-white dark:border-slate-800 dark:bg-slate-950"
+                      isSelected ? "border-[#1c05b3] bg-[#e0e4ff] dark:bg-blue-900/30" : "border-slate-200/80 bg-white dark:border-slate-800 dark:bg-slate-950"
                     }`}
                   >
                     <div className="flex items-center gap-3 min-w-0">
@@ -228,7 +228,7 @@ export const PerksAdminPanel = () => {
                         type="checkbox"
                         checked={isSelected}
                         onChange={() => toggleSelectUser(p.id)}
-                        className="h-4 w-4 rounded border-slate-300 text-[#2563eb]"
+                        className="h-4 w-4 rounded border-slate-300 text-[#1c05b3]"
                       />
                       <img src={avatar.image} alt="" className="h-10 w-10 rounded-full border border-slate-200 dark:border-slate-700" />
                       <div className="min-w-0">
@@ -284,7 +284,7 @@ export const PerksAdminPanel = () => {
                   onClick={() => togglePerk("xp_1000")}
                   className={`flex items-center gap-3 rounded-xl border p-3 cursor-pointer transition ${
                     selectedPerks.includes("xp_1000")
-                      ? "border-[#2563eb] bg-[#eff6ff] dark:bg-blue-900/30"
+                      ? "border-[#1c05b3] bg-[#e0e4ff] dark:bg-blue-900/30"
                       : "border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 hover:border-[#60a5fa] dark:hover:border-blue-500/50"
                   }`}
                 >
@@ -292,7 +292,7 @@ export const PerksAdminPanel = () => {
                     type="checkbox"
                     checked={selectedPerks.includes("xp_1000")}
                     onChange={() => {}}
-                    className="h-4 w-4 rounded border-slate-300 text-[#2563eb]"
+                    className="h-4 w-4 rounded border-slate-300 text-[#1c05b3]"
                   />
                   <div>
                     <p className="text-xs font-bold text-slate-900 dark:text-white">+1,000 Founder XP Boost</p>
@@ -304,7 +304,7 @@ export const PerksAdminPanel = () => {
                   onClick={() => togglePerk("tester_badge")}
                   className={`flex items-center gap-3 rounded-xl border p-3 cursor-pointer transition ${
                     selectedPerks.includes("tester_badge")
-                      ? "border-[#2563eb] bg-[#eff6ff] dark:bg-blue-900/30"
+                      ? "border-[#1c05b3] bg-[#e0e4ff] dark:bg-blue-900/30"
                       : "border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 hover:border-[#60a5fa] dark:hover:border-blue-500/50"
                   }`}
                 >
@@ -312,7 +312,7 @@ export const PerksAdminPanel = () => {
                     type="checkbox"
                     checked={selectedPerks.includes("tester_badge")}
                     onChange={() => {}}
-                    className="h-4 w-4 rounded border-slate-300 text-[#2563eb]"
+                    className="h-4 w-4 rounded border-slate-300 text-[#1c05b3]"
                   />
                   <div>
                     <p className="text-xs font-bold text-slate-900 dark:text-white">Neural Tester Title & Gold Avatar Ring</p>
@@ -324,7 +324,7 @@ export const PerksAdminPanel = () => {
                   onClick={() => togglePerk("crystals_500")}
                   className={`flex items-center gap-3 rounded-xl border p-3 cursor-pointer transition ${
                     selectedPerks.includes("crystals_500")
-                      ? "border-[#2563eb] bg-[#eff6ff] dark:bg-blue-900/30"
+                      ? "border-[#1c05b3] bg-[#e0e4ff] dark:bg-blue-900/30"
                       : "border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 hover:border-[#60a5fa] dark:hover:border-blue-500/50"
                   }`}
                 >
@@ -332,7 +332,7 @@ export const PerksAdminPanel = () => {
                     type="checkbox"
                     checked={selectedPerks.includes("crystals_500")}
                     onChange={() => {}}
-                    className="h-4 w-4 rounded border-slate-300 text-[#2563eb]"
+                    className="h-4 w-4 rounded border-slate-300 text-[#1c05b3]"
                   />
                   <div>
                     <p className="text-xs font-bold text-slate-900 dark:text-white">+500 Neural Crystals Bonus</p>
@@ -351,7 +351,7 @@ export const PerksAdminPanel = () => {
               type="button"
               onClick={handleDistributePerk}
               disabled={processing || selectedUserIds.length === 0}
-              className="w-full rounded-2xl bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] py-4 text-xs font-bold uppercase tracking-wider text-white shadow-md transition hover:scale-[1.01] disabled:opacity-50"
+              className="w-full rounded-2xl bg-gradient-to-r from-[#1c05b3] to-[#140494] py-4 text-xs font-bold uppercase tracking-wider text-white shadow-md transition hover:scale-[1.01] disabled:opacity-50"
             >
               {processing ? "Distributing Perks..." : "Gift Perks & Send Notification"}
             </button>

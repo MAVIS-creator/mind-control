@@ -28,8 +28,8 @@ export const ContactRoute = () => (
     <main className="mx-auto flex min-h-[calc(100svh-170px)] max-w-[1280px] flex-col justify-center px-4 py-8 sm:px-6 lg:px-8 lg:py-12">
       <section className="grid items-center gap-8 lg:grid-cols-[0.9fr_1.1fr]">
         <div>
-          <div className="inline-flex items-center gap-2 rounded-full border border-white/70 bg-white/70 px-4 py-2 text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-[#2563eb] shadow-[0_14px_30px_rgba(37,99,235,0.08)] backdrop-blur-xl dark:border-slate-800 dark:bg-slate-900/90 dark:text-white sm:text-xs">
-            <MailIcon className="h-4 w-4 text-[#2563eb] dark:text-sky-400" />
+          <div className="inline-flex items-center gap-2 rounded-full border border-white/70 bg-white/70 px-4 py-2 text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-[#1c05b3] shadow-[0_14px_30px_rgba(28,5,179,0.08)] backdrop-blur-xl dark:border-slate-800 dark:bg-slate-900/90 dark:text-white sm:text-xs">
+            <MailIcon className="h-4 w-4 text-[#1c05b3] dark:text-sky-400" />
             Contact MindGrid
           </div>
           <h1 className="mt-5 font-display text-5xl font-extrabold tracking-[-0.06em] text-[#0f172a] dark:text-white sm:text-7xl">
@@ -41,21 +41,21 @@ export const ContactRoute = () => (
           <div className="mt-7 flex flex-col gap-3 sm:flex-row">
             <a
               href="mailto:akintunde.dolapo1@gmail.com?subject=MindGrid%20message"
-              className="inline-flex items-center justify-center gap-3 rounded-full bg-gradient-to-b from-[#2563eb] to-[#1d4ed8] px-8 py-4 font-semibold text-white shadow-[0_18px_30px_rgba(37,99,235,0.22)]"
+              className="inline-flex items-center justify-center gap-3 rounded-full bg-gradient-to-b from-[#2406e2] to-[#1c05b3] px-8 py-4 font-semibold text-white shadow-[0_18px_30px_rgba(37,99,235,0.22)]"
             >
               <MailIcon className="h-5 w-5" />
               Email Us
             </a>
-            <Link to="/register" className="inline-flex items-center justify-center gap-3 rounded-full border border-[#cbd5e1] bg-white/80 px-8 py-4 font-semibold text-[#2563eb] dark:border-slate-800 dark:bg-slate-900 dark:text-white dark:hover:bg-slate-800">
+            <Link to="/register" className="inline-flex items-center justify-center gap-3 rounded-full border border-[#cbd5e1] bg-white/80 px-8 py-4 font-semibold text-[#1c05b3] dark:border-slate-800 dark:bg-slate-900 dark:text-white dark:hover:bg-slate-800">
               <PlayIcon className="h-5 w-5" />
               Join the Game
             </Link>
           </div>
         </div>
 
-        <div className="glass-panel rounded-[2.2rem] p-5 shadow-[0_18px_40px_rgba(37,99,235,0.08)] sm:p-7 dark:border dark:border-slate-800 dark:bg-slate-900/90">
+        <div className="glass-panel rounded-[2.2rem] p-5 shadow-[0_18px_40px_rgba(28,5,179,0.08)] sm:p-7 dark:border dark:border-slate-800 dark:bg-slate-900/90">
           <div className="mb-5 flex items-center gap-3">
-            <div className="flex h-14 w-14 items-center justify-center rounded-[1.3rem] bg-[#e0f2fe] text-[#2563eb] dark:bg-slate-800 dark:text-white">
+            <div className="flex h-14 w-14 items-center justify-center rounded-[1.3rem] bg-[#eff1ff] text-[#1c05b3] dark:bg-slate-800 dark:text-white">
               <SparklesIcon className="h-7 w-7" />
             </div>
             <div>
@@ -76,7 +76,7 @@ export const ContactRoute = () => (
           <article key={card.title} className="glass-panel rounded-[1.8rem] p-6 shadow-[0_14px_32px_rgba(37,99,235,0.06)] dark:border dark:border-slate-800 dark:bg-slate-900/90">
             <h2 className="text-xl font-bold tracking-[-0.03em] text-[#0f172a] dark:text-white">{card.title}</h2>
             <p className="mt-3 min-h-[5.5rem] text-sm leading-7 text-[#475569] dark:text-slate-300">{card.text}</p>
-            <a href={card.href} className="mt-5 inline-flex w-full justify-center rounded-full bg-white/80 px-5 py-3 text-sm font-semibold text-[#2563eb] dark:bg-slate-800 dark:text-white shadow-sm">
+            <a href={card.href} className="mt-5 inline-flex w-full justify-center rounded-full bg-white/80 px-5 py-3 text-sm font-semibold text-[#1c05b3] dark:bg-slate-800 dark:text-white shadow-sm">
               {card.action}
             </a>
           </article>

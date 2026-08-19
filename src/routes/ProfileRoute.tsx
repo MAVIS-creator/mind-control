@@ -164,7 +164,7 @@ export const ProfileRoute = () => {
           </div>
         ) : (
           <>
-            <section className="glass-panel rounded-[2rem] p-6 shadow-[0_14px_34px_rgba(37,99,235,0.08)] sm:p-8 lg:p-10">
+            <section className="glass-panel rounded-[2rem] p-6 shadow-[0_14px_34px_rgba(28,5,179,0.08)] sm:p-8 lg:p-10">
               <div className="grid gap-8 lg:grid-cols-[220px_1fr] lg:items-center">
                 <div className="relative mx-auto w-full max-w-[220px]">
                   <div
@@ -199,14 +199,14 @@ export const ProfileRoute = () => {
                       </span>
                     )}
                   </div>
-                  <p className="mt-2 text-sm uppercase tracking-[0.24em] text-[#2563eb] dark:text-sky-400">
+                  <p className="mt-2 text-sm uppercase tracking-[0.24em] text-[#1c05b3] dark:text-sky-400">
                     {resolvedSnapshot.profile.rank}
                   </p>
                   <p className="mt-4 max-w-2xl text-sm leading-7 text-[#5a6174] dark:text-slate-300 sm:text-base">
                     Operative record tracking single player runs, multiplayer battles, ranking credentials, and neural achievements.
                   </p>
                   <div className="mt-6 flex flex-wrap gap-4">
-                    <div className="rounded-full border border-[#d8e3fb] bg-[#eef4ff] px-4 py-2 text-xs font-semibold text-[#0284c7] dark:border-slate-800 dark:bg-slate-900 dark:text-sky-300">
+                    <div className="rounded-full border border-[#d8e3fb] bg-[#eef4ff] px-4 py-2 text-xs font-semibold text-[#2406e2] dark:border-slate-800 dark:bg-slate-900 dark:text-sky-300">
                       Level {level.level} ({formatNumber(resolvedSnapshot.profile.xp)} XP)
                     </div>
                     <div className="rounded-full border border-[#dfe4f2] bg-white/80 px-4 py-2 text-xs font-semibold text-[#5a6174] dark:border-slate-800 dark:bg-slate-900 dark:text-slate-400">
@@ -224,7 +224,7 @@ export const ProfileRoute = () => {
                   onClick={() => setProfileMode("single")}
                   className={`rounded-full px-6 py-2 text-xs font-bold uppercase tracking-wider transition-all ${
                     profileMode === "single"
-                      ? "bg-[#2563eb] text-white shadow-md dark:bg-blue-600"
+                      ? "bg-[#1c05b3] text-white shadow-md dark:bg-[#1c05b3]"
                       : "text-[#64748b] hover:text-[#0f172a] dark:text-slate-400 dark:hover:text-white"
                   }`}
                 >
@@ -235,7 +235,7 @@ export const ProfileRoute = () => {
                   onClick={() => setProfileMode("multiplayer")}
                   className={`rounded-full px-6 py-2 text-xs font-bold uppercase tracking-wider transition-all ${
                     profileMode === "multiplayer"
-                      ? "bg-[#2563eb] text-white shadow-md dark:bg-blue-600"
+                      ? "bg-[#1c05b3] text-white shadow-md dark:bg-[#1c05b3]"
                       : "text-[#64748b] hover:text-[#0f172a] dark:text-slate-400 dark:hover:text-white"
                   }`}
                 >
@@ -301,13 +301,13 @@ export const ProfileRoute = () => {
                         autoComplete="email"
                         value={email}
                         onChange={(event) => setEmail(event.target.value)}
-                        className="h-14 w-full rounded-[1.2rem] border border-[#dfe4f2] bg-[#f0f9ff] px-4 text-sm text-[#0f172a] outline-none transition focus:border-[#60a5fa] focus:ring-4 focus:ring-[#bae6fd] dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:focus:border-blue-500"
+                        className="h-14 w-full rounded-[1.2rem] border border-[#dfe4f2] bg-[#f0f9ff] px-4 text-sm text-[#0f172a] outline-none transition focus:border-[#1c05b3] focus:ring-4 focus:ring-[#c7ceff] dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:focus:border-[#1c05b3]"
                       />
                     </label>
                     <button
                       type="submit"
                       disabled={saving}
-                      className="h-14 rounded-full bg-gradient-to-b from-[#2563eb] to-[#1d4ed8] px-6 text-sm font-semibold text-white shadow-[0_14px_28px_rgba(37,99,235,0.2)] disabled:opacity-60"
+                      className="h-14 rounded-full bg-gradient-to-b from-[#2406e2] to-[#1c05b3] px-6 text-sm font-semibold text-white shadow-[0_14px_28px_rgba(37,99,235,0.2)] disabled:opacity-60"
                     >
                       {saving ? "Saving..." : "Update Email"}
                     </button>
@@ -336,7 +336,7 @@ export const ProfileRoute = () => {
                             onClick={() => updatePreferences({ colorTheme: item.id as any })}
                             className={`flex items-center justify-center gap-2 rounded-2xl border py-3 text-xs font-bold transition ${
                               isSelected
-                                ? "border-[#2563eb] bg-[#2563eb] text-white shadow-md"
+                                ? "border-[#1c05b3] bg-[#1c05b3] text-white shadow-md"
                                 : "border-slate-200 bg-white/70 text-slate-700 hover:bg-white dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-200"
                             }`}
                           >

@@ -74,7 +74,7 @@ export const AuthPanel = ({ forcedMode }: AuthPanelProps) => {
         initial={{ opacity: 0, y: 22 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.45 }}
-        className="mx-auto w-full max-w-[32rem] rounded-[2.8rem] border border-white/60 bg-white/82 p-7 shadow-[0_26px_60px_rgba(37,99,235,0.08)] backdrop-blur-xl dark:border-slate-800 dark:bg-slate-900/90 dark:text-slate-100 sm:p-9"
+        className="mx-auto w-full max-w-[32rem] rounded-[2.8rem] border border-white/60 bg-white/82 p-7 shadow-[0_26px_60px_rgba(28,5,179,0.08)] backdrop-blur-xl dark:border-slate-800 dark:bg-slate-900/90 dark:text-slate-100 sm:p-9"
       >
         <div className="mb-9">
           <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#64748b] dark:text-slate-400">Sign in</p>
@@ -95,14 +95,14 @@ export const AuthPanel = ({ forcedMode }: AuthPanelProps) => {
               value={identifier}
               onChange={(event) => setIdentifier(event.target.value)}
               placeholder="you@example.com or player_one"
-              className="h-16 w-full rounded-[1.35rem] border border-[#e2e8f0] bg-[#f0f9ff] px-6 text-[1.1rem] text-[#0f172a] outline-none transition focus:border-[#60a5fa] focus:ring-4 focus:ring-[#bae6fd] dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:placeholder-slate-500 dark:focus:border-blue-500"
+              className="h-16 w-full rounded-[1.35rem] border border-[#e2e8f0] bg-[#f0f9ff] px-6 text-[1.1rem] text-[#0f172a] outline-none transition focus:border-[#1c05b3] focus:ring-4 focus:ring-[#c7ceff] dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:placeholder-slate-500 dark:focus:border-[#1c05b3]"
             />
           </label>
 
           <label className="block">
             <div className="mb-2 flex items-center justify-between">
               <span className="text-sm font-semibold uppercase tracking-[0.16em] text-[#475569] dark:text-slate-300">Password</span>
-              <Link to="/forgot-password" className="text-sm font-semibold text-[#2563eb] dark:text-sky-400">
+              <Link to="/forgot-password" className="text-sm font-semibold text-[#1c05b3] dark:text-sky-400">
                 Forgot?
               </Link>
             </div>
@@ -114,7 +114,7 @@ export const AuthPanel = ({ forcedMode }: AuthPanelProps) => {
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               placeholder="••••••••"
-              className="h-16 w-full rounded-[1.35rem] border border-[#e2e8f0] bg-[#f0f9ff] px-6 text-[1.1rem] text-[#0f172a] outline-none transition focus:border-[#60a5fa] focus:ring-4 focus:ring-[#bae6fd] dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:placeholder-slate-500 dark:focus:border-blue-500"
+              className="h-16 w-full rounded-[1.35rem] border border-[#e2e8f0] bg-[#f0f9ff] px-6 text-[1.1rem] text-[#0f172a] outline-none transition focus:border-[#1c05b3] focus:ring-4 focus:ring-[#c7ceff] dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:placeholder-slate-500 dark:focus:border-[#1c05b3]"
             />
           </label>
 
@@ -133,7 +133,7 @@ export const AuthPanel = ({ forcedMode }: AuthPanelProps) => {
           <button
             type="submit"
             disabled={loading}
-            className="h-20 w-full rounded-full bg-gradient-to-b from-[#2563eb] to-[#1d4ed8] text-[1.45rem] font-bold text-white shadow-[0_16px_28px_rgba(37,99,235,0.24)] transition hover:scale-[1.01] disabled:opacity-60"
+            className="h-20 w-full rounded-full bg-gradient-to-b from-[#2406e2] to-[#1c05b3] text-[1.45rem] font-bold text-white shadow-[0_16px_28px_rgba(28,5,179,0.24)] transition hover:from-[#1c05b3] hover:to-[#120282] hover:scale-[1.01] disabled:opacity-60"
           >
             {loading ? "Loading..." : copy.action}
           </button>
@@ -145,7 +145,7 @@ export const AuthPanel = ({ forcedMode }: AuthPanelProps) => {
 
         <p className="mt-8 text-center text-[1.05rem] text-[#475569] dark:text-slate-400">
           New to the grid?{" "}
-          <Link to="/register" className="font-semibold text-[#2563eb] dark:text-sky-400">
+          <Link to="/register" className="font-semibold text-[#1c05b3] dark:text-sky-400">
             Create Account
           </Link>
         </p>
@@ -160,7 +160,7 @@ export const AuthPanel = ({ forcedMode }: AuthPanelProps) => {
         transition={{ duration: 0.45 }}
         className="mx-auto w-full max-w-[34rem]"
       >
-      <section className="rounded-[2.8rem] border border-white/60 bg-white/82 p-7 shadow-[0_26px_60px_rgba(37,99,235,0.08)] backdrop-blur-xl dark:border-slate-800 dark:bg-slate-900/90 dark:text-slate-100 sm:p-9">
+      <section className="rounded-[2.8rem] border border-white/60 bg-white/82 p-7 shadow-[0_26px_60px_rgba(28,5,179,0.08)] backdrop-blur-xl dark:border-slate-800 dark:bg-slate-900/90 dark:text-slate-100 sm:p-9">
         <header>
           <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#64748b] dark:text-slate-400">Create account</p>
           <h3 className="mt-3 text-[2.8rem] font-extrabold tracking-[-0.06em] text-[#0f172a] dark:text-white">{copy.title}</h3>
@@ -169,7 +169,7 @@ export const AuthPanel = ({ forcedMode }: AuthPanelProps) => {
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div>
-            <div className="mb-4 text-base font-semibold uppercase tracking-[0.14em] text-[#0284c7] dark:text-sky-400">Choose your avatar</div>
+            <div className="mb-4 text-base font-semibold uppercase tracking-[0.14em] text-[#2406e2] dark:text-sky-400">Choose your avatar</div>
             <AvatarPicker value={avatarId} onChange={setAvatarId} />
           </div>
 
@@ -184,7 +184,7 @@ export const AuthPanel = ({ forcedMode }: AuthPanelProps) => {
                 value={username}
                 onChange={(event) => setUsername(event.target.value)}
                 placeholder="Enter your grid name"
-                className="h-16 w-full rounded-[1.35rem] border border-[#e2e8f0] bg-[#f0f9ff] px-6 text-[1.05rem] text-[#0f172a] outline-none transition focus:border-[#60a5fa] focus:ring-4 focus:ring-[#bae6fd] dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:placeholder-slate-500 dark:focus:border-blue-500"
+                className="h-16 w-full rounded-[1.35rem] border border-[#e2e8f0] bg-[#f0f9ff] px-6 text-[1.05rem] text-[#0f172a] outline-none transition focus:border-[#1c05b3] focus:ring-4 focus:ring-[#c7ceff] dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:placeholder-slate-500 dark:focus:border-[#1c05b3]"
               />
             </label>
 
@@ -199,7 +199,7 @@ export const AuthPanel = ({ forcedMode }: AuthPanelProps) => {
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
                 placeholder="you@example.com"
-                className="h-16 w-full rounded-[1.35rem] border border-[#e2e8f0] bg-[#f0f9ff] px-6 text-[1.05rem] text-[#0f172a] outline-none transition focus:border-[#60a5fa] focus:ring-4 focus:ring-[#bae6fd] dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:placeholder-slate-500 dark:focus:border-blue-500"
+                className="h-16 w-full rounded-[1.35rem] border border-[#e2e8f0] bg-[#f0f9ff] px-6 text-[1.05rem] text-[#0f172a] outline-none transition focus:border-[#1c05b3] focus:ring-4 focus:ring-[#c7ceff] dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:placeholder-slate-500 dark:focus:border-[#1c05b3]"
               />
             </label>
           </div>
@@ -217,15 +217,15 @@ export const AuthPanel = ({ forcedMode }: AuthPanelProps) => {
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
                 placeholder="••••••••"
-                className="h-16 w-full rounded-[1.35rem] border border-[#e2e8f0] bg-[#f0f9ff] px-6 text-[1.05rem] text-[#0f172a] outline-none transition focus:border-[#60a5fa] focus:ring-4 focus:ring-[#bae6fd] dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:placeholder-slate-500 dark:focus:border-blue-500"
+                className="h-16 w-full rounded-[1.35rem] border border-[#e2e8f0] bg-[#f0f9ff] px-6 text-[1.05rem] text-[#0f172a] outline-none transition focus:border-[#1c05b3] focus:ring-4 focus:ring-[#c7ceff] dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:placeholder-slate-500 dark:focus:border-[#1c05b3]"
               />
             </label>
           </div>
 
           <label className="flex items-center gap-3 text-[1.05rem] text-[#475569] dark:text-slate-300">
-            <input type="checkbox" className="h-5 w-5 rounded border-[#cbd5e1] text-[#2563eb] dark:border-slate-700 dark:bg-slate-900" />
+            <input type="checkbox" className="h-5 w-5 rounded border-[#cbd5e1] text-[#1c05b3] dark:border-slate-700 dark:bg-slate-900" />
             <span>
-              I agree to the <span className="font-semibold text-[#2563eb] dark:text-sky-400">Terms of Service</span>
+              I agree to the <span className="font-semibold text-[#1c05b3] dark:text-sky-400">Terms of Service</span>
             </span>
           </label>
 
@@ -244,7 +244,7 @@ export const AuthPanel = ({ forcedMode }: AuthPanelProps) => {
           <button
             type="submit"
             disabled={loading}
-            className="h-20 w-full rounded-full bg-gradient-to-b from-[#2563eb] to-[#1d4ed8] text-[1.45rem] font-bold text-white shadow-[0_16px_28px_rgba(37,99,235,0.24)] transition hover:scale-[1.01] disabled:opacity-60"
+            className="h-20 w-full rounded-full bg-gradient-to-b from-[#2406e2] to-[#1c05b3] text-[1.45rem] font-bold text-white shadow-[0_16px_28px_rgba(28,5,179,0.24)] transition hover:from-[#1c05b3] hover:to-[#120282] hover:scale-[1.01] disabled:opacity-60"
           >
             {loading ? "Loading..." : copy.action}
           </button>
@@ -253,7 +253,7 @@ export const AuthPanel = ({ forcedMode }: AuthPanelProps) => {
 
       <p className="mt-8 text-center text-[1.05rem] text-[#475569] dark:text-slate-400">
         Already have an account?{" "}
-        <Link to="/login" className="font-semibold text-[#2563eb] dark:text-sky-400">
+        <Link to="/login" className="font-semibold text-[#1c05b3] dark:text-sky-400">
           Sign In
         </Link>
       </p>

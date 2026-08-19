@@ -34,7 +34,7 @@ export const EventBonusRoute = () => {
     };
   }, [answers, challenges]);
 
-  if (edition === undefined) return <EventEditionShell edition={edition}><main className="p-8 text-center font-bold text-[#2563eb] dark:text-sky-400">Loading event...</main></EventEditionShell>;
+  if (edition === undefined) return <EventEditionShell edition={edition}><main className="p-8 text-center font-bold text-[#1c05b3] dark:text-sky-400">Loading event...</main></EventEditionShell>;
   if (!edition) return <Navigate to="/" replace />;
   if (!latestRun) return <Navigate to={`/${edition.slug}`} replace />;
   if (!latestRun.qualifiedForBonus) return <Navigate to={`/${edition.slug}/results`} state={{ run: latestRun }} replace />;
@@ -55,8 +55,8 @@ export const EventBonusRoute = () => {
     <EventEditionShell edition={edition}>
       <main className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
         <section className="mb-7 text-center">
-          <SparklesIcon className="mx-auto h-12 w-12 text-[#2563eb] dark:text-sky-400" />
-          <p className="mt-4 text-xs font-bold uppercase tracking-[0.24em] text-[#2563eb] dark:text-sky-400">Bonus Round Unlocked</p>
+          <SparklesIcon className="mx-auto h-12 w-12 text-[#1c05b3] dark:text-sky-400" />
+          <p className="mt-4 text-xs font-bold uppercase tracking-[0.24em] text-[#1c05b3] dark:text-sky-400">Bonus Round Unlocked</p>
           <h1 className="mt-2 text-4xl font-black tracking-[-0.06em] text-[#0f172a] dark:text-white sm:text-6xl">Safe CTF Challenges</h1>
           <p className="mx-auto mt-4 max-w-2xl text-base leading-8 text-[#586074] dark:text-slate-400">
             Solve safe bonus puzzles. Correct answers add to your event score.
@@ -71,7 +71,7 @@ export const EventBonusRoute = () => {
               <article key={challenge.id} className="glass-panel rounded-[1.8rem] p-5 sm:p-6 dark:bg-slate-900/90 dark:border-slate-800">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                   <div>
-                    <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#2563eb] dark:text-sky-400">
+                    <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#1c05b3] dark:text-sky-400">
                       Challenge {index + 1} • {challenge.points} pts
                     </p>
                     <h2 className="mt-2 text-2xl font-bold tracking-[-0.04em] text-[#0f172a] dark:text-white">{challenge.title}</h2>
@@ -88,7 +88,7 @@ export const EventBonusRoute = () => {
                 <input
                   value={answers[challenge.id] ?? ""}
                   onChange={(event) => setAnswers((current) => ({ ...current, [challenge.id]: event.target.value }))}
-                  className="mt-3 w-full rounded-[1.1rem] border border-[#cbd5e1] dark:border-slate-700 bg-white/85 dark:bg-slate-900 px-4 py-3 outline-none focus:border-[#2563eb] dark:text-white"
+                  className="mt-3 w-full rounded-[1.1rem] border border-[#cbd5e1] dark:border-slate-700 bg-white/85 dark:bg-slate-900 px-4 py-3 outline-none focus:border-[#1c05b3] dark:text-white"
                   placeholder="Enter answer"
                   disabled={submitted}
                 />
@@ -99,12 +99,12 @@ export const EventBonusRoute = () => {
 
         <div className="mt-6 glass-panel rounded-[1.8rem] p-5 text-center dark:bg-slate-900/90 dark:border-slate-800">
           <p className="text-sm text-[#586074] dark:text-slate-400">Current bonus score</p>
-          <p className="mt-1 text-4xl font-black text-[#2563eb] dark:text-sky-400">{formatNumber(result.score)}</p>
+          <p className="mt-1 text-4xl font-black text-[#1c05b3] dark:text-sky-400">{formatNumber(result.score)}</p>
           {!submitted ? (
             <button
               type="button"
               onClick={() => setSubmitted(true)}
-              className="mt-5 rounded-full bg-gradient-to-b from-[#2563eb] to-[#1d4ed8] px-8 py-4 font-bold text-white shadow-md"
+              className="mt-5 rounded-full bg-gradient-to-b from-[#2406e2] to-[#1c05b3] px-8 py-4 font-bold text-white shadow-md"
             >
               Check Answers
             </button>
@@ -112,7 +112,7 @@ export const EventBonusRoute = () => {
             <button
               type="button"
               onClick={() => void finishBonus()}
-              className="mt-5 inline-flex items-center justify-center gap-3 rounded-full bg-gradient-to-b from-[#2563eb] to-[#1d4ed8] px-8 py-4 font-bold text-white shadow-md"
+              className="mt-5 inline-flex items-center justify-center gap-3 rounded-full bg-gradient-to-b from-[#2406e2] to-[#1c05b3] px-8 py-4 font-bold text-white shadow-md"
             >
               <PlayIcon className="h-5 w-5" />
               Finish Event

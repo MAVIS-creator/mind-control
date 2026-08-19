@@ -69,24 +69,24 @@ export const MultiplayerResultsRoute = () => {
   const progress = getLevelProgress(currentXp);
 
   return (
-    <div className="relative h-[100dvh] overflow-y-auto bg-[radial-gradient(circle_at_top_left,_#e0f2fe_0%,_#f8faff_42%,_#dbeafe_100%)] dark:bg-none dark:bg-slate-950 dark:text-slate-100">
+    <div className="relative h-[100dvh] overflow-y-auto bg-[radial-gradient(circle_at_top_left,_#e0e4ff_0%,_#f8faff_42%,_#dbeafe_100%)] dark:bg-none dark:bg-slate-950 dark:text-slate-100">
       <Seo title="Multiplayer Results - MindGrid" description="Post-match multiplayer score breakdown." />
 
       <div className="fixed inset-0 -z-10 overflow-hidden">
-        <div className="absolute left-0 top-0 h-[24rem] w-[24rem] rounded-full bg-[#38bdf8]/12 dark:bg-[#38bdf8]/5 blur-[100px]" />
-        <div className="absolute bottom-10 right-0 h-[24rem] w-[24rem] rounded-full bg-[#2563eb]/10 dark:bg-[#2563eb]/5 blur-[100px]" />
+        <div className="absolute left-0 top-0 h-[24rem] w-[24rem] rounded-full bg-[#2406e2]/12 dark:bg-[#2406e2]/5 blur-[100px]" />
+        <div className="absolute bottom-10 right-0 h-[24rem] w-[24rem] rounded-full bg-[#1c05b3]/10 dark:bg-[#1c05b3]/5 blur-[100px]" />
       </div>
 
       <main className="mx-auto flex min-h-full max-w-4xl items-center justify-center px-4 py-6 sm:px-6 lg:py-10">
         <section className="relative w-full max-w-xl">
-          <div className="glass-panel relative overflow-hidden rounded-[2rem] p-6 shadow-[0_24px_54px_rgba(37,99,235,0.12)] sm:rounded-[2.4rem] sm:p-9 dark:border-slate-800 dark:bg-slate-900/90">
+          <div className="glass-panel relative overflow-hidden rounded-[2rem] p-6 shadow-[0_24px_54px_rgba(28, 5, 179,0.12)] sm:rounded-[2.4rem] sm:p-9 dark:border-slate-800 dark:bg-slate-900/90">
             {/* Top Badge */}
-            <div className="absolute right-0 top-0 rounded-bl-[1.4rem] rounded-tr-[2.4rem] bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] px-5 py-2 text-xs font-bold uppercase tracking-[0.18em] text-white shadow-md">
+            <div className="absolute right-0 top-0 rounded-bl-[1.4rem] rounded-tr-[2.4rem] bg-gradient-to-r from-[#1c05b3] to-[#140494] px-5 py-2 text-xs font-bold uppercase tracking-[0.18em] text-white shadow-md">
               {isCoop ? "CO-OP SYNC" : isWinner ? "MATCH WINNER" : isTie ? "STALEMATE" : "MATCH COMPLETE"}
             </div>
 
             <div className="text-center">
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#2563eb] dark:text-sky-400">
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#1c05b3] dark:text-[#2406e2]">
                 {isSpeedRace ? "Speed Race Results" : "Multiplayer Clash"}
               </p>
               <h1 className="mt-2 font-display text-[2.2rem] font-extrabold tracking-[-0.04em] text-[#0f172a] dark:text-white sm:mt-3 sm:text-[3.6rem]">
@@ -116,10 +116,10 @@ export const MultiplayerResultsRoute = () => {
               <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#64748b] dark:text-slate-400">
                 {isCoop ? "Combined Team Score" : "Your Final Score"}
               </p>
-              <p className="my-2 text-[3.2rem] font-black leading-none tracking-[-0.04em] text-[#1d4ed8] dark:text-sky-400 sm:text-[5rem]">
+              <p className="my-2 text-[3.2rem] font-black leading-none tracking-[-0.04em] text-[#140494] dark:text-[#2406e2] sm:text-[5rem]">
                 {formatNumber(isCoop ? coopScore : myScore)}
               </p>
-              <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-[#e0f2fe] px-4 py-2 text-sm font-semibold text-[#0284c7] dark:bg-slate-800 dark:text-sky-300">
+              <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-[#e0e4ff] px-4 py-2 text-sm font-semibold text-[#120282] dark:bg-slate-800 dark:text-[#c7ceff]">
                 <SparklesIcon className="h-4 w-4" />
                 +{xpBonus} XP Awarded
               </div>
@@ -131,19 +131,19 @@ export const MultiplayerResultsRoute = () => {
                 <>
                   <ResultsTile
                     icon={<GridIcon className="h-5 w-5" />}
-                    accent="text-[#0284c7]"
+                    accent="text-[#120282]"
                     label="Your Pairs Cleared"
                     value={`${state.myMatches ?? (isWinner ? (state.totalPairs || 8) : 0)}/${state.totalPairs || 8}`}
                   />
                   <ResultsTile
                     icon={<TrophyIcon className="h-5 w-5" />}
-                    accent="text-[#2563eb]"
+                    accent="text-[#1c05b3]"
                     label="Opponent Pairs"
                     value={`${state.opponentMatches ?? (isWinner ? 0 : (state.totalPairs || 8))}/${state.totalPairs || 8}`}
                   />
                   <ResultsTile
                     icon={<ClockIcon className="h-5 w-5" />}
-                    accent="text-[#0284c7]"
+                    accent="text-[#120282]"
                     label="Accuracy"
                     value={`${accuracy.toFixed(0)}%`}
                   />
@@ -158,19 +158,19 @@ export const MultiplayerResultsRoute = () => {
                 <>
                   <ResultsTile
                     icon={<GridIcon className="h-5 w-5" />}
-                    accent="text-[#0284c7]"
+                    accent="text-[#120282]"
                     label={isCoop ? "Team Score" : "Your Score"}
                     value={formatNumber(isCoop ? coopScore : myScore)}
                   />
                   <ResultsTile
                     icon={<TrophyIcon className="h-5 w-5" />}
-                    accent="text-[#2563eb]"
+                    accent="text-[#1c05b3]"
                     label={isCoop ? "Accuracy" : "Opponent Score"}
                     value={isCoop ? `${accuracy.toFixed(0)}%` : formatNumber(opponentScore)}
                   />
                   <ResultsTile
                     icon={<ClockIcon className="h-5 w-5" />}
-                    accent="text-[#0284c7]"
+                    accent="text-[#120282]"
                     label="Accuracy"
                     value={`${accuracy.toFixed(0)}%`}
                   />
@@ -191,11 +191,11 @@ export const MultiplayerResultsRoute = () => {
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center justify-between text-xs font-semibold">
                     <span className="text-[#0f172a] dark:text-white">{session?.profile.username}</span>
-                    <span className="text-[#0284c7] dark:text-sky-400">Level {progress.level} • {calculateRank(currentXp)}</span>
+                    <span className="text-[#120282] dark:text-[#2406e2]">Level {progress.level} • {calculateRank(currentXp)}</span>
                   </div>
-                  <div className="mt-2 h-2.5 overflow-hidden rounded-full bg-[#dbeafe]">
+                  <div className="mt-2 h-2.5 overflow-hidden rounded-full bg-[#e0e4ff]">
                     <div
-                      className="h-full rounded-full bg-gradient-to-r from-[#38bdf8] via-[#2563eb] to-[#1d4ed8]"
+                      className="h-full rounded-full bg-gradient-to-r from-[#2406e2] via-[#1c05b3] to-[#140494]"
                       style={{ width: `${progress.progress}%` }}
                     />
                   </div>
@@ -223,7 +223,7 @@ export const MultiplayerResultsRoute = () => {
                     navigate("/multiplayer");
                   }
                 }}
-                className="inline-flex h-14 flex-1 items-center justify-center gap-2 rounded-full bg-gradient-to-b from-[#2563eb] to-[#1d4ed8] px-6 text-sm font-semibold uppercase tracking-[0.14em] text-white shadow-[0_18px_36px_rgba(37,99,235,0.22)] transition hover:scale-[1.01]"
+                className="inline-flex h-14 flex-1 items-center justify-center gap-2 rounded-full bg-gradient-to-b from-[#1c05b3] to-[#140494] px-6 text-sm font-semibold uppercase tracking-[0.14em] text-white shadow-[0_18px_36px_rgba(28, 5, 179,0.22)] transition hover:scale-[1.01]"
               >
                 <PlayIcon className="h-4 w-4" />
                 Play Again / Rematch

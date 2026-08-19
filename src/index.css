@@ -8,22 +8,22 @@
   --mindgrid-surface: #f8fafc;
   --mindgrid-surface-dim: #cbd5e1;
   --mindgrid-surface-container: #e2e8f0;
-  --mindgrid-surface-high: #dbeafe;
-  --mindgrid-surface-variant: #e0f2fe;
+  --mindgrid-surface-high: #e0e4ff;
+  --mindgrid-surface-variant: #eff1ff;
   --mindgrid-ink: #0f172a;
   --mindgrid-ink-soft: #475569;
   --mindgrid-outline: #cbd5e1;
-  --mindgrid-primary: #2563eb;
-  --mindgrid-primary-strong: #1d4ed8;
-  --mindgrid-secondary: #0284c7;
-  --mindgrid-tertiary: #0ea5e9;
+  --mindgrid-primary: #1c05b3;
+  --mindgrid-primary-strong: #140494;
+  --mindgrid-secondary: #2406e2;
+  --mindgrid-tertiary: #3d50f5;
   color: var(--mindgrid-ink);
-  background: linear-gradient(180deg, #f0f7ff 0%, #f8faff 45%, #e8f2ff 100%);
+  background: linear-gradient(180deg, #f0f3ff 0%, #f8faff 45%, #e8edff 100%);
   font-family: "Inter", sans-serif;
 }
 
 ::selection {
-  background: rgba(37, 99, 235, 0.18);
+  background: rgba(28, 5, 179, 0.18);
   color: var(--mindgrid-ink);
 }
 
@@ -80,7 +80,7 @@ input {
   border: 1px solid rgba(255, 255, 255, 0.86);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.72),
-    0 22px 48px rgba(53, 37, 205, 0.08);
+    0 22px 48px rgba(28, 5, 179, 0.08);
   backdrop-filter: blur(18px) saturate(120%);
 }
 
@@ -132,7 +132,7 @@ html.dark .hud-chip {
   max-width: min(92vw, 32rem);
   height: auto;
   object-fit: contain;
-  filter: drop-shadow(0 24px 40px rgba(53, 37, 205, 0.18));
+  filter: drop-shadow(0 24px 40px rgba(28, 5, 179, 0.22));
   animation: brand-mark-float 4.8s ease-in-out infinite;
   transition: transform 220ms ease, filter 220ms ease;
 }
@@ -145,7 +145,7 @@ html.dark .hud-chip {
 
 .brand-motion-mark:hover {
   transform: translateY(-4px) rotate(-4deg) scale(1.03);
-  filter: drop-shadow(0 30px 50px rgba(53, 37, 205, 0.24));
+  filter: drop-shadow(0 30px 50px rgba(28, 5, 179, 0.28));
 }
 
 @keyframes brand-mark-float {

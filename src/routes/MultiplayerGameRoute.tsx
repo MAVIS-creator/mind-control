@@ -54,8 +54,8 @@ export const MultiplayerGameRoute = () => {
 
   if (loading || !room) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#f0f9ff] dark:bg-slate-950">
-        <p className="font-display text-sm font-bold uppercase tracking-widest text-[#2563eb] dark:text-sky-400">
+      <div className="flex min-h-screen items-center justify-center bg-[#eff1ff] dark:bg-slate-950">
+        <p className="font-display text-sm font-bold uppercase tracking-widest text-[#1c05b3] dark:text-[#2406e2]">
           Synchronizing Multiplayer Board...
         </p>
       </div>
@@ -179,7 +179,7 @@ const LiveMultiplayerCanvas = ({
   };
 
   return (
-    <div className="flex min-h-[100dvh] flex-col bg-[linear-gradient(180deg,#f0f9ff_0%,#e0f2fe_100%)] dark:bg-none dark:bg-slate-950 dark:text-slate-100 lg:h-screen lg:max-h-screen lg:overflow-hidden">
+    <div className="flex min-h-[100dvh] flex-col bg-[linear-gradient(180deg,#f0f9ff_0%,#e0e4ff_100%)] dark:bg-none dark:bg-slate-950 dark:text-slate-100 lg:h-screen lg:max-h-screen lg:overflow-hidden">
       <Seo title="Live Multiplayer Battle - MindGrid" description="Realtime multiplayer memory game." />
 
       {/* Floating Quick Messages Overlay */}
@@ -187,9 +187,9 @@ const LiveMultiplayerCanvas = ({
         {activeMessages.map((msg) => (
           <div
             key={msg.id}
-            className="animate-bounce rounded-2xl bg-white/95 border border-[#2563eb]/20 px-5 py-2.5 text-xs font-bold text-[#0f172a] shadow-xl backdrop-blur-md dark:bg-slate-900/95 dark:border-slate-700 dark:text-white"
+            className="animate-bounce rounded-2xl bg-white/95 border border-[#1c05b3]/20 px-5 py-2.5 text-xs font-bold text-[#0f172a] shadow-xl backdrop-blur-md dark:bg-slate-900/95 dark:border-slate-700 dark:text-white"
           >
-            <span className="text-[#2563eb] dark:text-sky-400 mr-1">{msg.senderName}:</span> "{msg.message}"
+            <span className="text-[#1c05b3] dark:text-[#2406e2] mr-1">{msg.senderName}:</span> "{msg.message}"
           </div>
         ))}
       </div>
@@ -197,7 +197,7 @@ const LiveMultiplayerCanvas = ({
       {/* Quit Confirmation Modal */}
       {showQuitModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md px-4">
-          <div className="w-full max-w-md rounded-3xl bg-white p-7 shadow-2xl border border-blue-100 text-center dark:border-slate-800 dark:bg-slate-900">
+          <div className="w-full max-w-md rounded-3xl bg-white p-7 shadow-2xl border border-[#e0e4ff] text-center dark:border-slate-800 dark:bg-slate-900">
             <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-red-50 text-[#dc2626] dark:bg-rose-950/60 dark:text-rose-400">
               <ArrowLeftIcon className="h-6 w-6" />
             </div>
@@ -231,13 +231,13 @@ const LiveMultiplayerCanvas = ({
           <div className="flex min-w-0 items-center justify-between gap-2 lg:flex-1 lg:justify-start">
             <Link to="/play" className="flex min-w-0 items-center gap-2 sm:gap-3">
               <BrandMarkIcon className="h-9 w-9 shrink-0 object-contain sm:h-11 sm:w-11" />
-              <span className="truncate font-display text-[1.45rem] font-extrabold text-[#2563eb] dark:text-white sm:text-[2rem]">
+              <span className="truncate font-display text-[1.45rem] font-extrabold text-[#1c05b3] dark:text-white sm:text-[2rem]">
                 MindGrid
               </span>
             </Link>
           </div>
 
-          <div className="mx-auto flex w-full max-w-[33rem] items-center justify-between gap-2 rounded-[1.5rem] border border-white/80 bg-white/62 px-3 py-2 shadow-[0_16px_36px_rgba(37,99,235,0.08)] dark:border-slate-800 dark:bg-slate-900/90 sm:gap-4 sm:px-5 lg:w-auto lg:max-w-none lg:justify-center lg:rounded-full">
+          <div className="mx-auto flex w-full max-w-[33rem] items-center justify-between gap-2 rounded-[1.5rem] border border-white/80 bg-white/62 px-3 py-2 shadow-[0_16px_36px_rgba(28, 5, 179,0.08)] dark:border-slate-800 dark:bg-slate-900/90 sm:gap-4 sm:px-5 lg:w-auto lg:max-w-none lg:justify-center lg:rounded-full">
             <HudStat
               label={room.gameMode === "turn_based" ? "Shot Clock" : room.gameMode === "coop" ? "Elapsed" : "Time"}
               value={
@@ -252,7 +252,7 @@ const LiveMultiplayerCanvas = ({
               <HudStat label="Moves" value={`${gameState.moves}`} />
             )}
             <HudStat label="Pairs" value={`${gameState.matches}/${totalPairs}`} />
-            <div className="flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-full border border-[#b9d2f4] bg-[#d7e7fb] text-[#0058a8] dark:border-slate-700 dark:bg-slate-800 dark:text-blue-400 shadow-inner sm:h-16 sm:w-16">
+            <div className="flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-full border border-[#b9d2f4] bg-[#d7e7fb] text-[#0058a8] dark:border-slate-700 dark:bg-slate-800 dark:text-[#2406e2] shadow-inner sm:h-16 sm:w-16">
               <span className="text-[0.62rem] font-semibold uppercase">Combo</span>
               <span className="text-[1.25rem] font-bold sm:text-[1.45rem]">x{Math.max(gameState.combo, 1)}</span>
             </div>
@@ -267,7 +267,7 @@ const LiveMultiplayerCanvas = ({
               />
               <span>{pingMs}ms Ping</span>
             </div>
-            <div className="inline-flex min-w-0 items-center gap-1.5 rounded-full bg-gradient-to-b from-[#2563eb] to-[#1d4ed8] px-3 py-2 text-white shadow-[0_14px_30px_rgba(37,99,235,0.18)] sm:gap-2 sm:px-4 sm:py-2.5">
+            <div className="inline-flex min-w-0 items-center gap-1.5 rounded-full bg-gradient-to-b from-[#1c05b3] to-[#140494] px-3 py-2 text-white shadow-[0_14px_30px_rgba(28, 5, 179,0.18)] sm:gap-2 sm:px-4 sm:py-2.5">
               <SparklesIcon className="h-4 w-4" />
               <span className="truncate text-[0.74rem] font-semibold tracking-[0.03em] sm:text-sm">{profile.xp} XP</span>
             </div>
@@ -291,7 +291,7 @@ const LiveMultiplayerCanvas = ({
                 Back / Disband Match
               </button>
 
-              <span className="rounded-full bg-[#0284c7]/10 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-[#0284c7] dark:text-sky-400 border border-[#0284c7]/20 dark:border-sky-500/30">
+              <span className="rounded-full bg-[#120282]/10 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-[#120282] dark:text-[#2406e2] border border-[#120282]/20 dark:border-[#2406e2]/30">
                 {room.gameMode === "speed_sprint"
                   ? `SPEED SPRINT RACE (${room.gridSize.toUpperCase()} MATRIX)`
                   : room.gameMode === "coop"
@@ -312,7 +312,7 @@ const LiveMultiplayerCanvas = ({
                 <button
                   key={msg}
                   onClick={() => sendQuickMessage(msg)}
-                  className="rounded-xl bg-white/80 border border-slate-200 px-3 py-1.5 text-xs font-semibold text-[#0f172a] hover:bg-[#2563eb] hover:text-white transition-all shadow-sm active:scale-95"
+                  className="rounded-xl bg-white/80 border border-slate-200 px-3 py-1.5 text-xs font-semibold text-[#0f172a] hover:bg-[#1c05b3] hover:text-white transition-all shadow-sm active:scale-95"
                 >
                   {msg}
                 </button>
@@ -332,11 +332,11 @@ const LiveMultiplayerCanvas = ({
               <div className="mt-4">
                 <div className="flex items-center justify-between text-xs font-bold text-[#0f172a] dark:text-slate-200">
                   <span>You ({gameState.matches}/{totalPairs} pairs)</span>
-                  <span className="text-[#0284c7] dark:text-sky-400">{gameState.score} pts</span>
+                  <span className="text-[#120282] dark:text-[#2406e2]">{gameState.score} pts</span>
                 </div>
-                <div className="mt-2 h-3 overflow-hidden rounded-full bg-[#dbeafe] dark:bg-slate-800">
+                <div className="mt-2 h-3 overflow-hidden rounded-full bg-[#e0e4ff] dark:bg-slate-800">
                   <div
-                    className="h-full rounded-full bg-gradient-to-r from-[#38bdf8] via-[#2563eb] to-[#0284c7] transition-all duration-300"
+                    className="h-full rounded-full bg-gradient-to-r from-[#2406e2] via-[#1c05b3] to-[#120282] transition-all duration-300"
                     style={{ width: `${(gameState.matches / totalPairs) * 100}%` }}
                   />
                 </div>
@@ -356,7 +356,7 @@ const LiveMultiplayerCanvas = ({
                 </div>
                 <div className="mt-2 h-3 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-800">
                   <div
-                    className="h-full rounded-full bg-gradient-to-r from-sky-400 to-blue-600 transition-all duration-300 opacity-80"
+                    className="h-full rounded-full bg-gradient-to-r from-[#2406e2] to-[#1c05b3] transition-all duration-300 opacity-80"
                     style={{
                       width: `${
                         room.gameMode === "speed_sprint"
@@ -370,7 +370,7 @@ const LiveMultiplayerCanvas = ({
                 </div>
               </div>
 
-              <div className="mt-4 rounded-[1.15rem] border border-[#bfdbfe] bg-[#eff6ff] px-3 py-2.5 text-xs leading-5 text-[#2563eb] dark:text-sky-300 dark:bg-blue-950/30 dark:border-blue-500/20">
+              <div className="mt-4 rounded-[1.15rem] border border-[#c7ceff] bg-[#eff1ff] px-3 py-2.5 text-xs leading-5 text-[#1c05b3] dark:text-[#c7ceff] dark:bg-[#120282]/30 dark:border-[#2406e2]/20">
                 {room.gameMode === "speed_sprint"
                   ? gameState.matches === totalPairs
                     ? "You cleared all pairs first! Finalizing victory..."

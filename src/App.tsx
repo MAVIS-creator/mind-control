@@ -78,20 +78,20 @@ export const App = () => {
 
   if (booting) {
     return (
-      <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_top_left,_#e0f2fe_0%,_#f8faff_42%,_#dbeafe_100%)] dark:bg-slate-950 dark:bg-none dark:text-slate-100 px-4">
+      <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_top_left,_#eff1ff_0%,_#f8faff_42%,_#dbeafe_100%)] dark:bg-slate-950 dark:bg-none dark:text-slate-100 px-4">
         <div className="fixed inset-0 -z-10 overflow-hidden">
-          <div className="absolute -left-12 top-8 h-[22rem] w-[22rem] rounded-full bg-[#38bdf8]/16 dark:bg-[#38bdf8]/10 blur-[95px]" />
-          <div className="absolute right-0 top-0 h-[24rem] w-[24rem] rounded-full bg-[#2563eb]/14 dark:bg-[#2563eb]/10 blur-[95px]" />
-          <div className="absolute bottom-0 left-1/3 h-[18rem] w-[18rem] rounded-full bg-[#0284c7]/12 dark:bg-[#0284c7]/5 blur-[100px]" />
+          <div className="absolute -left-12 top-8 h-[22rem] w-[22rem] rounded-full bg-[#2406e2]/16 dark:bg-[#2406e2]/10 blur-[95px]" />
+          <div className="absolute right-0 top-0 h-[24rem] w-[24rem] rounded-full bg-[#1c05b3]/14 dark:bg-[#1c05b3]/10 blur-[95px]" />
+          <div className="absolute bottom-0 left-1/3 h-[18rem] w-[18rem] rounded-full bg-[#2406e2]/12 dark:bg-[#2406e2]/5 blur-[100px]" />
         </div>
-        <div className="glass-panel w-full max-w-md rounded-[2rem] px-6 py-8 text-center shadow-[0_22px_48px_rgba(37,99,235,0.08)] sm:px-8 dark:border-slate-800 dark:bg-slate-900/90">
+        <div className="glass-panel w-full max-w-md rounded-[2rem] px-6 py-8 text-center shadow-[0_22px_48px_rgba(28,5,179,0.08)] sm:px-8 dark:border-slate-800 dark:bg-slate-900/90">
           <BrandMotionMark className="mx-auto mb-6 w-[11rem] sm:w-[14rem]" />
-          <p className="font-display text-xs uppercase tracking-[0.4em] text-[#2563eb] dark:text-sky-400">Initializing</p>
+          <p className="font-display text-xs uppercase tracking-[0.4em] text-[#1c05b3] dark:text-sky-400">Initializing</p>
           <p className="mt-2 text-sm leading-7 text-[#464555] dark:text-slate-300 sm:text-base">
             Loading your game hub and preparing the next board.
           </p>
           <div className="mt-6 h-3 overflow-hidden rounded-full bg-[#dbeafe] dark:bg-slate-800">
-            <div className="h-full w-1/2 animate-pulse rounded-full bg-gradient-to-r from-[#38bdf8] via-[#2563eb] to-[#0284c7]" />
+            <div className="h-full w-1/2 animate-pulse rounded-full bg-gradient-to-r from-[#2406e2] via-[#1c05b3] to-[#2406e2]" />
           </div>
         </div>
       </div>
@@ -101,10 +101,10 @@ export const App = () => {
   return (
     <Suspense
       fallback={
-        <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_top_left,_#e0f2fe_0%,_#f8faff_42%,_#dbeafe_100%)] dark:bg-slate-950 dark:bg-none dark:text-slate-100 px-4">
-          <div className="glass-panel w-full max-w-sm rounded-[2rem] px-6 py-7 text-center shadow-[0_22px_48px_rgba(37,99,235,0.08)] dark:border-slate-800 dark:bg-slate-900/90">
+        <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_top_left,_#eff1ff_0%,_#f8faff_42%,_#dbeafe_100%)] dark:bg-slate-950 dark:bg-none dark:text-slate-100 px-4">
+          <div className="glass-panel w-full max-w-sm rounded-[2rem] px-6 py-7 text-center shadow-[0_22px_48px_rgba(28,5,179,0.08)] dark:border-slate-800 dark:bg-slate-900/90">
             <BrandMotionMark className="mx-auto mb-5 w-[9rem] sm:w-[11rem]" />
-            <p className="font-display text-xs uppercase tracking-[0.4em] text-[#2563eb] dark:text-sky-400">Routing</p>
+            <p className="font-display text-xs uppercase tracking-[0.4em] text-[#1c05b3] dark:text-sky-400">Routing</p>
             <p className="mt-3 text-sm leading-7 text-[#464555] dark:text-slate-300">Opening the next screen...</p>
           </div>
         </div>

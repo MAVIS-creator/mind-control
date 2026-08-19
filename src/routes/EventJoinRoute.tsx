@@ -33,7 +33,7 @@ export const EventJoinRoute = () => {
         <main className="flex min-h-[70svh] items-center justify-center px-4 text-center">
           <div className="glass-panel rounded-[2rem] p-8 dark:bg-slate-900/90 dark:border-slate-800">
             <BrandMotionMark className="mx-auto w-[12rem]" />
-            <p className="mt-4 font-bold text-[#2563eb] dark:text-sky-400">Loading event...</p>
+            <p className="mt-4 font-bold text-[#1c05b3] dark:text-sky-400">Loading event...</p>
           </div>
         </main>
       </EventEditionShell>
@@ -49,7 +49,7 @@ export const EventJoinRoute = () => {
         <section className="grid items-center gap-8 lg:grid-cols-[1.1fr_0.9fr]">
           <div className="text-center lg:text-left">
             <BrandMotionMark className="mx-auto w-[15rem] sm:w-[22rem] lg:mx-0" />
-            <p className="mt-7 text-xs font-bold uppercase tracking-[0.28em] text-[#2563eb] dark:text-sky-400">
+            <p className="mt-7 text-xs font-bold uppercase tracking-[0.28em] text-[#1c05b3] dark:text-sky-400">
               {edition.config.heroLabel}
             </p>
             <h1 className="mt-3 font-display text-5xl font-black tracking-[-0.07em] text-[#0f172a] dark:text-white sm:text-7xl">
@@ -65,8 +65,8 @@ export const EventJoinRoute = () => {
             </div>
           </div>
 
-          <div className="glass-panel rounded-[2.2rem] p-5 shadow-[0_18px_42px_rgba(37,99,235,0.08)] sm:p-7 dark:bg-slate-900/90 dark:border-slate-800">
-            <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#2563eb] dark:text-sky-400">{edition.config.eventLabel}</p>
+          <div className="glass-panel rounded-[2.2rem] p-5 shadow-[0_18px_42px_rgba(28,5,179,0.08)] sm:p-7 dark:bg-slate-900/90 dark:border-slate-800">
+            <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#1c05b3] dark:text-sky-400">{edition.config.eventLabel}</p>
             <h2 className="mt-2 text-3xl font-bold tracking-[-0.05em] text-[#0f172a] dark:text-white">Enter Event</h2>
             <div className="mt-6 space-y-4">
               <label className="block">
@@ -74,7 +74,7 @@ export const EventJoinRoute = () => {
                 <input
                   value={nickname}
                   onChange={(event) => setNickname(event.target.value)}
-                  className="mt-2 w-full rounded-[1.2rem] border border-[#cbd5e1] dark:border-slate-700 bg-white/80 dark:bg-slate-900 px-4 py-4 text-lg outline-none focus:border-[#2563eb] dark:text-white"
+                  className="mt-2 w-full rounded-[1.2rem] border border-[#cbd5e1] dark:border-slate-700 bg-white/80 dark:bg-slate-900 px-4 py-4 text-lg outline-none focus:border-[#1c05b3] dark:text-white"
                   placeholder="CyberBK"
                 />
               </label>
@@ -83,7 +83,7 @@ export const EventJoinRoute = () => {
                 <input
                   value={matricNumber}
                   onChange={(event) => setMatricNumber(event.target.value)}
-                  className="mt-2 w-full rounded-[1.2rem] border border-[#cbd5e1] dark:border-slate-700 bg-white/80 dark:bg-slate-900 px-4 py-4 text-lg outline-none focus:border-[#2563eb] dark:text-white"
+                  className="mt-2 w-full rounded-[1.2rem] border border-[#cbd5e1] dark:border-slate-700 bg-white/80 dark:bg-slate-900 px-4 py-4 text-lg outline-none focus:border-[#1c05b3] dark:text-white"
                   placeholder="Optional"
                 />
               </label>
@@ -91,7 +91,7 @@ export const EventJoinRoute = () => {
               <button
                 type="button"
                 onClick={enterEvent}
-                className="inline-flex w-full items-center justify-center gap-3 rounded-full bg-gradient-to-b from-[#2563eb] to-[#1d4ed8] px-8 py-4 text-lg font-bold text-white shadow-[0_18px_34px_rgba(37,99,235,0.22)]"
+                className="inline-flex w-full items-center justify-center gap-3 rounded-full bg-gradient-to-b from-[#2406e2] to-[#1c05b3] px-8 py-4 text-lg font-bold text-white shadow-[0_18px_34px_rgba(37,99,235,0.22)]"
               >
                 <PlayIcon className="h-5 w-5" />
                 Enter Event
@@ -102,7 +102,7 @@ export const EventJoinRoute = () => {
 
         <section className="mt-10">
           <div className="mb-5 text-center">
-            <p className="text-xs font-bold uppercase tracking-[0.28em] text-[#2563eb] dark:text-sky-400">Career paths from the seminar</p>
+            <p className="text-xs font-bold uppercase tracking-[0.28em] text-[#1c05b3] dark:text-sky-400">Career paths from the seminar</p>
             <h2 className="mt-2 text-4xl font-bold tracking-[-0.05em] text-[#0f172a] dark:text-white">This event is bigger than one match.</h2>
           </div>
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
@@ -121,7 +121,7 @@ export const EventJoinRoute = () => {
 
 const InfoPill = ({ icon, title, text }: { icon: React.ReactNode; title: string; text: string }) => (
   <div className="rounded-[1.4rem] border border-white/80 dark:border-slate-800 bg-white/70 dark:bg-slate-900/90 p-4 shadow-[0_12px_26px_rgba(37,99,235,0.06)]">
-    <div className="text-[#2563eb] dark:text-sky-400">{icon}</div>
+    <div className="text-[#1c05b3] dark:text-sky-400">{icon}</div>
     <p className="mt-3 font-bold text-[#0f172a] dark:text-white">{title}</p>
     <p className="mt-1 text-sm text-[#5a6174] dark:text-slate-400">{text}</p>
   </div>

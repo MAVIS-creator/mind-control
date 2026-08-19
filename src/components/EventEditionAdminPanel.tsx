@@ -163,7 +163,7 @@ export const EventEditionAdminPanel = ({ session }: { session: AuthSession }) =>
             <button
               type="button"
               onClick={() => void refresh()}
-              className="inline-flex items-center gap-2 rounded-full border border-[#cbd5e1] dark:border-slate-800 bg-white dark:bg-slate-950 px-4 py-2 text-xs font-bold uppercase tracking-[0.12em] text-[#2563eb] dark:text-sky-400"
+              className="inline-flex items-center gap-2 rounded-full border border-[#cbd5e1] dark:border-slate-800 bg-white dark:bg-slate-950 px-4 py-2 text-xs font-bold uppercase tracking-[0.12em] text-[#1c05b3] dark:text-sky-400"
             >
               <RefreshIcon className="h-4 w-4" />
               Refresh
@@ -171,7 +171,7 @@ export const EventEditionAdminPanel = ({ session }: { session: AuthSession }) =>
             <button
               type="button"
               onClick={createDraft}
-              className="inline-flex items-center gap-2 rounded-full bg-gradient-to-b from-[#2563eb] to-[#1d4ed8] px-4 py-2 text-xs font-bold uppercase tracking-[0.12em] text-white shadow-md"
+              className="inline-flex items-center gap-2 rounded-full bg-gradient-to-b from-[#2406e2] to-[#1c05b3] px-4 py-2 text-xs font-bold uppercase tracking-[0.12em] text-white shadow-md"
             >
               <SparklesIcon className="h-4 w-4" />
               New Event
@@ -190,7 +190,7 @@ export const EventEditionAdminPanel = ({ session }: { session: AuthSession }) =>
               onClick={() => setSelectedId(edition.id)}
               className={`w-full rounded-[1.2rem] border p-4 text-left transition ${
                 selectedEdition?.id === edition.id
-                  ? "border-[#2563eb] bg-[#eff6ff] dark:bg-blue-900/30"
+                  ? "border-[#1c05b3] bg-[#e0e4ff] dark:bg-blue-900/30"
                   : "border-[#e5e9f5] dark:border-slate-800 bg-white dark:bg-slate-950 hover:border-[#bfdbfe] dark:hover:border-slate-700"
               }`}
             >
@@ -199,7 +199,7 @@ export const EventEditionAdminPanel = ({ session }: { session: AuthSession }) =>
                   <p className="font-bold text-[#0f172a] dark:text-white">{edition.title}</p>
                   <p className="mt-1 text-xs font-semibold text-[#64748b] dark:text-slate-400">/{edition.slug}</p>
                 </div>
-                <span className="rounded-full bg-white dark:bg-slate-800 px-3 py-1 text-[0.65rem] font-bold uppercase tracking-[0.12em] text-[#2563eb] dark:text-sky-400">
+                <span className="rounded-full bg-white dark:bg-slate-800 px-3 py-1 text-[0.65rem] font-bold uppercase tracking-[0.12em] text-[#1c05b3] dark:text-sky-400">
                   {edition.status}
                 </span>
               </div>
@@ -212,7 +212,7 @@ export const EventEditionAdminPanel = ({ session }: { session: AuthSession }) =>
             <div className="rounded-[1.4rem] border border-[#dfe4f2] dark:border-slate-800 bg-[#f8faff] dark:bg-slate-950 p-4">
               <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#2563eb] dark:text-sky-400">
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#1c05b3] dark:text-sky-400">
                     AI tournament helper
                   </p>
                   <p className="mt-2 text-sm leading-6 text-[#64748b] dark:text-slate-400">
@@ -224,7 +224,7 @@ export const EventEditionAdminPanel = ({ session }: { session: AuthSession }) =>
                   type="button"
                   onClick={() => void generateWithAi()}
                   disabled={generating}
-                  className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-gradient-to-b from-[#2563eb] to-[#1d4ed8] px-5 py-3 text-xs font-bold uppercase tracking-[0.12em] text-white disabled:opacity-60 shadow-md"
+                  className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-gradient-to-b from-[#2406e2] to-[#1c05b3] px-5 py-3 text-xs font-bold uppercase tracking-[0.12em] text-white disabled:opacity-60 shadow-md"
                 >
                   <SparklesIcon className="h-4 w-4" />
                   {generating ? "Drafting..." : "AI Draft"}
@@ -337,14 +337,14 @@ export const EventEditionAdminPanel = ({ session }: { session: AuthSession }) =>
                 type="button"
                 onClick={() => void saveSelected()}
                 disabled={saving}
-                className="inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-gradient-to-b from-[#2563eb] to-[#1d4ed8] px-6 py-4 text-sm font-bold uppercase tracking-[0.14em] text-white disabled:opacity-60 shadow-md"
+                className="inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-gradient-to-b from-[#2406e2] to-[#1c05b3] px-6 py-4 text-sm font-bold uppercase tracking-[0.14em] text-white disabled:opacity-60 shadow-md"
               >
                 <SparklesIcon className="h-4 w-4" />
                 {saving ? "Saving..." : "Save Event"}
               </button>
               <Link
                 to={`/${selectedEdition.slug}`}
-                className="inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-[#cbd5e1] dark:border-slate-800 bg-white dark:bg-slate-900 px-6 py-4 text-sm font-bold uppercase tracking-[0.14em] text-[#2563eb] dark:text-sky-400 shadow-sm"
+                className="inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-[#cbd5e1] dark:border-slate-800 bg-white dark:bg-slate-900 px-6 py-4 text-sm font-bold uppercase tracking-[0.14em] text-[#1c05b3] dark:text-sky-400 shadow-sm"
               >
                 <PlayIcon className="h-4 w-4" />
                 Preview Route

@@ -21,11 +21,11 @@ export const AuthRoute = ({ mode }: AuthRouteProps) => {
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top_left,_#e0f2fe_0%,_#f8faff_45%,_#dbeafe_100%)] dark:bg-none dark:bg-slate-950 dark:text-slate-100 px-4 py-8 sm:px-6 lg:px-10">
+    <div className="relative min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top_left,_#eff1ff_0%,_#f8faff_45%,_#eff1ff_100%)] dark:bg-none dark:bg-slate-950 dark:text-slate-100 px-4 py-8 sm:px-6 lg:px-10">
       <div className="fixed inset-0 -z-10 overflow-hidden">
-        <div className="absolute -left-10 top-20 h-[22rem] w-[22rem] rounded-full bg-[#38bdf8]/18 dark:bg-[#38bdf8]/10 blur-[90px]" />
-        <div className="absolute right-0 top-0 h-[28rem] w-[28rem] rounded-full bg-[#2563eb]/16 dark:bg-[#2563eb]/10 blur-[110px]" />
-        <div className="absolute bottom-0 left-1/3 h-[20rem] w-[20rem] rounded-full bg-[#0284c7]/12 dark:bg-[#0284c7]/8 blur-[100px]" />
+        <div className="absolute -left-10 top-20 h-[22rem] w-[22rem] rounded-full bg-[#2406e2]/18 dark:bg-[#2406e2]/10 blur-[90px]" />
+        <div className="absolute right-0 top-0 h-[28rem] w-[28rem] rounded-full bg-[#1c05b3]/16 dark:bg-[#1c05b3]/10 blur-[110px]" />
+        <div className="absolute bottom-0 left-1/3 h-[20rem] w-[20rem] rounded-full bg-[#2406e2]/12 dark:bg-[#2406e2]/8 blur-[100px]" />
       </div>
 
       {/* Top Header Navigation back to Landing Page */}

@@ -33,10 +33,10 @@ export const ResultsRoute = () => {
   const avatar = avatarOptions.find((entry) => entry.id === state.entry.avatarId) ?? avatarOptions[0];
 
   return (
-    <div className="relative h-[100dvh] overflow-y-auto bg-[radial-gradient(circle_at_top_left,_#e0f2fe_0%,_#f8faff_42%,_#dbeafe_100%)] dark:bg-none dark:bg-slate-950 dark:text-slate-100">
+    <div className="relative h-[100dvh] overflow-y-auto bg-[radial-gradient(circle_at_top_left,_#eff1ff_0%,_#f8faff_42%,_#dbeafe_100%)] dark:bg-none dark:bg-slate-950 dark:text-slate-100">
       <div className="fixed inset-0 -z-10 overflow-hidden">
-        <div className="absolute left-0 top-0 h-[24rem] w-[24rem] rounded-full bg-[#38bdf8]/12 blur-[100px]" />
-        <div className="absolute bottom-10 right-0 h-[24rem] w-[24rem] rounded-full bg-[#2563eb]/10 blur-[100px]" />
+        <div className="absolute left-0 top-0 h-[24rem] w-[24rem] rounded-full bg-[#2406e2]/12 blur-[100px]" />
+        <div className="absolute bottom-10 right-0 h-[24rem] w-[24rem] rounded-full bg-[#1c05b3]/10 blur-[100px]" />
         <div className="absolute inset-0 opacity-20">
           <div className="mx-auto mt-32 grid max-w-md rotate-12 grid-cols-4 gap-4 blur-3xl">
             {Array.from({ length: 8 }).map((_, index) => (
@@ -44,12 +44,12 @@ export const ResultsRoute = () => {
                 key={index}
                 className={`aspect-square rounded-[1.4rem] ${
                   index % 4 === 0
-                    ? "bg-[#2563eb]"
+                    ? "bg-[#1c05b3]"
                     : index % 4 === 1
-                      ? "bg-[#38bdf8]"
+                      ? "bg-[#2406e2]"
                       : index % 4 === 2
-                        ? "bg-[#0284c7]"
-                        : "bg-[#1d4ed8]"
+                        ? "bg-[#2406e2]"
+                        : "bg-[#140494]"
                 }`}
               />
             ))}
@@ -103,13 +103,13 @@ const SuccessSummaryCard = ({
 
   return (
     <section className="relative w-full max-w-xl">
-      <div className="glass-panel relative overflow-hidden rounded-[1.8rem] p-5 shadow-[0_24px_54px_rgba(37,99,235,0.10)] sm:rounded-[2.3rem] sm:p-8">
-        <div className="absolute right-0 top-0 rounded-bl-[1.4rem] rounded-tr-[2.3rem] bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] px-5 py-2 text-xs font-bold uppercase tracking-[0.18em] text-white">
+      <div className="glass-panel relative overflow-hidden rounded-[1.8rem] p-5 shadow-[0_24px_54px_rgba(28,5,179,0.10)] sm:rounded-[2.3rem] sm:p-8">
+        <div className="absolute right-0 top-0 rounded-bl-[1.4rem] rounded-tr-[2.3rem] bg-gradient-to-r from-[#1c05b3] to-[#140494] px-5 py-2 text-xs font-bold uppercase tracking-[0.18em] text-white">
           Level Up!
         </div>
 
         <div className="text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#2563eb] dark:text-sky-400">Session Complete</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#1c05b3] dark:text-sky-400">Session Complete</p>
           <h1 className="mt-2 font-display text-[2.1rem] font-extrabold tracking-[-0.04em] text-[#0f172a] dark:text-white sm:mt-3 sm:text-[4rem]">
             Excellent Focus!
           </h1>
@@ -117,10 +117,10 @@ const SuccessSummaryCard = ({
 
         <div className="mt-5 rounded-[1.5rem] border border-white/70 bg-white/45 px-4 py-5 text-center shadow-inner sm:mt-7 sm:rounded-[2rem] sm:px-6 sm:py-7 dark:border-slate-800 dark:bg-slate-950/60">
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#64748b] dark:text-slate-400">Final Score</p>
-          <p className="my-2 text-[3.1rem] font-black leading-none tracking-[-0.04em] text-[#1d4ed8] dark:text-sky-400 sm:text-[5rem]">
+          <p className="my-2 text-[3.1rem] font-black leading-none tracking-[-0.04em] text-[#140494] dark:text-sky-400 sm:text-[5rem]">
             {formatNumber(state.breakdown.finalScore)}
           </p>
-          <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-[#e0f2fe] px-4 py-2 text-sm font-semibold text-[#0284c7] dark:bg-slate-800 dark:text-sky-300">
+          <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-[#eff1ff] px-4 py-2 text-sm font-semibold text-[#2406e2] dark:bg-slate-800 dark:text-sky-300">
             <SparklesIcon className="h-4 w-4" />
             +{state.xpAwarded ?? 0} XP
           </div>
@@ -129,13 +129,13 @@ const SuccessSummaryCard = ({
         <div className="mt-4 grid grid-cols-2 gap-3 sm:mt-6 sm:gap-4">
           <GameOverTile
             icon={<GridIcon className="h-5 w-5" />}
-            accent="text-[#0284c7]"
+            accent="text-[#2406e2]"
             label="Total Matches"
             value={`${totalMatches}`}
           />
           <GameOverTile
             icon={<ClockIcon className="h-5 w-5" />}
-            accent="text-[#2563eb]"
+            accent="text-[#1c05b3]"
             label="Time Taken"
             value={formatDuration(state.entry.duration)}
           />
@@ -154,13 +154,13 @@ const SuccessSummaryCard = ({
               <p className="text-lg font-bold text-[#0f172a] dark:text-white">{progress.level > 1 ? `Level ${progress.level}` : "Neural Rookie"}</p>
               <p className="text-sm text-[#64748b] dark:text-slate-400">Keep pushing your best runs to climb higher.</p>
             </div>
-            <span className="text-sm font-semibold text-[#0284c7] dark:text-sky-400">
+            <span className="text-sm font-semibold text-[#2406e2] dark:text-sky-400">
               {currentXp} / {progress.nextLevelXp} XP
             </span>
           </div>
           <div className="h-4 w-full rounded-full bg-[#dbeafe] p-0.5 shadow-inner">
             <div
-              className="h-full rounded-full bg-gradient-to-r from-[#38bdf8] via-[#2563eb] to-[#1d4ed8]"
+              className="h-full rounded-full bg-gradient-to-r from-[#2406e2] via-[#1c05b3] to-[#140494]"
               style={{ width: `${Math.max(8, progress.progress)}%` }}
             />
           </div>
@@ -170,14 +170,14 @@ const SuccessSummaryCard = ({
       <div className="mt-4 flex flex-col gap-3 sm:mt-5">
         <Link
           to="/play/classic"
-          className="inline-flex h-14 w-full items-center justify-center gap-3 rounded-[1.4rem] bg-gradient-to-b from-[#2563eb] to-[#1d4ed8] text-base font-bold text-white shadow-[0_18px_34px_rgba(37,99,235,0.22)] transition hover:scale-[1.01] sm:h-16 sm:text-lg"
+          className="inline-flex h-14 w-full items-center justify-center gap-3 rounded-[1.4rem] bg-gradient-to-b from-[#1c05b3] to-[#140494] text-base font-bold text-white shadow-[0_18px_34px_rgba(28,5,179,0.22)] transition hover:scale-[1.01] sm:h-16 sm:text-lg"
         >
           <PlayIcon className="h-5 w-5" />
           Play Again
         </Link>
         <Link
           to="/play"
-          className="inline-flex h-12 w-full items-center justify-center gap-3 rounded-[1.4rem] border border-[#bfdbfe] bg-white/65 text-sm font-bold text-[#0284c7] transition hover:bg-white sm:h-14 sm:text-base dark:border-slate-700 dark:bg-slate-900/90 dark:text-sky-400 dark:hover:bg-slate-800"
+          className="inline-flex h-12 w-full items-center justify-center gap-3 rounded-[1.4rem] border border-[#bfdbfe] bg-white/65 text-sm font-bold text-[#2406e2] transition hover:bg-white sm:h-14 sm:text-base dark:border-slate-700 dark:bg-slate-900/90 dark:text-sky-400 dark:hover:bg-slate-800"
         >
           <GridIcon className="h-5 w-5" />
           Back to Lobby
@@ -199,13 +199,13 @@ const GameOverSummary = ({
 
   return (
     <section className="w-full max-w-2xl">
-      <div className="glass-panel relative overflow-hidden rounded-[1.8rem] p-5 shadow-[0_24px_54px_rgba(37,99,235,0.10)] sm:rounded-[2.2rem] sm:p-10">
-      <div className="absolute right-0 top-0 rounded-bl-[1.4rem] rounded-tr-[2.2rem] bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] px-5 py-2 text-xs font-bold uppercase tracking-[0.18em] text-white">
+      <div className="glass-panel relative overflow-hidden rounded-[1.8rem] p-5 shadow-[0_24px_54px_rgba(28,5,179,0.10)] sm:rounded-[2.2rem] sm:p-10">
+      <div className="absolute right-0 top-0 rounded-bl-[1.4rem] rounded-tr-[2.2rem] bg-gradient-to-r from-[#1c05b3] to-[#140494] px-5 py-2 text-xs font-bold uppercase tracking-[0.18em] text-white">
         Session Complete
       </div>
 
       <div className="text-center">
-        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#2563eb] dark:text-sky-400">Round Summary</p>
+        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#1c05b3] dark:text-sky-400">Round Summary</p>
         <h1 className="mt-2 font-display text-[2.1rem] font-extrabold tracking-[-0.04em] text-[#0f172a] dark:text-white sm:mt-3 sm:text-[3.6rem]">
           {ranOutOfMoves ? "Moves Over" : "Time Over"}
         </h1>
@@ -218,10 +218,10 @@ const GameOverSummary = ({
 
       <div className="mt-5 rounded-[1.5rem] border border-white/70 bg-white/45 px-4 py-5 text-center shadow-inner sm:mt-8 sm:rounded-[1.9rem] sm:px-6 sm:py-7 dark:border-slate-800 dark:bg-slate-950/60">
         <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#64748b] dark:text-slate-400">Final Score</p>
-        <p className="my-2 text-[3rem] font-black leading-none tracking-[-0.04em] text-[#1d4ed8] dark:text-sky-400 sm:text-[3.6rem]">
+        <p className="my-2 text-[3rem] font-black leading-none tracking-[-0.04em] text-[#140494] dark:text-sky-400 sm:text-[3.6rem]">
           {formatNumber(state.breakdown.finalScore)}
         </p>
-        <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-[#e0f2fe] px-4 py-2 text-sm font-semibold text-[#0284c7] dark:bg-slate-800 dark:text-sky-300">
+        <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-[#eff1ff] px-4 py-2 text-sm font-semibold text-[#2406e2] dark:bg-slate-800 dark:text-sky-300">
           <SparklesIcon className="h-4 w-4" />
           Saved to Hall of Fame
         </div>
@@ -230,13 +230,13 @@ const GameOverSummary = ({
       <div className="mt-5 grid grid-cols-2 gap-3 sm:mt-8 sm:gap-4">
         <GameOverTile
           icon={<GridIcon className="h-5 w-5" />}
-          accent="text-[#0284c7]"
+          accent="text-[#2406e2]"
           label="Total Matches"
           value={`${totalMatches}`}
         />
         <GameOverTile
           icon={<ClockIcon className="h-5 w-5" />}
-          accent="text-[#2563eb]"
+          accent="text-[#1c05b3]"
           label={ranOutOfMoves ? "Moves Used" : "Time Taken"}
           value={ranOutOfMoves ? `${state.entry.movesUsed}/${state.entry.moveLimit}` : formatDuration(state.entry.duration)}
         />
@@ -262,14 +262,14 @@ const GameOverSummary = ({
       <div className="mt-4 flex flex-col gap-3 sm:mt-5 sm:flex-row">
         <Link
           to="/play/classic"
-          className="inline-flex h-14 flex-1 items-center justify-center gap-3 rounded-[1.4rem] bg-gradient-to-b from-[#2563eb] to-[#1d4ed8] text-base font-bold text-white shadow-[0_18px_34px_rgba(37,99,235,0.22)] transition hover:scale-[1.01] sm:h-16 sm:text-lg"
+          className="inline-flex h-14 flex-1 items-center justify-center gap-3 rounded-[1.4rem] bg-gradient-to-b from-[#1c05b3] to-[#140494] text-base font-bold text-white shadow-[0_18px_34px_rgba(28,5,179,0.22)] transition hover:scale-[1.01] sm:h-16 sm:text-lg"
         >
           <PlayIcon className="h-5 w-5" />
           Play Again
         </Link>
         <Link
           to="/play"
-          className="inline-flex h-12 flex-1 items-center justify-center gap-3 rounded-[1.4rem] border border-[#bfdbfe] bg-white/65 text-sm font-bold text-[#0284c7] transition hover:bg-white sm:h-14 sm:text-base dark:border-slate-700 dark:bg-slate-900/90 dark:text-sky-400 dark:hover:bg-slate-800"
+          className="inline-flex h-12 flex-1 items-center justify-center gap-3 rounded-[1.4rem] border border-[#bfdbfe] bg-white/65 text-sm font-bold text-[#2406e2] transition hover:bg-white sm:h-14 sm:text-base dark:border-slate-700 dark:bg-slate-900/90 dark:text-sky-400 dark:hover:bg-slate-800"
         >
           <TrophyIcon className="h-5 w-5" />
           Back to Lobby

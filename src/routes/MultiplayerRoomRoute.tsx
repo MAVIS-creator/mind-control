@@ -179,8 +179,8 @@ export const MultiplayerRoomRoute = () => {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#f0f9ff] dark:bg-slate-950 dark:text-slate-100">
-        <p className="font-display text-sm font-bold uppercase tracking-widest text-[#2563eb] dark:text-sky-400">
+      <div className="flex min-h-screen items-center justify-center bg-[#eff1ff] dark:bg-slate-950 dark:text-slate-100">
+        <p className="font-display text-sm font-bold uppercase tracking-widest text-[#1c05b3] dark:text-[#2406e2]">
           Connecting to Room Frequency...
         </p>
       </div>
@@ -189,12 +189,12 @@ export const MultiplayerRoomRoute = () => {
 
   if (!room) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-[#f0f9ff] dark:bg-slate-950 dark:text-slate-100 px-4 text-center">
+      <div className="flex min-h-screen flex-col items-center justify-center bg-[#eff1ff] dark:bg-slate-950 dark:text-slate-100 px-4 text-center">
         <h2 className="font-display text-xl font-bold text-[#0f172a] dark:text-white">Room Not Found</h2>
         <p className="mt-2 text-sm text-[#64748b] dark:text-slate-300">This lobby may have expired or been disbanded.</p>
         <button
           onClick={() => navigate("/multiplayer")}
-          className="mt-4 rounded-xl bg-[#2563eb] px-5 py-2.5 text-xs font-bold text-white shadow-md hover:bg-[#1d4ed8]"
+          className="mt-4 rounded-xl bg-[#1c05b3] px-5 py-2.5 text-xs font-bold text-white shadow-md hover:bg-[#140494]"
         >
           Return to Lobby
         </button>
@@ -203,7 +203,7 @@ export const MultiplayerRoomRoute = () => {
   }
 
   return (
-    <div className="relative min-h-screen bg-[radial-gradient(circle_at_top_left,_#e0f2fe_0%,_#f8faff_42%,_#dbeafe_100%)] dark:bg-none dark:bg-slate-950 dark:text-slate-100 px-4 py-8 sm:px-6 lg:px-8">
+    <div className="relative min-h-screen bg-[radial-gradient(circle_at_top_left,_#e0e4ff_0%,_#f8faff_42%,_#dbeafe_100%)] dark:bg-none dark:bg-slate-950 dark:text-slate-100 px-4 py-8 sm:px-6 lg:px-8">
       <Seo title={`Room ${room.roomCode} - MindGrid Multiplayer`} description="Pre-game multiplayer lobby room." />
 
       <div className="mx-auto max-w-4xl">
@@ -211,7 +211,7 @@ export const MultiplayerRoomRoute = () => {
         <div className="mb-6 flex items-center justify-between">
           <button
             onClick={handleLeave}
-            className="text-xs font-semibold uppercase tracking-wider text-[#1d4ed8] dark:text-sky-400 hover:underline"
+            className="text-xs font-semibold uppercase tracking-wider text-[#140494] dark:text-[#2406e2] hover:underline"
           >
             ← Disband / Leave Room
           </button>
@@ -240,7 +240,7 @@ export const MultiplayerRoomRoute = () => {
             </span>
             <button
               onClick={copyRoomCode}
-              className="rounded-xl bg-[#2563eb]/10 px-3 py-2 text-xs font-bold text-[#2563eb] hover:bg-[#2563eb]/20 transition-all"
+              className="rounded-xl bg-[#1c05b3]/10 px-3 py-2 text-xs font-bold text-[#1c05b3] hover:bg-[#1c05b3]/20 transition-all"
             >
               {copied ? "Copied!" : "Copy Code"}
             </button>
@@ -252,13 +252,13 @@ export const MultiplayerRoomRoute = () => {
 
         {/* Mode Details Pill */}
         <div className="mb-8 flex flex-wrap items-center justify-center gap-4 text-xs font-bold uppercase tracking-wider">
-          <span className="rounded-xl bg-white/80 px-4 py-2 text-[#0284c7] dark:text-sky-400 shadow-sm border border-white/60 dark:bg-slate-900/90 dark:border-slate-800">
+          <span className="rounded-xl bg-white/80 px-4 py-2 text-[#120282] dark:text-[#2406e2] shadow-sm border border-white/60 dark:bg-slate-900/90 dark:border-slate-800">
             Mode: {room.gameMode.replace("_", " ")}
           </span>
-          <span className="rounded-xl bg-white/80 px-4 py-2 text-[#0284c7] dark:text-sky-400 shadow-sm border border-white/60 dark:bg-slate-900/90 dark:border-slate-800">
+          <span className="rounded-xl bg-white/80 px-4 py-2 text-[#120282] dark:text-[#2406e2] shadow-sm border border-white/60 dark:bg-slate-900/90 dark:border-slate-800">
             Matrix: {room.gridSize}
           </span>
-          <span className="rounded-xl bg-white/80 px-4 py-2 text-[#0284c7] dark:text-sky-400 shadow-sm border border-white/60 dark:bg-slate-900/90 dark:border-slate-800">
+          <span className="rounded-xl bg-white/80 px-4 py-2 text-[#120282] dark:text-[#2406e2] shadow-sm border border-white/60 dark:bg-slate-900/90 dark:border-slate-800">
             Theme: {room.theme}
           </span>
         </div>
@@ -266,11 +266,11 @@ export const MultiplayerRoomRoute = () => {
         {/* Players Side by Side */}
         <div className="grid gap-6 sm:grid-cols-2 mb-8">
           {/* Host Player Card */}
-          <div className="glass-panel rounded-3xl p-6 text-center shadow-lg border-2 border-blue-500/20">
-            <span className="inline-block rounded-full bg-blue-500/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-blue-600 mb-3">
+          <div className="glass-panel rounded-3xl p-6 text-center shadow-lg border-2 border-[#2406e2]/20">
+            <span className="inline-block rounded-full bg-[#2406e2]/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#1c05b3] mb-3">
               Room Host
             </span>
-            <div className="mx-auto h-20 w-20 rounded-full bg-gradient-to-tr from-[#2563eb] to-[#0284c7] p-1 shadow-md">
+            <div className="mx-auto h-20 w-20 rounded-full bg-gradient-to-tr from-[#1c05b3] to-[#120282] p-1 shadow-md">
               <div className="h-full w-full rounded-full bg-white dark:bg-slate-900 flex items-center justify-center text-2xl font-black text-[#0f172a] dark:text-white">
                 {room.hostProfile?.username?.charAt(0).toUpperCase() || "H"}
               </div>
@@ -294,14 +294,14 @@ export const MultiplayerRoomRoute = () => {
           </div>
 
           {/* Guest Player Card */}
-          <div className="glass-panel rounded-3xl p-6 text-center shadow-lg border-2 border-sky-500/20">
-            <span className="inline-block rounded-full bg-sky-500/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-sky-600 mb-3">
+          <div className="glass-panel rounded-3xl p-6 text-center shadow-lg border-2 border-[#2406e2]/20">
+            <span className="inline-block rounded-full bg-[#2406e2]/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#1c05b3] mb-3">
               Challenger
             </span>
 
             {room.guestId && room.guestProfile && (onlineUserIds.length === 0 || onlineUserIds.includes(room.guestId)) ? (
               <>
-                <div className="mx-auto h-20 w-20 rounded-full bg-gradient-to-tr from-[#0284c7] to-[#38bdf8] p-1 shadow-md">
+                <div className="mx-auto h-20 w-20 rounded-full bg-gradient-to-tr from-[#120282] to-[#2406e2] p-1 shadow-md">
                   <div className="h-full w-full rounded-full bg-white dark:bg-slate-900 flex items-center justify-center text-2xl font-black text-[#0f172a] dark:text-white">
                     {room.guestProfile.username.charAt(0).toUpperCase()}
                   </div>
@@ -355,7 +355,7 @@ export const MultiplayerRoomRoute = () => {
           {isHost && (
             <button
               onClick={handleStartMatch}
-              className="rounded-2xl bg-gradient-to-r from-[#2563eb] via-[#0284c7] to-[#0369a1] px-10 py-4 font-display text-sm font-bold uppercase tracking-wider text-white shadow-lg transition-all hover:scale-105"
+              className="rounded-2xl bg-gradient-to-r from-[#1c05b3] via-[#120282] to-[#0369a1] px-10 py-4 font-display text-sm font-bold uppercase tracking-wider text-white shadow-lg transition-all hover:scale-105"
             >
               Start Multiplayer Match
             </button>

@@ -27,9 +27,9 @@ export const PlayRoute = () => {
 
   return (
     <AppShell session={session} active="home">
-      <div className="min-h-full bg-[radial-gradient(circle_at_top_left,_#e0f2fe_0%,_#f8faff_42%,_#dbeafe_100%)] dark:bg-none dark:bg-slate-950 px-3 py-5 pb-32 sm:px-6 sm:py-8 sm:pb-36 md:pb-10">
+      <div className="min-h-full bg-[radial-gradient(circle_at_top_left,_#eff1ff_0%,_#f8faff_42%,_#dbeafe_100%)] dark:bg-none dark:bg-slate-950 px-3 py-5 pb-32 sm:px-6 sm:py-8 sm:pb-36 md:pb-10">
         <div className="mx-auto max-w-5xl">
-          <div className="glass-panel rounded-[2rem] px-4 py-6 shadow-[0_18px_40px_rgba(37,99,235,0.08)] sm:rounded-[2.5rem] sm:px-8 sm:py-8 md:px-12">
+          <div className="glass-panel rounded-[2rem] px-4 py-6 shadow-[0_18px_40px_rgba(28,5,179,0.08)] sm:rounded-[2.5rem] sm:px-8 sm:py-8 md:px-12">
             <div className="mx-auto max-w-[540px]">
               <div className="mb-8 h-1 rounded-full bg-gradient-to-r from-blue-600 via-sky-500 to-blue-400" />
 
@@ -37,13 +37,13 @@ export const PlayRoute = () => {
                 <div className="inline-flex rounded-full bg-[#f0f9ff] dark:bg-slate-900/90 p-1.5 shadow-inner">
                   <button
                     type="button"
-                    className="rounded-full bg-gradient-to-b from-[#2563eb] to-[#1d4ed8] px-6 py-2.5 text-sm font-semibold text-white shadow-[0_12px_24px_rgba(37,99,235,0.24)]"
+                    className="rounded-full bg-gradient-to-b from-[#1c05b3] to-[#140494] px-6 py-2.5 text-sm font-semibold text-white shadow-[0_12px_24px_rgba(28,5,179,0.24)]"
                   >
                     Single Player
                   </button>
                   <Link
                     to="/multiplayer"
-                    className="rounded-full px-6 py-2.5 text-sm font-semibold text-[#475569] dark:text-slate-300 hover:text-[#0284c7] dark:hover:text-white transition-all"
+                    className="rounded-full px-6 py-2.5 text-sm font-semibold text-[#475569] dark:text-slate-300 hover:text-[#2406e2] dark:hover:text-white transition-all"
                   >
                     Multiplayer Clash
                   </Link>
@@ -63,7 +63,7 @@ export const PlayRoute = () => {
                           onClick={() => updateSettings({ gridSize: key })}
                           className={`inline-flex items-center justify-center gap-3 rounded-full border px-4 py-4 text-base font-medium transition sm:px-5 sm:text-lg ${
                             active
-                              ? "border-[#bfdbfe] dark:border-blue-500 bg-[#dbeafe] dark:bg-blue-900/90 text-[#1e3a8a] dark:text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.55),0_10px_18px_rgba(37,99,235,0.08)]"
+                              ? "border-[#bfdbfe] dark:border-blue-500 bg-[#dbeafe] dark:bg-blue-900/90 text-[#1e3a8a] dark:text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.55),0_10px_18px_rgba(28,5,179,0.08)]"
                               : "border-[#e2e8f0] dark:border-slate-800 bg-white dark:bg-slate-900 text-[#334155] dark:text-slate-200"
                           }`}
                         >
@@ -87,7 +87,7 @@ export const PlayRoute = () => {
                           onClick={() => updateSettings({ theme: option.id })}
                           className={`inline-flex items-center justify-center gap-3 rounded-full border px-4 py-4 text-base font-medium transition sm:px-5 sm:text-lg ${
                             active
-                              ? "border-[#bfdbfe] dark:border-blue-500 bg-[#dbeafe] dark:bg-blue-900/90 text-[#1e3a8a] dark:text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.55),0_10px_18px_rgba(37,99,235,0.08)]"
+                              ? "border-[#bfdbfe] dark:border-blue-500 bg-[#dbeafe] dark:bg-blue-900/90 text-[#1e3a8a] dark:text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.55),0_10px_18px_rgba(28,5,179,0.08)]"
                               : "border-[#e2e8f0] dark:border-slate-800 bg-white dark:bg-slate-900 text-[#334155] dark:text-slate-200"
                           }`}
                         >
@@ -112,7 +112,7 @@ export const PlayRoute = () => {
                 ) : (
                   <Link
                     to="/play/classic"
-                    className="inline-flex w-full items-center justify-center gap-3 rounded-full bg-gradient-to-b from-[#2563eb] to-[#1d4ed8] px-6 py-4 text-[1.15rem] font-semibold text-white shadow-[0_14px_28px_rgba(37,99,235,0.25)] sm:py-5 sm:text-[1.35rem]"
+                    className="inline-flex w-full items-center justify-center gap-3 rounded-full bg-gradient-to-b from-[#1c05b3] to-[#140494] px-6 py-4 text-[1.15rem] font-semibold text-white shadow-[0_14px_28px_rgba(28,5,179,0.25)] sm:py-5 sm:text-[1.35rem]"
                   >
                     <PlayIcon className="h-6 w-6" />
                     Start Game

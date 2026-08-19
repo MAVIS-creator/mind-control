@@ -1,8 +1,8 @@
 <svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <linearGradient id="mindgrid-bg" x1="32" y1="28" x2="214" y2="226" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#4F46E5"/>
-      <stop offset="1" stop-color="#3525CD"/>
+      <stop stop-color="#2406E2"/>
+      <stop offset="1" stop-color="#1C05B3"/>
     </linearGradient>
   </defs>
   <rect x="14" y="14" width="228" height="228" rx="56" fill="url(#mindgrid-bg)"/>
