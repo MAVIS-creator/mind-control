@@ -170,6 +170,42 @@ export const StarBadgeIcon = (props: IconProps) => (
   </svg>
 );
 
+export const ChartBarIcon = (props: IconProps) => (
+  <svg {...baseProps} {...props}>
+    <path d="M18 20V10" />
+    <path d="M12 20V4" />
+    <path d="M6 20v-6" />
+  </svg>
+);
+
+export const LinkIcon = (props: IconProps) => (
+  <svg {...baseProps} {...props}>
+    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+  </svg>
+);
+
+export const SendIcon = (props: IconProps) => (
+  <svg {...baseProps} {...props}>
+    <path d="m22 2-7 20-4-9-9-4Z" />
+    <path d="M22 2 11 13" />
+  </svg>
+);
+
+export const CopyIcon = (props: IconProps) => (
+  <svg {...baseProps} {...props}>
+    <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+  </svg>
+);
+
+export const CheckCircleIcon = (props: IconProps) => (
+  <svg {...baseProps} {...props}>
+    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+    <path d="m9 11 3 3L22 4" />
+  </svg>
+);
+
 export const BrandMarkIcon = ({ className, ...props }: BrandImageProps) => (
   <img
     src="/mindgrid_logo.svg"

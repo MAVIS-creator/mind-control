@@ -149,11 +149,11 @@ const toStoredMatchType = (matchType: string | null | undefined): MatchType =>
     ? matchType
     : "standard";
 
-const mapLeaderboardRow = (row: any, meta?: { isAdmin: boolean; isBetaTester: boolean }): LeaderboardEntry => ({
+const mapLeaderboardRow = (row: any, meta?: { isAdmin: boolean; isBetaTester: boolean; email?: string }): LeaderboardEntry => ({
   id: row.id,
   userId: row.user_id,
   username: row.username,
-  email: row.email ?? "",
+  email: meta?.email || row.email || "",
   avatarId: row.avatar_id,
   mode: row.mode,
   matchType: toStoredMatchType(row.match_type),
@@ -184,11 +184,11 @@ const mapLeaderboardRow = (row: any, meta?: { isAdmin: boolean; isBetaTester: bo
   }),
 });
 
-const mapAccountLeaderboardRow = (row: any, meta?: { isAdmin: boolean; isBetaTester: boolean }): LeaderboardEntry => ({
+const mapAccountLeaderboardRow = (row: any, meta?: { isAdmin: boolean; isBetaTester: boolean; email?: string }): LeaderboardEntry => ({
   id: `account-${row.user_id}`,
   userId: row.user_id,
   username: row.username,
-  email: row.email ?? "",
+  email: meta?.email || row.email || "",
   avatarId: row.avatar_id,
   mode: row.mode ?? "classic",
   matchType: toStoredMatchType(row.match_type),
@@ -391,18 +391,19 @@ const fetchRemoteLeaderboards = async () => {
           .order("total_points", { ascending: false })
           .order("best_duration", { ascending: true })
           .limit(200),
-        supabase.from("profiles").select("id, username, is_admin, is_beta_tester, created_at"),
+        supabase.from("profiles").select("id, username, email, is_admin, is_beta_tester, created_at"),
       ]);
 
     if (categoryError) throw categoryError;
     if (accountError) throw accountError;
 
-    const profileMetaMap = new Map<string, { isAdmin: boolean; isBetaTester: boolean }>();
+    const profileMetaMap = new Map<string, { isAdmin: boolean; isBetaTester: boolean; email?: string }>();
     (profileRows || []).forEach((p) => {
       const isAdmin = canBeAdminFromEnv(p.username) || Boolean(p.is_admin);
       const isBetaTester = isBetaTesterUser(p.username, Boolean(p.is_beta_tester), p.created_at);
-      profileMetaMap.set(p.id, { isAdmin, isBetaTester });
-      if (p.username) profileMetaMap.set(p.username.toLowerCase(), { isAdmin, isBetaTester });
+      const email = p.email ?? "";
+      profileMetaMap.set(p.id, { isAdmin, isBetaTester, email });
+      if (p.username) profileMetaMap.set(p.username.toLowerCase(), { isAdmin, isBetaTester, email });
     });
 
     const leaderboard = (categoryRows ?? []).map((r) =>
@@ -422,17 +423,18 @@ const fetchRemoteLeaderboards = async () => {
         .order("score", { ascending: false })
         .order("duration", { ascending: true })
         .limit(500),
-      supabase.from("profiles").select("id, username, is_admin, is_beta_tester, created_at"),
+      supabase.from("profiles").select("id, username, email, is_admin, is_beta_tester, created_at"),
     ]);
 
     if (runsError) throw runsError;
 
-    const profileMetaMap = new Map<string, { isAdmin: boolean; isBetaTester: boolean }>();
+    const profileMetaMap = new Map<string, { isAdmin: boolean; isBetaTester: boolean; email?: string }>();
     (profileRows || []).forEach((p) => {
       const isAdmin = canBeAdminFromEnv(p.username) || Boolean(p.is_admin);
       const isBetaTester = isBetaTesterUser(p.username, Boolean(p.is_beta_tester), p.created_at);
-      profileMetaMap.set(p.id, { isAdmin, isBetaTester });
-      if (p.username) profileMetaMap.set(p.username.toLowerCase(), { isAdmin, isBetaTester });
+      const email = p.email ?? "";
+      profileMetaMap.set(p.id, { isAdmin, isBetaTester, email });
+      if (p.username) profileMetaMap.set(p.username.toLowerCase(), { isAdmin, isBetaTester, email });
     });
 
     const next = buildPublicLeaderboardsFromRuns(runRows ?? []);
@@ -441,6 +443,7 @@ const fetchRemoteLeaderboards = async () => {
       if (meta) {
         e.isAdmin = meta.isAdmin;
         e.isBetaTester = meta.isBetaTester;
+        if (meta.email) e.email = meta.email;
       }
     });
     next.accountLeaderboard.forEach((e) => {
@@ -448,6 +451,7 @@ const fetchRemoteLeaderboards = async () => {
       if (meta) {
         e.isAdmin = meta.isAdmin;
         e.isBetaTester = meta.isBetaTester;
+        if (meta.email) e.email = meta.email;
       }
     });
     saveLeaderboards(next.leaderboard, next.accountLeaderboard);
