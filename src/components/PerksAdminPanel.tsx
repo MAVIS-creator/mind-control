@@ -155,7 +155,7 @@ export const PerksAdminPanel = () => {
 
       await sendAdminEmail({
         recipientIds: selectedUserIds,
-        subject: "🎉 You Received Official MindGrid Founder Perks!",
+        subject: "You Received Official MindGrid Founder Perks!",
         message: `Hello Operative,\n\nYou have been awarded the following Founder Perks from the MindGrid Admin Team:\n\n• ${awardedTitles.join("\n• ")}\n\nLog in to your account at https://neuralclash.dev to view your updated perks, badge, and level!\n\nThank you for being part of MindGrid: Neural Clash!`,
       });
 
@@ -183,11 +183,11 @@ export const PerksAdminPanel = () => {
 
       <div className="grid gap-6 xl:grid-cols-[1fr_0.8fr]">
         {/* User Emails & Testers Table */}
-        <section className="rounded-[1.6rem] border border-white/70 dark:border-slate-800 bg-white/84 dark:bg-slate-900/90 p-5 shadow-[0_16px_36px_rgba(53,37,205,0.06)]">
+        <section className="rounded-[1.6rem] border border-white/70 dark:border-slate-800 bg-white/84 dark:bg-slate-900/90 p-5 shadow-[0_16px_36px_rgba(37,99,235,0.06)]">
           <div className="flex items-center justify-between border-b border-[#ececf6] dark:border-slate-800 pb-4 mb-4">
             <div>
-              <h2 className="text-lg font-bold text-[#1a2340] dark:text-white">Registered Accounts & Emails</h2>
-              <p className="text-xs text-[#6c7489] dark:text-slate-400">Inspect registered player emails and manage Neural Tester badges.</p>
+              <h2 className="text-lg font-bold text-[#0f172a] dark:text-white">Registered Accounts & Emails</h2>
+              <p className="text-xs text-[#64748b] dark:text-slate-400">Inspect registered player emails and manage Neural Tester badges.</p>
             </div>
             <div className="flex gap-2">
               <button
@@ -220,7 +220,7 @@ export const PerksAdminPanel = () => {
                   <div
                     key={p.id}
                     className={`flex items-center justify-between gap-3 rounded-2xl border p-3.5 transition ${
-                      isSelected ? "border-[#4f46e5] bg-[#eef2ff] dark:bg-indigo-900/30" : "border-slate-200/80 bg-white dark:border-slate-800 dark:bg-slate-950"
+                      isSelected ? "border-[#2563eb] bg-[#eff6ff] dark:bg-blue-900/30" : "border-slate-200/80 bg-white dark:border-slate-800 dark:bg-slate-950"
                     }`}
                   >
                     <div className="flex items-center gap-3 min-w-0">
@@ -228,7 +228,7 @@ export const PerksAdminPanel = () => {
                         type="checkbox"
                         checked={isSelected}
                         onChange={() => toggleSelectUser(p.id)}
-                        className="h-4 w-4 rounded border-slate-300 text-[#4f46e5]"
+                        className="h-4 w-4 rounded border-slate-300 text-[#2563eb]"
                       />
                       <img src={avatar.image} alt="" className="h-10 w-10 rounded-full border border-slate-200 dark:border-slate-700" />
                       <div className="min-w-0">
@@ -268,10 +268,10 @@ export const PerksAdminPanel = () => {
         </section>
 
         {/* Gift Perks Control Panel */}
-        <section className="rounded-[1.6rem] border border-white/70 dark:border-slate-800 bg-white/84 dark:bg-slate-900/90 p-5 shadow-[0_16px_36px_rgba(53,37,205,0.06)]">
+        <section className="rounded-[1.6rem] border border-white/70 dark:border-slate-800 bg-white/84 dark:bg-slate-900/90 p-5 shadow-[0_16px_36px_rgba(37,99,235,0.06)]">
           <div className="border-b border-[#ececf6] dark:border-slate-800 pb-4 mb-4">
-            <h2 className="text-lg font-bold text-[#1a2340] dark:text-white">Gift Perks & Founder Rewards</h2>
-            <p className="text-xs text-[#6c7489] dark:text-slate-400">Distribute active Perks with live APIs to selected players.</p>
+            <h2 className="text-lg font-bold text-[#0f172a] dark:text-white">Gift Perks & Founder Rewards</h2>
+            <p className="text-xs text-[#64748b] dark:text-slate-400">Distribute active Perks with live APIs to selected players.</p>
           </div>
 
           <div className="space-y-4">
@@ -284,15 +284,15 @@ export const PerksAdminPanel = () => {
                   onClick={() => togglePerk("xp_1000")}
                   className={`flex items-center gap-3 rounded-xl border p-3 cursor-pointer transition ${
                     selectedPerks.includes("xp_1000")
-                      ? "border-[#4f46e5] bg-[#eef2ff] dark:bg-indigo-900/30"
-                      : "border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 hover:border-indigo-400 dark:hover:border-indigo-500/50"
+                      ? "border-[#2563eb] bg-[#eff6ff] dark:bg-blue-900/30"
+                      : "border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 hover:border-[#60a5fa] dark:hover:border-blue-500/50"
                   }`}
                 >
                   <input
                     type="checkbox"
                     checked={selectedPerks.includes("xp_1000")}
                     onChange={() => {}}
-                    className="h-4 w-4 rounded border-slate-300 text-[#4f46e5]"
+                    className="h-4 w-4 rounded border-slate-300 text-[#2563eb]"
                   />
                   <div>
                     <p className="text-xs font-bold text-slate-900 dark:text-white">+1,000 Founder XP Boost</p>
@@ -304,15 +304,15 @@ export const PerksAdminPanel = () => {
                   onClick={() => togglePerk("tester_badge")}
                   className={`flex items-center gap-3 rounded-xl border p-3 cursor-pointer transition ${
                     selectedPerks.includes("tester_badge")
-                      ? "border-[#4f46e5] bg-[#eef2ff] dark:bg-indigo-900/30"
-                      : "border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 hover:border-indigo-400 dark:hover:border-indigo-500/50"
+                      ? "border-[#2563eb] bg-[#eff6ff] dark:bg-blue-900/30"
+                      : "border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 hover:border-[#60a5fa] dark:hover:border-blue-500/50"
                   }`}
                 >
                   <input
                     type="checkbox"
                     checked={selectedPerks.includes("tester_badge")}
                     onChange={() => {}}
-                    className="h-4 w-4 rounded border-slate-300 text-[#4f46e5]"
+                    className="h-4 w-4 rounded border-slate-300 text-[#2563eb]"
                   />
                   <div>
                     <p className="text-xs font-bold text-slate-900 dark:text-white">Neural Tester Title & Gold Avatar Ring</p>
@@ -324,15 +324,15 @@ export const PerksAdminPanel = () => {
                   onClick={() => togglePerk("crystals_500")}
                   className={`flex items-center gap-3 rounded-xl border p-3 cursor-pointer transition ${
                     selectedPerks.includes("crystals_500")
-                      ? "border-[#4f46e5] bg-[#eef2ff] dark:bg-indigo-900/30"
-                      : "border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 hover:border-indigo-400 dark:hover:border-indigo-500/50"
+                      ? "border-[#2563eb] bg-[#eff6ff] dark:bg-blue-900/30"
+                      : "border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 hover:border-[#60a5fa] dark:hover:border-blue-500/50"
                   }`}
                 >
                   <input
                     type="checkbox"
                     checked={selectedPerks.includes("crystals_500")}
                     onChange={() => {}}
-                    className="h-4 w-4 rounded border-slate-300 text-[#4f46e5]"
+                    className="h-4 w-4 rounded border-slate-300 text-[#2563eb]"
                   />
                   <div>
                     <p className="text-xs font-bold text-slate-900 dark:text-white">+500 Neural Crystals Bonus</p>
@@ -342,7 +342,7 @@ export const PerksAdminPanel = () => {
               </div>
             </div>
 
-            <div className="rounded-xl bg-indigo-50 dark:bg-indigo-950/30 p-4 border border-indigo-100 dark:border-indigo-900/30 text-xs text-indigo-900 dark:text-indigo-200">
+            <div className="rounded-xl bg-blue-50 dark:bg-blue-950/30 p-4 border border-blue-100 dark:border-blue-900/30 text-xs text-blue-900 dark:text-sky-200">
               <p><span className="font-bold">Selected Perks: </span>{selectedPerks.length} perk(s)</p>
               <p><span className="font-bold">Target Recipients: </span>{selectedUserIds.length} player(s)</p>
             </div>
@@ -351,7 +351,7 @@ export const PerksAdminPanel = () => {
               type="button"
               onClick={handleDistributePerk}
               disabled={processing || selectedUserIds.length === 0}
-              className="w-full rounded-2xl bg-gradient-to-r from-[#4f46e5] to-[#3525cd] py-4 text-xs font-bold uppercase tracking-wider text-white shadow-md transition hover:scale-[1.01] disabled:opacity-50"
+              className="w-full rounded-2xl bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] py-4 text-xs font-bold uppercase tracking-wider text-white shadow-md transition hover:scale-[1.01] disabled:opacity-50"
             >
               {processing ? "Distributing Perks..." : "Gift Perks & Send Notification"}
             </button>

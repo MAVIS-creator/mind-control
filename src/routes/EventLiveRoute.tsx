@@ -39,7 +39,7 @@ export const EventLiveRoute = () => {
     void refresh();
   };
 
-  if (edition === undefined) return <EventEditionShell edition={edition}><main className="p-8 text-center font-bold text-[#3525cd] dark:text-indigo-400">Loading event...</main></EventEditionShell>;
+  if (edition === undefined) return <EventEditionShell edition={edition}><main className="p-8 text-center font-bold text-[#2563eb] dark:text-sky-400">Loading event...</main></EventEditionShell>;
   if (!edition) return <Navigate to="/" replace />;
 
   return (
@@ -47,12 +47,12 @@ export const EventLiveRoute = () => {
       <main className="mx-auto max-w-[1320px] px-4 py-8 sm:px-6 lg:px-8">
         <section className="mb-7 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.28em] text-[#3525cd] dark:text-indigo-400">Projector Leaderboard</p>
-            <h1 className="mt-2 text-4xl font-black tracking-[-0.06em] text-[#111c2d] dark:text-white sm:text-6xl">{edition.title}</h1>
+            <p className="text-xs font-bold uppercase tracking-[0.28em] text-[#2563eb] dark:text-sky-400">Projector Leaderboard</p>
+            <h1 className="mt-2 text-4xl font-black tracking-[-0.06em] text-[#0f172a] dark:text-white sm:text-6xl">{edition.title}</h1>
             <p className="mt-3 max-w-2xl text-base leading-8 text-[#586074] dark:text-slate-400">Nicknames only. Scores refresh automatically for this event display.</p>
           </div>
           <div className="flex gap-2">
-            <button type="button" onClick={() => void refresh()} className="rounded-full border border-[#d9d8eb] dark:border-slate-800 bg-white/80 dark:bg-slate-900/90 px-5 py-3 font-bold text-[#3525cd] dark:text-indigo-400">
+            <button type="button" onClick={() => void refresh()} className="rounded-full border border-[#cbd5e1] dark:border-slate-800 bg-white/80 dark:bg-slate-900/90 px-5 py-3 font-bold text-[#2563eb] dark:text-sky-400">
               <RefreshIcon className="inline h-4 w-4" /> Refresh
             </button>
             <button type="button" onClick={resetLocal} className="rounded-full border border-red-100 dark:border-red-900/30 bg-red-50 dark:bg-red-900/20 px-5 py-3 font-bold text-red-600 dark:text-red-400">
@@ -74,27 +74,27 @@ export const EventLiveRoute = () => {
             {runs.length ? (
               runs.map((run, index) => (
                 <div key={run.id} className="grid gap-3 px-5 py-5 md:grid-cols-[70px_1fr_140px_140px_140px_140px] md:items-center">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-white dark:bg-slate-800 text-lg font-black text-[#3525cd] dark:text-indigo-400 shadow-sm">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-white dark:bg-slate-800 text-lg font-black text-[#2563eb] dark:text-sky-400 shadow-sm">
                     {index + 1}
                   </div>
                   <div>
-                    <p className="text-xl font-black text-[#111c2d] dark:text-white">{run.nickname}</p>
+                    <p className="text-xl font-black text-[#0f172a] dark:text-white">{run.nickname}</p>
                     <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#7d8395] dark:text-slate-400">{run.participantCode}</p>
                   </div>
                   <p className="font-bold text-[#586074] dark:text-slate-400">{run.currentStage}</p>
-                  <p className="font-black text-[#3525cd] dark:text-indigo-400">{formatNumber(run.memoryScore)}</p>
-                  <p className="font-black text-[#6b00b7] dark:text-purple-400">{formatNumber(run.bonusScore)}</p>
+                  <p className="font-black text-[#2563eb] dark:text-sky-400">{formatNumber(run.memoryScore)}</p>
+                  <p className="font-black text-[#0284c7] dark:text-sky-300">{formatNumber(run.bonusScore)}</p>
                   <div>
-                    <p className="font-black text-[#111c2d] dark:text-white">{formatDuration(run.totalTimeSeconds)}</p>
-                    <p className="text-sm font-bold text-[#0060ac] dark:text-blue-400">{formatNumber(run.totalScore)} total</p>
+                    <p className="font-black text-[#0f172a] dark:text-white">{formatDuration(run.totalTimeSeconds)}</p>
+                    <p className="text-sm font-bold text-[#0284c7] dark:text-sky-400">{formatNumber(run.totalScore)} total</p>
                   </div>
                 </div>
               ))
             ) : (
               <div className="px-5 py-14 text-center">
-                <TrophyIcon className="mx-auto h-12 w-12 text-[#3525cd] dark:text-indigo-400" />
-                <p className="mt-4 text-lg font-bold text-[#111c2d] dark:text-white">No event runs yet.</p>
-                <Link to={`/${edition.slug}`} className="mt-4 inline-flex rounded-full bg-[#3525cd] dark:bg-indigo-600 px-6 py-3 font-bold text-white">
+                <TrophyIcon className="mx-auto h-12 w-12 text-[#2563eb] dark:text-sky-400" />
+                <p className="mt-4 text-lg font-bold text-[#0f172a] dark:text-white">No event runs yet.</p>
+                <Link to={`/${edition.slug}`} className="mt-4 inline-flex rounded-full bg-[#2563eb] dark:bg-blue-600 px-6 py-3 font-bold text-white">
                   Start first participant
                 </Link>
               </div>

@@ -187,8 +187,8 @@ export const FriendsDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: (
             onClick={() => setActiveTab("friends")}
             className={`flex-1 py-2.5 text-xs font-bold uppercase tracking-wider transition-all dark:text-white ${
               activeTab === "friends"
-                ? "border-b-2 border-[#3525cd] text-[#3525cd] dark:border-white"
-                : "text-[#64748b] hover:text-[#1e1b4b] dark:text-slate-400 dark:hover:text-white"
+                ? "border-b-2 border-[#2563eb] text-[#2563eb] dark:border-sky-400 dark:text-sky-400"
+                : "text-[#64748b] hover:text-[#0f172a] dark:text-slate-400 dark:hover:text-white"
             }`}
           >
             Friends ({friendsList.length})
@@ -197,8 +197,8 @@ export const FriendsDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: (
             onClick={() => setActiveTab("search")}
             className={`flex-1 py-2.5 text-xs font-bold uppercase tracking-wider transition-all dark:text-white ${
               activeTab === "search"
-                ? "border-b-2 border-[#3525cd] text-[#3525cd] dark:border-white"
-                : "text-[#64748b] hover:text-[#1e1b4b] dark:text-slate-400 dark:hover:text-white"
+                ? "border-b-2 border-[#2563eb] text-[#2563eb] dark:border-sky-400 dark:text-sky-400"
+                : "text-[#64748b] hover:text-[#0f172a] dark:text-slate-400 dark:hover:text-white"
             }`}
           >
             Add Friend
@@ -207,8 +207,8 @@ export const FriendsDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: (
             onClick={() => setActiveTab("pending")}
             className={`flex-1 py-2.5 text-xs font-bold uppercase tracking-wider transition-all relative dark:text-white ${
               activeTab === "pending"
-                ? "border-b-2 border-[#3525cd] text-[#3525cd] dark:border-white"
-                : "text-[#64748b] hover:text-[#1e1b4b] dark:text-slate-400 dark:hover:text-white"
+                ? "border-b-2 border-[#2563eb] text-[#2563eb] dark:border-sky-400 dark:text-sky-400"
+                : "text-[#64748b] hover:text-[#0f172a] dark:text-slate-400 dark:hover:text-white"
             }`}
           >
             Requests
@@ -242,8 +242,8 @@ export const FriendsDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: (
                     >
                       <div className="flex items-center gap-3">
                         <div className="relative">
-                          <div className="h-10 w-10 rounded-full bg-gradient-to-tr from-[#3525cd] to-[#7c3aed] p-0.5">
-                            <div className="flex h-full w-full items-center justify-center rounded-full bg-white font-bold text-[#1e1b4b]">
+                          <div className="h-10 w-10 rounded-full bg-gradient-to-tr from-[#2563eb] to-[#0284c7] p-0.5">
+                            <div className="flex h-full w-full items-center justify-center rounded-full bg-white font-bold text-[#0f172a]">
                               {f.friendProfile?.username.charAt(0).toUpperCase()}
                             </div>
                           </div>
@@ -254,7 +254,7 @@ export const FriendsDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: (
                           />
                         </div>
                         <div>
-                          <p className="text-xs font-bold text-[#1e1b4b] dark:text-white">{f.friendProfile?.username}</p>
+                          <p className="text-xs font-bold text-[#0f172a] dark:text-white">{f.friendProfile?.username}</p>
                           <p className="text-[10px] text-[#64748b] dark:text-slate-400">
                             {isOnline ? "Online Now" : formatLastSeen(lastSeenTime)}
                           </p>
@@ -276,7 +276,7 @@ export const FriendsDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: (
                   value={searchQuery}
                   onChange={handleSearchChange}
                   placeholder="Filter or search player username..."
-                  className="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-xs text-[#1e1b4b] focus:border-[#3525cd] focus:outline-none dark:bg-slate-800 dark:border-slate-700 dark:text-white dark:placeholder-slate-400"
+                  className="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-xs text-[#0f172a] focus:border-[#2563eb] focus:outline-none dark:bg-slate-800 dark:border-slate-700 dark:text-white dark:placeholder-slate-400"
                 />
               </div>
 
@@ -308,7 +308,7 @@ export const FriendsDrawer = ({ isOpen, onClose }: { isOpen: boolean; onClose: (
                           <button
                             onClick={() => handleSendRequest(user)}
                             disabled={sendingId === user.id}
-                            className="rounded-xl bg-[#4f46e5] px-3.5 py-1.5 text-xs font-bold text-white hover:bg-[#3730a3] transition-all"
+                            className="rounded-xl bg-[#2563eb] px-3.5 py-1.5 text-xs font-bold text-white hover:bg-[#1d4ed8] transition-all shadow-sm"
                           >
                             {sendingId === user.id ? "Sending..." : "Add & Notify Email"}
                           </button>

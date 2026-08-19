@@ -6,25 +6,38 @@ export default {
   theme: {
     extend: {
       colors: {
-        bg: "#f9f9ff",
-        panel: "#e7eeff",
-        panelAlt: "#dee8ff",
-        cyan: "#64a8fe",
-        indigo: "#3525cd",
-        violet: "#862dd4",
-        haze: "#d8e3fb",
+        bg: "#f8fafc",
+        panel: "#f1f5f9",
+        panelAlt: "#e2e8f0",
+        cyan: "#38bdf8",
+        blue: {
+          50: "#eff6ff",
+          100: "#dbeafe",
+          200: "#bfdbfe",
+          300: "#93c5fd",
+          400: "#60a5fa",
+          500: "#3b82f6",
+          600: "#2563eb",
+          700: "#1d4ed8",
+          800: "#1e40af",
+          900: "#1e3a8a",
+          950: "#0f172a",
+        },
+        indigo: "#2563eb",
+        blueAlt: "#0284c7",
+        haze: "#e0f2fe",
       },
       fontFamily: {
         display: ["Inter", "sans-serif"],
         body: ["Inter", "sans-serif"],
       },
       boxShadow: {
-        neon: "0 0 30px rgba(108, 247, 255, 0.18)",
-        violet: "0 0 36px rgba(195, 95, 255, 0.22)",
+        neon: "0 0 30px rgba(56, 189, 248, 0.22)",
+        blue: "0 0 36px rgba(37, 99, 235, 0.22)",
       },
       backgroundImage: {
         "neural-grid":
-          "radial-gradient(circle at top, rgba(90,102,255,0.2), transparent 32%), linear-gradient(rgba(108,247,255,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(108,247,255,0.08) 1px, transparent 1px)",
+          "radial-gradient(circle at top, rgba(37,99,235,0.15), transparent 32%), linear-gradient(rgba(56,189,248,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(56,189,248,0.08) 1px, transparent 1px)",
       },
       backgroundSize: {
         grid: "100% 100%, 48px 48px, 48px 48px",

@@ -84,7 +84,7 @@ export const BetaFounderClaimModal = () => {
           </div>
 
           <div className="flex items-center gap-3">
-            <SparklesIcon className="h-5 w-5 shrink-0 text-indigo-400" />
+            <SparklesIcon className="h-5 w-5 shrink-0 text-sky-400" />
             <div>
               <p className="text-xs font-bold text-white dark:text-white">+1,000 Founder XP Boost</p>
               <p className="text-[11px] text-slate-400 dark:text-slate-400">Instantly unlocks higher level tiers.</p>

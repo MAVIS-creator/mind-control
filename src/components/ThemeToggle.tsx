@@ -72,7 +72,7 @@ export const ThemeToggle = () => {
                   }}
                   className={`flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-bold transition ${
                     isSelected
-                      ? "bg-[#4f46e5] text-white shadow-sm"
+                      ? "bg-[#2563eb] text-white shadow-sm"
                       : "text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
                   }`}
                 >

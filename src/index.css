@@ -5,25 +5,25 @@
 @tailwind utilities;
 
 :root {
-  --mindgrid-surface: #f9f9ff;
-  --mindgrid-surface-dim: #cfdaf2;
-  --mindgrid-surface-container: #e7eeff;
-  --mindgrid-surface-high: #dee8ff;
-  --mindgrid-surface-variant: #d8e3fb;
-  --mindgrid-ink: #111c2d;
-  --mindgrid-ink-soft: #464555;
-  --mindgrid-outline: #c7c4d8;
-  --mindgrid-primary: #3525cd;
-  --mindgrid-primary-strong: #4f46e5;
-  --mindgrid-secondary: #0060ac;
-  --mindgrid-tertiary: #6b00b7;
+  --mindgrid-surface: #f8fafc;
+  --mindgrid-surface-dim: #cbd5e1;
+  --mindgrid-surface-container: #e2e8f0;
+  --mindgrid-surface-high: #dbeafe;
+  --mindgrid-surface-variant: #e0f2fe;
+  --mindgrid-ink: #0f172a;
+  --mindgrid-ink-soft: #475569;
+  --mindgrid-outline: #cbd5e1;
+  --mindgrid-primary: #2563eb;
+  --mindgrid-primary-strong: #1d4ed8;
+  --mindgrid-secondary: #0284c7;
+  --mindgrid-tertiary: #0ea5e9;
   color: var(--mindgrid-ink);
-  background: linear-gradient(180deg, #f8faff 0%, #f9f9ff 45%, #eef4ff 100%);
+  background: linear-gradient(180deg, #f0f7ff 0%, #f8faff 45%, #e8f2ff 100%);
   font-family: "Inter", sans-serif;
 }
 
 ::selection {
-  background: rgba(79, 70, 229, 0.18);
+  background: rgba(37, 99, 235, 0.18);
   color: var(--mindgrid-ink);
 }
 

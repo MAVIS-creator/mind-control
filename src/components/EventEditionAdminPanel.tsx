@@ -163,7 +163,7 @@ export const EventEditionAdminPanel = ({ session }: { session: AuthSession }) =>
             <button
               type="button"
               onClick={() => void refresh()}
-              className="inline-flex items-center gap-2 rounded-full border border-[#d9deee] dark:border-slate-800 bg-white dark:bg-slate-950 px-4 py-2 text-xs font-bold uppercase tracking-[0.12em] text-[#3525cd] dark:text-indigo-400"
+              className="inline-flex items-center gap-2 rounded-full border border-[#cbd5e1] dark:border-slate-800 bg-white dark:bg-slate-950 px-4 py-2 text-xs font-bold uppercase tracking-[0.12em] text-[#2563eb] dark:text-sky-400"
             >
               <RefreshIcon className="h-4 w-4" />
               Refresh
@@ -171,7 +171,7 @@ export const EventEditionAdminPanel = ({ session }: { session: AuthSession }) =>
             <button
               type="button"
               onClick={createDraft}
-              className="inline-flex items-center gap-2 rounded-full bg-gradient-to-b from-[#4f46e5] to-[#3525cd] px-4 py-2 text-xs font-bold uppercase tracking-[0.12em] text-white"
+              className="inline-flex items-center gap-2 rounded-full bg-gradient-to-b from-[#2563eb] to-[#1d4ed8] px-4 py-2 text-xs font-bold uppercase tracking-[0.12em] text-white shadow-md"
             >
               <SparklesIcon className="h-4 w-4" />
               New Event
@@ -182,7 +182,7 @@ export const EventEditionAdminPanel = ({ session }: { session: AuthSession }) =>
 
       <div className="grid gap-5 p-5 xl:grid-cols-[0.42fr_1fr]">
         <div className="space-y-2">
-          {loading ? <p className="rounded-[1rem] bg-[#f8faff] dark:bg-slate-950 p-4 text-sm text-[#6c7489] dark:text-slate-400">Loading events...</p> : null}
+          {loading ? <p className="rounded-[1rem] bg-[#f8faff] dark:bg-slate-950 p-4 text-sm text-[#64748b] dark:text-slate-400">Loading events...</p> : null}
           {editions.map((edition) => (
             <button
               key={edition.id}
@@ -190,16 +190,16 @@ export const EventEditionAdminPanel = ({ session }: { session: AuthSession }) =>
               onClick={() => setSelectedId(edition.id)}
               className={`w-full rounded-[1.2rem] border p-4 text-left transition ${
                 selectedEdition?.id === edition.id
-                  ? "border-[#4f46e5] bg-[#eef2ff] dark:bg-indigo-900/30"
-                  : "border-[#e5e9f5] dark:border-slate-800 bg-white dark:bg-slate-950 hover:border-[#c9d5f6] dark:hover:border-slate-700"
+                  ? "border-[#2563eb] bg-[#eff6ff] dark:bg-blue-900/30"
+                  : "border-[#e5e9f5] dark:border-slate-800 bg-white dark:bg-slate-950 hover:border-[#bfdbfe] dark:hover:border-slate-700"
               }`}
             >
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <p className="font-bold text-[#111c2d] dark:text-white">{edition.title}</p>
-                  <p className="mt-1 text-xs font-semibold text-[#6c7489] dark:text-slate-400">/{edition.slug}</p>
+                  <p className="font-bold text-[#0f172a] dark:text-white">{edition.title}</p>
+                  <p className="mt-1 text-xs font-semibold text-[#64748b] dark:text-slate-400">/{edition.slug}</p>
                 </div>
-                <span className="rounded-full bg-white dark:bg-slate-800 px-3 py-1 text-[0.65rem] font-bold uppercase tracking-[0.12em] text-[#3525cd] dark:text-indigo-400">
+                <span className="rounded-full bg-white dark:bg-slate-800 px-3 py-1 text-[0.65rem] font-bold uppercase tracking-[0.12em] text-[#2563eb] dark:text-sky-400">
                   {edition.status}
                 </span>
               </div>
@@ -212,10 +212,10 @@ export const EventEditionAdminPanel = ({ session }: { session: AuthSession }) =>
             <div className="rounded-[1.4rem] border border-[#dfe4f2] dark:border-slate-800 bg-[#f8faff] dark:bg-slate-950 p-4">
               <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#3525cd] dark:text-indigo-400">
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#2563eb] dark:text-sky-400">
                     AI tournament helper
                   </p>
-                  <p className="mt-2 text-sm leading-6 text-[#6c7489] dark:text-slate-400">
+                  <p className="mt-2 text-sm leading-6 text-[#64748b] dark:text-slate-400">
                     Describe the event you want. The AI can draft supported rounds, rules, categories, and bonus
                     challenges. New gameplay features still need code support first.
                   </p>
@@ -224,7 +224,7 @@ export const EventEditionAdminPanel = ({ session }: { session: AuthSession }) =>
                   type="button"
                   onClick={() => void generateWithAi()}
                   disabled={generating}
-                  className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-gradient-to-b from-[#4f46e5] to-[#3525cd] px-5 py-3 text-xs font-bold uppercase tracking-[0.12em] text-white disabled:opacity-60"
+                  className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-gradient-to-b from-[#2563eb] to-[#1d4ed8] px-5 py-3 text-xs font-bold uppercase tracking-[0.12em] text-white disabled:opacity-60 shadow-md"
                 >
                   <SparklesIcon className="h-4 w-4" />
                   {generating ? "Drafting..." : "AI Draft"}
@@ -337,14 +337,14 @@ export const EventEditionAdminPanel = ({ session }: { session: AuthSession }) =>
                 type="button"
                 onClick={() => void saveSelected()}
                 disabled={saving}
-                className="inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-gradient-to-b from-[#4f46e5] to-[#3525cd] px-6 py-4 text-sm font-bold uppercase tracking-[0.14em] text-white disabled:opacity-60"
+                className="inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-gradient-to-b from-[#2563eb] to-[#1d4ed8] px-6 py-4 text-sm font-bold uppercase tracking-[0.14em] text-white disabled:opacity-60 shadow-md"
               >
                 <SparklesIcon className="h-4 w-4" />
                 {saving ? "Saving..." : "Save Event"}
               </button>
               <Link
                 to={`/${selectedEdition.slug}`}
-                className="inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-[#d9deee] bg-white px-6 py-4 text-sm font-bold uppercase tracking-[0.14em] text-[#3525cd]"
+                className="inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-[#cbd5e1] dark:border-slate-800 bg-white dark:bg-slate-900 px-6 py-4 text-sm font-bold uppercase tracking-[0.14em] text-[#2563eb] dark:text-sky-400 shadow-sm"
               >
                 <PlayIcon className="h-4 w-4" />
                 Preview Route

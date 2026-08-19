@@ -9,7 +9,7 @@ import type { GridSize, LeaderboardEntry, MatchType, MultiplayerGameMode } from 
 
 const medalClasses = [
   "border-[#ffd166] bg-[#fff7db] dark:border-amber-500/50 dark:bg-amber-900/20",
-  "border-[#c7d2fe] bg-[#eef2ff] dark:border-indigo-500/50 dark:bg-indigo-900/20",
+  "border-[#bae6fd] bg-[#f0f9ff] dark:border-sky-500/50 dark:bg-sky-900/20",
   "border-[#f4c7a1] bg-[#fff2e8] dark:border-orange-500/50 dark:bg-orange-900/20",
 ] as const;
 
@@ -172,40 +172,27 @@ export const HallOfFameRoute = () => {
       }
       return b.totalPoints - a.totalPoints;
     });
-  }, [mpLeaderboard, mpModeFilter, mpSortKey]);
+  }, [multiplayerEntries, mpModeFilter, mpSortKey]);
 
   const visibleEntries = rankedEntries.slice(0, visibleCount);
   const canLoadMore = visibleCount < rankedEntries.length;
 
   useEffect(() => {
-    setVisibleCount(PAGE_SIZE);
-  }, [gridFilter, matchTypeFilter, sortKey, rankedEntries.length]);
-
-  useEffect(() => {
-    if (!canLoadMore) return;
-    const node = sentinelRef.current;
-    if (!node) return;
+    const sentinel = sentinelRef.current;
+    if (!sentinel || !canLoadMore) return undefined;
 
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry?.isIntersecting) {
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
           setVisibleCount((current) => Math.min(current + PAGE_SIZE, rankedEntries.length));
         }
       },
-      { rootMargin: "320px" },
+      { rootMargin: "240px" },
     );
 
-    observer.observe(node);
+    observer.observe(sentinel);
     return () => observer.disconnect();
   }, [canLoadMore, rankedEntries.length]);
-
-  if (!session) {
-    return <Navigate to="/login" replace />;
-  }
-
-  if (!session.profile.email || isLegacyAccountEmail(session.profile.email)) {
-    return <Navigate to="/complete-email" replace />;
-  }
 
   const podiumSingle = rankedEntries.slice(0, 3);
   const podiumMp = filteredMpEntries.slice(0, 3);
@@ -214,7 +201,7 @@ export const HallOfFameRoute = () => {
     <AppShell session={session} active="ranks">
       <div className="mx-auto min-h-full w-full max-w-[1260px] px-3 py-5 pb-32 sm:px-6 sm:pb-36 lg:px-10 md:pb-10">
         <section className="mb-8 text-center">
-          <h1 className="mt-3 font-display text-4xl tracking-[-0.05em] text-[#3525cd] dark:text-indigo-400 sm:text-5xl">Hall of Fame</h1>
+          <h1 className="mt-3 font-display text-4xl tracking-[-0.05em] text-[#2563eb] dark:text-sky-400 sm:text-5xl">Hall of Fame</h1>
           <p className="mx-auto mt-3 max-w-3xl text-sm leading-7 text-[#464555] dark:text-slate-300 sm:text-base">
             {leaderboardTab === "multiplayer"
               ? "Global multiplayer rankings tracking battle points, victories, win rates, and co-op completions."
@@ -231,8 +218,8 @@ export const HallOfFameRoute = () => {
                 onClick={() => setLeaderboardTab("single")}
                 className={`rounded-full px-6 py-2 text-xs font-bold uppercase tracking-wider transition-all ${
                   leaderboardTab === "single"
-                    ? "bg-[#3525cd] text-white shadow-md dark:bg-indigo-600"
-                    : "text-[#64748b] hover:text-[#1e1b4b] dark:text-slate-400 dark:hover:text-white"
+                    ? "bg-[#2563eb] text-white shadow-md dark:bg-blue-600"
+                    : "text-[#64748b] hover:text-[#0f172a] dark:text-slate-400 dark:hover:text-white"
                 }`}
               >
                 Single Player Leaderboard
@@ -242,8 +229,8 @@ export const HallOfFameRoute = () => {
                 onClick={() => setLeaderboardTab("multiplayer")}
                 className={`rounded-full px-6 py-2 text-xs font-bold uppercase tracking-wider transition-all ${
                   leaderboardTab === "multiplayer"
-                    ? "bg-[#3525cd] text-white shadow-md dark:bg-indigo-600"
-                    : "text-[#64748b] hover:text-[#1e1b4b] dark:text-slate-400 dark:hover:text-white"
+                    ? "bg-[#2563eb] text-white shadow-md dark:bg-blue-600"
+                    : "text-[#64748b] hover:text-[#0f172a] dark:text-slate-400 dark:hover:text-white"
                 }`}
               >
                 Multiplayer Clash Ranks
@@ -259,7 +246,7 @@ export const HallOfFameRoute = () => {
                 <select
                   value={gridFilter}
                   onChange={(e) => setGridFilter(e.target.value as any)}
-                  className="rounded-xl border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 dark:text-white px-3 py-1.5 text-xs font-semibold text-[#1e1b4b] outline-none focus:border-[#3525cd]"
+                  className="rounded-xl border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 dark:text-white px-3 py-1.5 text-xs font-semibold text-[#0f172a] outline-none focus:border-[#2563eb]"
                 >
                   <option value="all">All Boards</option>
                   <option value="4x4">4x4 Matrix</option>
@@ -273,7 +260,7 @@ export const HallOfFameRoute = () => {
                 <select
                   value={sortKey}
                   onChange={(e) => setSortKey(e.target.value as any)}
-                  className="rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-[#1e1b4b] outline-none focus:border-[#3525cd] dark:border-slate-700 dark:bg-slate-900 dark:text-white"
+                  className="rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-[#0f172a] outline-none focus:border-[#2563eb] dark:border-slate-700 dark:bg-slate-900 dark:text-white"
                 >
                   <option value="rating">Overall Rating</option>
                   <option value="points">Total Points</option>
@@ -288,7 +275,7 @@ export const HallOfFameRoute = () => {
                 <select
                   value={matchTypeFilter}
                   onChange={(e) => setMatchTypeFilter(e.target.value as any)}
-                  className="rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-[#1e1b4b] outline-none focus:border-[#3525cd] dark:border-slate-700 dark:bg-slate-900 dark:text-white"
+                  className="rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-[#0f172a] outline-none focus:border-[#2563eb] dark:border-slate-700 dark:bg-slate-900 dark:text-white"
                 >
                   <option value="all">All Themes</option>
                   <option value="numbers">Numbers</option>
@@ -307,7 +294,7 @@ export const HallOfFameRoute = () => {
                 <select
                   value={mpModeFilter}
                   onChange={(e) => setMpModeFilter(e.target.value as any)}
-                  className="rounded-xl border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 dark:text-white px-3 py-1.5 text-xs font-semibold text-[#1e1b4b] outline-none focus:border-[#3525cd]"
+                  className="rounded-xl border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 dark:text-white px-3 py-1.5 text-xs font-semibold text-[#0f172a] outline-none focus:border-[#2563eb]"
                 >
                   <option value="all">All Multiplayer Modes</option>
                   <option value="speed_sprint">Speed Sprint Race</option>
@@ -321,7 +308,7 @@ export const HallOfFameRoute = () => {
                 <select
                   value={mpSortKey}
                   onChange={(e) => setMpSortKey(e.target.value as any)}
-                  className="rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-[#1e1b4b] outline-none focus:border-[#3525cd] dark:border-slate-700 dark:bg-slate-900 dark:text-white"
+                  className="rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-[#0f172a] outline-none focus:border-[#2563eb] dark:border-slate-700 dark:bg-slate-900 dark:text-white"
                 >
                   <option value="points">Multiplayer Points</option>
                   <option value="wins">Most Wins</option>
@@ -362,7 +349,7 @@ export const HallOfFameRoute = () => {
                     <div
                       className={`mx-auto mt-4 w-fit rounded-full p-[3px] transition-all duration-300 ${
                         entry.isAdmin
-                          ? "bg-gradient-to-r from-sky-400 via-indigo-500 to-amber-400 shadow-[0_0_24px_rgba(14,165,233,0.55)] dark:shadow-[0_0_28px_rgba(56,189,248,0.75)]"
+                          ? "bg-gradient-to-r from-sky-400 via-blue-500 to-amber-400 shadow-[0_0_24px_rgba(14,165,233,0.55)] dark:shadow-[0_0_28px_rgba(56,189,248,0.75)]"
                           : entry.isBetaTester
                           ? "bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 shadow-[0_0_20px_rgba(245,158,11,0.5)] dark:shadow-[0_0_24px_rgba(245,158,11,0.7)]"
                           : ""
@@ -376,11 +363,11 @@ export const HallOfFameRoute = () => {
                     </div>
                     <Link
                       to={`/profile/${entry.userId}`}
-                      className="mt-4 inline-block text-xl font-semibold text-slate-900 hover:text-[#3525cd] dark:text-white dark:hover:text-indigo-400"
+                      className="mt-4 inline-block text-xl font-semibold text-slate-900 hover:text-[#2563eb] dark:text-white dark:hover:text-sky-400"
                     >
                       {entry.username}
                     </Link>
-                    <p className="mt-1 text-sm font-bold uppercase tracking-[0.18em] text-[#3525cd] dark:text-indigo-400">
+                    <p className="mt-1 text-sm font-bold uppercase tracking-[0.18em] text-[#2563eb] dark:text-sky-400">
                       {formatNumber(pts)} MP Points
                     </p>
                     <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
@@ -389,7 +376,7 @@ export const HallOfFameRoute = () => {
                         : `${wins} Win${wins === 1 ? "" : "s"} • Win Rate ${winRate.toFixed(0)}%`}
                     </p>
                     <div className="mt-3 flex items-center justify-center">
-                      <span className="rounded-full bg-white/80 px-3 py-1 text-xs font-semibold text-[#4f46e5] dark:bg-slate-800 dark:text-slate-200">
+                      <span className="rounded-full bg-white/80 px-3 py-1 text-xs font-semibold text-[#2563eb] dark:bg-slate-800 dark:text-slate-200">
                         {entry.rank}
                       </span>
                     </div>
@@ -407,7 +394,7 @@ export const HallOfFameRoute = () => {
               return (
                 <article
                   key={entry.id}
-                  className={`rounded-[2rem] border p-5 text-center shadow-[0_20px_44px_rgba(53,37,205,0.07)] backdrop-blur-xl sm:p-6 ${
+                  className={`rounded-[2rem] border p-5 text-center shadow-[0_20px_44px_rgba(37,99,235,0.07)] backdrop-blur-xl sm:p-6 ${
                     medalClasses[index] ?? "border-slate-200 bg-white/80 dark:border-slate-800 dark:bg-slate-900/80"
                   }`}
                 >
@@ -417,7 +404,7 @@ export const HallOfFameRoute = () => {
                   <div
                     className={`mx-auto mt-4 w-fit rounded-full p-[3px] transition-all duration-300 ${
                       entry.isAdmin
-                        ? "bg-gradient-to-r from-sky-400 via-indigo-500 to-amber-400 shadow-[0_0_24px_rgba(14,165,233,0.55)] dark:shadow-[0_0_28px_rgba(56,189,248,0.75)]"
+                        ? "bg-gradient-to-r from-sky-400 via-blue-500 to-amber-400 shadow-[0_0_24px_rgba(14,165,233,0.55)] dark:shadow-[0_0_28px_rgba(56,189,248,0.75)]"
                         : entry.isBetaTester
                         ? "bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 shadow-[0_0_20px_rgba(245,158,11,0.5)] dark:shadow-[0_0_24px_rgba(245,158,11,0.7)]"
                         : ""
@@ -431,11 +418,11 @@ export const HallOfFameRoute = () => {
                   </div>
                   <Link
                     to={`/profile/${entry.userId}`}
-                    className="mt-4 inline-block text-xl font-semibold text-slate-900 hover:text-[#3525cd] dark:text-white dark:hover:text-indigo-400"
+                    className="mt-4 inline-block text-xl font-semibold text-slate-900 hover:text-[#2563eb] dark:text-white dark:hover:text-sky-400"
                   >
                     {entry.username}
                   </Link>
-                  <p className="mt-1 text-sm uppercase tracking-[0.18em] text-[#3525cd] dark:text-indigo-400">
+                  <p className="mt-1 text-sm uppercase tracking-[0.18em] text-[#2563eb] dark:text-sky-400">
                     {formatNumber(entry.rating)} rating
                   </p>
                   <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
@@ -515,7 +502,7 @@ export const HallOfFameRoute = () => {
                               <div
                                 className={`rounded-full p-[2px] transition-all duration-300 shrink-0 ${
                                   entry.isAdmin
-                                    ? "bg-gradient-to-r from-sky-400 via-indigo-500 to-amber-400 shadow-[0_0_12px_rgba(14,165,233,0.55)] dark:shadow-[0_0_16px_rgba(56,189,248,0.7)]"
+                                    ? "bg-gradient-to-r from-sky-400 via-blue-500 to-amber-400 shadow-[0_0_12px_rgba(14,165,233,0.55)] dark:shadow-[0_0_16px_rgba(56,189,248,0.7)]"
                                     : entry.isBetaTester
                                     ? "bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.5)] dark:shadow-[0_0_14px_rgba(245,158,11,0.65)]"
                                     : ""
@@ -530,7 +517,7 @@ export const HallOfFameRoute = () => {
                               <div>
                                 <Link
                                   to={`/profile/${entry.userId}`}
-                                  className="font-semibold text-slate-900 hover:text-[#3525cd] dark:text-white dark:hover:text-indigo-400"
+                                  className="font-semibold text-slate-900 hover:text-[#2563eb] dark:text-white dark:hover:text-sky-400"
                                 >
                                   {entry.username}
                                 </Link>
@@ -538,8 +525,8 @@ export const HallOfFameRoute = () => {
                               </div>
                             </div>
                           </td>
-                          <td className="px-6 py-4 font-bold text-[#0060ac] dark:text-sky-400">{formatNumber(pts)}</td>
-                          <td className="px-6 py-4 font-bold text-[#3525cd] dark:text-indigo-400">{wins}</td>
+                          <td className="px-6 py-4 font-bold text-[#0284c7] dark:text-sky-400">{formatNumber(pts)}</td>
+                          <td className="px-6 py-4 font-bold text-[#2563eb] dark:text-sky-400">{wins}</td>
                           {mpModeFilter !== "coop" && <td className="px-6 py-4 text-slate-500 dark:text-slate-400">{losses}</td>}
                           {mpModeFilter !== "coop" && (
                             <td className="px-6 py-4 font-semibold text-emerald-600 dark:text-emerald-400">{winRate.toFixed(0)}%</td>
@@ -586,7 +573,7 @@ export const HallOfFameRoute = () => {
                               <div
                                 className={`rounded-full p-[2px] transition-all duration-300 shrink-0 ${
                                   entry.isAdmin
-                                    ? "bg-gradient-to-r from-sky-400 via-indigo-500 to-amber-400 shadow-[0_0_12px_rgba(14,165,233,0.55)] dark:shadow-[0_0_16px_rgba(56,189,248,0.7)]"
+                                    ? "bg-gradient-to-r from-sky-400 via-blue-500 to-amber-400 shadow-[0_0_12px_rgba(14,165,233,0.55)] dark:shadow-[0_0_16px_rgba(56,189,248,0.7)]"
                                     : entry.isBetaTester
                                     ? "bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.5)] dark:shadow-[0_0_14px_rgba(245,158,11,0.65)]"
                                     : ""
@@ -601,7 +588,7 @@ export const HallOfFameRoute = () => {
                               <div>
                                 <Link
                                   to={`/profile/${entry.userId}`}
-                                  className="font-medium text-slate-900 hover:text-[#3525cd] dark:text-white dark:hover:text-indigo-400"
+                                  className="font-medium text-slate-900 hover:text-[#2563eb] dark:text-white dark:hover:text-sky-400"
                                 >
                                   {entry.username}
                                 </Link>
@@ -611,8 +598,8 @@ export const HallOfFameRoute = () => {
                               </div>
                             </div>
                           </td>
-                          <td className="px-6 py-4 font-semibold text-[#3525cd] dark:text-indigo-400">{formatNumber(entry.rating)}</td>
-                          <td className="px-6 py-4 font-semibold text-[#0060ac] dark:text-sky-400">{formatNumber(entry.totalPoints)}</td>
+                          <td className="px-6 py-4 font-semibold text-[#2563eb] dark:text-sky-400">{formatNumber(entry.rating)}</td>
+                          <td className="px-6 py-4 font-semibold text-[#0284c7] dark:text-sky-400">{formatNumber(entry.totalPoints)}</td>
                           <td className="px-6 py-4">{formatNumber(entry.score)}</td>
                           <td className="px-6 py-4">{formatPercent(entry.accuracy)}</td>
                           <td className="px-6 py-4">x{entry.maxCombo}</td>
@@ -639,7 +626,7 @@ export const HallOfFameRoute = () => {
                   <button
                     type="button"
                     onClick={() => setVisibleCount((current) => Math.min(current + PAGE_SIZE, rankedEntries.length))}
-                    className="rounded-full border border-[#d9d8eb] bg-white/80 px-6 py-3 text-sm font-semibold text-[#3525cd] shadow-sm transition hover:bg-white"
+                    className="rounded-full border border-[#cbd5e1] bg-white/80 px-6 py-3 text-sm font-semibold text-[#2563eb] shadow-sm transition hover:bg-white"
                   >
                     Load More Players
                   </button>

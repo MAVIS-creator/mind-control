@@ -29,12 +29,12 @@ export const avatarOptions: AvatarOption[] = [
     id: "echo-bloom",
     name: "Echo Bloom",
     image: "/avatars/echo-bloom.png",
-    accent: "from-fuchsia-200 to-purple-500",
+    accent: "from-sky-200 to-blue-500",
   },
   {
     id: "quantum-ray",
     name: "Quantum Ray",
     image: "/avatars/quantum-ray.png",
-    accent: "from-cyan-200 to-indigo-500",
+    accent: "from-cyan-200 to-blue-600",
   },
 ];

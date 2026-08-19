@@ -127,7 +127,7 @@ export const EventGameRoute = () => {
     return (
       <EventEditionShell edition={edition}>
         <main className="flex min-h-[70svh] items-center justify-center px-4 text-center">
-          <div className="glass-panel rounded-[2rem] p-8 font-bold text-[#3525cd] dark:bg-slate-900/90 dark:border-slate-800 dark:text-indigo-400">Loading event...</div>
+          <div className="glass-panel rounded-[2rem] p-8 font-bold text-[#2563eb] dark:bg-slate-900/90 dark:border-slate-800 dark:text-sky-400">Loading event...</div>
         </main>
       </EventEditionShell>
     );
@@ -167,10 +167,10 @@ export const EventGameRoute = () => {
   return (
     <EventEditionShell edition={edition}>
       <main className="mx-auto max-w-[1320px] px-3 py-5 sm:px-6 lg:px-8">
-        <section className="mb-5 grid gap-3 rounded-[1.8rem] border border-white/80 dark:border-slate-800 bg-white/70 dark:bg-slate-900/90 p-4 shadow-[0_16px_36px_rgba(53,37,205,0.08)] md:grid-cols-[1fr_auto] md:items-center">
+        <section className="mb-5 grid gap-3 rounded-[1.8rem] border border-white/80 dark:border-slate-800 bg-white/70 dark:bg-slate-900/90 p-4 shadow-[0_16px_36px_rgba(37,99,235,0.08)] md:grid-cols-[1fr_auto] md:items-center">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#3525cd] dark:text-indigo-400">Round {round.number} of {edition.config.rounds.length}</p>
-            <h1 className="mt-1 text-3xl font-black tracking-[-0.05em] text-[#111c2d] dark:text-white">{round.title}</h1>
+            <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#2563eb] dark:text-sky-400">Round {round.number} of {edition.config.rounds.length}</p>
+            <h1 className="mt-1 text-3xl font-black tracking-[-0.05em] text-[#0f172a] dark:text-white">{round.title}</h1>
             <p className="mt-1 text-sm leading-6 text-[#586074] dark:text-slate-400">{round.subtitle}</p>
           </div>
           <div className="grid grid-cols-3 gap-2 text-center">
@@ -189,9 +189,9 @@ export const EventGameRoute = () => {
               className={`min-h-[6.5rem] rounded-[1.2rem] border p-3 text-center text-sm font-bold leading-5 transition sm:min-h-[8rem] sm:p-4 ${
                 card.revealed || card.matched
                   ? card.kind === "prompt"
-                    ? "border-[#b7cdf8] bg-[#eef5ff] text-[#111c2d] dark:border-indigo-500/30 dark:bg-indigo-900/40 dark:text-white"
-                    : "border-[#cbb9ff] bg-[#f4efff] text-[#3525cd] dark:border-purple-500/30 dark:bg-purple-900/40 dark:text-indigo-200"
-                  : "border-white/80 bg-white/80 text-[#c3bbff] shadow-[0_12px_26px_rgba(53,37,205,0.06)] hover:scale-[1.01] dark:border-slate-800 dark:bg-slate-900/80 dark:text-slate-400"
+                    ? "border-[#bfdbfe] bg-[#eff6ff] text-[#0f172a] dark:border-blue-500/30 dark:bg-blue-900/40 dark:text-white"
+                    : "border-[#bae6fd] bg-[#f0f9ff] text-[#0284c7] dark:border-sky-500/30 dark:bg-sky-900/40 dark:text-sky-200"
+                  : "border-white/80 bg-white/80 text-[#93c5fd] shadow-[0_12px_26px_rgba(37,99,235,0.06)] hover:scale-[1.01] dark:border-slate-800 dark:bg-slate-900/80 dark:text-slate-400"
               }`}
             >
               {card.revealed || card.matched ? (
@@ -207,17 +207,17 @@ export const EventGameRoute = () => {
         </section>
 
         {status === "complete" && lastResult ? (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#111c2d]/35 dark:bg-slate-950/80 px-4 backdrop-blur-sm">
-            <div className="glass-panel max-w-lg rounded-[2rem] p-6 text-center shadow-[0_24px_60px_rgba(17,28,45,0.18)] dark:bg-slate-900/90 dark:border-slate-800">
-              <TrophyIcon className="mx-auto h-10 w-10 text-[#3525cd] dark:text-indigo-400" />
-              <p className="mt-4 text-xs font-bold uppercase tracking-[0.24em] text-[#3525cd] dark:text-indigo-400">Round Complete</p>
-              <h2 className="mt-2 text-3xl font-black tracking-[-0.05em] text-[#111c2d] dark:text-white">{round.pairs.length}/{round.pairs.length} Matched</h2>
-              <p className="mt-2 text-5xl font-black text-[#3525cd] dark:text-indigo-400">{formatNumber(lastResult.score)}</p>
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0f172a]/35 dark:bg-slate-950/80 px-4 backdrop-blur-sm">
+            <div className="glass-panel max-w-lg rounded-[2rem] p-6 text-center shadow-[0_24px_60px_rgba(15,23,42,0.18)] dark:bg-slate-900/90 dark:border-slate-800">
+              <TrophyIcon className="mx-auto h-10 w-10 text-[#2563eb] dark:text-sky-400" />
+              <p className="mt-4 text-xs font-bold uppercase tracking-[0.24em] text-[#2563eb] dark:text-sky-400">Round Complete</p>
+              <h2 className="mt-2 text-3xl font-black tracking-[-0.05em] text-[#0f172a] dark:text-white">{round.pairs.length}/{round.pairs.length} Matched</h2>
+              <p className="mt-2 text-5xl font-black text-[#2563eb] dark:text-sky-400">{formatNumber(lastResult.score)}</p>
               <p className="mx-auto mt-4 max-w-md text-sm leading-7 text-[#586074] dark:text-slate-400">{round.summary}</p>
               <button
                 type="button"
                 onClick={() => void continueFlow()}
-                className="mt-6 inline-flex w-full items-center justify-center gap-3 rounded-full bg-gradient-to-b from-[#4f46e5] to-[#3525cd] px-6 py-4 font-bold text-white"
+                className="mt-6 inline-flex w-full items-center justify-center gap-3 rounded-full bg-gradient-to-b from-[#2563eb] to-[#1d4ed8] px-6 py-4 font-bold text-white shadow-md"
               >
                 <PlayIcon className="h-5 w-5" />
                 {roundIndex < edition.config.rounds.length - 1 ? "Next Round" : "Continue"}
@@ -233,6 +233,6 @@ export const EventGameRoute = () => {
 const Hud = ({ label, value }: { label: string; value: string }) => (
   <div className="rounded-[1rem] bg-white/85 dark:bg-slate-900/90 dark:border dark:border-slate-800 px-4 py-3 shadow-sm">
     <p className="text-[0.62rem] font-bold uppercase tracking-[0.22em] text-[#7d8395] dark:text-slate-400">{label}</p>
-    <p className="mt-1 text-xl font-black text-[#3525cd] dark:text-white">{value}</p>
+    <p className="mt-1 text-xl font-black text-[#2563eb] dark:text-sky-400">{value}</p>
   </div>
 );

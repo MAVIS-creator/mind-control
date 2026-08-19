@@ -40,20 +40,20 @@ export const ResetPasswordRoute = () => {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top_left,_#e2dfff_0%,_#f9f9ff_45%,_#d4e3ff_100%)] dark:bg-none dark:bg-slate-950 px-4 py-8 sm:px-6 lg:px-10">
+    <div className="relative min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top_left,_#e0f2fe_0%,_#f8faff_45%,_#dbeafe_100%)] dark:bg-none dark:bg-slate-950 px-4 py-8 sm:px-6 lg:px-10">
       <div className="fixed inset-0 -z-10 overflow-hidden">
-        <div className="absolute -left-10 top-20 h-[22rem] w-[22rem] rounded-full bg-[#9a7cff]/16 dark:bg-[#9a7cff]/10 blur-[90px]" />
-        <div className="absolute right-0 top-0 h-[28rem] w-[28rem] rounded-full bg-[#64a8fe]/18 dark:bg-[#64a8fe]/10 blur-[110px]" />
+        <div className="absolute -left-10 top-20 h-[22rem] w-[22rem] rounded-full bg-[#38bdf8]/18 dark:bg-[#38bdf8]/10 blur-[90px]" />
+        <div className="absolute right-0 top-0 h-[28rem] w-[28rem] rounded-full bg-[#2563eb]/16 dark:bg-[#2563eb]/10 blur-[110px]" />
       </div>
 
       <div className="mx-auto flex max-w-5xl items-center justify-center">
-        <section className="glass-panel w-full max-w-[32rem] rounded-[2.5rem] px-6 py-8 shadow-[0_26px_60px_rgba(53,37,205,0.08)] sm:px-8 dark:bg-slate-900/90 dark:border dark:border-slate-800">
+        <section className="glass-panel w-full max-w-[32rem] rounded-[2.5rem] px-6 py-8 shadow-[0_26px_60px_rgba(37,99,235,0.08)] sm:px-8 dark:bg-slate-900/90 dark:border dark:border-slate-800">
           <BrandMotionMark className="mx-auto mb-6 w-[11rem] sm:w-[14rem]" />
-          <p className="text-center text-xs font-semibold uppercase tracking-[0.3em] text-[#667085] dark:text-slate-400">Create New Password</p>
-          <h1 className="mt-3 text-center font-display text-[2.4rem] font-extrabold tracking-[-0.06em] text-[#111c2d] dark:text-white">
+          <p className="text-center text-xs font-semibold uppercase tracking-[0.3em] text-[#64748b] dark:text-slate-400">Create New Password</p>
+          <h1 className="mt-3 text-center font-display text-[2.4rem] font-extrabold tracking-[-0.06em] text-[#0f172a] dark:text-white">
             Secure your account
           </h1>
-          <p className="mt-3 text-center text-[1rem] leading-7 text-[#5a6174] dark:text-slate-300">
+          <p className="mt-3 text-center text-[1rem] leading-7 text-[#475569] dark:text-slate-300">
             Choose a new password for your MindGrid account.
           </p>
 
@@ -73,11 +73,11 @@ export const ResetPasswordRoute = () => {
               },
             ].map((field) => (
               <label key={field.label} className="block">
-                <span className="mb-2 block text-sm font-semibold uppercase tracking-[0.16em] text-[#464555] dark:text-slate-300">
+                <span className="mb-2 block text-sm font-semibold uppercase tracking-[0.16em] text-[#475569] dark:text-slate-300">
                   {field.label}
                 </span>
                 <div className="relative">
-                  <LockIcon className="pointer-events-none absolute left-5 top-1/2 h-5 w-5 -translate-y-1/2 text-[#6f7590] dark:text-slate-500" />
+                  <LockIcon className="pointer-events-none absolute left-5 top-1/2 h-5 w-5 -translate-y-1/2 text-[#64748b] dark:text-slate-500" />
                   <input
                     required
                     type="password"
@@ -86,7 +86,7 @@ export const ResetPasswordRoute = () => {
                     value={field.value}
                     onChange={(event) => field.setValue(event.target.value)}
                     placeholder="••••••••"
-                    className="h-16 w-full rounded-[1.35rem] border border-[#e8eaf5] bg-[#eef2ff] pl-14 pr-6 text-[1.05rem] text-[#111c2d] outline-none transition focus:border-[#c3c0ff] focus:ring-4 focus:ring-[#e2dfff] dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:placeholder-slate-500 dark:focus:border-indigo-500"
+                    className="h-16 w-full rounded-[1.35rem] border border-[#e2e8f0] bg-[#f0f9ff] pl-14 pr-6 text-[1.05rem] text-[#0f172a] outline-none transition focus:border-[#60a5fa] focus:ring-4 focus:ring-[#bae6fd] dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:placeholder-slate-500 dark:focus:border-blue-500"
                   />
                 </div>
               </label>
@@ -107,14 +107,14 @@ export const ResetPasswordRoute = () => {
             <button
               type="submit"
               disabled={loading}
-              className="h-16 w-full rounded-full bg-gradient-to-b from-[#4f46e5] to-[#3525cd] text-[1.15rem] font-bold text-white shadow-[0_16px_28px_rgba(53,37,205,0.24)] transition hover:scale-[1.01] disabled:opacity-60"
+              className="h-16 w-full rounded-full bg-gradient-to-b from-[#2563eb] to-[#1d4ed8] text-[1.15rem] font-bold text-white shadow-[0_16px_28px_rgba(37,99,235,0.24)] transition hover:scale-[1.01] disabled:opacity-60"
             >
               {loading ? "Updating..." : "Update Password"}
             </button>
           </form>
 
-          <p className="mt-8 text-center text-[1rem] text-[#464555] dark:text-slate-400">
-            <Link to="/login" className="font-semibold text-[#3525cd] dark:text-indigo-400">
+          <p className="mt-8 text-center text-[1rem] text-[#475569] dark:text-slate-400">
+            <Link to="/login" className="font-semibold text-[#2563eb] dark:text-sky-400">
               Back to sign in
             </Link>
           </p>

@@ -164,16 +164,16 @@ export const ProfileRoute = () => {
           </div>
         ) : (
           <>
-            <section className="glass-panel rounded-[2rem] p-6 shadow-[0_14px_34px_rgba(53,37,205,0.08)] sm:p-8 lg:p-10">
+            <section className="glass-panel rounded-[2rem] p-6 shadow-[0_14px_34px_rgba(37,99,235,0.08)] sm:p-8 lg:p-10">
               <div className="grid gap-8 lg:grid-cols-[220px_1fr] lg:items-center">
                 <div className="relative mx-auto w-full max-w-[220px]">
                   <div
                     className={`rounded-full p-[4px] transition-all duration-300 ${
                       resolvedSnapshot.profile.isAdmin
-                        ? "bg-gradient-to-r from-sky-400 via-indigo-500 to-amber-400 shadow-[0_0_35px_rgba(14,165,233,0.45)] dark:shadow-[0_0_45px_rgba(56,189,248,0.7)]"
+                        ? "bg-gradient-to-r from-sky-400 via-blue-500 to-amber-400 shadow-[0_0_35px_rgba(14,165,233,0.45)] dark:shadow-[0_0_45px_rgba(56,189,248,0.7)]"
                         : resolvedSnapshot.profile.isBetaTester
                         ? "bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 shadow-[0_0_30px_rgba(245,158,11,0.4)] dark:shadow-[0_0_40px_rgba(245,158,11,0.65)]"
-                        : "bg-[#e2dfff] dark:bg-slate-700"
+                        : "bg-[#bae6fd] dark:bg-slate-700"
                     }`}
                   >
                     <img
@@ -189,7 +189,7 @@ export const ProfileRoute = () => {
                       {resolvedSnapshot.profile.username}
                     </h1>
                     {resolvedSnapshot.profile.isAdmin && (
-                      <span className="rounded-full bg-gradient-to-r from-sky-500 to-indigo-600 px-3.5 py-1 text-xs font-black uppercase tracking-wider text-white shadow-md border border-sky-300">
+                      <span className="rounded-full bg-gradient-to-r from-sky-500 to-blue-600 px-3.5 py-1 text-xs font-black uppercase tracking-wider text-white shadow-md border border-sky-300">
                         Founder Architect
                       </span>
                     )}
@@ -199,14 +199,14 @@ export const ProfileRoute = () => {
                       </span>
                     )}
                   </div>
-                  <p className="mt-2 text-sm uppercase tracking-[0.24em] text-[#3525cd] dark:text-indigo-400">
+                  <p className="mt-2 text-sm uppercase tracking-[0.24em] text-[#2563eb] dark:text-sky-400">
                     {resolvedSnapshot.profile.rank}
                   </p>
                   <p className="mt-4 max-w-2xl text-sm leading-7 text-[#5a6174] dark:text-slate-300 sm:text-base">
                     Operative record tracking single player runs, multiplayer battles, ranking credentials, and neural achievements.
                   </p>
                   <div className="mt-6 flex flex-wrap gap-4">
-                    <div className="rounded-full border border-[#d8e3fb] bg-[#eef4ff] px-4 py-2 text-xs font-semibold text-[#0060ac] dark:border-slate-800 dark:bg-slate-900 dark:text-indigo-300">
+                    <div className="rounded-full border border-[#d8e3fb] bg-[#eef4ff] px-4 py-2 text-xs font-semibold text-[#0284c7] dark:border-slate-800 dark:bg-slate-900 dark:text-sky-300">
                       Level {level.level} ({formatNumber(resolvedSnapshot.profile.xp)} XP)
                     </div>
                     <div className="rounded-full border border-[#dfe4f2] bg-white/80 px-4 py-2 text-xs font-semibold text-[#5a6174] dark:border-slate-800 dark:bg-slate-900 dark:text-slate-400">
@@ -224,8 +224,8 @@ export const ProfileRoute = () => {
                   onClick={() => setProfileMode("single")}
                   className={`rounded-full px-6 py-2 text-xs font-bold uppercase tracking-wider transition-all ${
                     profileMode === "single"
-                      ? "bg-[#3525cd] text-white shadow-md dark:bg-indigo-600"
-                      : "text-[#64748b] hover:text-[#1e1b4b] dark:text-slate-400 dark:hover:text-white"
+                      ? "bg-[#2563eb] text-white shadow-md dark:bg-blue-600"
+                      : "text-[#64748b] hover:text-[#0f172a] dark:text-slate-400 dark:hover:text-white"
                   }`}
                 >
                   Single Player Stats
@@ -235,8 +235,8 @@ export const ProfileRoute = () => {
                   onClick={() => setProfileMode("multiplayer")}
                   className={`rounded-full px-6 py-2 text-xs font-bold uppercase tracking-wider transition-all ${
                     profileMode === "multiplayer"
-                      ? "bg-[#3525cd] text-white shadow-md dark:bg-indigo-600"
-                      : "text-[#64748b] hover:text-[#1e1b4b] dark:text-slate-400 dark:hover:text-white"
+                      ? "bg-[#2563eb] text-white shadow-md dark:bg-blue-600"
+                      : "text-[#64748b] hover:text-[#0f172a] dark:text-slate-400 dark:hover:text-white"
                   }`}
                 >
                   Multiplayer Clash Stats
@@ -246,7 +246,7 @@ export const ProfileRoute = () => {
 
             <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
               {currentHighlights.map(([title, value]) => (
-                <div key={title} className="glass-panel rounded-[1.6rem] p-5 shadow-[0_10px_26px_rgba(53,37,205,0.05)]">
+                <div key={title} className="glass-panel rounded-[1.6rem] p-5 shadow-[0_10px_26px_rgba(37,99,235,0.05)]">
                   <div className="text-[0.65rem] uppercase tracking-[0.24em] text-slate-500 dark:text-slate-400">{title}</div>
                   <div className="mt-3 text-lg font-semibold text-slate-900 dark:text-white">{value}</div>
                 </div>
@@ -254,7 +254,7 @@ export const ProfileRoute = () => {
             </div>
 
             <div className="mt-6 grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
-              <section className="glass-panel rounded-[1.8rem] p-6 shadow-[0_10px_26px_rgba(53,37,205,0.05)]">
+              <section className="glass-panel rounded-[1.8rem] p-6 shadow-[0_10px_26px_rgba(37,99,235,0.05)]">
                 <h2 className="text-lg font-semibold text-slate-900 dark:text-white">
                   {profileMode === "multiplayer" ? "Multiplayer Clash Overview" : "Single Player Overview"}
                 </h2>
@@ -284,7 +284,7 @@ export const ProfileRoute = () => {
               </section>
 
               {isOwnProfile ? (
-                <section className="glass-panel rounded-[1.8rem] p-6 shadow-[0_10px_26px_rgba(53,37,205,0.05)]">
+                <section className="glass-panel rounded-[1.8rem] p-6 shadow-[0_10px_26px_rgba(37,99,235,0.05)]">
                   <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Account Email</h2>
                   <p className="mt-2 text-sm leading-7 text-[#5a6174] dark:text-slate-300">
                     Change the email attached to your account anytime here.
@@ -301,13 +301,13 @@ export const ProfileRoute = () => {
                         autoComplete="email"
                         value={email}
                         onChange={(event) => setEmail(event.target.value)}
-                        className="h-14 w-full rounded-[1.2rem] border border-[#dfe4f2] bg-[#f8f9ff] px-4 text-sm text-[#1f2740] outline-none transition focus:border-[#c5c2ff] focus:ring-4 focus:ring-[#ebe9ff] dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:focus:border-indigo-500"
+                        className="h-14 w-full rounded-[1.2rem] border border-[#dfe4f2] bg-[#f0f9ff] px-4 text-sm text-[#0f172a] outline-none transition focus:border-[#60a5fa] focus:ring-4 focus:ring-[#bae6fd] dark:border-slate-700 dark:bg-slate-900 dark:text-white dark:focus:border-blue-500"
                       />
                     </label>
                     <button
                       type="submit"
                       disabled={saving}
-                      className="h-14 rounded-full bg-gradient-to-b from-[#4f46e5] to-[#3525cd] px-6 text-sm font-semibold text-white shadow-[0_14px_28px_rgba(53,37,205,0.2)] disabled:opacity-60"
+                      className="h-14 rounded-full bg-gradient-to-b from-[#2563eb] to-[#1d4ed8] px-6 text-sm font-semibold text-white shadow-[0_14px_28px_rgba(37,99,235,0.2)] disabled:opacity-60"
                     >
                       {saving ? "Saving..." : "Update Email"}
                     </button>
@@ -336,7 +336,7 @@ export const ProfileRoute = () => {
                             onClick={() => updatePreferences({ colorTheme: item.id as any })}
                             className={`flex items-center justify-center gap-2 rounded-2xl border py-3 text-xs font-bold transition ${
                               isSelected
-                                ? "border-[#4f46e5] bg-[#4f46e5] text-white shadow-md"
+                                ? "border-[#2563eb] bg-[#2563eb] text-white shadow-md"
                                 : "border-slate-200 bg-white/70 text-slate-700 hover:bg-white dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-200"
                             }`}
                           >

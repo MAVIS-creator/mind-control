@@ -16,7 +16,7 @@ export const LeaderboardTable = ({
   <div className="glass-panel overflow-hidden rounded-[2rem] dark:bg-slate-950 dark:border-slate-800">
     <div className="flex items-center justify-between border-b border-slate-200/70 px-5 py-4 dark:border-slate-800">
       <h2 className="flex items-center gap-3 text-lg font-semibold text-slate-900 dark:text-white">
-        <span className="rounded-2xl bg-indigo-100 p-2 text-indigo-700">
+        <span className="rounded-2xl bg-blue-100 p-2 text-[#2563eb] dark:bg-blue-900/30 dark:text-sky-400">
           <TrophyIcon className="h-4 w-4" />
         </span>
         {title}
@@ -48,7 +48,7 @@ export const LeaderboardTable = ({
                       <div
                         className={`rounded-2xl p-[2px] transition-all duration-300 shrink-0 ${
                           entry.isAdmin
-                            ? "bg-gradient-to-r from-sky-400 via-indigo-500 to-amber-400 shadow-[0_0_12px_rgba(14,165,233,0.55)] dark:shadow-[0_0_16px_rgba(56,189,248,0.7)]"
+                            ? "bg-gradient-to-r from-sky-400 via-blue-500 to-amber-400 shadow-[0_0_12px_rgba(14,165,233,0.55)] dark:shadow-[0_0_16px_rgba(56,189,248,0.7)]"
                             : entry.isBetaTester
                             ? "bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.5)] dark:shadow-[0_0_14px_rgba(245,158,11,0.65)]"
                             : ""
@@ -61,7 +61,7 @@ export const LeaderboardTable = ({
                         />
                       </div>
                       <div>
-                        <Link to={`/profile/${entry.userId}`} className="font-medium text-slate-900 hover:text-indigo-700 dark:text-white dark:hover:text-indigo-400">
+                        <Link to={`/profile/${entry.userId}`} className="font-medium text-slate-900 hover:text-[#2563eb] dark:text-white dark:hover:text-sky-400">
                           {entry.username}
                         </Link>
                         <div className="text-xs uppercase tracking-[0.24em] text-slate-400 dark:text-slate-500">
@@ -70,7 +70,7 @@ export const LeaderboardTable = ({
                       </div>
                     </div>
                   </td>
-                  <td className="px-5 py-4 font-display tracking-[0.1em] text-indigo-700 dark:text-indigo-400">
+                  <td className="px-5 py-4 font-display tracking-[0.1em] text-[#2563eb] dark:text-sky-400">
                     {formatNumber(entry.score)}
                   </td>
                   <td className="px-5 py-4">{formatPercent(entry.accuracy)}</td>
