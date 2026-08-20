@@ -16,21 +16,21 @@ import { AdminPagination } from "./AdminPagination";
 export const PRESET_TEMPLATES = [
   {
     id: "pwa_download",
-    name: "PWA Web App Available for Install",
-    subject: "MindGrid Web App is Ready for Download (Zero Lag & Offline)",
+    name: "PWA Web App Install Guide",
+    subject: "Install MindGrid on Your Phone (Fast Home-Screen Web App)",
     body: `Hello Operative,
 
-MindGrid is now officially ready to install as a high-performance Web App (PWA) on your mobile and desktop devices!
+MindGrid can now be installed directly to your phone or desktop home screen as a Web App (PWA)!
 
 Why Install?
-• Instant 0-latency home-screen access
-• Fullscreen immersion with 60FPS fluid cards
-• 1.5x score boosts and immediate leaderboard syncing
+• Fullscreen memory matching with zero browser address bars
+• Instant launch directly from your phone's home screen
+• Smooth 60FPS card animations and fast board loading
 
 How to Install in 10 Seconds:
-• iOS (Safari): Open https://neuralclash.dev ➔ Tap the Share button (box with arrow) ➔ Tap "Add to Home Screen".
-• Android / Chrome: Open https://neuralclash.dev ➔ Tap Menu (3 dots) ➔ Tap "Install App" or "Add to Home Screen".
-• Desktop (Chrome/Edge): Click the Install icon in your address bar.
+• iPhone / iPad (Safari): Open https://neuralclash.dev ➔ Tap the Share button (square with arrow) ➔ Tap "Add to Home Screen".
+• Android (Chrome): Open https://neuralclash.dev ➔ Tap Menu (3 dots) ➔ Tap "Install App" or "Add to Home Screen".
+• Desktop (Chrome/Edge): Click the Install icon in your browser address bar.
 
 Direct Install Link:
 https://neuralclash.dev/?install=pwa
@@ -41,54 +41,55 @@ Best regards,
 MindGrid Admin & Klyvex Studios`,
   },
   {
-    id: "weekly_tournament",
-    name: "New Weekly Tournament Live",
-    subject: "Weekly Tournament Arena is Live - Double XP & Prize Multipliers!",
+    id: "multiplayer_invite",
+    name: "1v1 Multiplayer Duel Invitation",
+    subject: "Challenge Your Friends to a 1v1 Real-Time Memory Match on MindGrid",
     body: `Hello Operative,
 
-The new MindGrid Weekly Championship Arena is officially live!
+Did you know MindGrid supports live 1v1 multiplayer duels?
 
-Tournament Highlights:
-• Exclusive 5x6 Speed Sprint & Tactical Sync Matrix
-• 2x Rating Points for all podium finishers
-• Special Founder Badges for top 10 operatives
+Multiplayer Highlights:
+• Create a private duel room with a custom room code to send to a friend.
+• Both players play on the exact same card grid in real-time.
+• Prove who has the faster reaction memory and accuracy.
 
-Join the Arena Now:
-https://neuralclash.dev/events
+Create or Join a Room:
+https://neuralclash.dev/multiplayer
 
 Best regards,
 MindGrid Esports Team`,
   },
   {
-    id: "reengagement",
-    name: "Player Re-engagement / Streak Boost",
-    subject: "Your MindGrid Rank is Slipping - Reclaim Your Spot on the Hall of Fame!",
+    id: "leaderboard_reclaim",
+    name: "Leaderboard Rank Slipping Alert",
+    subject: "Your MindGrid Leaderboard Rank is Slipping - Reclaim Your Spot!",
     body: `Hello Operative,
 
-Other players are climbing the Hall of Fame leaderboards! Your spot is being contested in the global rankings.
+Other operatives have been playing and setting higher scores on MindGrid, which means your ranking on the Hall of Fame is slipping down the leaderboard.
 
-Log in now to protect your rating and unlock your daily combo multiplier bonus.
-
-Play Now:
+Jump back into the grid to play a match and climb back up:
 https://neuralclash.dev/play
+
+Check your current rank in the Hall of Fame:
+https://neuralclash.dev/ranks
 
 Best regards,
 MindGrid Command`,
   },
   {
     id: "tester_perks",
-    name: "Neural Tester Founder Rewards",
-    subject: "Exclusive Neural Tester Perks & Founder Badge Activated!",
+    name: "Neural Tester Recognition",
+    subject: "Thank You for Being a MindGrid Neural Tester!",
     body: `Hello Operative,
 
-Thank you for being an active part of the MindGrid competitive ecosystem!
+Thank you for being an active tester and player in the MindGrid ecosystem!
 
-Your account has been granted exclusive Neural Tester access, which includes:
-• Golden Founder Avatar Ring
-• 1,000 Bonus Account XP
-• Early access to new multiplayer duel modes
+As a verified tester:
+• Your profile displays the official Tester badge on public leaderboards.
+• You have access to all grid sizes (2x2, 3x4, 4x4, 5x6, 6x6) and modes.
+• You can test custom room multiplayer matches with other players.
 
-Claim your rewards inside your profile:
+View your operative profile:
 https://neuralclash.dev/profile
 
 Best regards,

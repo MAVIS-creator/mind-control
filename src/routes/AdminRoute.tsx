@@ -293,8 +293,8 @@ export const AdminRoute = (): JSX.Element => {
                 navigate("/mavisbk/messages");
               }}
               onStageDoubleXpCampaign={() => {
-                setEmailSubject(PRESET_TEMPLATES[1].subject);
-                setEmailBody(PRESET_TEMPLATES[1].body);
+                setEmailSubject(PRESET_TEMPLATES[2].subject);
+                setEmailBody(PRESET_TEMPLATES[2].body);
                 setSelectedUserIds(players.map((p) => p.userId));
                 navigate("/mavisbk/messages");
               }}

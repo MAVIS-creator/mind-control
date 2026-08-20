@@ -69,17 +69,17 @@ export const AdminGrowthPanel = ({
             </button>
           </div>
 
-          {/* Playbook 2: Weekend Double XP */}
+          {/* Playbook 2: Leaderboard Record Sprint */}
           <div className="flex flex-col justify-between rounded-2xl border border-slate-200/80 bg-slate-50/70 p-5 dark:border-slate-800 dark:bg-slate-950/60 space-y-3">
             <div>
               <div className="flex items-center justify-between">
-                <span className="font-bold text-xs text-slate-900 dark:text-white">Weekend Double-XP Rush</span>
+                <span className="font-bold text-xs text-slate-900 dark:text-white">Hall of Fame Record Sprint</span>
                 <span className="rounded-full bg-amber-100 dark:bg-amber-950/60 px-2 py-0.5 text-[10px] font-bold text-amber-800 dark:text-amber-300">
                   Engagement
                 </span>
               </div>
               <p className="mt-2 text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                Announce 1.5x score and rating boosts for Saturday/Sunday. Urges competitive players to climb for Zenith Lord rank.
+                Dispatch an announcement highlighting top Hall of Fame records and inviting operatives to test larger grid sizes (5x6 and 6x6) to beat their personal best.
               </p>
             </div>
             <button
@@ -87,7 +87,7 @@ export const AdminGrowthPanel = ({
               onClick={onStageDoubleXpCampaign}
               className="rounded-xl bg-amber-600 px-3.5 py-2 text-xs font-bold text-white hover:bg-amber-700 transition"
             >
-              Stage Double-XP Rush &rarr;
+              Stage Sprint Campaign &rarr;
             </button>
           </div>
 

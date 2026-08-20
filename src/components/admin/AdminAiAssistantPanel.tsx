@@ -35,104 +35,107 @@ export type AutoScheduleItem = {
 
 export const AUTOMATED_SCHEDULES: AutoScheduleItem[] = [
   {
-    id: "daily_pulse",
-    name: "Daily Morning Pulse",
-    cadence: "Daily",
-    triggerTime: "Every morning at 9:00 AM UTC",
+    id: "pwa_guide",
+    name: "Web App (PWA) Install Guide",
+    cadence: "Mobile Onboarding",
+    triggerTime: "Sent to new & mobile operatives",
     audience: "All Registered Operatives",
-    purpose: "Daily challenge notification and streak combo multiplier protection.",
-    verifiedFeatures: ["Daily Sprint Matrix", "1.5x Streak Multiplier", "XP Bonus"],
-    subject: "Your Daily MindGrid Challenge is Ready (1.5x Combo Multiplier Active)",
+    purpose: "Guides players on installing MindGrid directly to their iOS/Android home screen for fullscreen 60FPS play.",
+    verifiedFeatures: ["PWA Home Screen Install", "Fullscreen Mode", "Fast 60FPS Cards"],
+    subject: "Install MindGrid on Your Phone (Fast Home-Screen Web App)",
     body: `Hello Operative,
 
-Your daily MindGrid speed sprint matrix has been generated for today!
+MindGrid can now be installed directly to your mobile home screen as a high-performance Web App (PWA) without needing an app store!
 
-Today's Mission:
-• Complete 1 Speed Sprint run to maintain your daily login streak.
-• Earn up to 1.5x score combo bonuses for clean board clears.
-• Check your current standing on the Hall of Fame podium.
+Why Install?
+• Fullscreen memory matching with zero browser address bars
+• Instant launch directly from your phone's home screen
+• Smooth 60FPS card animations and fast board loading
 
-Launch Today's Grid:
+How to Install in 10 Seconds:
+• iPhone / iPad (Safari): Open https://neuralclash.dev ➔ Tap the Share button (square with arrow) ➔ Tap "Add to Home Screen".
+• Android (Chrome): Open https://neuralclash.dev ➔ Tap Menu (3 dots) ➔ Tap "Install App" or "Add to Home Screen".
+• Desktop (Chrome/Edge): Click the Install icon in your browser address bar.
+
+Direct Install Link:
+https://neuralclash.dev/?install=pwa
+
+Jump in and test your memory speed today!
+
+Best regards,
+MindGrid Admin & Klyvex Studios`,
+    ticker: "WEB APP: Install MindGrid directly to your home screen for fullscreen 60FPS memory duels!",
+  },
+  {
+    id: "multiplayer_challenge",
+    name: "1v1 Multiplayer Duel Invitation",
+    cadence: "Community Duel Call",
+    triggerTime: "Dispatched to active players",
+    audience: "Active Operatives",
+    purpose: "Invites players to create private rooms and challenge friends in real-time memory matches.",
+    verifiedFeatures: ["1v1 Live Multiplayer", "Private Room Codes", "Synchronized Grid Cards"],
+    subject: "Challenge Your Friends to a 1v1 Real-Time Memory Match on MindGrid",
+    body: `Hello Operative,
+
+Did you know MindGrid supports live 1v1 multiplayer duels?
+
+Multiplayer Highlights:
+• Create a private duel room with a custom room code to send to a friend.
+• Both players play on the exact same card grid in real-time.
+• Prove who has the faster reaction memory and accuracy.
+
+Create or Join a Room:
+https://neuralclash.dev/multiplayer
+
+Best regards,
+MindGrid Esports Team`,
+    ticker: "MULTIPLAYER: Create a private 1v1 room and challenge your friends in real-time!",
+  },
+  {
+    id: "hall_of_fame_updates",
+    name: "Hall of Fame Leaderboard Update",
+    cadence: "Competitive Leaderboard",
+    triggerTime: "Dispatched when new top scores are set",
+    audience: "Ranked Operatives",
+    purpose: "Informs operatives that new high scores have been set across grid sizes and invites them to check their rank.",
+    verifiedFeatures: ["Global Hall of Fame", "Grid Sizes (2x2 to 6x6)", "Accuracy & Speed Stats"],
+    subject: "New High Scores on the Hall of Fame - Check Your Leaderboard Rank",
+    body: `Hello Operative,
+
+Operatives have been setting new high score records on the MindGrid global leaderboards across all grid sizes (2x2, 3x4, 4x4, 5x6, and 6x6).
+
+Check your current standing in the Hall of Fame to see where your profile ranks:
+https://neuralclash.dev/ranks
+
+Ready to set a new personal record? Launch a run:
 https://neuralclash.dev/play
 
 Best regards,
 MindGrid Command`,
-    ticker: "DAILY CHALLENGE: Today's speed matrix is ready! Complete your run for 1.5x combo bonus.",
+    ticker: "HALL OF FAME: New top scores have been set! Check your standing at /ranks.",
   },
   {
-    id: "friday_rush",
-    name: "Weekly Friday Weekend Rush",
-    cadence: "Weekly (Fridays)",
-    triggerTime: "Every Friday at 4:00 PM UTC",
-    audience: "Active & Competitive Operatives",
-    purpose: "Announces weekend competitive matrix with Double XP and 1v1 multiplayer duels.",
-    verifiedFeatures: ["Weekend Tournament Arena", "2x Rating Points", "1v1 Room Duels"],
-    subject: "Weekend Tournament Arena is Live - Double XP & Prize Multipliers!",
+    id: "inactive_rank_alert",
+    name: "Leaderboard Rank Slipping Alert",
+    cadence: "Triggered on 7+ Days Inactivity",
+    triggerTime: "Automated after 7 consecutive days without a match",
+    audience: "Operatives inactive for 7+ days",
+    purpose: "Alerts lapsed players that other operatives have posted higher scores, pushing their rank position down.",
+    verifiedFeatures: ["Rank Position Defense", "PWA Quick Launch", "Single & Multiplayer"],
+    subject: "Your Leaderboard Rank is Slipping on MindGrid - Reclaim Your Spot!",
     body: `Hello Operative,
 
-The MindGrid Weekend Championship Arena is officially open for competition!
+Other operatives have been playing and setting higher scores on MindGrid, which means your ranking on the Hall of Fame is slipping down the leaderboard.
 
-Weekend Highlights:
-• Exclusive 5x6 Speed Sprint & Tactical Sync Matrix
-• 2x Rating Points for all podium finishers
-• Challenge friends in real-time 1v1 duel rooms with custom codes
+Jump back into the grid to play a match and climb back up:
+https://neuralclash.dev/play
 
-Enter the Arena:
-https://neuralclash.dev/events
-
-Best regards,
-MindGrid Esports Team`,
-    ticker: "WEEKEND RUSH: 2x rating points and 1v1 multiplayer duel arenas are live all weekend!",
-  },
-  {
-    id: "sunday_finale",
-    name: "Weekly Sunday Season Finale",
-    cadence: "Weekly (Sundays)",
-    triggerTime: "Every Sunday at 6:00 PM UTC",
-    audience: "Top 50 & Ranked Operatives",
-    purpose: "Urges players to defend their Hall of Fame ranking before weekly lock-in.",
-    verifiedFeatures: ["Hall of Fame Lock-In", "Zenith Lord Honors", "Podium Badges"],
-    subject: "Final Hours: Weekly Leaderboard Season Locks at Midnight!",
-    body: `Hello Operative,
-
-The weekly MindGrid leaderboard cycle is entering its final hours!
-
-Season Climax Details:
-• Weekly ranks will lock at midnight UTC.
-• Top podium finishers will be permanently crowned Zenith Lords in the Hall of Fame.
-• Defend your position against contenders before time runs out.
-
-Defend Your Rank:
-https://neuralclash.dev/ranks
-
-Best regards,
-MindGrid Admin`,
-    ticker: "SEASON FINALE: Final hours before weekly leaderboard lock-in! Defend your rank.",
-  },
-  {
-    id: "inactive_nudge",
-    name: "Inactive Player Auto-Nudge",
-    cadence: "Triggered on 7+ Days Inactive",
-    triggerTime: "Automated after 7 consecutive days of inactivity",
-    audience: "Operatives with no runs in 7+ days",
-    purpose: "Re-engages inactive players by reminding them of rank defense and the new PWA install.",
-    verifiedFeatures: ["PWA Web App Install", "0-Latency Play", "Rank Defense"],
-    subject: "Your MindGrid Rank is Slipping - Claim Your Spot on the Hall of Fame!",
-    body: `Hello Operative,
-
-Other players are climbing the global Hall of Fame leaderboards! Your spot is being contested.
-
-New Since Your Last Session:
-• MindGrid Web App (PWA) is now available for direct 1-tap install on iOS & Android with 0 latency.
-• Real-time 1v1 multiplayer duels are active.
-• Jump back in to restore your rating and combo multipliers.
-
-Install & Play:
+You can also install the MindGrid Web App directly to your phone's home screen for quick access:
 https://neuralclash.dev/?install=pwa
 
 Best regards,
 MindGrid Command · Klyvex Studios`,
-    ticker: "RE-ENGAGE: Install MindGrid PWA directly to your home screen for zero-latency duels!",
+    ticker: "RANK ALERT: Other operatives are setting higher scores. Jump back in to climb the ranks!",
   },
 ];
 
@@ -147,8 +150,8 @@ export const AdminAiAssistantPanel = ({
   const [selectedScheduleId, setSelectedScheduleId] = useState<string>(AUTOMATED_SCHEDULES[0].id);
 
   // Custom AI generator state
-  const [aiTopic, setAiTopic] = useState("Direct PWA install guide for iOS and Android, zero lag, full offline caching.");
-  const [aiTone, setAiTone] = useState<"esports" | "promotional" | "urgent" | "rewarding">("promotional");
+  const [aiTopic, setAiTopic] = useState("Direct PWA install guide for iOS and Android, zero lag, fullscreen home-screen play.");
+  const [aiTone, setAiTone] = useState<"promotional" | "esports" | "reengagement" | "tester">("promotional");
   const [aiAudience, setAiAudience] = useState<"all" | "active" | "inactive">("all");
   const [aiGenerating, setAiGenerating] = useState(false);
   const [customAiOutput, setCustomAiOutput] = useState<{
@@ -181,11 +184,33 @@ export const AdminAiAssistantPanel = ({
   const generateCustomAiBroadcast = () => {
     setAiGenerating(true);
     setTimeout(() => {
+      let sub = "";
+      let bdy = "";
+      let ticker = "";
+
+      if (aiTone === "esports") {
+        sub = "Challenge Other Operatives in Live 1v1 Memory Duels on MindGrid";
+        bdy = `Hello Operative,\n\nTest your memory speed against real opponents in 1v1 multiplayer duels on MindGrid!\n\nReal Features:\n• Create private rooms with custom 6-digit join codes.\n• Synchronized card grids for fair competitive matching.\n• Live match results and winner determination.\n\nEnter the Arena:\nhttps://neuralclash.dev/multiplayer\n\nBest regards,\nMindGrid Esports Team`;
+        ticker = "MULTIPLAYER: Duel other operatives live in real-time memory battles at /multiplayer!";
+      } else if (aiTone === "reengagement") {
+        sub = "Your Hall of Fame Rank is Slipping - Jump Back into MindGrid!";
+        bdy = `Hello Operative,\n\nOther players have been playing and setting higher scores on MindGrid, pushing your rank position down the Hall of Fame.\n\nPlay a match now to post a higher score and climb back up:\nhttps://neuralclash.dev/play\n\nBest regards,\nMindGrid Command`;
+        ticker = "RANK UPDATE: Climb the Hall of Fame leaderboards at https://neuralclash.dev/ranks";
+      } else if (aiTone === "tester") {
+        sub = "Neural Tester Access & Founder Recognition on MindGrid";
+        bdy = `Hello Operative,\n\nThank you for testing and playing on the MindGrid platform!\n\nAs a verified tester:\n• Your account displays the Tester role on public leaderboards.\n• Access all board grids (2x2 to 6x6) and single/multiplayer modes.\n\nCheck your profile:\nhttps://neuralclash.dev/profile\n\nBest regards,\nKlyvex Studios Team`;
+        ticker = "TESTERS: Thank you to all verified neural testers testing new multiplayer features!";
+      } else {
+        sub = "Install MindGrid on Your Phone (Fast Home-Screen Web App)";
+        bdy = `Hello Operative,\n\nMindGrid is available to install directly onto your iOS or Android home screen as a Web App (PWA)!\n\nWhy Install?\n• Fullscreen card matching with zero browser address bars.\n• Fast 60FPS fluid cards and offline caching.\n\nInstall in 10 Seconds:\n• iOS: Safari ➔ Share ➔ Add to Home Screen.\n• Android: Chrome ➔ Menu ➔ Install App.\n\nDirect Link:\nhttps://neuralclash.dev/?install=pwa\n\nBest regards,\nMindGrid Admin & Klyvex Studios`;
+        ticker = "PWA READY: Install MindGrid directly to your phone for fullscreen 60FPS play!";
+      }
+
       setCustomAiOutput({
-        subject: `[MindGrid Update] ${aiTopic.slice(0, 45)}...`,
-        body: `Hello Operative,\n\n${aiTopic}\n\nVerified Features Included:\n• 0-Latency Web App (PWA) home-screen install.\n• Real-time 1v1 multiplayer arena duels at /multiplayer.\n• Daily combo multipliers and Hall of Fame ranking at /ranks.\n\nPlay Now:\nhttps://neuralclash.dev/?install=pwa\n\nBest regards,\nMindGrid Command · Klyvex Studios`,
-        broadcast: `UPDATE: ${aiTopic.slice(0, 60)} - Tap to play!`,
-        social: `${aiTopic.slice(0, 100)} https://neuralclash.dev #MindGrid #Esports`,
+        subject: sub,
+        body: bdy,
+        broadcast: ticker,
+        social: `${sub} https://neuralclash.dev #MindGrid #PWA #Gaming`,
       });
       setAiGenerating(false);
     }, 400);
@@ -205,7 +230,7 @@ export const AdminAiAssistantPanel = ({
                 AI Automated Broadcast Scheduler
               </h3>
               <p className="text-xs text-slate-600 dark:text-slate-300">
-                100% grounded in real MindGrid features. Inspect exact schedule timings, message contents, and dispatch templates below.
+                100% grounded in real, active MindGrid features (PWA mobile install, 1v1 live multiplayer duels, Hall of Fame rankings, and inactive rank alerts).
               </p>
             </div>
           </div>
@@ -247,7 +272,7 @@ export const AdminAiAssistantPanel = ({
               <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
                 <div>
                   <h4 className="font-display text-base font-bold text-slate-900 dark:text-white">
-                    Automated Cadence Roster
+                    Automated Cadence Roster (100% Factual)
                   </h4>
                   <p className="text-xs text-slate-500">
                     Click any schedule below to inspect the exact message that is sent.
@@ -338,7 +363,7 @@ export const AdminAiAssistantPanel = ({
 
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1.5">
-                  Announcement Context / Custom Topic
+                  Announcement Focus / Custom Topic
                 </label>
                 <textarea
                   rows={4}
@@ -351,17 +376,17 @@ export const AdminAiAssistantPanel = ({
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1.5">
-                    Voice Tone
+                    Feature Focus
                   </label>
                   <select
                     value={aiTone}
                     onChange={(e) => setAiTone(e.target.value as any)}
                     className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-slate-900 outline-none dark:border-slate-800 dark:bg-slate-950 dark:text-white"
                   >
-                    <option value="promotional">PWA Download & Features</option>
-                    <option value="esports">Esports Competitive</option>
-                    <option value="urgent">Urgent Season Finale</option>
-                    <option value="rewarding">Founder & Tester Perks</option>
+                    <option value="promotional">PWA Web App Install</option>
+                    <option value="esports">1v1 Multiplayer Duels</option>
+                    <option value="reengagement">Leaderboard Rank Alerts</option>
+                    <option value="tester">Neural Tester Recognition</option>
                   </select>
                 </div>
 
@@ -375,8 +400,8 @@ export const AdminAiAssistantPanel = ({
                     className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-slate-900 outline-none dark:border-slate-800 dark:bg-slate-950 dark:text-white"
                   >
                     <option value="all">All Registered Operatives</option>
-                    <option value="active">Active Players (Last 7 Days)</option>
-                    <option value="inactive">Inactive Players (Re-engage)</option>
+                    <option value="active">Active Players</option>
+                    <option value="inactive">Inactive Players (7+ Days)</option>
                   </select>
                 </div>
               </div>
