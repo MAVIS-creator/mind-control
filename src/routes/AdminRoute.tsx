@@ -1,6 +1,6 @@
 import type { JSX } from "react";
 import { useEffect, useMemo, useState } from "react";
-import { Link, Navigate, useParams } from "react-router-dom";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { ArrowLeftIcon } from "../components/AppIcons";
 import { EventEditionAdminPanel } from "../components/EventEditionAdminPanel";
 import { PerksAdminPanel } from "../components/PerksAdminPanel";
@@ -23,6 +23,7 @@ import type { LeaderboardEntry, ReviewStatus } from "../types";
 
 export const AdminRoute = (): JSX.Element => {
   const { adminSection } = useParams();
+  const navigate = useNavigate();
   const {
     session,
     leaderboard,
@@ -245,10 +246,34 @@ export const AdminRoute = (): JSX.Element => {
 
           {section === "ai-assistant" && (
             <AdminAiAssistantPanel
+              recipientCount={players.length}
+              sending={sending}
               onTransferToComposer={(subject, body) => {
                 setEmailSubject(subject);
                 setEmailBody(body);
-                window.location.hash = "";
+                setSelectedUserIds(players.map((p) => p.userId));
+                navigate("/mavisbk/messages");
+              }}
+              onDirectDispatchAll={async (subject, body) => {
+                setEmailSubject(subject);
+                setEmailBody(body);
+                const allIds = players.map((p) => p.userId);
+                setSelectedUserIds(allIds);
+                setSending(true);
+                setSendMessage(null);
+                setSendError(null);
+                try {
+                  const res = await sendAdminEmail({
+                    recipientIds: allIds,
+                    subject,
+                    message: body,
+                  });
+                  alert(`Broadcast transmission successfully dispatched to ${res.sent} operatives!`);
+                } catch (err: any) {
+                  alert(`Transmission failed: ${err.message || err}`);
+                } finally {
+                  setSending(false);
+                }
               }}
               onSetLiveGlobalTicker={(ticker) => {
                 if (typeof window !== "undefined") {
@@ -265,16 +290,19 @@ export const AdminRoute = (): JSX.Element => {
                 setEmailSubject(PRESET_TEMPLATES[0].subject);
                 setEmailBody(PRESET_TEMPLATES[0].body);
                 setSelectedUserIds(players.map((p) => p.userId));
+                navigate("/mavisbk/messages");
               }}
               onStageDoubleXpCampaign={() => {
                 setEmailSubject(PRESET_TEMPLATES[1].subject);
                 setEmailBody(PRESET_TEMPLATES[1].body);
                 setSelectedUserIds(players.map((p) => p.userId));
+                navigate("/mavisbk/messages");
               }}
               onStageMultiplayerCampaign={() => {
                 setEmailSubject("Challenge Your Friends to a 1v1 Memory Duel on MindGrid!");
                 setEmailBody(`Hello Operative,\n\nDid you know you can challenge your friends in real-time 1v1 memory duels?\n\nCreate a private room with a custom room code or duel online operatives at https://neuralclash.dev/multiplayer\n\nBest regards,\nMindGrid Esports Team`);
                 setSelectedUserIds(players.map((p) => p.userId));
+                navigate("/mavisbk/messages");
               }}
             />
           )}

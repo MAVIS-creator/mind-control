@@ -3,7 +3,10 @@ import { useState } from "react";
 import { BrandMarkIcon, CopyIcon, SendIcon, SparklesIcon } from "../AppIcons";
 
 type AdminAiAssistantPanelProps = {
+  recipientCount: number;
+  sending?: boolean;
   onTransferToComposer: (subject: string, body: string) => void;
+  onDirectDispatchAll: (subject: string, body: string) => Promise<void>;
   onSetLiveGlobalTicker: (ticker: string) => void;
 };
 
@@ -35,7 +38,10 @@ export const VERIFIED_FEATURE_TOPICS = [
 ];
 
 export const AdminAiAssistantPanel = ({
+  recipientCount,
+  sending = false,
   onTransferToComposer,
+  onDirectDispatchAll,
   onSetLiveGlobalTicker,
 }: AdminAiAssistantPanelProps): JSX.Element => {
   const [aiTopic, setAiTopic] = useState(VERIFIED_FEATURE_TOPICS[0].promptHint);
@@ -318,18 +324,32 @@ MindGrid Admin · Klyvex Studios`;
 
         {/* Right Column: AI Output & Styled Preview with Floating Logo */}
         <div className="rounded-[1.8rem] border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
-            <h4 className="font-display text-base font-bold text-slate-900 dark:text-white">
-              Generated Email & Floating Brand Preview
-            </h4>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
+            <div>
+              <h4 className="font-display text-base font-bold text-slate-900 dark:text-white">
+                Generated Email & Floating Brand Preview
+              </h4>
+              <p className="text-[11px] text-slate-500">Ready for review or instant dispatch.</p>
+            </div>
             {aiOutput && (
-              <button
-                type="button"
-                onClick={() => onTransferToComposer(aiOutput.subject, aiOutput.body)}
-                className="rounded-full bg-emerald-100 px-3.5 py-1 text-xs font-bold text-emerald-800 hover:bg-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300"
-              >
-                Transfer to Composer &rarr;
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => onTransferToComposer(aiOutput.subject, aiOutput.body)}
+                  className="rounded-full bg-[#eff1ff] px-3.5 py-1.5 text-xs font-bold text-[#1c05b3] hover:bg-blue-100 dark:bg-blue-950/60 dark:text-sky-300 transition"
+                >
+                  Edit in Composer &rarr;
+                </button>
+                <button
+                  type="button"
+                  disabled={sending}
+                  onClick={() => onDirectDispatchAll(aiOutput.subject, aiOutput.body)}
+                  className="inline-flex items-center gap-1.5 rounded-full bg-[#1c05b3] px-4 py-1.5 text-xs font-bold text-white shadow-sm hover:bg-[#140494] transition disabled:opacity-50"
+                >
+                  <SendIcon className="h-3 w-3" />
+                  <span>{sending ? "Sending..." : `Send to All (${recipientCount})`}</span>
+                </button>
+              </div>
             )}
           </div>
 
