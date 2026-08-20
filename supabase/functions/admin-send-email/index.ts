@@ -5,6 +5,7 @@ type EmailRequest = {
   recipientIds?: string[];
   subject?: string;
   message?: string;
+  html?: string;
 };
 
 const corsHeaders = {
@@ -30,32 +31,75 @@ const escapeHtml = (value: string) =>
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
 
-const renderEmail = (message: string) => {
+const linkify = (escapedText: string) => {
+  return escapedText.replace(
+    /(https?:\/\/[^\s<]+)/g,
+    '<a href="$1" target="_blank" style="color:#1c05b3;font-weight:700;text-decoration:underline;">$1</a>',
+  );
+};
+
+export const renderEmail = (subject: string, message: string) => {
   const paragraphs = escapeHtml(message)
     .split(/\n{2,}/)
-    .map((paragraph) => paragraph.replaceAll("\n", "<br />"))
-    .map((paragraph) => `<p style="margin:0 0 16px;color:#4b5568;line-height:1.7;font-size:16px;">${paragraph}</p>`)
+    .map((paragraph) => {
+      const formatted = linkify(paragraph.replaceAll("\n", "<br />"));
+      return `<p style="margin:0 0 14px;color:#334155;line-height:1.75;font-size:14px;">${formatted}</p>`;
+    })
     .join("");
 
   return `<!doctype html>
-<html>
-  <body style="margin:0;background:#eef4ff;padding:32px;font-family:Inter,Segoe UI,Arial,sans-serif;">
-    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:28px;overflow:hidden;border:1px solid #dfe7fb;">
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>${escapeHtml(subject)}</title>
+  </head>
+  <body style="margin:0;background:#f8faff;padding:32px 12px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#0f172a;-webkit-font-smoothing:antialiased;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:620px;margin:0 auto;background:#ffffff;border-radius:28px;overflow:hidden;border:1px solid #e2e8f0;box-shadow:0 16px 40px rgba(28,5,179,0.06);">
+      
+      <!-- Brand Header with Floating Trypan Blue Logo -->
       <tr>
-        <td style="padding:28px 28px 10px;">
-          <div style="display:inline-block;background:#4f46e5;color:#ffffff;border-radius:16px;padding:10px 13px;font-weight:800;letter-spacing:.08em;">MG</div>
-          <h1 style="margin:18px 0 8px;color:#111827;font-size:28px;line-height:1.15;">MindGrid Admin Message</h1>
-          <p style="margin:0;color:#64748b;font-size:14px;">A message from the MindGrid team.</p>
+        <td style="padding:36px 24px 20px;text-align:center;background:radial-gradient(circle at top,#eff1ff 0%,#ffffff 75%);border-bottom:1px solid #f1f5f9;">
+          <table role="presentation" cellspacing="0" cellpadding="0" style="margin:0 auto;">
+            <tr>
+              <td style="background:#1c05b3;border-radius:18px;padding:12px;text-align:center;box-shadow:0 10px 24px rgba(28,5,179,0.32);">
+                <img src="https://neuralclash.dev/logo-m.png" alt="MindGrid" width="40" height="40" style="display:block;margin:0 auto;border:none;" />
+              </td>
+            </tr>
+          </table>
+          <h1 style="margin:14px 0 2px;font-size:22px;font-weight:900;color:#1c05b3;letter-spacing:-0.02em;line-height:1.2;">MindGrid</h1>
+          <p style="margin:0;font-size:10px;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;color:#64748b;">NEURAL CLASH &middot; KLYVEX STUDIOS</p>
         </td>
       </tr>
+
+      <!-- Subject & Main Message Content -->
       <tr>
-        <td style="padding:18px 28px 10px;">
-          ${paragraphs}
+        <td style="padding:28px 28px 12px;">
+          <div style="background:#f8faff;border:1px solid #e2e8f0;border-radius:20px;padding:24px 22px;">
+            <h2 style="margin:0 0 16px;color:#0f172a;font-size:17px;font-weight:800;line-height:1.4;border-bottom:1px solid #e2e8f0;padding-bottom:12px;">
+              ${escapeHtml(subject)}
+            </h2>
+            <div>
+              ${paragraphs}
+            </div>
+          </div>
         </td>
       </tr>
+
+      <!-- Quick Action Button -->
       <tr>
-        <td style="padding:22px 28px 28px;border-top:1px solid #edf2ff;color:#8a93a8;font-size:13px;">
-          Built by Klyvex Studios for MindGrid.
+        <td style="padding:8px 28px 24px;text-align:center;">
+          <a href="https://neuralclash.dev/?install=pwa" target="_blank" style="display:inline-block;background:linear-gradient(180deg,#2406e2 0%,#1c05b3 100%);color:#ffffff;text-decoration:none;font-weight:800;font-size:13px;letter-spacing:0.04em;text-transform:uppercase;border-radius:999px;padding:14px 32px;box-shadow:0 12px 24px rgba(28,5,179,0.25);">
+            Launch MindGrid &rarr;
+          </a>
+        </td>
+      </tr>
+
+      <!-- Footer Security & Studio Attribution -->
+      <tr>
+        <td style="padding:20px 24px 28px;border-top:1px solid #f1f5f9;text-align:center;color:#94a3b8;font-size:11px;line-height:1.6;">
+          <p style="margin:0 0 4px;">Dispatched from secure admin gateway &middot; <a href="https://neuralclash.dev" style="color:#1c05b3;text-decoration:none;font-weight:600;">https://neuralclash.dev</a></p>
+          <p style="margin:0;">Built by <strong>Klyvex Studios</strong> &middot; <a href="https://klyvex-studios.tech" style="color:#64748b;text-decoration:none;">https://klyvex-studios.tech</a></p>
         </td>
       </tr>
     </table>
@@ -164,12 +208,14 @@ Deno.serve(async (request) => {
     },
   });
 
+  const htmlContent = payload.html || renderEmail(subject, message);
+
   try {
     await transport.sendMail({
       from: `"${fromName}" <${fromEmail}>`,
       to: recipients.map((recipient) => `"${recipient.name}" <${recipient.email}>`).join(", "),
       subject,
-      html: renderEmail(message),
+      html: htmlContent,
       text: message,
     });
   } catch (error) {
