@@ -463,18 +463,18 @@ export const AdminMessagesPanel = ({
           /* Live Styled Email Preview Container with Floating MindGrid Logo */
           <div className="rounded-2xl border border-slate-200/80 bg-slate-50/70 p-6 dark:border-slate-800 dark:bg-slate-950/70 space-y-6">
             <div className="text-center pb-4 border-b border-slate-200 dark:border-slate-800">
-              {/* Floating Logo with Animation and MindGrid underneath */}
+              {/* Floating Dancing Logo SVG from Floating Screen */}
               <div className="mx-auto flex flex-col items-center justify-center">
-                <div className="relative">
-                  <div className="h-16 w-16 rounded-2xl bg-[#1c05b3] p-3 shadow-[0_10px_25px_rgba(28,5,179,0.35)] animate-bounce">
-                    <BrandMarkIcon className="h-full w-full" />
-                  </div>
-                </div>
+                <img
+                  src="/mindgrid_logo.svg"
+                  alt="MindGrid"
+                  className="h-16 w-16 drop-shadow-[0_12px_24px_rgba(28,5,179,0.38)] animate-bounce"
+                />
                 <h4 className="mt-3 font-display text-lg font-black tracking-tight text-[#1c05b3] dark:text-white">
                   MindGrid
                 </h4>
                 <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                  Neural Clash · Klyvex Studios
+                  NEURAL CLASH · KLYVEX STUDIOS
                 </p>
               </div>
             </div>

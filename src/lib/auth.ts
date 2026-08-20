@@ -1280,8 +1280,8 @@ export const formatAdminHtmlEmail = (subject: string, message: string): string =
         <td style="padding:36px 24px 20px;text-align:center;background:radial-gradient(circle at top,#eff1ff 0%,#ffffff 75%);border-bottom:1px solid #f1f5f9;">
           <table role="presentation" cellspacing="0" cellpadding="0" style="margin:0 auto;">
             <tr>
-              <td style="background:#1c05b3;border-radius:18px;padding:12px;text-align:center;box-shadow:0 10px 24px rgba(28,5,179,0.32);">
-                <img src="https://neuralclash.dev/logo-m.png" alt="MindGrid" width="40" height="40" style="display:block;margin:0 auto;border:none;" />
+              <td style="text-align:center;">
+                <img src="https://neuralclash.dev/mindgrid_logo.svg" alt="MindGrid" width="68" height="68" style="display:block;margin:0 auto;border:none;filter:drop-shadow(0 12px 24px rgba(28,5,179,0.35));" />
               </td>
             </tr>
           </table>

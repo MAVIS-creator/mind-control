@@ -454,10 +454,13 @@ export const AdminAiAssistantPanel = ({
           {/* Styled Card Preview with Floating Trypan Blue Brand Logo */}
           <div className="rounded-2xl border border-slate-200/80 bg-slate-50/70 p-5 dark:border-slate-800 dark:bg-slate-950/70 space-y-4">
             <div className="text-center pb-4 border-b border-slate-200 dark:border-slate-800">
+              {/* Floating Dancing Logo SVG from Floating Screen */}
               <div className="mx-auto flex flex-col items-center justify-center">
-                <div className="h-14 w-14 rounded-2xl bg-[#1c05b3] p-3 shadow-[0_10px_24px_rgba(28,5,179,0.35)] animate-bounce">
-                  <BrandMarkIcon className="h-full w-full" />
-                </div>
+                <img
+                  src="/mindgrid_logo.svg"
+                  alt="MindGrid"
+                  className="h-16 w-16 drop-shadow-[0_12px_24px_rgba(28,5,179,0.38)] animate-bounce"
+                />
                 <h5 className="mt-2.5 font-display text-base font-black tracking-tight text-[#1c05b3] dark:text-white">
                   MindGrid
                 </h5>
