@@ -7,19 +7,19 @@ const contactCards = [
     title: "Player feedback",
     text: "Tell us what feels fun, confusing, too easy, too hard, or missing from the current game flow.",
     action: "Send Feedback",
-    href: "mailto:akintunde.dolapo1@gmail.com?subject=MindGrid%20player%20feedback",
+    href: "mailto:mavis@neuralclash.dev?subject=MindGrid%20player%20feedback",
   },
   {
     title: "Bug reports",
     text: "Share device, browser, route, and what happened so we can reproduce and fix issues faster.",
     action: "Report a Bug",
-    href: "mailto:akintunde.dolapo1@gmail.com?subject=MindGrid%20bug%20report",
+    href: "mailto:mavis@neuralclash.dev?subject=MindGrid%20bug%20report",
   },
   {
     title: "Support",
     text: "Need help with login, profile email, score saving, or leaderboard placement? Send the details.",
     action: "Get Support",
-    href: "mailto:akintunde.dolapo1@gmail.com?subject=MindGrid%20support",
+    href: "mailto:mavis@neuralclash.dev?subject=MindGrid%20support",
   },
 ];
 
@@ -40,7 +40,7 @@ export const ContactRoute = () => (
           </p>
           <div className="mt-7 flex flex-col gap-3 sm:flex-row">
             <a
-              href="mailto:akintunde.dolapo1@gmail.com?subject=MindGrid%20message"
+              href="mailto:mavis@neuralclash.dev?subject=MindGrid%20message"
               className="inline-flex items-center justify-center gap-3 rounded-full bg-gradient-to-b from-[#2406e2] to-[#1c05b3] px-8 py-4 font-semibold text-white shadow-[0_18px_30px_rgba(37,99,235,0.22)]"
             >
               <MailIcon className="h-5 w-5" />

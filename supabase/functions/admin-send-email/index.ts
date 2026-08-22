@@ -98,7 +98,7 @@ export const renderEmail = (subject: string, message: string) => {
       <!-- Footer Security & Studio Attribution -->
       <tr>
         <td style="padding:20px 24px 28px;border-top:1px solid #f1f5f9;text-align:center;color:#94a3b8;font-size:11px;line-height:1.6;">
-          <p style="margin:0 0 4px;">Dispatched from secure admin gateway &middot; <a href="https://neuralclash.dev" style="color:#1c05b3;text-decoration:none;font-weight:600;">https://neuralclash.dev</a></p>
+          <p style="margin:0 0 4px;">Dispatched from secure admin gateway &middot; Inquiries: <a href="mailto:mavis@neuralclash.dev" style="color:#1c05b3;text-decoration:none;font-weight:600;">mavis@neuralclash.dev</a></p>
           <p style="margin:0;">Built by <strong>Klyvex Studios</strong> &middot; <a href="https://klyvex-studios.tech" style="color:#64748b;text-decoration:none;">https://klyvex-studios.tech</a></p>
         </td>
       </tr>
@@ -122,13 +122,13 @@ Deno.serve(async (request) => {
   const smtpPort = Number(Deno.env.get("SMTP_PORT") ?? "587");
   const smtpUsername = Deno.env.get("SMTP_USERNAME");
   const smtpPassword = Deno.env.get("SMTP_PASSWORD");
-  const fromEmail = Deno.env.get("SMTP_FROM_EMAIL") ?? smtpUsername;
+  const fromEmail = Deno.env.get("SMTP_FROM_EMAIL") ?? "mavis@neuralclash.dev";
   const fromName = Deno.env.get("SMTP_FROM_NAME") ?? "MindGrid";
 
   if (!supabaseUrl || !supabaseAnonKey) {
     return json({ error: "Supabase function environment is missing project credentials." }, 500);
   }
-  if (!smtpHost || !smtpUsername || !smtpPassword || !fromEmail) {
+  if (!smtpHost || !smtpUsername || !smtpPassword) {
     return json({ error: "Email sending is not configured. Add SMTP_HOST, SMTP_USERNAME, SMTP_PASSWORD, and SMTP_FROM_EMAIL secrets." }, 500);
   }
 
@@ -213,6 +213,7 @@ Deno.serve(async (request) => {
   try {
     await transport.sendMail({
       from: `"${fromName}" <${fromEmail}>`,
+      replyTo: `"MindGrid Support" <mavis@neuralclash.dev>`,
       to: recipients.map((recipient) => `"${recipient.name}" <${recipient.email}>`).join(", "),
       subject,
       html: htmlContent,
