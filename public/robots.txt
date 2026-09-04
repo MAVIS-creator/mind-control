@@ -22,6 +22,7 @@ Disallow: /profile
 Disallow: /multiplayer
 Disallow: /multiplayer/
 Disallow: /mavisbk
+Disallow: /mavisbk/
 
 # Social Media Preview Crawlers
 User-agent: Twitterbot
@@ -42,6 +43,8 @@ Allow: /ranks
 Allow: /contact
 Disallow: /cyberpath
 Disallow: /cyberpath/
+Disallow: /mavisbk
+Disallow: /mavisbk/
 
 User-agent: Bingbot
 Allow: /
@@ -49,6 +52,8 @@ Allow: /ranks
 Allow: /contact
 Disallow: /cyberpath
 Disallow: /cyberpath/
+Disallow: /mavisbk
+Disallow: /mavisbk/
 
 Sitemap: https://neuralclash.dev/sitemap.xml
 Host: https://neuralclash.dev

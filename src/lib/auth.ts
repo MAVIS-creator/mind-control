@@ -1169,7 +1169,8 @@ export const authApi = {
           "The selected players do not have saved emails in this local browser. Restart the dev server so localhost uses Supabase, then refresh the admin page.",
         );
       }
-      window.location.href = `mailto:${recipients.join(",")}?subject=${encodeURIComponent(payload.subject)}&body=${encodeURIComponent(payload.message)}`;
+      // Keep recipients undisclosed in the local-development fallback too.
+      window.location.href = `mailto:?bcc=${encodeURIComponent(recipients.join(","))}&subject=${encodeURIComponent(payload.subject)}&body=${encodeURIComponent(payload.message)}`;
       return { sent: recipients.length, recipients };
     }
 

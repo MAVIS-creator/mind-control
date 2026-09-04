@@ -1,4 +1,6 @@
 /node_modules
+/likely-delivered-cpf-campaign-recipients-2026-09-03.csv
+/notification-batches-2026-09-03/
 /dist
 *.tsbuildinfo
 vite.config.js

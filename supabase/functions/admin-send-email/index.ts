@@ -214,7 +214,9 @@ Deno.serve(async (request) => {
     await transport.sendMail({
       from: `"${fromName}" <${fromEmail}>`,
       replyTo: `"MindGrid Support" <mavis@neuralclash.dev>`,
-      to: recipients.map((recipient) => `"${recipient.name}" <${recipient.email}>`).join(", "),
+      // Keep player addresses private: every player is an undisclosed Bcc recipient.
+      to: `"${fromName}" <${fromEmail}>`,
+      bcc: recipients.map((recipient) => `"${recipient.name}" <${recipient.email}>`).join(", "),
       subject,
       html: htmlContent,
       text: message,
